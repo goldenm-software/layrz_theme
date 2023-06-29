@@ -210,7 +210,7 @@ class ThemedActionButton {
   final String? labelText;
   final IconData icon;
   final VoidCallback onPressed;
-  final Color color;
+  final Color? color;
   final bool onlyIcon;
   final bool isLoading;
   final Duration? cooldown;
@@ -222,7 +222,7 @@ class ThemedActionButton {
     this.labelText,
     required this.icon,
     required this.onPressed,
-    this.color = kPrimaryColor,
+    this.color,
     this.onlyIcon = false,
     this.isLoading = false,
     this.cooldown,

@@ -87,6 +87,7 @@ class _ButtonsViewState extends State<ButtonsView> {
               ThemedButtonStyle.text,
               ThemedButtonStyle.fab,
               ThemedButtonStyle.outlinedFab,
+              ThemedButtonStyle.filledFab,
             ].map((style) {
               return Padding(
                 padding: const EdgeInsets.all(10),

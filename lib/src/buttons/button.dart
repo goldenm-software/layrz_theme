@@ -37,7 +37,7 @@ class ThemedButton extends StatefulWidget {
     this.isLoading = false,
 
     /// [color] is used to override the color of the button.
-    /// By default, the color will be [Theme.of(context).primaryColor].
+    /// By default, the color will be [defaultColor].
     this.color,
 
     /// [style] is the design of the button, based on Material 3 rules. For more info go to
@@ -85,10 +85,18 @@ class _ThemedButtonState extends State<ThemedButton> {
   Duration get cooldownDuration => widget.cooldownDuration;
   VoidCallback? get onCooldownFinish => widget.onCooldownFinish;
 
-  bool get isFabButton => [ThemedButtonStyle.outlinedFab, ThemedButtonStyle.fab].contains(style);
+  bool get isFabButton => [
+        ThemedButtonStyle.outlinedFab,
+        ThemedButtonStyle.fab,
+        ThemedButtonStyle.filledFab,
+      ].contains(style);
   double get buttonSize => isFabButton ? 40 : 30;
   EdgeInsets get padding => const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
   bool isHovered = false;
+
+  double get hoverOpacity => isHovered ? 0.3 : 0.2;
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get defaultColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +125,8 @@ class _ThemedButtonState extends State<ThemedButton> {
         return _buildOutlinedButton();
       case ThemedButtonStyle.outlinedFab:
         return _builOutlinedFabButton();
+      case ThemedButtonStyle.filledFab:
+        return _builFilledFabButton();
       case ThemedButtonStyle.fab:
         return _buildFabButton();
       case ThemedButtonStyle.text:
@@ -127,7 +137,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   Widget _buildFabButton() {
-    Color color = this.color ?? Theme.of(context).primaryColor;
+    Color color = this.color ?? defaultColor;
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
@@ -155,7 +165,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         width: buttonSize,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: isHovered ? contentColor.withOpacity(0.1) : Colors.transparent,
+          color: isHovered ? contentColor.withOpacity(hoverOpacity) : Colors.transparent,
           borderRadius: BorderRadius.circular(buttonSize),
         ),
         child: buildLoadingOrChild(
@@ -172,7 +182,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   Widget _builOutlinedFabButton() {
-    Color color = this.color ?? Theme.of(context).primaryColor;
+    Color color = this.color ?? defaultColor;
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
@@ -202,7 +212,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         width: buttonSize,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: isHovered ? contentColor.withOpacity(0.1) : Colors.transparent,
+          color: isHovered ? contentColor.withOpacity(hoverOpacity) : Colors.transparent,
           border: Border.all(
             color: isDisabled ? disabledColor : contentColor,
             width: 1,
@@ -222,8 +232,55 @@ class _ThemedButtonState extends State<ThemedButton> {
     );
   }
 
+  Widget _builFilledFabButton() {
+    Color color = this.color ?? defaultColor;
+
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
+
+    String message = "";
+
+    if (labelText != null) {
+      message = labelText ?? "";
+    } else if (label != null) {
+      if (label is Text) {
+        message = (label! as Text).data ?? "";
+      } else {
+        message = label.toString();
+      }
+    }
+
+    Color contentColor = isDisabled ? disabledColor : color;
+    return Tooltip(
+      message: message,
+      child: AnimatedContainer(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width,
+        ),
+        key: _key,
+        duration: kHoverDuration,
+        height: buttonSize,
+        width: buttonSize,
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: contentColor.withOpacity(hoverOpacity),
+          borderRadius: BorderRadius.circular(buttonSize),
+        ),
+        child: buildLoadingOrChild(
+          child: Center(
+            child: Icon(
+              icon ?? MdiIcons.help,
+              color: contentColor,
+              size: 20,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildTextButton() {
-    Color color = this.color ?? Theme.of(context).primaryColor;
+    Color color = this.color ?? defaultColor;
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
@@ -242,7 +299,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       width: width,
       padding: padding.subtract(const EdgeInsets.symmetric(vertical: 2)),
       decoration: BoxDecoration(
-        color: isHovered ? contentColor.withOpacity(0.1) : Colors.transparent,
+        color: isHovered ? contentColor.withOpacity(hoverOpacity) : Colors.transparent,
         borderRadius: BorderRadius.circular(buttonSize),
       ),
       child: buildLoadingOrChild(
@@ -272,7 +329,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   Widget _buildOutlinedButton() {
-    Color color = this.color ?? Theme.of(context).primaryColor;
+    Color color = this.color ?? defaultColor;
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
@@ -289,10 +346,10 @@ class _ThemedButtonState extends State<ThemedButton> {
       width: width,
       padding: padding.subtract(const EdgeInsets.symmetric(vertical: 2)),
       decoration: BoxDecoration(
-        color: isHovered ? contentColor.withOpacity(0.1) : Colors.transparent,
+        color: isHovered ? contentColor.withOpacity(0.3) : Colors.transparent,
         border: Border.all(
           color: isDisabled ? disabledColor : contentColor,
-          width: 2,
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(buttonSize),
       ),
@@ -323,7 +380,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   Widget _buildElevatedButton() {
-    Color color = this.color ?? Theme.of(context).primaryColor;
+    Color color = this.color ?? defaultColor;
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
@@ -380,7 +437,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   Widget _buildFilledButton() {
-    Color color = this.color ?? Theme.of(context).primaryColor;
+    Color color = this.color ?? defaultColor;
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
@@ -429,7 +486,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   Widget _buildFilledTonalButton() {
-    Color color = this.color ?? Theme.of(context).primaryColor;
+    Color color = this.color ?? defaultColor;
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
@@ -448,11 +505,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       width: width,
       padding: padding,
       decoration: BoxDecoration(
-        color: isDisabled
-            ? disabledColor.withOpacity(0.2)
-            : isHovered
-                ? contentColor.withOpacity(0.4)
-                : contentColor.withOpacity(0.2),
+        color: isDisabled ? disabledColor.withOpacity(hoverOpacity) : contentColor.withOpacity(hoverOpacity),
         borderRadius: BorderRadius.circular(buttonSize),
       ),
       child: buildLoadingOrChild(
@@ -501,7 +554,7 @@ class _ThemedButtonState extends State<ThemedButton> {
     if (style == ThemedButtonStyle.outlined) {
       width -= 3;
       height -= 3;
-    } else if ([ThemedButtonStyle.fab, ThemedButtonStyle.outlinedFab].contains(style)) {
+    } else if ([ThemedButtonStyle.fab, ThemedButtonStyle.outlinedFab, ThemedButtonStyle.filledFab].contains(style)) {
       width -= 8;
       height -= 8;
     }
@@ -567,4 +620,5 @@ enum ThemedButtonStyle {
   text,
   fab,
   outlinedFab,
+  filledFab,
 }

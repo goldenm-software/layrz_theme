@@ -1,6 +1,6 @@
 # Layrz Theme
 
-Managed by Golden M, Inc.
+Managed by Golden M, Inc. by authorization of Layrz Limited.
 
 ## Description
 It's a group of widgets that can be help you to implement scripts into Layrz modules, or incorporate them into your own projects.
