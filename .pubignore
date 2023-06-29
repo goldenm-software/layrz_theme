@@ -1,0 +1,9 @@
+.fvm/
+.fvm/flutter_sdk
+/.vscode
+/.dart_tool
+/.metadata
+/.packages
+/build
+.gitlab-ci.yml
+disabled.gitlab-ci.yml
