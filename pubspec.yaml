@@ -5,11 +5,10 @@ repository: https://gitlab.com/goldenm-software/layrz/flutter-components/layrz_t
 
 topics:
   - flutter
-  - material-you
   - layrz
   - material-design
   - material-3
-  - material-components
+  - goldenm
 
 environment:
   sdk: ">=2.18.0 <4.0.0"
