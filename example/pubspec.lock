@@ -196,10 +196,10 @@ packages:
     dependency: transitive
     description:
       name: google_fonts
-      sha256: "6b6f10f0ce3c42f6552d1c70d2c28d764cf22bb487f50f66cca31dcd5194f4d6"
+      sha256: e20ff62b158b96f392bfc8afe29dee1503c94fbea2cbe8186fd59b756b8ae982
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.4"
+    version: "5.1.0"
   highlight:
     dependency: transitive
     description:
@@ -212,10 +212,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "2ed163531e071c2c6b7c659635112f24cb64ecbebf6af46b550d536c0b1aa112"
+      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.4"
+    version: "1.1.0"
   http_parser:
     dependency: transitive
     description:
@@ -262,7 +262,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.0.1"
+    version: "4.0.2"
   linked_scroll_controller:
     dependency: transitive
     description:
@@ -566,4 +566,4 @@ packages:
     version: "0.2.0+1"
 sdks:
   dart: ">=3.0.0 <4.0.0"
-  flutter: ">=3.7.0"
+  flutter: ">=3.10.0"
