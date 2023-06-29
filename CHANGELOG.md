@@ -1,8 +1,8 @@
 # Changelog
 
 ## 4.0.2
-- Fixed ThemedTable actions having no divider
-- Added shadow color to drawer elements
+- Fixed `ThemedTable` actions having no divider
+- Added shadow color to `ThemedDrawer` elements
 
 ## 4.0.1
 - Fixes related to pub points
