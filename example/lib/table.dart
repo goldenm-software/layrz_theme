@@ -65,6 +65,9 @@ class _TableViewState extends State<TableView> {
                   name: "Asset ${i + 1}",
                 );
               }),
+              onShow: (ctx, asset) async {
+                return;
+              },
               columns: [
                 ThemedColumn(
                   labelText: 'ID',

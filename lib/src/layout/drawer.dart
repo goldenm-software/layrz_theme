@@ -167,6 +167,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
         context: context,
         radius: 0,
         color: drawerColor,
+        shadowColor: drawerColor,
       ).copyWith(
         color: drawerColor,
       ),
@@ -534,6 +535,13 @@ class _ThemedDrawerItemState extends State<ThemedDrawerItem> with TickerProvider
             elevation: 0,
             radius: 5,
             color: isActive
+                ? Colors.white
+                : _isHover
+                    ? Colors.white.withOpacity(0.4)
+                    : isDark
+                        ? Colors.grey.shade900
+                        : Theme.of(context).primaryColor,
+            shadowColor: isActive
                 ? Colors.white
                 : _isHover
                     ? Colors.white.withOpacity(0.4)
