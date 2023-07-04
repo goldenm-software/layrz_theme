@@ -3,6 +3,8 @@ part of layout;
 class ThemedNotificationIcon extends StatefulWidget {
   final List<ThemedNotificationItem> notifications;
   final Color backgroundColor;
+  final bool inAppBar;
+  final bool forceFullSize;
 
   const ThemedNotificationIcon({
     super.key,
@@ -13,6 +15,14 @@ class ThemedNotificationIcon extends StatefulWidget {
 
     /// [backgroundColor] is the background color of the notification icon.
     required this.backgroundColor,
+
+    /// [inAppBar] is a boolean that indicates whether the notification icon is
+    /// in the app bar or not.
+    this.inAppBar = false,
+
+    /// [forceFullSize] is a boolean that forces the notification icon to be
+    /// displayed in full size.
+    this.forceFullSize = false,
   });
 
   @override
@@ -43,13 +53,20 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      key: _key,
-      onTap: _buildOverlay,
-      child: Icon(
-        notificationIcon,
-        color: notificationIconColor,
-        size: 18,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(30),
+        key: _key,
+        onTap: _buildOverlay,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Icon(
+            notificationIcon,
+            color: notificationIconColor,
+            size: 18,
+          ),
+        ),
       ),
     );
   }
@@ -62,10 +79,25 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
     RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     Size screenSize = MediaQuery.of(context).size;
-    double bottom = 50;
+    double? bottom = 50;
     double right = screenSize.width - offset.dx - renderBox.size.width;
+    double? top;
+    double? left;
 
-    double width = screenSize.width * 0.5;
+    if (widget.inAppBar) {
+      top = 50;
+      bottom = null;
+    }
+
+    double? width = screenSize.width * 0.5;
+
+    debugPrint('widget.forceFullSize: ${widget.forceFullSize}');
+
+    if (width < 200 || widget.forceFullSize) {
+      left = 10;
+      right = 10;
+      width = null;
+    }
 
     _overlay = OverlayEntry(
       builder: (context) {
@@ -75,7 +107,9 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
             children: [
               Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
               Positioned(
+                top: top,
                 bottom: bottom,
+                left: left,
                 right: right,
                 child: RawKeyboardListener(
                   focusNode: _focusNode,
@@ -86,9 +120,9 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                   },
                   child: ScaleTransition(
                     scale: _controller,
-                    alignment: Alignment.bottomRight,
+                    alignment: widget.inAppBar ? Alignment.topRight : Alignment.bottomRight,
                     child: Container(
-                      width: width - 50,
+                      width: width == null ? null : width - 50,
                       constraints: BoxConstraints(
                         maxHeight: screenSize.height * 0.4,
                         minHeight: 56,

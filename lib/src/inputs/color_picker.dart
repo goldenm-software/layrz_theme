@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedColorPicker extends StatefulWidget {
   final String? labelText;
@@ -18,7 +18,7 @@ class ThemedColorPicker extends StatefulWidget {
   final double? height;
 
   const ThemedColorPicker({
-    Key? key,
+    super.key,
     this.labelText,
     this.label,
     this.disabled = false,
@@ -34,8 +34,7 @@ class ThemedColorPicker extends StatefulWidget {
     this.width,
     this.height,
     this.saveText = "OK",
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        super(key: key);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedColorPicker> createState() => _ThemedColorPickerState();

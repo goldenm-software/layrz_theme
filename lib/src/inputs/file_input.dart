@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedFileInput extends StatefulWidget {
   /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.

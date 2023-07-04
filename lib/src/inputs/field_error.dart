@@ -1,14 +1,14 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedFieldDisplayError extends StatelessWidget {
   final List<String> errors;
   final bool hideDetails;
 
   const ThemedFieldDisplayError({
-    Key? key,
+    super.key,
     this.errors = const [],
     this.hideDetails = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

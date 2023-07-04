@@ -22,6 +22,7 @@ class _TextViewState extends State<TextView> {
   @override
   Widget build(BuildContext context) {
     return Layout(
+      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Padding(
@@ -30,14 +31,6 @@ class _TextViewState extends State<TextView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
-              Center(
-                child: ThemedButton(
-                  labelText: "Toggle theme",
-                  onTap: widget.toggleTheme,
-                ),
-              ),
-              const SizedBox(height: 10),
               Text("displayLarge", style: Theme.of(context).textTheme.displayLarge),
               Text("displayMedium", style: Theme.of(context).textTheme.displayMedium),
               Text("displaySmall", style: Theme.of(context).textTheme.displaySmall),

@@ -14,10 +14,12 @@ class ThemedTaskbar extends StatefulWidget {
   final VoidCallback? onSettingsTap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onLogoutTap;
+  final VoidCallback? onThemeSwitchTap;
   final Color? backgroundColor;
   final List<ThemedNotificationItem> notifications;
   final String dateFormat;
   final String timeFormat;
+  final List<ThemedNavigatorItem> additionalActions;
 
   /// [ThemedTaskbar] is the taskbar of the application.
   const ThemedTaskbar({
@@ -62,6 +64,10 @@ class ThemedTaskbar extends StatefulWidget {
     /// [onLogoutTap] is a callback that is called when the logout button is
     this.onLogoutTap,
 
+    /// [onThemeSwitchTap] is a callback that is called when the theme switch
+    /// button is tapped.
+    this.onThemeSwitchTap,
+
     /// [backgroundColor] is the background color of the taskbar.
     this.backgroundColor,
 
@@ -76,6 +82,10 @@ class ThemedTaskbar extends StatefulWidget {
     /// [timeFormat] is the format of the time.
     /// See https://strftime.org/ for more information.
     this.timeFormat = '%H:%M %p',
+
+    /// [additionalActions] is the list of additional actions to be displayed in
+    /// the taskbar.
+    this.additionalActions = const [],
   });
 
   @override
@@ -131,43 +141,35 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).dividerColor,
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () {
-                    debugPrint('Logo tapped');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ThemedImage(
-                      path: favicon,
-                      width: menuSize,
-                      height: menuSize,
-                    ),
-                  ),
-                ),
-              ),
+            ThemedAppBarAvatar(
+              appTitle: widget.appTitle,
+              logo: widget.logo,
+              favicon: widget.favicon,
+              version: widget.version,
+              companyName: widget.companyName,
+              userName: widget.userName,
+              userDynamicAvatar: widget.userDynamicAvatar,
+              enableAbout: widget.enableAbout,
+              onSettingsTap: widget.onSettingsTap,
+              onProfileTap: widget.onProfileTap,
+              onLogoutTap: widget.onLogoutTap,
+              additionalActions: widget.additionalActions,
+              backgroundColor: widget.backgroundColor,
+              asTaskBar: true,
+              onThemeSwitchTap: widget.onThemeSwitchTap,
             ),
             const SizedBox(width: 10),
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: widget.items
-                      .map((item) => item.toHorizontalWidget(context: context, backgroundColor: backgroundColor))
-                      .toList(),
+                  children: [
+                    if (persistentItems.isNotEmpty) ...[
+                      ...persistentItems,
+                      ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+                    ],
+                    ...items,
+                  ].map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor)).toList(),
                 ),
               ),
             ),

@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 class FoundFont {
   final String titleFont;

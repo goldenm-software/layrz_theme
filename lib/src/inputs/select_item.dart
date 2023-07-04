@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedSelectItem<T> {
   final Widget? content;

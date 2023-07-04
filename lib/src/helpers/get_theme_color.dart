@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 MaterialColor getThemeColor({required String theme, Color color = kPrimaryColor}) {
   switch (theme) {

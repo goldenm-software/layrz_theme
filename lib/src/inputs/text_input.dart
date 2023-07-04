@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedTextInput extends StatefulWidget {
   /// [keyboardType] is the type of the keyboard.

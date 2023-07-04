@@ -24,14 +24,14 @@ class ResponsiveCol extends StatelessWidget {
   /// [ResponsiveCol] is a component to wrap a child between an especific breakpoints.
   /// Read the documentation of each field for more information.
   const ResponsiveCol({
-    Key? key,
+    super.key,
     this.xs = Sizes.col12,
     this.sm,
     this.md,
     this.lg,
     this.xl,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

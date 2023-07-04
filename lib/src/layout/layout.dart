@@ -4,15 +4,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:collection/collection.dart';
-import 'package:confetti/confetti.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'appbar.dart';
 part 'sidebar.dart';
@@ -22,9 +19,7 @@ part 'models.dart';
 
 // Parts
 part 'parts/notification.dart';
-
-// Shapes
-part 'shapes/notification.dart';
+part 'parts/avatar.dart';
 
 class ThemedLayout extends StatefulWidget {
   final ThemedLayoutStyle style;
@@ -44,10 +39,12 @@ class ThemedLayout extends StatefulWidget {
   final VoidCallback? onSettingsTap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onLogoutTap;
+  final VoidCallback? onThemeSwitchTap;
   final List<ThemedNavigatorItem> additionalActions;
   final Color? backgroundColor;
   final List<ThemedNavigatorItem> persistentItems;
   final List<ThemedNotificationItem> notifications;
+  final double mobileBreakpoint;
 
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
@@ -73,12 +70,20 @@ class ThemedLayout extends StatefulWidget {
     /// displayed.
     this.disableLeading = false,
 
-    /// [enableAbout], [onSettingsTap], [onProfileTap] and [onLogoutTap] are
-    /// enablers of about, settings, profile and logout buttons and pages.
+    /// [enableAbout] is a boolean that enables the about button.
     this.enableAbout = true,
+
+    /// [onSettingsTap] is the callback to be executed when the settings button
     this.onSettingsTap,
+
+    /// [onProfileTap] is the callback to be executed when the profile button
     this.onProfileTap,
+
+    /// [onLogoutTap] is the callback to be executed when the logout button
     this.onLogoutTap,
+
+    /// [onThemeSwitchTap] is the callback to be executed when the theme switch button
+    this.onThemeSwitchTap,
 
     /// [appTitle] is the title of the app.
     required this.appTitle,
@@ -119,6 +124,10 @@ class ThemedLayout extends StatefulWidget {
     /// [notifications] is the list of notifications to be displayed in the taskbar or sidebar.
     /// By default is `[]`.
     this.notifications = const [],
+
+    /// [mobileBreakpoint] is the breakpoint for mobile devices.
+    /// By default is `kMediumGrid`.
+    this.mobileBreakpoint = kMediumGrid,
   });
 
   @override
@@ -154,17 +163,44 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       onLogoutTap: widget.onLogoutTap,
       additionalActions: widget.additionalActions,
       backgroundColor: widget.backgroundColor,
+      notifications: widget.notifications,
+      mobileBreakpoint: widget.mobileBreakpoint,
+      forceNotificationIcon: widget.style == ThemedLayoutStyle.classic,
+      onThemeSwitchTap: widget.onThemeSwitchTap,
     );
 
-    Widget sidebar = Padding(
-      padding: const EdgeInsets.all(5),
-      child: Placeholder(
-        color: Colors.black.withOpacity(0.2),
-        child: const Center(
-          child: Text("Sidebar"),
+    double width = MediaQuery.of(context).size.width;
+
+    if (width <= widget.mobileBreakpoint) {
+      return Scaffold(
+        key: _scaffoldKey,
+        appBar: appBar,
+        body: SafeArea(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: widget.body,
+          ),
         ),
-      ),
-    );
+        drawer: ThemedDrawer(
+          items: widget.items,
+          appTitle: widget.appTitle,
+          companyName: widget.companyName,
+          logo: widget.logo,
+          favicon: widget.favicon,
+          version: widget.version,
+          userName: widget.userName,
+          userDynamicAvatar: widget.userDynamicAvatar,
+          enableAbout: widget.enableAbout,
+          onSettingsTap: widget.onSettingsTap,
+          onProfileTap: widget.onProfileTap,
+          onLogoutTap: widget.onLogoutTap,
+          onThemeSwitchTap: widget.onThemeSwitchTap,
+          additionalActions: widget.additionalActions,
+          mobileBreakpoint: widget.mobileBreakpoint,
+        ),
+      );
+    }
 
     Widget content = const SizedBox.shrink();
 
@@ -194,6 +230,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onProfileTap: widget.onProfileTap,
               onLogoutTap: widget.onLogoutTap,
               notifications: widget.notifications,
+              onThemeSwitchTap: widget.onThemeSwitchTap,
             ),
           ],
         );
@@ -202,7 +239,13 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         content = Row(
           children: [
             ThemedDrawer(
-              items: getChildUrls(),
+              items: [
+                ...widget.items,
+                if (widget.persistentItems.isNotEmpty) ...[
+                  ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+                  ...widget.persistentItems,
+                ],
+              ],
               appTitle: widget.appTitle,
               companyName: widget.companyName,
               logo: widget.logo,
@@ -214,7 +257,6 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onSettingsTap: widget.onSettingsTap,
               onProfileTap: widget.onProfileTap,
               onLogoutTap: widget.onLogoutTap,
-              // notifications: [],
               additionalActions: widget.additionalActions,
             ),
             Expanded(
@@ -224,13 +266,22 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         );
         break;
       case ThemedLayoutStyle.classic:
+        final childUrls = getChildUrls();
         content = Column(
           children: [
             appBar,
             Expanded(
               child: Row(
                 children: [
-                  ThemedSidebar.asContracted(items: getChildUrls()),
+                  ThemedSidebar.asContracted(
+                    items: [
+                      ...childUrls,
+                      if (widget.persistentItems.isNotEmpty) ...[
+                        if (childUrls.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+                        ...widget.persistentItems,
+                      ],
+                    ],
+                  ),
                   Expanded(
                     child: widget.body,
                   ),

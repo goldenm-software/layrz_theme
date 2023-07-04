@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedDynamicAvatarInput extends StatefulWidget {
   final String? labelText;

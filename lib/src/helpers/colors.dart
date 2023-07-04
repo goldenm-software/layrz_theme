@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 /// [useBlack] is a helper function to detect if the color should have the content
 /// with [Colors.White] or [Colors.black] color.

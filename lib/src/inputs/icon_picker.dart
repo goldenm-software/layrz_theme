@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedIconPicker extends StatefulWidget {
   /// [labelText] is the label text of the icon picker. Avoid submit [label] and [labelText] at the same time.

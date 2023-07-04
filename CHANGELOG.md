@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.4
+- New widget `ThemedLayout` to unify `ThemedAppBar`, `ThemedDrawer` and `ThemedTaskbar` using a unified Layrz style
+- Internal file organization updated to a sub-libraries schema
+
 ## 4.0.3
 - Fixed `ThemedTable` actions having no divider
 - Added shadow color to `ThemedDrawer` elements

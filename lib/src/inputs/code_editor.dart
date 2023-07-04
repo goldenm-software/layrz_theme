@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedCodeEditor extends StatefulWidget {
   /// Is the label of the field, you should use or [label] or [labelText] but not both. Also, [labelText] helps you
@@ -26,7 +26,7 @@ class ThemedCodeEditor extends StatefulWidget {
   final List<String> customInserts;
 
   const ThemedCodeEditor({
-    Key? key,
+    super.key,
     this.labelText,
     this.label,
     this.onChanged,
@@ -69,7 +69,7 @@ class ThemedCodeEditor extends StatefulWidget {
 
     /// List of custom inserts
     this.customInserts = const [],
-  }) : super(key: key);
+  });
 
   @override
   State<ThemedCodeEditor> createState() => _ThemedCodeEditorState();

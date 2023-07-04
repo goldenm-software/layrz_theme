@@ -1,6 +1,6 @@
 // ignore_for_file: unused_element
 
-part of layrz_theme;
+part of inputs;
 
 class _InternalDateDraw {
   final DateTime value;

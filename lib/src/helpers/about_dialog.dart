@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 /// [openInfoDialog] is a helper function to open an info dialog using the structure of Layrz.
 void openInfoDialog({

@@ -122,6 +122,7 @@ class _DynamicCredentialsViewState extends State<DynamicCredentialsView> {
   @override
   Widget build(BuildContext context) {
     return Layout(
+      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Column(
