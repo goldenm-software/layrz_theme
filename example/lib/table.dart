@@ -39,17 +39,12 @@ class _TableViewState extends State<TableView> {
   @override
   Widget build(BuildContext context) {
     return Layout(
+      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 10),
-          ThemedButton(
-            labelText: "Toggle theme",
-            onTap: widget.toggleTheme,
-          ),
-          const SizedBox(height: 10),
           Expanded(
             child: ThemedTable<Asset>(
               module: 'assets',

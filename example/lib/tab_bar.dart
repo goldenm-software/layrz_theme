@@ -30,16 +30,11 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Layout(
       showDrawer: true,
+      toggleTheme: widget.toggleTheme,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 10),
-          ThemedButton(
-            labelText: "Toggle theme",
-            onTap: widget.toggleTheme,
-          ),
-          const SizedBox(height: 10),
           TabBar(
             controller: _tabController,
             tabs: const [

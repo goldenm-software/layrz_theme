@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 enum DatePickerQuickOptions {
   today,
@@ -41,7 +41,7 @@ class ThemedDateTimeRangePickerVariant extends StatefulWidget {
   final LayrzAppLocalizations? i18n;
 
   const ThemedDateTimeRangePickerVariant({
-    Key? key,
+    super.key,
     this.i18n,
     this.value,
     this.labelText,
@@ -55,8 +55,7 @@ class ThemedDateTimeRangePickerVariant extends StatefulWidget {
     this.errors = const [],
     this.hideDetails = false,
   })  : assert(label == null || labelText == null),
-        assert(value == null || value.length == 2),
-        super(key: key);
+        assert(value == null || value.length == 2);
 
   @override
   State<ThemedDateTimeRangePickerVariant> createState() => _ThemedDateTimeRangePickerVariantState();

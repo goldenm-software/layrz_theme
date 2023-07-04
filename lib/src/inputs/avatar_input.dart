@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedAvatarInput extends StatefulWidget {
   final String? labelText;
@@ -10,7 +10,7 @@ class ThemedAvatarInput extends StatefulWidget {
   final bool hideDetails;
 
   const ThemedAvatarInput({
-    Key? key,
+    super.key,
     this.label,
     this.value,
     this.labelText,
@@ -18,8 +18,7 @@ class ThemedAvatarInput extends StatefulWidget {
     this.disabled = false,
     this.errors = const [],
     this.hideDetails = false,
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        super(key: key);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedAvatarInput> createState() => _ThemedAvatarInputState();

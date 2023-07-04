@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 typedef OnSearch = void Function(String value);
 

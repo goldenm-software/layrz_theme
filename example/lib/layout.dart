@@ -6,11 +6,14 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class Layout extends StatefulWidget {
   final bool showDrawer;
   final Widget body;
+  final VoidCallback toggleTheme;
+
   const Layout({
-    Key? key,
+    super.key,
     required this.showDrawer,
     required this.body,
-  }) : super(key: key);
+    required this.toggleTheme,
+  });
 
   @override
   State<Layout> createState() => _LayoutState();
@@ -19,99 +22,108 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   bool get showDrawer => widget.showDrawer;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ThemedLayoutStyle _layoutStyle = ThemedLayoutStyle.modern;
+  ThemedLayoutStyle _layoutStyle = ThemedLayoutStyle.classic;
 
   @override
   Widget build(BuildContext context) {
+    List<ThemedNavigatorItem> persistentItems = [
+      ThemedNavigatorAction(
+        labelText: ThemedLayoutStyle.modern.toString().split('.').last,
+        highlight: _layoutStyle == ThemedLayoutStyle.modern,
+        icon: MdiIcons.viewGrid,
+        onTap: () {
+          setState(() {
+            _layoutStyle = ThemedLayoutStyle.modern;
+          });
+        },
+      ),
+      ThemedNavigatorAction(
+        labelText: ThemedLayoutStyle.classic.toString().split('.').last,
+        highlight: _layoutStyle == ThemedLayoutStyle.classic,
+        icon: MdiIcons.viewDashboard,
+        onTap: () {
+          setState(() {
+            _layoutStyle = ThemedLayoutStyle.classic;
+          });
+        },
+      ),
+      ThemedNavigatorAction(
+        labelText: ThemedLayoutStyle.sidebar.toString().split('.').last,
+        highlight: _layoutStyle == ThemedLayoutStyle.sidebar,
+        icon: MdiIcons.viewSplitHorizontal,
+        onTap: () {
+          setState(() {
+            _layoutStyle = ThemedLayoutStyle.sidebar;
+          });
+        },
+      )
+    ];
     List<ThemedNavigatorItem> items = [
       ThemedNavigatorPage(
         labelText: 'Home',
         path: '/home',
         children: List.generate(5, (i) {
-          return [
-            ThemedNavigatorAction(
-              labelText: "Action $i",
-              icon: Icons.add,
-              onTap: () {
-                debugPrint('Action $i tapped');
-              },
-            ),
-            ThemedNavigatorLabel(
-              labelText: "Label $i",
-            ),
-            ThemedNavigatorPage(
-              labelText: "Subpage $i",
-              path: '/home/test$i',
-            ),
-            if (i != 4) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
-          ];
-        }).expand((element) => element).toList(),
+          return ThemedNavigatorPage(
+            labelText: "Subpage $i",
+            path: '/home/test$i',
+          );
+        }),
       ),
       ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
       ThemedNavigatorPage(
         labelText: 'Table',
         path: '/table',
       ),
+      ThemedNavigatorPage(
+        labelText: 'Text',
+        path: '/text',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Cards',
+        path: '/cards',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Inputs',
+        path: '/inputs',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Dynamic credentials',
+        path: '/dynamic_credentials',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Tab bar',
+        path: '/tabBar',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Buttons',
+        path: '/buttons',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Avatars',
+        path: '/avatars',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Empty',
+        path: '/empty',
+      ),
       ThemedNavigatorSeparator(),
-      ...ThemedLayoutStyle.values.map((style) {
-        return ThemedNavigatorAction(
-          labelText: 'Style: ${style.toString().split('.').last}',
-          highlight: _layoutStyle == style,
-          onTap: () {
-            setState(() => _layoutStyle = style);
-          },
-        );
-      }),
-      // ThemedNavigatorPage(
-      //   labelText: 'Text',
-      //   path: '/text',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Cards',
-      //   path: '/cards',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Inputs',
-      //   path: '/inputs',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Dynamic credentials',
-      //   path: '/dynamic_credentials',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Tab bar',
-      //   path: '/tabBar',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Buttons',
-      //   path: '/buttons',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Avatars',
-      //   path: '/avatars',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Empty',
-      //   path: '/empty',
-      // ),
-      // ThemedNavigatorPage(
-      //   labelText: 'Login Example',
-      //   path: '/login_example',
-      // ),
-      // ThemedNavigatorAction(
-      //   highlight: true,
-      //   labelText: 'Action',
-      //   onTap: () {
-      //     ScaffoldMessenger.of(context).showSnackBar(
-      //       const SnackBar(
-      //         content: Text('Action tapped'),
-      //       ),
-      //     );
-      //   },
-      // ),
-      // ThemedNavigatorLabel(
-      //   labelText: 'Label',
-      // ),
+      ThemedNavigatorPage(
+        labelText: 'Login Example',
+        path: '/login_example',
+      ),
+      ThemedNavigatorAction(
+        labelText: 'Action',
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Action tapped'),
+            ),
+          );
+        },
+      ),
+      ThemedNavigatorLabel(
+        labelText: 'Label',
+      ),
     ];
 
     const logo = AppThemedAsset(
@@ -126,32 +138,8 @@ class _LayoutState extends State<Layout> {
 
     const appTitle = "Text environment";
 
-    // Widget drawer = ThemedDrawer(
-    // logo: logo,
-    // favicon: favicon,
-    // appTitle: appTitle,
-    // items: items,
-    // userAvatar: 'https://cdn.layrz.com/%EA%BE%B8%EB%9D%BC.jpg',
-    // isDesktop: false,
-    // version: '2023.1.1',
-    // );
-
-    // PreferredSizeWidget appBar = ThemedAppBar(
-    // logo: logo,
-    // favicon: favicon,
-    // scaffoldKey: _scaffoldKey,
-    // appTitle: appTitle,
-    // items: items,
-    // enableAlternativeUserMenu: true,
-    // userAvatar: const Avatar(
-    //   type: AvatarType.url,
-    //   url: 'https://cdn.layrz.com/%EA%BE%B8%EB%9D%BC.jpg',
-    // ),
-    // isDesktop: false,
-    // version: '2023.1.1',
-    // );
-
     return ThemedLayout(
+      persistentItems: persistentItems,
       style: _layoutStyle,
       scaffoldKey: _scaffoldKey,
       logo: logo,
@@ -164,6 +152,17 @@ class _LayoutState extends State<Layout> {
       ),
       version: '2023.1.1',
       body: widget.body,
+      enableAbout: true,
+      onLogoutTap: () {
+        debugPrint('Logout tapped');
+      },
+      onProfileTap: () {
+        debugPrint('Profile tapped');
+      },
+      onSettingsTap: () {
+        debugPrint('Settings tapped');
+      },
+      onThemeSwitchTap: widget.toggleTheme,
       notifications: [
         ThemedNotificationItem(
           title: "With icon",
@@ -188,38 +187,11 @@ class _LayoutState extends State<Layout> {
             debugPrint('Notification tapped');
           },
         ),
-        ThemedNotificationItem(
+        const ThemedNotificationItem(
           title: "Plain",
           content: "Lorem ipsum dolor sit amet",
         ),
       ],
     );
-
-    // return Scaffold(
-    //   appBar: appBar,
-    //   drawer: drawer,
-    //   body: Row(
-    //     children: [
-    //       // drawer,
-    //       // ThemedSidebar(items: items),
-    //       Expanded(
-    //         child: Column(
-    //           children: [
-    //             Expanded(child: widget.body),
-    //             ThemedTaskbar(
-    //               logo: logo,
-    //               favicon: favicon,
-    //               appTitle: appTitle,
-    //               userAvatar: 'https://cdn.layrz.com/%EA%BE%B8%EB%9D%BC.jpg',
-    //               items: [
-    //                 ThemedNavigatorLabel(labelText: "Test label " * 5),
-    //               ],
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

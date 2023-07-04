@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 /// [generateContainerElevation] is a helper generator for the [BoxDecoration] of the [Container] widget.
 /// It generates the [BoxDecoration] with the given [elevation] and [radius].

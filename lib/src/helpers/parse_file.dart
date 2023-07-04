@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 /// [parseFileToBase64] is a helper function to parse a file to base64.
 /// Will return a Map with the keys:

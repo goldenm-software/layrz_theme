@@ -31,7 +31,9 @@ class ThemedSidebar extends StatefulWidget {
 }
 
 class _ThemedSidebarState extends State<ThemedSidebar> {
-  Color get drawerColor => widget.backgroundColor ?? Theme.of(context).primaryColor;
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get backgroundColor =>
+      widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
 
   final ScrollController _scrollController = ScrollController();
   @override
@@ -50,9 +52,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
       width: 50,
       height: double.infinity,
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: drawerColor,
-      ),
+      color: backgroundColor,
       child: SafeArea(
         child: SingleChildScrollView(
           controller: _scrollController,
@@ -67,9 +67,9 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
 
                   return c1 || c2 || c3;
                 })
-                .map((item) => item.toVerticalWidget(
+                .map((item) => item.toSidebarItem(
                       context: context,
-                      backgroundColor: drawerColor,
+                      backgroundColor: backgroundColor,
                       width: 30,
                       height: 30,
                     ))

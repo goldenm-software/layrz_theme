@@ -43,11 +43,11 @@ class ResponsiveRow extends StatelessWidget {
   final WrapCrossAlignment crossAxisAlignment;
 
   const ResponsiveRow({
-    Key? key,
+    super.key,
     required this.children,
     this.mainAxisAlignment = WrapAlignment.start,
     this.crossAxisAlignment = WrapCrossAlignment.start,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -2,11 +2,9 @@ part of layout;
 
 class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-
   final List<ThemedNavigatorItem> items;
   final String homePath;
   final bool disableLeading;
-
   final String appTitle;
   final AppThemedAsset logo;
   final AppThemedAsset favicon;
@@ -14,19 +12,18 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String companyName;
   final String userName;
   final Avatar? userDynamicAvatar;
-
   final bool enableAbout;
   final VoidCallback? onSettingsTap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onLogoutTap;
-
+  final VoidCallback? onThemeSwitchTap;
   final bool isDesktop;
-
   final bool enableAlternativeUserMenu;
-
   final List<ThemedNavigatorItem> additionalActions;
-
   final Color? backgroundColor;
+  final List<ThemedNotificationItem> notifications;
+  final double mobileBreakpoint;
+  final bool forceNotificationIcon;
 
   const ThemedAppBar({
     super.key,
@@ -44,12 +41,21 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     /// displayed.
     this.disableLeading = false,
 
-    /// [enableAbout], [onSettingsTap], [onProfileTap] and [onLogoutTap] are
-    /// enablers of about, settings, profile and logout buttons and pages.
+    /// [enableAbout] is a boolean that enables the about button.
     this.enableAbout = true,
+
+    /// [onSettingsTap] is the callback to be executed when the settings button
     this.onSettingsTap,
+
+    /// [onProfileTap] is the callback to be executed when the profile button
     this.onProfileTap,
+
+    /// [onLogoutTap] is the callback to be executed when the logout button
     this.onLogoutTap,
+
+    /// [onThemeSwitchTap] is a callback that is called when the theme switch
+    /// button is tapped.
+    this.onThemeSwitchTap,
 
     /// [appTitle] is the title of the app.
     required this.appTitle,
@@ -94,6 +100,18 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     /// [backgroundColor] is the background color of the app bar.
     /// Overrides the default background color from `Theme.of(context).scaffoldBackgroundColor`.
     this.backgroundColor,
+
+    /// [notifications] is the list of notifications to be displayed in the app bar.
+    /// By default is `[]`. Only will appear when the `mobileBreakpoint` is reached.
+    this.notifications = const [],
+
+    /// [mobileBreakpoint] is the breakpoint to display the notifications.
+    /// By default is `kMediumGrid`.
+    this.mobileBreakpoint = kMediumGrid,
+
+    /// [forceNotificationIcon] is the flag to force the notification icon to be displayed.
+    /// By default is `false`.
+    this.forceNotificationIcon = false,
   });
 
   static Size get size => const Size.fromHeight(55);
@@ -111,6 +129,11 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
 
   String get logo => isDark ? widget.logo.white : widget.logo.normal;
   Color get backgroundColor => widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
+  double get width => MediaQuery.of(context).size.width;
+  bool get isMobile => width < widget.mobileBreakpoint;
+
+  String get currentPath => ModalRoute.of(context)?.settings.name ?? '';
+  bool get isHome => currentPath == widget.homePath;
 
   @override
   void initState() {
@@ -121,7 +144,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Container(
       height: ThemedAppBar.size.height,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: backgroundColor,
         boxShadow: [
@@ -132,33 +155,111 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
           ),
         ],
       ),
-      child: Row(
-        children: [
-          SizedBox(
-            height: ThemedAppBar.size.height - 10,
-            child: AspectRatio(
-              aspectRatio: 1000 / 300, // 1000px X 300px - default dimensions of logos from Layrz
-              child: ThemedImage(
-                path: logo,
+      child: SafeArea(
+        child: Row(
+          children: [
+            if (isMobile) ...[
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(50),
+                  onTap: () => widget.scaffoldKey.currentState?.openDrawer(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Icon(
+                      MdiIcons.dotsVertical,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                reverse: true,
-                child: Row(
-                  children: widget.items
-                      .map((item) => item.toHorizontalWidget(context: context, backgroundColor: backgroundColor))
-                      .toList(),
+              const SizedBox(width: 10),
+            ] else if (!isHome) ...[
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(50),
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Icon(
+                      MdiIcons.chevronLeft,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
+            InkWell(
+              onTap: (!isMobile && !isHome) ? () => Navigator.of(context).pushReplacementNamed(widget.homePath) : null,
+              child: SizedBox(
+                height: ThemedAppBar.size.height - 10,
+                child: AspectRatio(
+                  aspectRatio: 1000 / 300, // 1000px X 300px - default dimensions of logos from Layrz
+                  child: ThemedImage(
+                    path: logo,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            if (!isMobile) ...[
+              const SizedBox(width: 10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    child: Row(
+                      children: widget.items
+                          .map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
+              if (widget.forceNotificationIcon) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: ThemedNavigatorSeparator(
+                    type: ThemedSeparatorType.dots,
+                  ).toAppBarItem(context: context, backgroundColor: backgroundColor),
+                ),
+                const SizedBox(width: 10),
+                ThemedNotificationIcon(
+                  notifications: widget.notifications,
+                  backgroundColor: backgroundColor,
+                  inAppBar: true,
+                ),
+                const SizedBox(width: 10),
+                ThemedAppBarAvatar(
+                  appTitle: widget.appTitle,
+                  logo: widget.logo,
+                  favicon: widget.favicon,
+                  version: widget.version,
+                  companyName: widget.companyName,
+                  userName: widget.userName,
+                  userDynamicAvatar: widget.userDynamicAvatar,
+                  enableAbout: widget.enableAbout,
+                  onSettingsTap: widget.onSettingsTap,
+                  onProfileTap: widget.onProfileTap,
+                  onLogoutTap: widget.onLogoutTap,
+                  additionalActions: widget.additionalActions,
+                  backgroundColor: widget.backgroundColor,
+                  onThemeSwitchTap: widget.onThemeSwitchTap,
+                ),
+              ],
+            ] else ...[
+              const Spacer(),
+              ThemedNotificationIcon(
+                notifications: widget.notifications,
+                backgroundColor: backgroundColor,
+                inAppBar: true,
+                forceFullSize: width < kSmallGrid,
+              ),
+              const SizedBox(width: 10),
+            ],
+          ],
+        ),
       ),
     );
   }

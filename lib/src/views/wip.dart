@@ -2,7 +2,7 @@ part of layrz_theme;
 
 /// [WorkInProgressView] is a helper view to display "Work in progress"
 class WorkInProgressView extends StatelessWidget {
-  const WorkInProgressView({Key? key}) : super(key: key);
+  const WorkInProgressView({super.key});
 
   @override
   Widget build(BuildContext context) {

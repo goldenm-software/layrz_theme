@@ -23,19 +23,9 @@ class _EmptyViewState extends State<EmptyView> {
   Widget build(BuildContext context) {
     return Layout(
       showDrawer: true,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            ThemedButton(
-              labelText: "Toggle theme",
-              onTap: widget.toggleTheme,
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
+      toggleTheme: widget.toggleTheme,
+      body: Center(
+        child: Text("Empty view ${widget.name}"),
       ),
     );
   }

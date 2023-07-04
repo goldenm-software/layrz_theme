@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedInputLikeContainer extends StatelessWidget {
   /// A list of errors to display
@@ -27,7 +27,7 @@ class ThemedInputLikeContainer extends StatelessWidget {
   /// and can have any widget as a child
   ///
   const ThemedInputLikeContainer({
-    Key? key,
+    super.key,
     this.errors = const [],
     required this.child,
     this.labelText,
@@ -35,8 +35,7 @@ class ThemedInputLikeContainer extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.padding = const EdgeInsets.all(10.0),
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        super(key: key);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   Widget build(BuildContext context) {

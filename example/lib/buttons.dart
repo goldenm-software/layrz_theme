@@ -25,18 +25,13 @@ class _ButtonsViewState extends State<ButtonsView> {
   @override
   Widget build(BuildContext context) {
     return Layout(
+      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 10),
-            ThemedButton(
-              labelText: "Toggle theme",
-              onTap: widget.toggleTheme,
-            ),
-            const SizedBox(height: 10),
             ThemedButton(
               labelText: "Start cooldown",
               onTap: () {

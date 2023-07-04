@@ -15,26 +15,29 @@ abstract class ThemedNavigatorItem {
     this.labelText,
   });
 
-  /// [horizontalPadding] is the padding applied of the element when is rendered using [toHorizontalWidget].
-  static EdgeInsets get horizontalPadding => const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10);
+  /// [topBarItemPadding] is the padding applied of the element when is rendered using [toAppBarItem].
+  static EdgeInsets get topBarItemPadding => const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10);
 
-  /// [verticalPadding] is the padding applied of the element when is rendered using [toVerticalWidget].
-  static EdgeInsets get verticalPadding => const EdgeInsets.symmetric(vertical: 5);
+  /// [sidebarItemPadding] is the padding applied of the element when is rendered using [toSidebarItem].
+  static EdgeInsets get sidebarItemPadding => const EdgeInsets.symmetric(vertical: 5);
 
-  /// [toHorizontalWidget] is the widget to be displayed in the appbar.
-  Widget toHorizontalWidget({
+  /// [drawerItemPadding] is the padding applied of the element when is rendered using [toDrawerItem].
+  static EdgeInsets get drawerItemPadding => const EdgeInsets.symmetric(vertical: 5);
+
+  /// [toAppBarItem] is the widget to be displayed in the appbar.
+  Widget toAppBarItem({
     required BuildContext context,
     required Color backgroundColor,
     int dotCount = 5,
   }) {
     return Padding(
-      padding: horizontalPadding,
+      padding: topBarItemPadding,
       child: label ?? Text(labelText ?? ''),
     );
   }
 
-  /// [toVerticalWidget] is the widget to be displayed in the drawer.
-  Widget toVerticalWidget({
+  /// [toSidebarItem] is the widget to be displayed in the drawer.
+  Widget toSidebarItem({
     required BuildContext context,
     required Color backgroundColor,
     double? width,
@@ -42,8 +45,34 @@ abstract class ThemedNavigatorItem {
     int dotCount = 5,
   }) {
     return Padding(
-      padding: verticalPadding,
+      padding: sidebarItemPadding,
       child: label ?? Text(labelText ?? ''),
+    );
+  }
+
+  /// [toDrawerItem] is the widget to be displayed in the drawer.
+  Widget toDrawerItem({
+    required BuildContext context,
+    required Color backgroundColor,
+    double? width,
+    double? height,
+    int dotCount = 5,
+    VoidCallback? callback,
+  }) {
+    return Padding(
+      padding: sidebarItemPadding,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          label ??
+              Text(
+                labelText ?? '',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: validateColor(color: backgroundColor),
+                    ),
+              )
+        ],
+      ),
     );
   }
 }
@@ -68,9 +97,9 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     this.children = const [],
   }) : assert(label != null || labelText != null);
 
-  /// [toHorizontalWidget] is the widget to be displayed in the appbar.
+  /// [toAppBarItem] is the widget to be displayed in the appbar.
   @override
-  Widget toHorizontalWidget({
+  Widget toAppBarItem({
     required BuildContext context,
     required Color backgroundColor,
     int dotCount = 5,
@@ -91,15 +120,15 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
         }
       },
       highlight: highlight,
-    ).toHorizontalWidget(
+    ).toAppBarItem(
       context: context,
       backgroundColor: backgroundColor,
     );
   }
 
-  /// [toVerticalWidget] is the widget to be displayed in the drawer.
+  /// [toSidebarItem] is the widget to be displayed in the drawer.
   @override
-  Widget toVerticalWidget({
+  Widget toSidebarItem({
     required BuildContext context,
     required Color backgroundColor,
     double? width,
@@ -113,13 +142,77 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
       labelText: labelText,
       label: label,
       icon: icon,
-      onTap: () => Navigator.of(context).pushNamed(path),
+      onTap: () {
+        final subpages = children.whereType<ThemedNavigatorPage>();
+        if (subpages.isNotEmpty) {
+          Navigator.of(context).pushNamed(subpages.first.path);
+        } else {
+          Navigator.of(context).pushNamed(path);
+        }
+      },
       highlight: highlight,
-    ).toVerticalWidget(
+    ).toSidebarItem(
       context: context,
       backgroundColor: backgroundColor,
       width: width,
       height: height,
+    );
+  }
+
+  /// [toDrawerItem] is the widget to be displayed in the drawer.
+  @override
+  Widget toDrawerItem({
+    required BuildContext context,
+    required Color backgroundColor,
+    double? width,
+    double? height,
+    int dotCount = 40,
+    VoidCallback? callback,
+  }) {
+    String currentPath = ModalRoute.of(context)?.settings.name ?? '';
+    bool highlight = currentPath.startsWith(path);
+    bool isExpanded = highlight;
+
+    return StatefulBuilder(
+      builder: (BuildContext context, setState) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ThemedNavigatorAction(
+              labelText: labelText,
+              label: label,
+              icon: icon,
+              onTap: children.isEmpty
+                  ? () => Navigator.of(context).pushNamed(path)
+                  : () => setState(() => isExpanded = !isExpanded),
+              highlight: highlight,
+              forceOnTap: true,
+            ).toDrawerItem(
+              context: context,
+              backgroundColor: backgroundColor,
+              width: width,
+              height: height,
+              callback: callback,
+              suffixIcon: children.isEmpty
+                  ? null
+                  : isExpanded
+                      ? MdiIcons.chevronDown
+                      : MdiIcons.chevronUp,
+            ),
+            if (isExpanded) ...[
+              for (final child in children)
+                child.toDrawerItem(
+                  context: context,
+                  backgroundColor: backgroundColor,
+                  width: width,
+                  height: height,
+                  dotCount: dotCount,
+                  callback: callback,
+                ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
@@ -128,6 +221,7 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
   final IconData? icon;
   final VoidCallback onTap;
   final bool highlight;
+  final bool forceOnTap;
 
   /// [ThemedNavigatorAction] is a helper class to handle the actions of the view.
   ThemedNavigatorAction({
@@ -142,28 +236,34 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
 
     /// [highlight] indicates if the action is highlighted.
     this.highlight = false,
+
+    /// [forceOnTap] indicates if the action should be forced to be tapped.
+    this.forceOnTap = false,
   }) : assert(label != null || labelText != null);
 
-  /// [toHorizontalWidget] is the widget to be displayed in the appbar.
+  /// [toAppBarItem] is the widget to be displayed in the appbar.
   @override
-  Widget toHorizontalWidget({
+  Widget toAppBarItem({
     required BuildContext context,
     required Color backgroundColor,
     int dotCount = 5,
   }) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    Color activeColor = isDark ? Colors.white : Theme.of(context).primaryColor;
+
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Container(
         decoration: BoxDecoration(
-          color: highlight ? Theme.of(context).primaryColor.withOpacity(0.2) : backgroundColor,
+          color: highlight ? activeColor.withOpacity(0.2) : backgroundColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: highlight ? null : onTap,
-            child: super.toHorizontalWidget(
+            onTap: (highlight && !forceOnTap) ? null : onTap,
+            child: super.toAppBarItem(
               context: context,
               backgroundColor: backgroundColor,
             ),
@@ -173,9 +273,9 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
     );
   }
 
-  /// [toVerticalWidget] is the widget to be displayed in the appbar.
+  /// [toSidebarItem] is the widget to be displayed in the appbar.
   @override
-  Widget toVerticalWidget({
+  Widget toSidebarItem({
     required BuildContext context,
     required Color backgroundColor,
     double? width,
@@ -189,7 +289,7 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
     }
 
     return Padding(
-      padding: ThemedNavigatorItem.verticalPadding,
+      padding: ThemedNavigatorItem.sidebarItemPadding,
       child: Tooltip(
         message: text,
         child: Container(
@@ -203,16 +303,82 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(10),
-              onTap: highlight ? null : onTap,
+              onTap: (highlight && !forceOnTap) ? null : onTap,
               child: Padding(
                 padding: const EdgeInsets.all(7),
                 child: Center(
                   child: Icon(
                     icon ?? MdiIcons.help,
                     size: 16,
-                    color: highlight ? Theme.of(context).primaryColor : validateColor(color: backgroundColor),
+                    color: highlight ? backgroundColor : validateColor(color: backgroundColor),
                   ),
                 ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [toDrawerItem] is the widget to be displayed in the appbar.
+  @override
+  Widget toDrawerItem({
+    required BuildContext context,
+    required Color backgroundColor,
+    double? width,
+    double? height,
+    int dotCount = 5,
+    IconData? suffixIcon,
+    VoidCallback? callback,
+  }) {
+    return Padding(
+      padding: ThemedNavigatorItem.drawerItemPadding,
+      child: Container(
+        decoration: BoxDecoration(
+          color: highlight ? validateColor(color: backgroundColor) : Colors.transparent,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: (highlight && !forceOnTap)
+                ? null
+                : () {
+                    callback?.call();
+                    onTap.call();
+                  },
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  if (icon != null) ...[
+                    Icon(
+                      icon ?? MdiIcons.help,
+                      size: 16,
+                      color: highlight ? backgroundColor : validateColor(color: backgroundColor),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  Expanded(
+                    child: label ??
+                        Text(
+                          labelText ?? '',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: highlight ? backgroundColor : validateColor(color: backgroundColor),
+                              ),
+                        ),
+                  ),
+                  if (suffixIcon != null) ...[
+                    const SizedBox(width: 10),
+                    Icon(
+                      suffixIcon,
+                      size: 16,
+                      color: highlight ? backgroundColor : validateColor(color: backgroundColor),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
@@ -231,9 +397,9 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
     this.type = ThemedSeparatorType.line,
   });
 
-  /// [toHorizontalWidget] is the widget to be displayed in the appbar.
+  /// [toAppBarItem] is the widget to be displayed in the appbar.
   @override
-  Widget toHorizontalWidget({
+  Widget toAppBarItem({
     required BuildContext context,
     required Color backgroundColor,
     int dotCount = 5,
@@ -242,13 +408,13 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
 
     if (type == ThemedSeparatorType.line) {
       return Padding(
-        padding: ThemedNavigatorItem.horizontalPadding,
+        padding: ThemedNavigatorItem.topBarItemPadding,
         child: const VerticalDivider(),
       );
     }
 
     return Padding(
-      padding: ThemedNavigatorItem.horizontalPadding,
+      padding: ThemedNavigatorItem.topBarItemPadding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(dotCount, (_) {
@@ -265,9 +431,9 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
     );
   }
 
-  /// [toVerticalWidget] is the widget to be displayed in the drawer.
+  /// [toSidebarItem] is the widget to be displayed in the drawer.
   @override
-  Widget toVerticalWidget({
+  Widget toSidebarItem({
     required BuildContext context,
     required Color backgroundColor,
     double? width,
@@ -276,13 +442,48 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
   }) {
     if (type == ThemedSeparatorType.line) {
       return Padding(
-        padding: ThemedNavigatorItem.verticalPadding,
+        padding: ThemedNavigatorItem.sidebarItemPadding,
         child: const Divider(),
       );
     }
 
     return Padding(
-      padding: ThemedNavigatorItem.verticalPadding,
+      padding: ThemedNavigatorItem.sidebarItemPadding,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(dotCount, (_) {
+          return Container(
+            width: 2,
+            height: 2,
+            decoration: BoxDecoration(
+              color: validateColor(color: backgroundColor).withOpacity(0.5),
+              shape: BoxShape.circle,
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  /// [toSidebarItem] is the widget to be displayed in the drawer.
+  @override
+  Widget toDrawerItem({
+    required BuildContext context,
+    required Color backgroundColor,
+    double? width,
+    double? height,
+    int dotCount = 40,
+    VoidCallback? callback,
+  }) {
+    if (type == ThemedSeparatorType.line) {
+      return Padding(
+        padding: ThemedNavigatorItem.sidebarItemPadding,
+        child: const Divider(),
+      );
+    }
+
+    return Padding(
+      padding: ThemedNavigatorItem.sidebarItemPadding,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(dotCount, (_) {

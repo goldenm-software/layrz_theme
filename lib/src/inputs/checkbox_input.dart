@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 enum ThemedCheckboxInputStyle {
   /// [ThemedCheckboxInputStyle.asField] is a checkbox that is displayed as a field.
@@ -52,7 +52,7 @@ class ThemedCheckboxInput extends StatefulWidget {
   /// [ThemedCheckboxInput] is a checkbox input.
   /// It can be a flutter checkbox, field or switch, control that using [style] property.
   const ThemedCheckboxInput({
-    Key? key,
+    super.key,
     this.labelText,
     this.label,
     this.disabled = false,
@@ -64,8 +64,7 @@ class ThemedCheckboxInput extends StatefulWidget {
     this.dense = false,
     this.asField = false,
     this.style = ThemedCheckboxInputStyle.asCheckbox2,
-  })  : assert(label == null || labelText == null),
-        super(key: key);
+  }) : assert(label == null || labelText == null);
 
   @override
   State<ThemedCheckboxInput> createState() => _ThemedCheckboxInputState();

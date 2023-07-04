@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedRadioInput<T> extends StatefulWidget {
   final String? labelText;
@@ -17,7 +17,7 @@ class ThemedRadioInput<T> extends StatefulWidget {
   final Sizes? xlSize;
 
   const ThemedRadioInput({
-    Key? key,
+    super.key,
     required this.items,
     this.labelText,
     this.label,
@@ -32,8 +32,7 @@ class ThemedRadioInput<T> extends StatefulWidget {
     this.mdSize = Sizes.col4,
     this.lgSize = Sizes.col3,
     this.xlSize = Sizes.col2,
-  })  : assert(label == null || labelText == null),
-        super(key: key);
+  }) : assert(label == null || labelText == null);
 
   @override
   State<ThemedRadioInput<T>> createState() => _ThemedRadioInputState<T>();

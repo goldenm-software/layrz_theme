@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 /// [drawAvatar] is a helper function to generate a [CircleAvatar] using the avatar and the name
 /// (as failover) of the entity.

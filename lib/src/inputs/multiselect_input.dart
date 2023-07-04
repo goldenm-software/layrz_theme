@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedMultiSelectInput<T> extends StatefulWidget {
   final String? labelText;
@@ -30,7 +30,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
   final TextInputType searchKeyboardType;
 
   const ThemedMultiSelectInput({
-    Key? key,
+    super.key,
     required this.items,
     String? dialogLabelText,
     Widget? dialogLabel,
@@ -60,8 +60,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
     this.selectAllLabelText = "Select all",
     this.unselectAllLabelText = "Unselect all",
     this.searchKeyboardType = TextInputType.text,
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        super(key: key);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedMultiSelectInput<T>> createState() => _ThemedMultiSelectInputState<T>();

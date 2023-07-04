@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of helpers;
 
 MaterialColor generateSwatch({required Color color}) {
   return MaterialColor(color.value, {

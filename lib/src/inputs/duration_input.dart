@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 enum ThemedDurationInputVisibleValues {
   days,
@@ -429,11 +429,11 @@ class ThemedNumberInput extends StatelessWidget {
   final Function(int)? onChanged;
 
   const ThemedNumberInput({
-    Key? key,
+    super.key,
     this.labelText = "",
     required this.value,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

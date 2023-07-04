@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedDateTimeRangePicker extends StatefulWidget {
   final String? labelText;

@@ -30,20 +30,13 @@ class _LoginExampleViewState extends State<LoginExampleView> {
   Widget build(BuildContext context) {
     ThemeMode themeMode = Theme.of(context).brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
     return Layout(
+      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 10),
-            ThemedButton(
-              labelText: "Toggle theme",
-              onTap: widget.toggleTheme,
-              color: themeMode == ThemeMode.dark ? Colors.white : Colors.grey.shade800,
-            ),
-            const SizedBox(height: 10),
-            const SizedBox(height: 10),
             Text(
               'Login interface Example',
               style: Theme.of(context).textTheme.headlineSmall,

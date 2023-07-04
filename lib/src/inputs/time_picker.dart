@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedTimePicker extends StatefulWidget {
   final String? labelText;
@@ -17,7 +17,7 @@ class ThemedTimePicker extends StatefulWidget {
   final bool use24HourFormat;
 
   const ThemedTimePicker({
-    Key? key,
+    super.key,
     this.value,
     this.labelText,
     this.label,
@@ -32,8 +32,7 @@ class ThemedTimePicker extends StatefulWidget {
     this.startAt,
     this.endAt,
     this.use24HourFormat = true,
-  })  : assert(label == null || labelText == null),
-        super(key: key);
+  }) : assert(label == null || labelText == null);
 
   @override
   State<ThemedTimePicker> createState() => _ThemedTimePickerState();

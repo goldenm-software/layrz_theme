@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedSelectInput<T> extends StatefulWidget {
   final String? labelText;
@@ -29,7 +29,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
   final TextInputType searchKeyboardType;
 
   const ThemedSelectInput({
-    Key? key,
+    super.key,
     required this.items,
     this.label,
     this.labelText,
@@ -58,8 +58,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.heightFactor = 0.7,
     this.maxHeight = 300,
     this.searchKeyboardType = TextInputType.text,
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        super(key: key);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedSelectInput<T>> createState() => _ThemedSelectInputState<T>();

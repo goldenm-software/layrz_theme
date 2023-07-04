@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of inputs;
 
 class ThemedDualListInput<T> extends StatefulWidget {
   final String? labelText;
@@ -13,7 +13,7 @@ class ThemedDualListInput<T> extends StatefulWidget {
   final String searchText;
 
   const ThemedDualListInput({
-    Key? key,
+    super.key,
     required this.items,
     this.label,
     this.labelText,
@@ -24,8 +24,7 @@ class ThemedDualListInput<T> extends StatefulWidget {
     this.availableText = "Available",
     this.selectedText = "Selected",
     this.searchText = "Search",
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        super(key: key);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedDualListInput<T>> createState() => _ThemedDualListInputState<T>();
