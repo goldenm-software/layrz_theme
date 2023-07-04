@@ -159,109 +159,114 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
         ],
       ),
       child: SafeArea(
-        child: Row(
-          children: [
-            if (isMobile) ...[
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap: () => widget.scaffoldKey.currentState?.openDrawer(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Icon(
-                      MdiIcons.dotsVertical,
+        child: SizedBox(
+          height: ThemedAppBar.size.height,
+          child: Row(
+            children: [
+              if (isMobile) ...[
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(50),
+                    onTap: () => widget.scaffoldKey.currentState?.openDrawer(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Icon(
+                        MdiIcons.dotsVertical,
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 10),
-            ] else if (!isHome) ...[
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Icon(
-                      MdiIcons.chevronLeft,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-            ],
-            InkWell(
-              onTap: (!isMobile && !isHome) ? () => Navigator.of(context).pushReplacementNamed(widget.homePath) : null,
-              child: SizedBox(
-                height: ThemedAppBar.size.height - 10,
-                child: AspectRatio(
-                  aspectRatio: 1000 / 300, // 1000px X 300px - default dimensions of logos from Layrz
-                  child: ThemedImage(
-                    path: logo,
-                  ),
-                ),
-              ),
-            ),
-            if (!isMobile) ...[
-              const SizedBox(width: 10),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    reverse: true,
-                    child: Row(
-                      children: widget.items
-                          .map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor))
-                          .toList(),
-                    ),
-                  ),
-                ),
-              ),
-              if (widget.forceNotificationIcon) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: ThemedNavigatorSeparator(
-                    type: ThemedSeparatorType.dots,
-                  ).toAppBarItem(context: context, backgroundColor: backgroundColor),
                 ),
                 const SizedBox(width: 10),
+              ] else if (!isHome) ...[
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(50),
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Icon(
+                        MdiIcons.chevronLeft,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+              InkWell(
+                onTap:
+                    (!isMobile && !isHome) ? () => Navigator.of(context).pushReplacementNamed(widget.homePath) : null,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  height: ThemedAppBar.size.height - 10,
+                  child: AspectRatio(
+                    aspectRatio: 1000 / 300, // 1000px X 300px - default dimensions of logos from Layrz
+                    child: ThemedImage(
+                      path: logo,
+                    ),
+                  ),
+                ),
+              ),
+              if (!isMobile) ...[
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      child: Row(
+                        children: widget.items
+                            .map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ),
+                if (widget.forceNotificationIcon) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: ThemedNavigatorSeparator(
+                      type: ThemedSeparatorType.dots,
+                    ).toAppBarItem(context: context, backgroundColor: backgroundColor),
+                  ),
+                  const SizedBox(width: 10),
+                  ThemedNotificationIcon(
+                    notifications: widget.notifications,
+                    backgroundColor: backgroundColor,
+                    inAppBar: true,
+                  ),
+                  const SizedBox(width: 10),
+                  ThemedAppBarAvatar(
+                    appTitle: widget.appTitle,
+                    logo: widget.logo,
+                    favicon: widget.favicon,
+                    version: widget.version,
+                    companyName: widget.companyName,
+                    userName: widget.userName,
+                    userDynamicAvatar: widget.userDynamicAvatar,
+                    enableAbout: widget.enableAbout,
+                    onSettingsTap: widget.onSettingsTap,
+                    onProfileTap: widget.onProfileTap,
+                    onLogoutTap: widget.onLogoutTap,
+                    additionalActions: widget.additionalActions,
+                    backgroundColor: widget.backgroundColor,
+                    onThemeSwitchTap: widget.onThemeSwitchTap,
+                  ),
+                ],
+              ] else ...[
+                const Spacer(),
                 ThemedNotificationIcon(
                   notifications: widget.notifications,
                   backgroundColor: backgroundColor,
                   inAppBar: true,
+                  forceFullSize: width < kSmallGrid,
                 ),
                 const SizedBox(width: 10),
-                ThemedAppBarAvatar(
-                  appTitle: widget.appTitle,
-                  logo: widget.logo,
-                  favicon: widget.favicon,
-                  version: widget.version,
-                  companyName: widget.companyName,
-                  userName: widget.userName,
-                  userDynamicAvatar: widget.userDynamicAvatar,
-                  enableAbout: widget.enableAbout,
-                  onSettingsTap: widget.onSettingsTap,
-                  onProfileTap: widget.onProfileTap,
-                  onLogoutTap: widget.onLogoutTap,
-                  additionalActions: widget.additionalActions,
-                  backgroundColor: widget.backgroundColor,
-                  onThemeSwitchTap: widget.onThemeSwitchTap,
-                ),
               ],
-            ] else ...[
-              const Spacer(),
-              ThemedNotificationIcon(
-                notifications: widget.notifications,
-                backgroundColor: backgroundColor,
-                inAppBar: true,
-                forceFullSize: width < kSmallGrid,
-              ),
-              const SizedBox(width: 10),
             ],
-          ],
+          ),
         ),
       ),
     );

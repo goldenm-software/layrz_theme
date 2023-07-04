@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -135,6 +136,7 @@ class ThemedLayout extends StatefulWidget {
 }
 
 class _ThemedLayoutState extends State<ThemedLayout> {
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
@@ -236,6 +238,43 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         );
         break;
       case ThemedLayoutStyle.sidebar:
+        String? pageName;
+        IconData? pageIcon;
+
+        String currentPath = ModalRoute.of(context)?.settings.name ?? '';
+
+        final match = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
+          return currentPath.startsWith(page.path);
+        });
+
+        if (match != null) {
+          pageName = match.labelText;
+          pageIcon = match.icon;
+
+          if (match.label is Text) {
+            pageName = (match.label as Text).data;
+          }
+
+          if (match.children.isNotEmpty) {
+            final submatch = match.children.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
+              return currentPath.startsWith(page.path);
+            });
+
+            if (submatch != null) {
+              String? subpageName = submatch.labelText;
+              pageIcon = submatch.icon;
+
+              if (submatch.label is Text) {
+                subpageName = (submatch.label as Text).data;
+              }
+
+              if (subpageName != null) {
+                pageName = '$pageName - $subpageName';
+              }
+            }
+          }
+        }
+
         content = Row(
           children: [
             ThemedDrawer(
@@ -260,7 +299,42 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               additionalActions: widget.additionalActions,
             ),
             Expanded(
-              child: widget.body,
+              child: Column(
+                children: [
+                  if (pageName != null) ...[
+                    Container(
+                      height: ThemedAppBar.size.height,
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (pageIcon != null) ...[
+                            Icon(
+                              pageIcon,
+                              color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 5),
+                          ],
+                          Expanded(
+                            child: Text(
+                              pageName,
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  Expanded(
+                    child: widget.body,
+                  ),
+                ],
+              ),
             ),
           ],
         );

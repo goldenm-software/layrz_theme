@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 4.0.6
+- Added default empty text for Notifications and reduced size of the logo on `ThemedAppBar`
+- Added name of the page in the `ThemedLayoutStyle.sidebar` as a "Fake AppBar"
+
 ## 4.0.5
 - Fixes on design on Android
 

@@ -30,6 +30,7 @@ class ThemedNotificationIcon extends StatefulWidget {
 }
 
 class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with SingleTickerProviderStateMixin {
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor => widget.backgroundColor;
   List<ThemedNotificationItem> get notifications => widget.notifications;
@@ -130,53 +131,60 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                       ),
                       decoration: generateContainerElevation(context: context),
                       clipBehavior: Clip.antiAlias,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemExtent: 56,
-                        itemCount: notifications.length,
-                        itemBuilder: (context, index) {
-                          ThemedNotificationItem item = notifications[index];
-
-                          return Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: item.onTap != null
-                                  ? () {
-                                      _destroyOverlay(callback: item.onTap);
-                                    }
-                                  : null,
-                              child: Container(
-                                height: 56,
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    drawAvatar(
-                                      context: context,
-                                      icon: item.icon ?? MdiIcons.bell,
-                                      color: item.color ?? Theme.of(context).primaryColor,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item.title,
-                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                        Text(item.content, style: Theme.of(context).textTheme.bodySmall),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                      child: notifications.isEmpty
+                          ? SizedBox(
+                              height: 56,
+                              child: Center(
+                                child: Text(i18n?.t('layrz.notifications.empty') ?? 'No notifications'),
                               ),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              itemExtent: 56,
+                              itemCount: notifications.length,
+                              itemBuilder: (context, index) {
+                                ThemedNotificationItem item = notifications[index];
+
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: item.onTap != null
+                                        ? () {
+                                            _destroyOverlay(callback: item.onTap);
+                                          }
+                                        : null,
+                                    child: Container(
+                                      height: 56,
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          drawAvatar(
+                                            context: context,
+                                            icon: item.icon ?? MdiIcons.bell,
+                                            color: item.color ?? Theme.of(context).primaryColor,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                item.title,
+                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                              ),
+                                              Text(item.content, style: Theme.of(context).textTheme.bodySmall),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ),
                   ),
                 ),

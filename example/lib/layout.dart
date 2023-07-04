@@ -22,7 +22,7 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   bool get showDrawer => widget.showDrawer;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ThemedLayoutStyle _layoutStyle = ThemedLayoutStyle.classic;
+  ThemedLayoutStyle _layoutStyle = ThemedLayoutStyle.sidebar;
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +62,15 @@ class _LayoutState extends State<Layout> {
       ThemedNavigatorPage(
         labelText: 'Home',
         path: '/home',
+        icon: MdiIcons.home,
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Nested',
+        path: '/nested',
         children: List.generate(5, (i) {
           return ThemedNavigatorPage(
             labelText: "Subpage $i",
-            path: '/home/test$i',
+            path: '/nested/test$i',
           );
         }),
       ),
@@ -138,6 +143,35 @@ class _LayoutState extends State<Layout> {
 
     const appTitle = "Text environment";
 
+    var notifications = [
+      ThemedNotificationItem(
+        title: "With icon",
+        content: "Lorem ipsum dolor sit amet",
+        icon: MdiIcons.help,
+        onTap: () {
+          debugPrint('Notification tapped');
+        },
+      ),
+      ThemedNotificationItem(
+        title: "With color",
+        content: "Lorem ipsum dolor sit amet",
+        color: Colors.red,
+        onTap: () {
+          debugPrint('Notification tapped');
+        },
+      ),
+      ThemedNotificationItem(
+        title: "With onTap",
+        content: "Lorem ipsum dolor sit amet",
+        onTap: () {
+          debugPrint('Notification tapped');
+        },
+      ),
+      const ThemedNotificationItem(
+        title: "Plain",
+        content: "Lorem ipsum dolor sit amet",
+      ),
+    ];
     return ThemedLayout(
       persistentItems: persistentItems,
       style: _layoutStyle,
@@ -163,35 +197,7 @@ class _LayoutState extends State<Layout> {
         debugPrint('Settings tapped');
       },
       onThemeSwitchTap: widget.toggleTheme,
-      notifications: [
-        ThemedNotificationItem(
-          title: "With icon",
-          content: "Lorem ipsum dolor sit amet",
-          icon: MdiIcons.help,
-          onTap: () {
-            debugPrint('Notification tapped');
-          },
-        ),
-        ThemedNotificationItem(
-          title: "With color",
-          content: "Lorem ipsum dolor sit amet",
-          color: Colors.red,
-          onTap: () {
-            debugPrint('Notification tapped');
-          },
-        ),
-        ThemedNotificationItem(
-          title: "With onTap",
-          content: "Lorem ipsum dolor sit amet",
-          onTap: () {
-            debugPrint('Notification tapped');
-          },
-        ),
-        const ThemedNotificationItem(
-          title: "Plain",
-          content: "Lorem ipsum dolor sit amet",
-        ),
-      ],
+      notifications: notifications,
     );
   }
 }
