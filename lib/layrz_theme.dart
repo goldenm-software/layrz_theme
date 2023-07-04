@@ -31,10 +31,11 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:highlight/highlight.dart';
 import 'package:highlight/languages/python.dart' as python_lang;
 import 'package:highlight/languages/javascript.dart' as javascript_lang;
-import 'package:shared_preferences/shared_preferences.dart';
 
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
 export 'package:file_picker/file_picker.dart' show FileType;
+
+export 'src/layout/layout.dart';
 
 // Constructors and constants
 part 'src/theme/constants.dart';
@@ -80,14 +81,6 @@ part 'src/views/about.dart';
 part 'src/responsive/sizes.dart';
 part 'src/responsive/row.dart';
 part 'src/responsive/col.dart';
-
-// Layout
-part 'src/layout/view.dart';
-part 'src/layout/appbar.dart';
-part 'src/layout/taskbar.dart';
-part 'src/layout/drawer.dart';
-part 'src/layout/menu.dart';
-part 'src/layout/sidebar.dart';
 
 // ORM
 part 'src/orm/orm.dart';

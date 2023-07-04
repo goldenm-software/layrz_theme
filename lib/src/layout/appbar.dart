@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of layout;
 
 class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -13,7 +13,7 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? version;
   final String companyName;
   final String userName;
-  final Avatar? userAvatar;
+  final Avatar? userDynamicAvatar;
 
   final bool enableAbout;
   final VoidCallback? onSettingsTap;
@@ -25,6 +25,8 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool enableAlternativeUserMenu;
 
   final List<ThemedNavigatorItem> additionalActions;
+
+  final Color? backgroundColor;
 
   const ThemedAppBar({
     super.key,
@@ -55,16 +57,18 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     /// [companyName] is the name of the company.
     this.companyName = 'Golden M, Inc',
 
-    /// [logo] and [favicon] is the logo of the app. Can be a path or a url.
+    /// [logo] is the logo of the app. Can be a path or a url.
     required this.logo,
+
+    /// [favicon] is the favicon of the app. Can be a path or a url.
     required this.favicon,
 
     /// [userName] is the name of the user.
     this.userName = "Golden M",
 
-    /// [userAvatar] is the dynamic avatar of the user.
+    /// [userDynamicAvatar] is the dynamic avatar of the user.
     /// In other components like `ThemedDrawer`, the prop is `ThemedDrawer.userDynamicAvatar`.
-    this.userAvatar,
+    this.userDynamicAvatar,
 
     /// [version] is the version of the app.
     this.version,
@@ -86,6 +90,10 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     /// Its important to note that the additional actions are displayed in the app bar only if
     /// [enableAlternativeUserMenu] is `true`.
     this.additionalActions = const [],
+
+    /// [backgroundColor] is the background color of the app bar.
+    /// Overrides the default background color from `Theme.of(context).scaffoldBackgroundColor`.
+    this.backgroundColor,
   });
 
   static Size get size => const Size.fromHeight(55);
@@ -98,493 +106,60 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMixin {
-  GlobalKey<ScaffoldState> get scaffoldKey => widget.scaffoldKey;
-  final GlobalKey _userMenuKey = GlobalKey();
-  List<ThemedNavigatorItem> get items => widget.items;
-  String get homePath => widget.homePath;
-  bool get disableLeading => widget.disableLeading;
-  String get appTitle => widget.appTitle;
-  AppThemedAsset get logo => widget.logo;
-  AppThemedAsset get favicon => widget.favicon;
-  String? get version => widget.version;
-
-  Size get preferredSize => widget.preferredSize;
-
-  bool get isMacOS => !kIsWeb && Platform.isMacOS;
-  bool get isIOS => !kIsWeb && Platform.isIOS;
-
-  late AnimationController _animationController;
-  OverlayEntry? _overlayEntry;
-
-  String get path => ModalRoute.of(context)?.settings.name ?? "";
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
-  double get width => MediaQuery.of(context).size.width;
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-  Color get drawerColor => isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor;
-  Color get itemColor => isDark ? Colors.white : Theme.of(context).primaryColor;
-  String get logoUri => !isDark ? logo.normal : logo.white;
+
+  String get logo => isDark ? widget.logo.white : widget.logo.normal;
+  Color get backgroundColor => widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: kHoverDuration);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _animationController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    double availableSize = width - 40;
-    Widget logoWidget = ThemedImage(
-      path: logoUri,
-      width: 100,
-      height: 30,
-    );
-
-    logoWidget = Padding(
-      padding: const EdgeInsets.all(10),
-      child: ThemedImage(
-        path: logoUri,
-        width: 100,
-        height: 30,
-      ),
-    );
-
-    availableSize -= 120;
-
-    if (isMacOS) {
-      availableSize -= 20;
-
-      if (path != homePath) {
-        availableSize += 40;
-      }
-    }
-
-    if (!disableLeading) {
-      if (path != homePath) {
-        availableSize -= 100;
-      }
-    }
-    availableSize -= 40;
-
-    if (widget.enableAlternativeUserMenu) {
-      availableSize -= 50;
-    }
-
-    List<Widget> buttons = items.map(_parseNavigatorItem).toList();
-
     return Container(
-      decoration: generateContainerElevation(
-        context: context,
-        elevation: 1,
-        radius: 0,
-        reverse: true,
-      ),
-      child: AppBar(
-        systemOverlayStyle: Scaffold.of(context).isDrawerOpen && isIOS
-            ? SystemUiOverlayStyle(
-                statusBarIconBrightness: useBlack(color: drawerColor) ? Brightness.light : Brightness.dark,
-                statusBarBrightness: useBlack(color: drawerColor) ? Brightness.light : Brightness.dark,
-                systemNavigationBarIconBrightness: useBlack(color: drawerColor) ? Brightness.light : Brightness.dark,
-              )
-            : null,
-        title: path == homePath
-            ? logoWidget
-            : MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  child: logoWidget,
-                  onTap: () => Navigator.of(context).pushNamed(homePath),
-                ),
-              ),
-        automaticallyImplyLeading: disableLeading ? false : path != homePath,
-        leadingWidth: isMacOS ? 135 : null,
-        leading: disableLeading
-            ? null
-            : width < kSmallGrid
-                ? Row(
-                    children: [
-                      if (isMacOS) ...[
-                        const SizedBox(width: 80),
-                      ],
-                      SizedBox(
-                        width: 55,
-                        height: 55,
-                        child: IconButton(
-                          icon: Icon(
-                            MdiIcons.dotsVertical,
-                            size: 25,
-                            color: itemColor,
-                          ),
-                          onPressed: () {
-                            if (scaffoldKey.currentState != null) {
-                              scaffoldKey.currentState?.openDrawer();
-                            } else {
-                              Scaffold.of(context).openDrawer();
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                : path != homePath
-                    ? Row(
-                        children: [
-                          if (isMacOS) ...[
-                            const SizedBox(width: 80),
-                          ],
-                          SizedBox(
-                            width: 55,
-                            height: 55,
-                            child: InkWell(
-                              child: Icon(
-                                MdiIcons.chevronLeft,
-                                size: 25,
-                                color: itemColor,
-                              ),
-                              onTap: () => Navigator.of(context).pop(),
-                            ),
-                          ),
-                        ],
-                      )
-                    : null,
-        actions: width >= kSmallGrid
-            ? [
-                SizedBox(
-                  width: availableSize, // 120 of the logo + 40 of the user menu + 40 of margins
-                  height: preferredSize.height,
-                  child: SingleChildScrollView(
-                    reverse: true,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: buttons,
-                    ),
-                  ),
-                ),
-                if (widget.enableAlternativeUserMenu) ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15).add(const EdgeInsets.only(right: 10)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(preferredSize.height ~/ 10, (_) {
-                        return Container(
-                          width: 2,
-                          height: 2,
-                          decoration: BoxDecoration(
-                            color: itemColor.withOpacity(0.5),
-                            shape: BoxShape.circle,
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                  InkWell(
-                    key: _userMenuKey,
-                    onTap: _createOverlay,
-                    child: Tooltip(
-                      message: widget.userName,
-                      child: drawAvatar(
-                        context: context,
-                        size: 30,
-                        name: widget.userName,
-                        dynamicAvatar: widget.userAvatar,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                ],
-              ]
-            : null,
-      ),
-    );
-  }
-
-  Future<void> _createOverlay() async {
-    if (_overlayEntry != null) {
-      return;
-    }
-
-    List<Widget> actions = [
-      ...widget.additionalActions,
-      if (widget.enableAbout)
-        ThemedNavigatorAction(
-          labelText: i18n?.t('layrz.taskbar.about') ?? 'About',
-          icon: MdiIcons.informationOutline,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ThemedLicensesView(
-                  companyName: widget.companyName,
-                  logo: widget.logo,
-                  version: version,
-                ),
-              ),
-            );
-          },
-        ),
-      if (widget.onSettingsTap != null)
-        ThemedNavigatorAction(
-          labelText: i18n?.t('layrz.taskbar.settings') ?? 'Settings',
-          icon: MdiIcons.cogOutline,
-          onTap: widget.onSettingsTap!,
-        ),
-      if (widget.onProfileTap != null)
-        ThemedNavigatorAction(
-          labelText: i18n?.t('layrz.taskbar.profile') ?? 'Edit profile',
-          icon: MdiIcons.accountCircleOutline,
-          onTap: widget.onProfileTap!,
-        ),
-      if (widget.onLogoutTap != null)
-        ThemedNavigatorAction(
-          labelText: i18n?.t('layrz.taskbar.signOut') ?? 'Logout',
-          icon: MdiIcons.logoutVariant,
-          onTap: widget.onLogoutTap!,
-        ),
-    ].map(_parseNavigatorItemAsListTile).toList();
-
-    RenderBox renderBox = _userMenuKey.currentContext?.findRenderObject() as RenderBox;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    Size size = renderBox.size;
-
-    double top = offset.dy + size.height + 5;
-    double right = 10;
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) {
-        return Material(
-          color: Colors.transparent,
-          child: Stack(
-            children: [
-              Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
-              Positioned(
-                top: top,
-                right: right,
-                width: 180,
-                child: ScaleTransition(
-                  scale: _animationController,
-                  alignment: Alignment.topRight,
-                  child: StatefulBuilder(
-                    builder: (context, setState) {
-                      return Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: generateContainerElevation(
-                          context: context,
-                          radius: 5,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: actions,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+      height: ThemedAppBar.size.height,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).dividerColor,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
-        );
-      },
-    );
-
-    Overlay.of(context, rootOverlay: true).insert(_overlayEntry!);
-
-    await _animationController.forward();
-  }
-
-  Future<void> _destroyOverlay() async {
-    await _animationController.reverse();
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-    setState(() {});
-  }
-
-  Widget _parseNavigatorItem(ThemedNavigatorItem item) {
-    String path = ModalRoute.of(context)?.settings.name ?? "";
-    if (item is ThemedNavigatorSeparator) {
-      if (item.type == ThemedSeparatorType.line) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          child: VerticalDivider(
-            color: itemColor.withOpacity(0.5),
-            width: 0,
-            thickness: 1,
-          ),
-        );
-      }
-
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(preferredSize.height ~/ 10, (_) {
-            return Container(
-              width: 2,
-              height: 2,
-              decoration: BoxDecoration(
-                color: itemColor.withOpacity(0.5),
-                shape: BoxShape.circle,
-              ),
-            );
-          }),
-        ),
-      );
-    }
-
-    if (item is ThemedNavigatorLabel) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        child: item.label ??
-            Text(
-              item.labelText ?? "",
-              style: TextStyle(
-                color: itemColor,
-                fontSize: 14,
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            height: ThemedAppBar.size.height - 10,
+            child: AspectRatio(
+              aspectRatio: 1000 / 300, // 1000px X 300px - default dimensions of logos from Layrz
+              child: ThemedImage(
+                path: logo,
               ),
             ),
-      );
-    }
-
-    if (item is ThemedNavigatorAction) {
-      bool highlight = item.highlight;
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: (preferredSize.height - 25) * 0.2),
-        child: ThemedButton(
-          style: highlight ? ThemedButtonStyle.filledTonal : ThemedButtonStyle.text,
-          icon: item.icon,
-          label: item.label,
-          labelText: item.labelText,
-          onTap: highlight ? null : item.onTap,
-          color: itemColor,
-        ),
-      );
-    }
-
-    if (item is ThemedNavigatorPage) {
-      bool highlight = path.startsWith(item.path);
-
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: (preferredSize.height - 25) * 0.2),
-        child: ThemedButton(
-          style: highlight ? ThemedButtonStyle.filledTonal : ThemedButtonStyle.text,
-          icon: item.icon,
-          label: item.label,
-          labelText: item.labelText,
-          onTap: () {
-            if (!highlight) {
-              Navigator.of(context).pushNamed(item.path);
-            }
-          },
-          color: itemColor,
-        ),
-      );
-    }
-
-    return const SizedBox();
-  }
-
-  Widget _parseNavigatorItemAsListTile(ThemedNavigatorItem item) {
-    String path = ModalRoute.of(context)?.settings.name ?? "";
-    EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
-    if (item is ThemedNavigatorSeparator) {
-      if (item.type == ThemedSeparatorType.line) {
-        return Padding(
-          padding: padding,
-          child: Divider(color: Theme.of(context).dividerColor),
-        );
-      }
-
-      return Padding(
-        padding: padding,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(30, (_) {
-            return Container(
-              width: 2,
-              height: 2,
-              decoration: BoxDecoration(
-                color: Theme.of(context).dividerColor,
-                shape: BoxShape.circle,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                reverse: true,
+                child: Row(
+                  children: widget.items
+                      .map((item) => item.toHorizontalWidget(context: context, backgroundColor: backgroundColor))
+                      .toList(),
+                ),
               ),
-            );
-          }),
-        ),
-      );
-    }
-
-    if (item is ThemedNavigatorLabel) {
-      return Container(
-        width: double.infinity,
-        padding: padding,
-        child: item.label ??
-            Text(
-              item.labelText ?? "",
-              textAlign: TextAlign.justify,
             ),
-      );
-    }
-
-    if (item is ThemedNavigatorAction) {
-      bool highlight = item.highlight;
-      return InkWell(
-        onTap: highlight
-            ? null
-            : () {
-                _destroyOverlay();
-                item.onTap.call();
-              },
-        child: Padding(
-          padding: padding,
-          child: Row(
-            children: [
-              if (item.icon != null) ...[
-                Icon(item.icon),
-                const SizedBox(width: 10),
-              ],
-              Expanded(
-                child: Text(
-                  item.labelText ?? "",
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-            ],
           ),
-        ),
-      );
-    }
-
-    if (item is ThemedNavigatorPage) {
-      bool highlight = path.startsWith(item.path);
-      return InkWell(
-        onTap: highlight
-            ? null
-            : () {
-                _destroyOverlay();
-                Navigator.of(context).pushNamed(item.path);
-              },
-        child: Padding(
-          padding: padding,
-          child: Row(
-            children: [
-              if (item.icon != null) ...[
-                Icon(item.icon),
-                const SizedBox(width: 10),
-              ],
-              Expanded(
-                child: Text(
-                  item.labelText ?? "",
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return const SizedBox();
+        ],
+      ),
+    );
   }
 }
