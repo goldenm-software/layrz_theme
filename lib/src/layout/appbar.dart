@@ -138,12 +138,15 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(Theme.of(context).appBarTheme.systemOverlayStyle!);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ThemedAppBar.size.height,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: backgroundColor,

@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.5
+- Fixes on design on Android
+
 ## 4.0.4
 - New widget `ThemedLayout` to unify `ThemedAppBar`, `ThemedDrawer` and `ThemedTaskbar` using a unified Layrz style
 - Internal file organization updated to a sub-libraries schema

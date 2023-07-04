@@ -118,7 +118,7 @@ ThemeData generateLightTheme({
 
         // Changes the navigation bar colors and buttons
         systemNavigationBarColor: color,
-        systemNavigationBarDividerColor: validateColor(color: color).withOpacity(0.2),
+        systemNavigationBarDividerColor: color,
         systemNavigationBarIconBrightness: isIOS
             ? Brightness.light
             : useBlack(color: color)
