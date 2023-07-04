@@ -1,24 +1,39 @@
-part of layrz_theme;
+part of layout;
 
 class ThemedSidebar extends StatefulWidget {
   final List<ThemedNavigatorItem> items;
+  final bool contracted;
+  final Color? backgroundColor;
 
   const ThemedSidebar({
     super.key,
 
     /// [items] is the list of buttons to be displayed in the drawer.
     this.items = const [],
+
+    /// [contracted] is a boolean that enables the contracted sidebar.
+    this.contracted = false,
+
+    /// [backgroundColor] is the background color of the sidebar.
+    /// If null, it will be the primary color of the theme.
+    this.backgroundColor,
   });
 
   @override
   State<ThemedSidebar> createState() => _ThemedSidebarState();
+
+  static ThemedSidebar asContracted({List<ThemedNavigatorItem> items = const []}) {
+    return ThemedSidebar(
+      items: items,
+      contracted: true,
+    );
+  }
 }
 
 class _ThemedSidebarState extends State<ThemedSidebar> {
-  final ScrollController _scrollController = ScrollController();
+  Color get drawerColor => widget.backgroundColor ?? Theme.of(context).primaryColor;
 
-  bool get isMobile => !kIsWeb && (Platform.isIOS || Platform.isAndroid);
-  bool get isMacOS => !kIsWeb && Platform.isMacOS;
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -31,17 +46,11 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color drawerColor = isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor;
     return Container(
-      width: 65,
+      width: 50,
       height: double.infinity,
       padding: const EdgeInsets.all(10),
-      decoration: generateContainerElevation(
-        context: context,
-        radius: 0,
-        color: drawerColor,
-      ).copyWith(
+      decoration: BoxDecoration(
         color: drawerColor,
       ),
       child: SafeArea(
@@ -50,13 +59,21 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
-            children: widget.items.map((page) {
-              return ThemedSidebarItem(
-                item: page,
-                children: (page is ThemedNavigatorPage) ? page.children : [],
-                drawerColor: drawerColor,
-              );
-            }).toList(),
+            children: widget.items
+                .where((item) {
+                  bool c1 = item is ThemedNavigatorPage;
+                  bool c2 = item is ThemedNavigatorAction;
+                  bool c3 = item is ThemedNavigatorSeparator;
+
+                  return c1 || c2 || c3;
+                })
+                .map((item) => item.toVerticalWidget(
+                      context: context,
+                      backgroundColor: drawerColor,
+                      width: 30,
+                      height: 30,
+                    ))
+                .toList(),
           ),
         ),
       ),

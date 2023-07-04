@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
         '/home/test4': (context) => EmptyView(name: 'Test 4', toggleTheme: toggleTheme),
         '/login_example': (context) => LoginExampleView(name: 'Login Example', toggleTheme: toggleTheme),
       },
-      initialRoute: '/table',
+      initialRoute: '/home',
     );
   }
 }

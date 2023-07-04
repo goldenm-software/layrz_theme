@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of layout;
 
 class ThemedDrawer extends StatefulWidget {
   final List<ThemedNavigatorItem> items;
