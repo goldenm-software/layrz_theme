@@ -618,7 +618,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           ],
           drawCell(
             width: actionsWidth,
-            isLast: true,
             alignment: Alignment.centerRight,
             child: actions,
           ),

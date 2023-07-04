@@ -29,6 +29,7 @@
 build/
 
 .fvm/flutter_sdk
+example/.fvm/flutter_sdk
 
 .flutter-plugins
 .flutter-plugins-dependencies
