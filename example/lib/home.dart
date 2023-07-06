@@ -30,16 +30,6 @@ class _HomeViewState extends State<HomeView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ThemedButton(
-              labelText: "Show dialog",
-              onTap: () {
-                showThemedSnackbar(ThemedSnackbar(
-                  icon: Icons.help,
-                  context: context,
-                  message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sodales nisl et odio ",
-                ));
-              },
-            ),
-            ThemedButton(
               labelText: "Show dialog [title]",
               onTap: () {
                 showThemedSnackbar(ThemedSnackbar(

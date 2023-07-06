@@ -21,3 +21,9 @@ void showThemedSnackbar(ThemedSnackbar item) {
 
   controller.add(item);
 }
+
+/// [setThemedSnackbarScaffoldKey] is the helper function to set the
+/// [scaffoldKey] of the [ThemedSnackbarController].
+void setThemedSnackbarScaffoldKey(GlobalKey<ScaffoldState> key) {
+  ThemedSnackbarController.scaffoldKey = key;
+}

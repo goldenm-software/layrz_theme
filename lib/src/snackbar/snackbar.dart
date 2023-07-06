@@ -47,10 +47,20 @@ class ThemedSnackbar {
   /// [padding] helps to calculate the padding of the snackbar
   EdgeInsets get padding => const EdgeInsets.all(10);
 
+  /// [scaffoldContext] helps to get the scaffold context
+  BuildContext get globalContext => ThemedSnackbarController.scaffoldKey?.currentContext ?? context;
+
   /// [backgroundColor] helps to calculate the background color of the snackbar
   /// if [color] is not null, it will be used as the background color
   /// otherwise, it will be calculated based on the theme primary color.
-  Color get backgroundColor => color ?? Theme.of(context).primaryColor;
+  Color get backgroundColor {
+    if (color != null) return color!;
+    try {
+      return Theme.of(globalContext).primaryColor;
+    } catch (e) {
+      return Colors.blue;
+    }
+  }
 
   /// [spacing] helps to calculate the spacing between snackbars
   double get spacing => 10;
@@ -64,7 +74,7 @@ class ThemedSnackbar {
   ///
   /// When [width] is not null, and is greater than the screen width, will be apply the same rule as above.
   double get effectiveWidth {
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(globalContext).size.width;
 
     if (width != null) {
       if (width! > screenWidth) {
@@ -103,7 +113,7 @@ class ThemedSnackbar {
   /// [titleWidget] helps to build the title widget
   Text get titleWidget => Text(
         title ?? '',
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        style: Theme.of(globalContext).textTheme.titleMedium?.copyWith(
               color: validateColor(color: backgroundColor),
             ),
       );
@@ -111,7 +121,7 @@ class ThemedSnackbar {
   /// [messageWidget] helps to build the message widget
   Text get messageWidget => Text(
         message,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        style: Theme.of(globalContext).textTheme.bodyMedium?.copyWith(
               color: validateColor(color: backgroundColor).withOpacity(title != null ? 0.8 : 1),
             ),
         maxLines: maxLines,
@@ -121,7 +131,7 @@ class ThemedSnackbar {
   /// [_top] helps to calculate the top position of the snackbar
   /// it will be calculated based on the previous snackbars height
   double _top(ThemedSnackbarController controller) {
-    double top = MediaQuery.of(context).padding.top;
+    double top = MediaQuery.of(globalContext).padding.top;
 
     for (ThemedSnackbar snackbar in controller._snackbars.values) {
       if (snackbar.key == key) {

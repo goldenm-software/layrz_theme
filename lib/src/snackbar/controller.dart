@@ -7,6 +7,11 @@ class ThemedSnackbarController {
   /// snackbars, please use the helper function [showThemedSnackbar]
   ThemedSnackbarController();
 
+  /// [scaffoldKey] is the key to get the current [ScaffoldState].
+  /// Is used as main key to display the snackbars. As fallback it will use
+  /// the [BuildContext] provided by the [ThemedSnackbar].
+  static GlobalKey<ScaffoldState>? scaffoldKey;
+
   /// [_snackbars] is the list of snackbars to be displayed.
   /// It is a private list, to add snackbars, please use the [add] method.
   /// To remove snackbars, please use the [remove] method.

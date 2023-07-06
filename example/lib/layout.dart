@@ -22,7 +22,13 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   bool get showDrawer => widget.showDrawer;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ThemedLayoutStyle _layoutStyle = ThemedLayoutStyle.sidebar;
+  ThemedLayoutStyle _layoutStyle = ThemedLayoutStyle.modern;
+
+  @override
+  void initState() {
+    super.initState();
+    setThemedSnackbarScaffoldKey(_scaffoldKey);
+  }
 
   @override
   Widget build(BuildContext context) {
