@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.9
+- Fixed `ThemedNotificationIcon` to handle Dynamic Island (And hopefully any `SafeArea` padded segment)
+
 ## 4.0.8
 - Adjusted status bar color when the `ThemedDrawer` is opened or closed.
 
