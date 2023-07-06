@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.8
+- Adjusted status bar color when the `ThemedDrawer` is opened or closed.
+
 ## 4.0.7
 - New function `setThemedSnackbarScaffoldKey` to set a `GlobalKey<ScaffoldState>` to the `ThemedSnackbar`.
 - `ThemedSnackbar` now will use as primary context the `GlobalKey<ScaffoldState>` setted before, otherwise, will use the provided `BuildContext` in the constructor.

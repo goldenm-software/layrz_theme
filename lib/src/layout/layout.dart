@@ -185,6 +185,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           ),
         ),
         drawer: ThemedDrawer(
+          scaffoldKey: _scaffoldKey,
+          fromScaffold: true,
           items: widget.items,
           appTitle: widget.appTitle,
           companyName: widget.companyName,
@@ -278,6 +280,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         content = Row(
           children: [
             ThemedDrawer(
+              scaffoldKey: _scaffoldKey,
               items: [
                 ...widget.items,
                 if (widget.persistentItems.isNotEmpty) ...[

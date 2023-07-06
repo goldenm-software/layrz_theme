@@ -1,6 +1,7 @@
 part of layout;
 
 class ThemedDrawer extends StatefulWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
   final List<ThemedNavigatorItem> items;
   final bool enableAbout;
   final VoidCallback? onSettingsTap;
@@ -19,9 +20,13 @@ class ThemedDrawer extends StatefulWidget {
   final List<ThemedNavigatorItem> additionalActions;
   final double mobileBreakpoint;
   final Color? backgroundColor;
+  final bool fromScaffold;
 
   const ThemedDrawer({
     super.key,
+
+    /// [scaffoldKey] is the key of the scaffold.
+    required this.scaffoldKey,
 
     /// [items] is the list of buttons to be displayed in the drawer.
     this.items = const [],
@@ -81,6 +86,10 @@ class ThemedDrawer extends StatefulWidget {
     /// [backgroundColor] is the background color of the drawer.
     /// By default is `Theme.of(context).primaryColor`.
     this.backgroundColor,
+
+    /// [fromScaffold] is a boolean that indicates if the drawer is being used from a scaffold.
+    /// By default is `false`.
+    this.fromScaffold = false,
   });
 
   @override
@@ -115,12 +124,24 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
 
   @override
   void dispose() {
+    _overrideAppBar();
     _userExpandController.dispose();
     super.dispose();
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(ThemedDrawer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _overrideAppBar();
     LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
 
     List<ThemedNavigatorItem> actions = [
@@ -258,7 +279,11 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                   children: [
                     const SizedBox(height: 10),
                     ...actions
-                        .map((item) => item.toDrawerItem(context: context, backgroundColor: backgroundColor))
+                        .map((item) => item.toDrawerItem(
+                              context: context,
+                              backgroundColor: backgroundColor,
+                              fromScaffold: widget.fromScaffold,
+                            ))
                         .toList(),
                   ],
                 ),
@@ -281,7 +306,11 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                 child: Column(
                   children: [
                     ...widget.items
-                        .map((item) => item.toDrawerItem(context: context, backgroundColor: backgroundColor))
+                        .map((item) => item.toDrawerItem(
+                              context: context,
+                              backgroundColor: backgroundColor,
+                              fromScaffold: widget.fromScaffold,
+                            ))
                         .toList(),
                   ],
                 ),
@@ -318,5 +347,25 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
         ),
       ),
     );
+  }
+
+  void _overrideAppBar() {
+    if (!widget.fromScaffold) return;
+    bool isOpen = widget.scaffoldKey.currentState?.isDrawerOpen ?? false;
+    BuildContext? context = widget.scaffoldKey.currentContext;
+
+    if (context == null) return;
+
+    SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
+
+    if (isOpen) {
+      style = style.copyWith(
+        statusBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
+        statusBarBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
+      );
+    }
+
+    SystemChrome.setSystemUIOverlayStyle(style);
   }
 }
