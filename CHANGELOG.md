@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.12
+- Added `disableNotifications` to `ThemedAppBar` to disable notification icon.
+
 ## 4.0.11
 - New helper functions `saveFile` and `pickFile` to help in the process to save a file or get a files from the device.
 

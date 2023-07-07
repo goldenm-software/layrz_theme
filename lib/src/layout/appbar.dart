@@ -24,6 +24,7 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final List<ThemedNotificationItem> notifications;
   final double mobileBreakpoint;
   final bool forceNotificationIcon;
+  final bool disableNotifications;
 
   const ThemedAppBar({
     super.key,
@@ -112,6 +113,10 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     /// [forceNotificationIcon] is the flag to force the notification icon to be displayed.
     /// By default is `false`.
     this.forceNotificationIcon = false,
+
+    /// [disableNotifications] is the flag to disable the notifications.
+    /// By default is `false`.
+    this.disableNotifications = false,
   });
 
   static bool get isMacOS => !kIsWeb && Platform.isMacOS;
@@ -236,11 +241,13 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                     ).toAppBarItem(context: context, backgroundColor: backgroundColor),
                   ),
                   const SizedBox(width: 10),
-                  ThemedNotificationIcon(
-                    notifications: widget.notifications,
-                    backgroundColor: backgroundColor,
-                    inAppBar: true,
-                  ),
+                  if (!widget.disableNotifications) ...[
+                    ThemedNotificationIcon(
+                      notifications: widget.notifications,
+                      backgroundColor: backgroundColor,
+                      inAppBar: true,
+                    ),
+                  ],
                   const SizedBox(width: 10),
                   ThemedAppBarAvatar(
                     appTitle: widget.appTitle,
@@ -261,12 +268,14 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                 ],
               ] else ...[
                 const Spacer(),
-                ThemedNotificationIcon(
-                  notifications: widget.notifications,
-                  backgroundColor: backgroundColor,
-                  inAppBar: true,
-                  forceFullSize: width < kSmallGrid,
-                ),
+                if (!widget.disableNotifications) ...[
+                  ThemedNotificationIcon(
+                    notifications: widget.notifications,
+                    backgroundColor: backgroundColor,
+                    inAppBar: true,
+                    forceFullSize: width < kSmallGrid,
+                  ),
+                ],
                 const SizedBox(width: 10),
               ],
             ],
