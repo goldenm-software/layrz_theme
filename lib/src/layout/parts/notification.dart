@@ -80,13 +80,13 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
     RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     Size screenSize = MediaQuery.of(context).size;
-    double? bottom = 50;
+    double? bottom = screenSize.height - offset.dy;
     double right = screenSize.width - offset.dx - renderBox.size.width;
     double? top;
     double? left;
 
     if (widget.inAppBar) {
-      top = 50;
+      top = offset.dy + renderBox.size.height + 10;
       bottom = null;
     }
 

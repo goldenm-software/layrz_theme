@@ -138,14 +138,11 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      SystemChrome.setSystemUIOverlayStyle(Theme.of(context).appBarTheme.systemOverlayStyle!);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    _overrideAppBar();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
@@ -270,5 +267,20 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
         ),
       ),
     );
+  }
+
+  void _overrideAppBar() {
+    bool isOpen = widget.scaffoldKey.currentState?.isDrawerOpen ?? false;
+    SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
+
+    if (isOpen) {
+      style = style.copyWith(
+        statusBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
+        statusBarBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
+      );
+    }
+
+    SystemChrome.setSystemUIOverlayStyle(style);
   }
 }

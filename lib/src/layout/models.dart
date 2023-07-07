@@ -58,6 +58,7 @@ abstract class ThemedNavigatorItem {
     double? height,
     int dotCount = 5,
     VoidCallback? callback,
+    bool fromScaffold = false,
   }) {
     return Padding(
       padding: sidebarItemPadding,
@@ -168,6 +169,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     double? height,
     int dotCount = 40,
     VoidCallback? callback,
+    bool fromScaffold = false,
   }) {
     String currentPath = ModalRoute.of(context)?.settings.name ?? '';
     bool highlight = currentPath.startsWith(path);
@@ -331,6 +333,7 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
     int dotCount = 5,
     IconData? suffixIcon,
     VoidCallback? callback,
+    bool fromScaffold = false,
   }) {
     return Padding(
       padding: ThemedNavigatorItem.drawerItemPadding,
@@ -347,6 +350,7 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
                 ? null
                 : () {
                     callback?.call();
+                    if (fromScaffold) Navigator.of(context).pop();
                     onTap.call();
                   },
             child: Padding(
@@ -474,6 +478,7 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
     double? height,
     int dotCount = 40,
     VoidCallback? callback,
+    bool fromScaffold = false,
   }) {
     if (type == ThemedSeparatorType.line) {
       return Padding(
