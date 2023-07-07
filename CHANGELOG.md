@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.10
+- Added the option to disable `SafeArea` inside a child of the `ThemedLayout`
+- Added the possibility to change the padding of the child inside of the `ThemedLayout`
+
 ## 4.0.9
 - Fixed `ThemedNotificationIcon` to handle Dynamic Island (And hopefully any `SafeArea` padded segment)
 
