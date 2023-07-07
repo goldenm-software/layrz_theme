@@ -34,6 +34,13 @@ dependencies:
   highlight: ">=0.7.0 <1.0.0"
   code_text_field: ">=1.1.0 <2.0.0"
   layrz_models: ">=2.0.0 <3.0.0"
+  # file_saver: ">=0.2.0 <0.3.0"
+  path_provider: ">=2.0.15 <3.0.0"
+  permission_handler: ">=10.4.1 <11.0.0"
+  document_file_save_plus: ">=2.0.0 <3.0.0"
+
+dependency_overrides:
+  http: ">=1.0.0 <2.0.0"
 
 dev_dependencies:
   flutter_test:

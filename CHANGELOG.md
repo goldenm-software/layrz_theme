@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.11
+- New helper functions `saveFile` and `pickFile` to help in the process to save a file or get a files from the device.
+
 ## 4.0.10
 - Added the option to disable `SafeArea` inside a child of the `ThemedLayout`
 - Added the possibility to change the padding of the child inside of the `ThemedLayout`
