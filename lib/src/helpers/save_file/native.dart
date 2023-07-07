@@ -42,45 +42,96 @@ Future<ThemedFile?> saveFile({
       status = await Permission.storage.request();
     }
 
-    if (status.isGranted) {
-      final parentDirectory = await getApplicationDocumentsDirectory();
-
-      FileType type = FileType.any;
-      List<String> allowedExtensions = [];
-      final mime = lookupMimeType(filename);
-
-      if (mime != null) {
-        if (mime.startsWith('image/')) {
-          type = FileType.image;
-        } else if (mime.startsWith('video/')) {
-          type = FileType.video;
-        } else if (mime.startsWith('audio/')) {
-          type = FileType.audio;
-        } else {
-          type = FileType.custom;
-          allowedExtensions = [extensionFromMime(mime)];
-        }
-      }
-
-      final directory = await FilePicker.platform.saveFile(
-        dialogTitle: dialogTitle,
-        initialDirectory: parentDirectory.path,
-        fileName: filename,
-        type: type,
-        allowedExtensions: allowedExtensions,
-      );
-
-      if (directory != null) {
-        final file = File(directory);
-        await file.writeAsBytes(bytes);
-        return ThemedFile(
-          name: filename,
-          bytes: bytes,
-          path: file.path,
-        );
-      }
+    if (!status.isGranted) {
       return null;
     }
+
+    final parentDirectory = await getApplicationDocumentsDirectory();
+
+    FileType type = FileType.any;
+    List<String> allowedExtensions = [];
+    final mime = lookupMimeType(filename);
+
+    if (mime != null) {
+      if (mime.startsWith('image/')) {
+        type = FileType.image;
+      } else if (mime.startsWith('video/')) {
+        type = FileType.video;
+      } else if (mime.startsWith('audio/')) {
+        type = FileType.audio;
+      } else {
+        type = FileType.custom;
+        allowedExtensions = [extensionFromMime(mime)];
+      }
+    }
+
+    final directory = await FilePicker.platform.saveFile(
+      dialogTitle: dialogTitle,
+      initialDirectory: parentDirectory.path,
+      fileName: filename,
+      type: type,
+      allowedExtensions: allowedExtensions,
+    );
+
+    if (directory != null) {
+      final file = File(directory);
+      await file.writeAsBytes(bytes);
+      return ThemedFile(
+        name: filename,
+        bytes: bytes,
+        path: file.path,
+      );
+    }
+    return null;
+  }
+
+  if (Platform.isIOS) {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+    }
+
+    if (!status.isGranted) {
+      return null;
+    }
+
+    final parentDirectory = await getApplicationDocumentsDirectory();
+    final directory = await FilePicker.platform.getDirectoryPath(
+      dialogTitle: dialogTitle,
+      initialDirectory: parentDirectory.path,
+    );
+
+    if (directory != null) {
+      final file = File("$directory/$filename");
+      await file.writeAsBytes(bytes);
+      return ThemedFile(
+        name: filename,
+        bytes: bytes,
+        path: file.path,
+      );
+    }
+
+    return null;
+  }
+
+  if (Platform.isMacOS) {
+    final parentDirectory = await getApplicationDocumentsDirectory();
+    final directory = await FilePicker.platform.getDirectoryPath(
+      dialogTitle: dialogTitle,
+      initialDirectory: parentDirectory.path,
+    );
+
+    if (directory != null) {
+      final file = File("$directory/$filename");
+      await file.writeAsBytes(bytes);
+      return ThemedFile(
+        name: filename,
+        bytes: bytes,
+        path: file.path,
+      );
+    }
+
+    return null;
   }
 
   return null;

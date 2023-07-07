@@ -114,7 +114,9 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.forceNotificationIcon = false,
   });
 
-  static Size get size => const Size.fromHeight(55);
+  static bool get isMacOS => !kIsWeb && Platform.isMacOS;
+
+  static Size get size => Size.fromHeight(isMacOS ? 50 : 55);
 
   @override
   Size get preferredSize => size;
@@ -134,6 +136,8 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
 
   String get currentPath => ModalRoute.of(context)?.settings.name ?? '';
   bool get isHome => currentPath == widget.homePath;
+
+  bool get isMacOS => !kIsWeb && Platform.isMacOS;
 
   @override
   void initState() {
@@ -160,6 +164,9 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
           height: ThemedAppBar.size.height,
           child: Row(
             children: [
+              if (isMacOS) ...[
+                const SizedBox(width: 62),
+              ],
               if (isMobile) ...[
                 Material(
                   color: Colors.transparent,

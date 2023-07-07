@@ -6,9 +6,9 @@ part of helpers;
 /// - ['name'] - the name of the file.
 /// - ['mimeType'] - the mime type of the file.
 /// And, will receive a [file] argument that should be a [PlatformFile] instance.
-Future<Map<String, String>?> parseFileToBase64(PlatformFile file) async {
-  List<int> byteArray = file.bytes!.toList();
-  String? mimeType = lookupMimeType(file.name);
+Future<Map<String, String>?> parseFileToBase64(ThemedFile file) async {
+  List<int> byteArray = file.bytes.toList();
+  String? mimeType = file.mimeType;
 
   if (mimeType != null) {
     return {
@@ -23,6 +23,6 @@ Future<Map<String, String>?> parseFileToBase64(PlatformFile file) async {
 
 /// [parseBase64ToFile] is a helper function to parse a base64 string to a file.
 /// Will return a [List<int>] and will receive a [file] as [PlatformFile] instance
-Future<List<int>> parseFileToByteArray(PlatformFile file) async {
-  return file.bytes!.toList();
+Future<List<int>> parseFileToByteArray(ThemedFile file) async {
+  return file.bytes.toList();
 }
