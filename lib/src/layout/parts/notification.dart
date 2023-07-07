@@ -92,8 +92,6 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
 
     double? width = screenSize.width * 0.5;
 
-    debugPrint('widget.forceFullSize: ${widget.forceFullSize}');
-
     if (width < 200 || widget.forceFullSize) {
       left = 10;
       right = 10;

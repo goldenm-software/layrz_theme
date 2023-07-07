@@ -46,6 +46,8 @@ class ThemedLayout extends StatefulWidget {
   final List<ThemedNavigatorItem> persistentItems;
   final List<ThemedNotificationItem> notifications;
   final double mobileBreakpoint;
+  final EdgeInsets padding;
+  final bool disableSafeArea;
 
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
@@ -129,6 +131,14 @@ class ThemedLayout extends StatefulWidget {
     /// [mobileBreakpoint] is the breakpoint for mobile devices.
     /// By default is `kMediumGrid`.
     this.mobileBreakpoint = kMediumGrid,
+
+    /// [padding] is the padding of the layout.
+    /// By default is `EdgeInsets.all(10)`.
+    this.padding = const EdgeInsets.all(10),
+
+    /// [disableSafeArea] is a boolean that disables the safe area.
+    /// By default is `false`.
+    this.disableSafeArea = false,
   });
 
   @override
@@ -173,17 +183,21 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
     double width = MediaQuery.of(context).size.width;
 
+    Widget child = Container(
+      width: double.infinity,
+      padding: widget.padding,
+      child: widget.body,
+    );
+
+    if (!widget.disableSafeArea) {
+      child = SafeArea(child: child);
+    }
+
     if (width <= widget.mobileBreakpoint) {
       return Scaffold(
         key: _scaffoldKey,
         appBar: appBar,
-        body: SafeArea(
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: widget.body,
-          ),
-        ),
+        body: child,
         drawer: ThemedDrawer(
           items: widget.items,
           appTitle: widget.appTitle,
@@ -211,12 +225,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         content = Column(
           children: [
             appBar,
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: widget.body,
-              ),
-            ),
+            Expanded(child: child),
             ThemedTaskbar(
               items: getChildUrls(),
               persistentItems: widget.persistentItems,
@@ -330,9 +339,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                       ),
                     ),
                   ],
-                  Expanded(
-                    child: widget.body,
-                  ),
+                  Expanded(child: child),
                 ],
               ),
             ),
@@ -356,9 +363,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                       ],
                     ],
                   ),
-                  Expanded(
-                    child: widget.body,
-                  ),
+                  Expanded(child: child),
                 ],
               ),
             ),
