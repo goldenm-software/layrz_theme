@@ -4,7 +4,6 @@ library inputs;
 import 'dart:async';
 import 'package:code_text_field/code_text_field.dart';
 import 'package:collection/collection.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';

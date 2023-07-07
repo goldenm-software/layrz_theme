@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
-import 'package:mime/mime.dart';
 export 'save_file/native.dart' if (dart.library.html) 'save_file/web.dart';
 export 'pick_file/native.dart' if (dart.library.html) 'pick_file/web.dart';
 

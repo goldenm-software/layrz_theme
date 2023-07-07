@@ -4,8 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/src/file.dart';
-import 'package:mime/mime.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<List<ThemedFile>?> pickFile({
