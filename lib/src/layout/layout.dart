@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,6 +46,8 @@ class ThemedLayout extends StatefulWidget {
   final List<ThemedNavigatorItem> persistentItems;
   final List<ThemedNotificationItem> notifications;
   final double mobileBreakpoint;
+  final EdgeInsets padding;
+  final bool disableSafeArea;
 
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
@@ -128,6 +131,14 @@ class ThemedLayout extends StatefulWidget {
     /// [mobileBreakpoint] is the breakpoint for mobile devices.
     /// By default is `kMediumGrid`.
     this.mobileBreakpoint = kMediumGrid,
+
+    /// [padding] is the padding of the layout.
+    /// By default is `EdgeInsets.all(10)`.
+    this.padding = const EdgeInsets.all(10),
+
+    /// [disableSafeArea] is a boolean that disables the safe area.
+    /// By default is `false`.
+    this.disableSafeArea = false,
   });
 
   @override
@@ -135,6 +146,7 @@ class ThemedLayout extends StatefulWidget {
 }
 
 class _ThemedLayoutState extends State<ThemedLayout> {
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
@@ -171,18 +183,24 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
     double width = MediaQuery.of(context).size.width;
 
+    Widget child = Container(
+      width: double.infinity,
+      padding: widget.padding,
+      child: widget.body,
+    );
+
+    if (!widget.disableSafeArea) {
+      child = SafeArea(child: child);
+    }
+
     if (width <= widget.mobileBreakpoint) {
       return Scaffold(
         key: _scaffoldKey,
         appBar: appBar,
-        body: SafeArea(
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: widget.body,
-          ),
-        ),
+        body: child,
         drawer: ThemedDrawer(
+          scaffoldKey: _scaffoldKey,
+          fromScaffold: true,
           items: widget.items,
           appTitle: widget.appTitle,
           companyName: widget.companyName,
@@ -209,12 +227,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         content = Column(
           children: [
             appBar,
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: widget.body,
-              ),
-            ),
+            Expanded(child: child),
             ThemedTaskbar(
               items: getChildUrls(),
               persistentItems: widget.persistentItems,
@@ -236,9 +249,47 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         );
         break;
       case ThemedLayoutStyle.sidebar:
+        String? pageName;
+        IconData? pageIcon;
+
+        String currentPath = ModalRoute.of(context)?.settings.name ?? '';
+
+        final match = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
+          return currentPath.startsWith(page.path);
+        });
+
+        if (match != null) {
+          pageName = match.labelText;
+          pageIcon = match.icon;
+
+          if (match.label is Text) {
+            pageName = (match.label as Text).data;
+          }
+
+          if (match.children.isNotEmpty) {
+            final submatch = match.children.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
+              return currentPath.startsWith(page.path);
+            });
+
+            if (submatch != null) {
+              String? subpageName = submatch.labelText;
+              pageIcon = submatch.icon;
+
+              if (submatch.label is Text) {
+                subpageName = (submatch.label as Text).data;
+              }
+
+              if (subpageName != null) {
+                pageName = '$pageName - $subpageName';
+              }
+            }
+          }
+        }
+
         content = Row(
           children: [
             ThemedDrawer(
+              scaffoldKey: _scaffoldKey,
               items: [
                 ...widget.items,
                 if (widget.persistentItems.isNotEmpty) ...[
@@ -260,7 +311,40 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               additionalActions: widget.additionalActions,
             ),
             Expanded(
-              child: widget.body,
+              child: Column(
+                children: [
+                  if (pageName != null) ...[
+                    Container(
+                      height: ThemedAppBar.size.height,
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (pageIcon != null) ...[
+                            Icon(
+                              pageIcon,
+                              color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 5),
+                          ],
+                          Expanded(
+                            child: Text(
+                              pageName,
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  Expanded(child: child),
+                ],
+              ),
             ),
           ],
         );
@@ -282,9 +366,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                       ],
                     ],
                   ),
-                  Expanded(
-                    child: widget.body,
-                  ),
+                  Expanded(child: child),
                 ],
               ),
             ),

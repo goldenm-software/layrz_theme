@@ -1,5 +1,30 @@
 # Changelog
 
+## 4.0.11
+- New helper functions `saveFile` and `pickFile` to help in the process to save a file or get a files from the device.
+
+## 4.0.10
+- Added the option to disable `SafeArea` inside a child of the `ThemedLayout`
+- Added the possibility to change the padding of the child inside of the `ThemedLayout`
+
+## 4.0.9
+- Fixed `ThemedNotificationIcon` to handle Dynamic Island (And hopefully any `SafeArea` padded segment)
+
+## 4.0.8
+- Adjusted status bar color when the `ThemedDrawer` is opened or closed.
+
+## 4.0.7
+- New function `setThemedSnackbarScaffoldKey` to set a `GlobalKey<ScaffoldState>` to the `ThemedSnackbar`.
+- `ThemedSnackbar` now will use as primary context the `GlobalKey<ScaffoldState>` setted before, otherwise, will use the provided `BuildContext` in the constructor.
+
+
+## 4.0.6
+- Added default empty text for Notifications and reduced size of the logo on `ThemedAppBar`
+- Added name of the page in the `ThemedLayoutStyle.sidebar` as a "Fake AppBar"
+
+## 4.0.5
+- Fixes on design on Android
+
 ## 4.0.4
 - New widget `ThemedLayout` to unify `ThemedAppBar`, `ThemedDrawer` and `ThemedTaskbar` using a unified Layrz style
 - Internal file organization updated to a sub-libraries schema

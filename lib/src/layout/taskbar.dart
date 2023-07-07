@@ -166,7 +166,7 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
                   children: [
                     if (persistentItems.isNotEmpty) ...[
                       ...persistentItems,
-                      ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+                      if (items.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
                     ],
                     ...items,
                   ].map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor)).toList(),

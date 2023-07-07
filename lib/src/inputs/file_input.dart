@@ -105,15 +105,13 @@ class _ThemedFileInputState extends State<ThemedFileInput> with SingleTickerProv
       widget.onChanged?.call("", []);
       return;
     }
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowCompression: true,
+    final files = await pickFile(
       allowMultiple: false,
-      withData: true,
       type: widget.acceptedTypes,
     );
 
-    if (result != null) {
-      PlatformFile file = result.files.first;
+    if (files != null) {
+      ThemedFile file = files.first;
       _controller.text = file.name;
       List<int> byteArray = await compute(parseFileToByteArray, file);
       Map<String, String>? b64 = await compute(parseFileToBase64, file);

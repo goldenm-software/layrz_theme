@@ -23,6 +23,8 @@ export 'src/layout/layout.dart';
 export 'src/inputs/inputs.dart';
 export 'src/helpers/helpers.dart';
 
+export 'src/file.dart';
+
 // Constructors and constants
 part 'src/theme/constants.dart';
 part 'src/theme/light_theme.dart';

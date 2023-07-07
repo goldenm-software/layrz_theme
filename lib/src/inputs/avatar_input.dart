@@ -59,16 +59,12 @@ class _ThemedAvatarInputState extends State<ThemedAvatarInput> with SingleTicker
                       onTap: widget.disabled
                           ? null
                           : () async {
-                              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                allowCompression: true,
+                              final files = await pickFile(
                                 allowMultiple: false,
-                                withData: true,
                                 type: FileType.image,
                               );
-
-                              if (result != null) {
-                                PlatformFile file = result.files.first;
-
+                              if (files != null) {
+                                ThemedFile file = files.first;
                                 Map<String, String>? b64 = await compute(parseFileToBase64, file);
 
                                 if (b64 != null) {

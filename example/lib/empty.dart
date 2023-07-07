@@ -24,8 +24,22 @@ class _EmptyViewState extends State<EmptyView> {
     return Layout(
       showDrawer: true,
       toggleTheme: widget.toggleTheme,
-      body: Center(
-        child: Text("Empty view ${widget.name}"),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ThemedButton(
+            labelText: "Show snackbar",
+            onTap: () {
+              showThemedSnackbar(ThemedSnackbar(
+                icon: Icons.help,
+                context: context,
+                message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sodales nisl et odio ",
+              ));
+            },
+          ),
+          Text("Empty view ${widget.name}"),
+        ],
       ),
     );
   }
