@@ -32,7 +32,7 @@ class _HomeViewState extends State<HomeView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ThemedButton(
-              labelText: "Show dialog [title]",
+              labelText: "Show snackbar [title]",
               onTap: () {
                 showThemedSnackbar(ThemedSnackbar(
                   icon: Icons.help,
@@ -44,30 +44,16 @@ class _HomeViewState extends State<HomeView> {
             ),
             const SizedBox(height: 10),
             ThemedButton(
-              labelText: "Open dialog",
+              labelText: "Show snackbar long",
               onTap: () {
-                showDialog(
+                showThemedSnackbar(ThemedSnackbar(
+                  icon: Icons.help,
                   context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text("This is a dialog"),
-                            ThemedButton(
-                              labelText: "Close dialog",
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
+                  title: 'Title',
+                  message: "Loremipsumdolorsitamet,consecteturadipiscingelit.Inquisturpisatodioauctor"
+                      "sodales.Pellentesqueegetsemdiam.Pellentesquevelmassalobortisnuncaliquetfinibuseget"
+                      "etnunc.",
+                ));
               },
             ),
             const SizedBox(height: 10),

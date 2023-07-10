@@ -85,7 +85,7 @@ class ThemedSnackbar {
     }
 
     if (screenWidth < 500) {
-      return screenWidth * 0.8;
+      return screenWidth - 20;
     }
 
     return 500;

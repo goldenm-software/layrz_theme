@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.13
+- Updated `width` for `ThemedSnackbar`, now, for screens with width mess than `500u` will expand to the full width of the screen
+
 ## 4.0.12
 - Added `disableNotifications` to `ThemedAppBar` to disable notification icon.
 
