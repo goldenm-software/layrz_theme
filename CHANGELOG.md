@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.14
+- Corrections on Text size prediction in `ThemedSnackbar`, should not overflow the text.
+
 ## 4.0.13
 - Updated `width` for `ThemedSnackbar`, now, for screens with width mess than `500u` will expand to the full width of the screen
 

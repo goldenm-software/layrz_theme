@@ -32,27 +32,36 @@ class _HomeViewState extends State<HomeView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ThemedButton(
-              labelText: "Show snackbar [title]",
+              labelText: "Show snackbar [simple]",
               onTap: () {
                 showThemedSnackbar(ThemedSnackbar(
                   icon: Icons.help,
                   context: context,
-                  title: 'Title',
-                  message: "This is a snackbar",
+                  message: "Esta situación puede generarse por problemas de permisos en la cuenta de Wialon "
+                      "y/o problemas con las credenciales.",
+                ));
+              },
+            ),
+            ThemedButton(
+              labelText: "Show snackbar [test]",
+              onTap: () {
+                showThemedSnackbar(ThemedSnackbar(
+                  icon: Icons.help,
+                  context: context,
+                  message: "Translation missing external.accounts.errors.syncFailed.caption",
                 ));
               },
             ),
             const SizedBox(height: 10),
             ThemedButton(
-              labelText: "Show snackbar long",
+              labelText: "Show snackbar [w/ title]",
               onTap: () {
                 showThemedSnackbar(ThemedSnackbar(
                   icon: Icons.help,
                   context: context,
-                  title: 'Title',
-                  message: "Loremipsumdolorsitamet,consecteturadipiscingelit.Inquisturpisatodioauctor"
-                      "sodales.Pellentesqueegetsemdiam.Pellentesquevelmassalobortisnuncaliquetfinibuseget"
-                      "etnunc.",
+                  title: 'Lo sentimos, pero no hemos podido extraer información de la cuenta indicada.',
+                  message: "Usualmente esto se debe a errores en las credenciales de Wialon. Por favor verifíquelas "
+                      "y vuelva a intentarlo",
                 ));
               },
             ),
