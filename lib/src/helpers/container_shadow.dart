@@ -20,7 +20,7 @@ BoxDecoration generateContainerElevation({
   /// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
   Color? shadowColor,
 
-  /// The [reverse] is the boolean to reverse the [BoxDecoration], by default it is false.
+  /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
   bool reverse = false,
 }) {
   assert(elevation <= 5, 'The elevation must be less than or equal to 5');

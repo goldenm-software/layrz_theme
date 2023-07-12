@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.15
+- Added `elevation`, `shadowColor` and `reverse` properties to `drawAvatar()`
+- Updated functionality of `color` property on `drawAvatar()`, now will apply to `dynamicAvatar`
+- Updated documentation of `reverse` on `generateContainerElevation()`
+
 ## 4.0.14
 - Corrections on Text size prediction in `ThemedSnackbar`, should not overflow the text.
 

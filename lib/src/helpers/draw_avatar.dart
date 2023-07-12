@@ -24,21 +24,37 @@ Widget drawAvatar({
 
   /// [size] is the size of the avatar.
   /// By default, it is 30.
+  double size = 30,
+
   /// You can control the radius using [radius] property
   /// By default, it is 30. (The same as the [size])
-  double size = 30,
   double radius = 30,
 
   /// [color] is the color of the avatar. By default, it is [Theme.of(context).primaryColor].
-  /// When [dynamicAvatar.type] is [AvatarType.emoji], [AvatarType.base64], [AvatarType.url] or
-  /// [avatar] is not [null] the color will be override to [Colors.grey.shade900]
+  /// Only when [dynamicAvatar] is not null, the default value of the color is based on the different types of avatars.
+  /// For [AvatarType.emoji], the default color is [Colors.grey.shade900].
+  /// For [AvatarType.icon], the default color is [Theme.of(context).primaryColor].
+  /// For [AvatarType.base64] and [AvatarType.url], the default color is [Colors.transparent].
+  /// For [AvatarType.none], the default color is [Theme.of(context).primaryColor].
   Color? color,
+
+  /// [elevation] is the elevation of the avatar. By default, it is 1.
+  double elevation = 1,
+
+  /// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
+  Color? shadowColor,
+
+  /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
+  bool reverse = false,
 
   /// [context] is the context of the widget.
   required BuildContext context,
 }) {
-  bool isDark = Theme.of(context).brightness == Brightness.dark;
-  Color containerColor = color ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
+  assert(elevation <= 5, 'The elevation must be less than or equal to 5');
+  assert(elevation >= 0, 'The elevation must be greater than or equal to 0');
+  assert(radius >= 0, 'The radius must be greater than or equal to 0');
+
+  Color containerColor = color ?? Theme.of(context).primaryColor;
   Widget content = const SizedBox();
   double contentSize = size * 0.4;
 
@@ -63,7 +79,7 @@ Widget drawAvatar({
         );
         break;
       case AvatarType.base64:
-        containerColor = Colors.transparent;
+        containerColor = color ?? Colors.transparent;
         if ((dynamicAvatar.base64 ?? '').isEmpty) {
           content = Image.network(
             'https://cdn.layrz.com/resources/layo/layo.png',
@@ -79,7 +95,7 @@ Widget drawAvatar({
         }
         break;
       case AvatarType.url:
-        containerColor = Colors.transparent;
+        containerColor = color ?? Colors.transparent;
         content = Image.network(
           dynamicAvatar.url ?? 'https://cdn.layrz.com/resources/layo/layo.png',
           fit: BoxFit.cover,
@@ -160,13 +176,21 @@ Widget drawAvatar({
     decoration: BoxDecoration(
       color: containerColor,
       borderRadius: BorderRadius.circular(radius),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.15),
-          blurRadius: 4,
-          spreadRadius: 2,
-        ),
-      ],
+      border: elevation == 0
+          ? Border.all(
+              color: shadowColor ?? Theme.of(context).dividerColor,
+              width: 1,
+            )
+          : null,
+      boxShadow: elevation > 0
+          ? [
+              BoxShadow(
+                color: shadowColor ?? Theme.of(context).dividerColor,
+                blurRadius: 2 * elevation.toDouble(),
+                offset: Offset(0, elevation.toDouble() * (reverse ? -1 : 1)), // changes position of shadow
+              ),
+            ]
+          : null,
     ),
     child: content,
   );
