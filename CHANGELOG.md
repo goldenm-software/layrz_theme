@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.16
+- Added support on `ThemedLayout` and layout-related widgets to use different `pushNamed()` and `pop()` navigator methods. (Basically can support go_router)
+
 ## 4.0.15
 - Added `elevation`, `shadowColor` and `reverse` properties to `drawAvatar()`
 - Updated functionality of `color` property on `drawAvatar()`, now will apply to `dynamicAvatar`
