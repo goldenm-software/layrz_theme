@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.17
+- Added `currentPath` to overrides the currentPath on Layout
+
 ## 4.0.16
 - Added support on `ThemedLayout` and layout-related widgets to use different `pushNamed()` and `pop()` navigator methods. (Basically can support go_router)
 

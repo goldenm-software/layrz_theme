@@ -54,6 +54,7 @@ class ThemedLayout extends StatefulWidget {
   final ThemedNavigatorPushFunction? onNavigatorPush;
   final ThemdNavigatorPopFunction? onNavigatorPop;
   final bool isBackEnabled;
+  final String? currentPath;
 
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
@@ -157,6 +158,10 @@ class ThemedLayout extends StatefulWidget {
     /// [isBackEnabled] is the flag to enable the back button.
     /// By default is `true`.
     this.isBackEnabled = true,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
 
   @override
@@ -415,7 +420,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
   }
 
   List<ThemedNavigatorItem> getChildUrls() {
-    String path = ModalRoute.of(context)?.settings.name ?? '';
+    String path = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
     final parent = widget.items.whereType<ThemedNavigatorPage>().where((parents) => path.startsWith(parents.path));
 
     if (parent.isEmpty) {
