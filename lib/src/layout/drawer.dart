@@ -21,6 +21,8 @@ class ThemedDrawer extends StatefulWidget {
   final double mobileBreakpoint;
   final Color? backgroundColor;
   final bool fromScaffold;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
+  final ThemdNavigatorPopFunction? onNavigatorPop;
 
   const ThemedDrawer({
     super.key,
@@ -90,6 +92,14 @@ class ThemedDrawer extends StatefulWidget {
     /// [fromScaffold] is a boolean that indicates if the drawer is being used from a scaffold.
     /// By default is `false`.
     this.fromScaffold = false,
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
+
+    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+    /// By default is `Navigator.of(context).pop`
+    this.onNavigatorPop,
   });
 
   @override
@@ -115,6 +125,10 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
   bool actionsExpanded = false;
   bool isExpanded = false;
   double get width => MediaQuery.of(context).size.width;
+
+  ThemedNavigatorPushFunction get onNavigatorPush =>
+      widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
+  ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
 
   @override
   void initState() {
@@ -283,6 +297,8 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                               context: context,
                               backgroundColor: backgroundColor,
                               fromScaffold: widget.fromScaffold,
+                              onNavigatorPush: onNavigatorPush,
+                              onNavigatorPop: onNavigatorPop,
                             ))
                         .toList(),
                   ],
@@ -310,6 +326,8 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                               context: context,
                               backgroundColor: backgroundColor,
                               fromScaffold: widget.fromScaffold,
+                              onNavigatorPush: onNavigatorPush,
+                              onNavigatorPop: onNavigatorPop,
                             ))
                         .toList(),
                   ],

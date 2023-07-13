@@ -20,6 +20,7 @@ class ThemedTaskbar extends StatefulWidget {
   final String dateFormat;
   final String timeFormat;
   final List<ThemedNavigatorItem> additionalActions;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
 
   /// [ThemedTaskbar] is the taskbar of the application.
   const ThemedTaskbar({
@@ -86,6 +87,10 @@ class ThemedTaskbar extends StatefulWidget {
     /// [additionalActions] is the list of additional actions to be displayed in
     /// the taskbar.
     this.additionalActions = const [],
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
   });
 
   @override
@@ -102,6 +107,8 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
   List<ThemedNavigatorItem> get persistentItems => widget.persistentItems;
   List<ThemedNotificationItem> get notifications => widget.notifications;
   double get height => 55;
+  ThemedNavigatorPushFunction get onNavigatorPush =>
+      widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
 
   /* 20 = Padding.vertical of main element and 16 = Padding.vertical of the container */
   double get menuSize => height - (20 + 16);
@@ -169,7 +176,13 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
                       if (items.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
                     ],
                     ...items,
-                  ].map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor)).toList(),
+                  ]
+                      .map((item) => item.toAppBarItem(
+                            context: context,
+                            backgroundColor: backgroundColor,
+                            onNavigatorPush: onNavigatorPush,
+                          ))
+                      .toList(),
                 ),
               ),
             ),

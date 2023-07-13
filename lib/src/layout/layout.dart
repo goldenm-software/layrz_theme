@@ -22,6 +22,9 @@ part 'models.dart';
 part 'parts/notification.dart';
 part 'parts/avatar.dart';
 
+typedef ThemedNavigatorPushFunction = void Function(String path);
+typedef ThemdNavigatorPopFunction = void Function();
+
 class ThemedLayout extends StatefulWidget {
   final ThemedLayoutStyle style;
   final Widget body;
@@ -48,6 +51,9 @@ class ThemedLayout extends StatefulWidget {
   final double mobileBreakpoint;
   final EdgeInsets padding;
   final bool disableSafeArea;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
+  final ThemdNavigatorPopFunction? onNavigatorPop;
+  final bool isBackEnabled;
 
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
@@ -139,6 +145,18 @@ class ThemedLayout extends StatefulWidget {
     /// [disableSafeArea] is a boolean that disables the safe area.
     /// By default is `false`.
     this.disableSafeArea = false,
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
+
+    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+    /// By default is `Navigator.of(context).pop`
+    this.onNavigatorPop,
+
+    /// [isBackEnabled] is the flag to enable the back button.
+    /// By default is `true`.
+    this.isBackEnabled = true,
   });
 
   @override
@@ -179,6 +197,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       mobileBreakpoint: widget.mobileBreakpoint,
       forceNotificationIcon: widget.style == ThemedLayoutStyle.classic,
       onThemeSwitchTap: widget.onThemeSwitchTap,
+      onNavigatorPush: widget.onNavigatorPush,
+      isBackEnabled: widget.isBackEnabled,
     );
 
     double width = MediaQuery.of(context).size.width;
@@ -244,6 +264,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onLogoutTap: widget.onLogoutTap,
               notifications: widget.notifications,
               onThemeSwitchTap: widget.onThemeSwitchTap,
+              onNavigatorPush: widget.onNavigatorPush,
             ),
           ],
         );
@@ -378,9 +399,18 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         break;
     }
 
-    return Scaffold(
+    Widget body = Scaffold(
       key: _scaffoldKey,
       body: content,
+    );
+
+    if (widget.isBackEnabled) {
+      return body;
+    }
+
+    return WillPopScope(
+      child: body,
+      onWillPop: () => Future.value(false),
     );
   }
 

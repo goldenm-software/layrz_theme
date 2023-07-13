@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:layrz_theme/layrz_theme.dart';
@@ -6,11 +8,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 class HomeView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
+
   const HomeView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -20,11 +21,25 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   List<int> selected = [];
   List<ThemedSelectItem<int>> get choices => [];
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      debugPrint("Tick on HomeView");
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Layout(
-      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Column(

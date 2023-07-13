@@ -16,6 +16,8 @@ class ThemedAppBarAvatar extends StatefulWidget {
   final List<ThemedNavigatorItem> additionalActions;
   final Color? backgroundColor;
   final bool asTaskBar;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
+  final ThemdNavigatorPopFunction? onNavigatorPop;
 
   const ThemedAppBarAvatar({
     super.key,
@@ -70,6 +72,14 @@ class ThemedAppBarAvatar extends StatefulWidget {
 
     /// [asTaskBar] is a boolean that indicates if the app bar is used as a task bar.
     this.asTaskBar = false,
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
+
+    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+    /// By default is `Navigator.of(context).pop`
+    this.onNavigatorPop,
   });
 
   @override
@@ -82,6 +92,10 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
   final GlobalKey _userMenuKey = GlobalKey();
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   final FocusNode _focusNode = FocusNode();
+
+  ThemedNavigatorPushFunction get onNavigatorPush =>
+      widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
+  ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
 
   @override
   void initState() {
@@ -208,6 +222,8 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                       context: context,
                                       callback: _destroyOverlay,
                                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                      onNavigatorPop: onNavigatorPop,
+                                      onNavigatorPush: onNavigatorPush,
                                     ))
                                 .toList(),
                           ),

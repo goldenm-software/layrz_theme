@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
@@ -6,11 +8,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 class AvatarsView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
+
   const AvatarsView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -21,10 +22,25 @@ class _AvatarsViewState extends State<AvatarsView> {
   List<int> selected = [];
   List<ThemedSelectItem<int>> get choices => [];
 
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      debugPrint("Tick on AvatarsView");
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Layout(
-      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Padding(

@@ -8,11 +8,10 @@ import 'package:layrz_theme_example/layout.dart';
 
 class TableView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
+
   const TableView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -30,16 +29,13 @@ class _TableViewState extends State<TableView> {
     now = DateTime.now();
 
     Timer.periodic(const Duration(seconds: 5), (timer) {
-      setState(() {
-        now = DateTime.now();
-      });
+      if (mounted) setState(() => now = DateTime.now());
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Layout(
-      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
