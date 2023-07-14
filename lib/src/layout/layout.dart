@@ -204,6 +204,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       onThemeSwitchTap: widget.onThemeSwitchTap,
       onNavigatorPush: widget.onNavigatorPush,
       isBackEnabled: widget.isBackEnabled,
+      currentPath: widget.currentPath,
     );
 
     double width = MediaQuery.of(context).size.width;
@@ -243,6 +244,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           mobileBreakpoint: widget.mobileBreakpoint,
           onNavigatorPush: widget.onNavigatorPush,
           onNavigatorPop: widget.onNavigatorPop,
+          currentPath: widget.currentPath,
         ),
       );
     }
@@ -272,6 +274,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               notifications: widget.notifications,
               onThemeSwitchTap: widget.onThemeSwitchTap,
               onNavigatorPush: widget.onNavigatorPush,
+              currentPath: widget.currentPath,
             ),
           ],
         );
@@ -280,7 +283,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         String? pageName;
         IconData? pageIcon;
 
-        String currentPath = ModalRoute.of(context)?.settings.name ?? '';
+        String currentPath = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
 
         final match = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
           return currentPath.startsWith(page.path);
@@ -339,6 +342,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               additionalActions: widget.additionalActions,
               onNavigatorPop: widget.onNavigatorPop,
               onNavigatorPush: widget.onNavigatorPush,
+              currentPath: widget.currentPath,
             ),
             Expanded(
               child: Column(
@@ -389,6 +393,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                 children: [
                   ThemedSidebar.asContracted(
                     onNavigatorPush: widget.onNavigatorPush,
+                    currentPath: widget.currentPath,
                     items: [
                       ...childUrls,
                       if (widget.persistentItems.isNotEmpty) ...[

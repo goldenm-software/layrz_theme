@@ -173,18 +173,24 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
     RenderBox renderBox = _userMenuKey.currentContext?.findRenderObject() as RenderBox;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     Size size = renderBox.size;
+    EdgeInsets padding = MediaQuery.of(context).padding;
 
-    double? top = offset.dy + size.height + 5;
-    double? right = 10;
+    double? top = offset.dy + size.height + padding.top + 5;
+    double? right = padding.right + 10;
 
     double? bottom;
     double? left;
 
+    double width = MediaQuery.of(context).size.width * 0.4;
+    if (width > 250) {
+      width = 250;
+    }
+
     if (widget.asTaskBar) {
       top = null;
       right = null;
-      bottom = 50;
-      left = 10;
+      bottom = padding.bottom + ThemedTaskbar.height + 10;
+      left = padding.left + 10;
     }
 
     _overlayEntry = OverlayEntry(
@@ -199,7 +205,6 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                 right: right,
                 bottom: bottom,
                 left: left,
-                width: 180,
                 child: RawKeyboardListener(
                   focusNode: _focusNode,
                   onKey: (event) {
@@ -213,19 +218,25 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                     child: StatefulBuilder(
                       builder: (context, setState) {
                         return Container(
+                          constraints: BoxConstraints(maxWidth: width, minWidth: 150),
                           padding: const EdgeInsets.all(10),
-                          decoration: generateContainerElevation(context: context),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: actions
-                                .map((action) => action.toDrawerItem(
-                                      context: context,
-                                      callback: _destroyOverlay,
-                                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                                      onNavigatorPop: onNavigatorPop,
-                                      onNavigatorPush: onNavigatorPush,
-                                    ))
-                                .toList(),
+                          decoration: generateContainerElevation(
+                            context: context,
+                            elevation: 3,
+                          ),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            separatorBuilder: (context, index) => const Divider(),
+                            itemCount: actions.length,
+                            itemBuilder: (context, index) {
+                              return actions[index].toDrawerItem(
+                                context: context,
+                                callback: _destroyOverlay,
+                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                onNavigatorPop: onNavigatorPop,
+                                onNavigatorPush: onNavigatorPush,
+                              );
+                            },
                           ),
                         );
                       },

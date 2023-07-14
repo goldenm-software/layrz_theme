@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.19
+- Improvements in `ThemedLayout` and layout-related widgets, now will consider `MediaQuery.of(context).padding` to the fixed overlays' locations.
+
+## 4.0.18
+- Some hotfixes in `ThemedLayout` and layout-related widgets
+
 ## 4.0.17
 - Added `currentPath` to overrides the currentPath on Layout
 

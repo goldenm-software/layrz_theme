@@ -28,6 +28,7 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final ThemedNavigatorPushFunction? onNavigatorPush;
   final ThemdNavigatorPopFunction? onNavigatorPop;
   final bool isBackEnabled;
+  final String? currentPath;
 
   const ThemedAppBar({
     super.key,
@@ -132,6 +133,10 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     /// [isBackEnabled] is the flag to enable the back button.
     /// By default is `true`.
     this.isBackEnabled = true,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
 
   static bool get isMacOS => !kIsWeb && Platform.isMacOS;
@@ -154,7 +159,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   double get width => MediaQuery.of(context).size.width;
   bool get isMobile => width < widget.mobileBreakpoint;
 
-  String get currentPath => ModalRoute.of(context)?.settings.name ?? '';
+  String get currentPath => widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
   bool get isHome => currentPath == widget.homePath;
 
   bool get isMacOS => !kIsWeb && Platform.isMacOS;
@@ -250,6 +255,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                             context: context,
                             backgroundColor: backgroundColor,
                             onNavigatorPush: onNavigatorPush,
+                            currentPath: currentPath,
                           );
                         }).toList(),
                       ),
@@ -265,6 +271,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                       context: context,
                       backgroundColor: backgroundColor,
                       onNavigatorPush: onNavigatorPush,
+                      currentPath: currentPath,
                     ),
                   ),
                   const SizedBox(width: 10),

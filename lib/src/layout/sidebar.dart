@@ -5,6 +5,7 @@ class ThemedSidebar extends StatefulWidget {
   final bool contracted;
   final Color? backgroundColor;
   final ThemedNavigatorPushFunction? onNavigatorPush;
+  final String? currentPath;
 
   const ThemedSidebar({
     super.key,
@@ -22,6 +23,10 @@ class ThemedSidebar extends StatefulWidget {
     /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
     /// By default is `Navigator.of(context).pushNamed`
     this.onNavigatorPush,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
 
   @override
@@ -34,11 +39,16 @@ class ThemedSidebar extends StatefulWidget {
     /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
     /// By default is `Navigator.of(context).pushNamed`
     ThemedNavigatorPushFunction? onNavigatorPush,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    String? currentPath,
   }) {
     return ThemedSidebar(
       items: items,
       contracted: true,
       onNavigatorPush: onNavigatorPush,
+      currentPath: currentPath,
     );
   }
 }
@@ -89,6 +99,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                       width: 30,
                       height: 30,
                       onNavigatorPush: onNavigatorPush,
+                      currentPath: widget.currentPath,
                     ))
                 .toList(),
           ),

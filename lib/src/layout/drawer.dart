@@ -23,6 +23,7 @@ class ThemedDrawer extends StatefulWidget {
   final bool fromScaffold;
   final ThemedNavigatorPushFunction? onNavigatorPush;
   final ThemdNavigatorPopFunction? onNavigatorPop;
+  final String? currentPath;
 
   const ThemedDrawer({
     super.key,
@@ -100,6 +101,10 @@ class ThemedDrawer extends StatefulWidget {
     /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
     /// By default is `Navigator.of(context).pop`
     this.onNavigatorPop,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
 
   @override
@@ -299,6 +304,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                               fromScaffold: widget.fromScaffold,
                               onNavigatorPush: onNavigatorPush,
                               onNavigatorPop: onNavigatorPop,
+                              currentPath: widget.currentPath,
                             ))
                         .toList(),
                   ],
@@ -328,6 +334,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                               fromScaffold: widget.fromScaffold,
                               onNavigatorPush: onNavigatorPush,
                               onNavigatorPop: onNavigatorPop,
+                              currentPath: widget.currentPath,
                             ))
                         .toList(),
                   ],
@@ -339,12 +346,14 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
               Divider(color: sidebarTextColor.withOpacity(0.2)),
               InkWell(
                 onTap: () {
-                  openInfoDialog(
-                    context: context,
-                    appTitle: widget.appTitle,
-                    i18n: i18n,
-                    companyName: widget.companyName,
-                    logo: isDark ? widget.favicon.white : widget.favicon.normal,
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ThemedLicensesView(
+                        companyName: companyName,
+                        logo: widget.logo,
+                        version: version,
+                      ),
+                    ),
                   );
                 },
                 child: Container(

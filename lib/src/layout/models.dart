@@ -30,6 +30,7 @@ abstract class ThemedNavigatorItem {
     required Color backgroundColor,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
     return Padding(
       padding: topBarItemPadding,
@@ -45,6 +46,7 @@ abstract class ThemedNavigatorItem {
     double? height,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
     return Padding(
       padding: sidebarItemPadding,
@@ -63,6 +65,7 @@ abstract class ThemedNavigatorItem {
     bool fromScaffold = false,
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
+    String? currentPath,
   }) {
     return Padding(
       padding: sidebarItemPadding,
@@ -109,9 +112,10 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     required Color backgroundColor,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
-    String currentPath = ModalRoute.of(context)?.settings.name ?? '';
-    bool highlight = currentPath.startsWith(path);
+    String localPath = currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
+    bool highlight = localPath.startsWith(path);
 
     return ThemedNavigatorAction(
       labelText: labelText,
@@ -142,9 +146,10 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     double? height,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
-    String currentPath = ModalRoute.of(context)?.settings.name ?? '';
-    bool highlight = currentPath.startsWith(path);
+    String localPath = currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
+    bool highlight = localPath.startsWith(path);
 
     return ThemedNavigatorAction(
       labelText: labelText,
@@ -180,9 +185,10 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     bool fromScaffold = false,
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
+    String? currentPath,
   }) {
-    String currentPath = ModalRoute.of(context)?.settings.name ?? '';
-    bool highlight = currentPath.startsWith(path);
+    String localPath = currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
+    bool highlight = localPath.startsWith(path);
     bool isExpanded = highlight;
 
     return StatefulBuilder(
@@ -263,6 +269,7 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
     required Color backgroundColor,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color activeColor = isDark ? Colors.white : Theme.of(context).primaryColor;
@@ -299,6 +306,7 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
     double? height,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
     String text = labelText ?? '';
 
@@ -352,6 +360,7 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
     bool fromScaffold = false,
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
+    String? currentPath,
   }) {
     return Padding(
       padding: ThemedNavigatorItem.drawerItemPadding,
@@ -426,6 +435,7 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
     required Color backgroundColor,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -463,6 +473,7 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
     double? height,
     int dotCount = 5,
     required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
   }) {
     if (type == ThemedSeparatorType.line) {
       return Padding(
@@ -501,6 +512,7 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
     bool fromScaffold = false,
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
+    String? currentPath,
   }) {
     if (type == ThemedSeparatorType.line) {
       return Padding(
@@ -534,11 +546,68 @@ enum ThemedSeparatorType {
 }
 
 class ThemedNavigatorLabel extends ThemedNavigatorItem {
+  final TextStyle? labelStyle;
+
   /// [ThemedNavigatorLabel] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedDrawer.items].
   ThemedNavigatorLabel({
     super.label,
     super.labelText,
+
+    /// [labelStyle] is the style of the label. Only applies when [labelText] is not null.
+    this.labelStyle,
   }) : assert(label != null || labelText != null);
+
+  /// [toDrawerItem] is the widget to be displayed in the drawer.
+  @override
+  Widget toDrawerItem({
+    required BuildContext context,
+    required Color backgroundColor,
+    double? width,
+    double? height,
+    int dotCount = 5,
+    VoidCallback? callback,
+    bool fromScaffold = false,
+    required ThemedNavigatorPushFunction onNavigatorPush,
+    required VoidCallback onNavigatorPop,
+    String? currentPath,
+  }) {
+    return Padding(
+      padding: ThemedNavigatorItem.drawerItemPadding.add(const EdgeInsets.all(10)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          label ??
+              Text(
+                labelText ?? '',
+                style: labelStyle?.copyWith(
+                  color: validateColor(color: backgroundColor).withOpacity(0.5),
+                ),
+              )
+        ],
+      ),
+    );
+  }
+
+  /// [toAppBarItem] is the widget to be displayed in the appbar.
+  @override
+  Widget toAppBarItem({
+    required BuildContext context,
+    required Color backgroundColor,
+    int dotCount = 5,
+    required ThemedNavigatorPushFunction onNavigatorPush,
+    String? currentPath,
+  }) {
+    return Padding(
+      padding: ThemedNavigatorItem.topBarItemPadding,
+      child: label ??
+          Text(
+            labelText ?? '',
+            style: labelStyle?.copyWith(
+              color: validateColor(color: backgroundColor).withOpacity(0.5),
+            ),
+          ),
+    );
+  }
 }
 
 class ThemedNotificationItem {

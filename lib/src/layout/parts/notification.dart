@@ -80,21 +80,22 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
     RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     Size screenSize = MediaQuery.of(context).size;
-    double? bottom = screenSize.height - offset.dy;
-    double right = screenSize.width - offset.dx - renderBox.size.width;
+    EdgeInsets padding = MediaQuery.of(context).padding;
+    double? bottom = screenSize.height - offset.dy + padding.bottom + 20;
+    double right = screenSize.width - offset.dx - renderBox.size.width + padding.right;
     double? top;
     double? left;
 
     if (widget.inAppBar) {
-      top = offset.dy + renderBox.size.height + 10;
+      top = offset.dy + renderBox.size.height + padding.top + 10;
       bottom = null;
     }
 
     double? width = screenSize.width * 0.5;
 
     if (width < 200 || widget.forceFullSize) {
-      left = 10;
-      right = 10;
+      left = padding.left + 10;
+      right = padding.right + 10;
       width = null;
     }
 
@@ -127,7 +128,10 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                         minHeight: 56,
                         maxWidth: 400,
                       ),
-                      decoration: generateContainerElevation(context: context),
+                      decoration: generateContainerElevation(
+                        context: context,
+                        elevation: 3,
+                      ),
                       clipBehavior: Clip.antiAlias,
                       child: notifications.isEmpty
                           ? SizedBox(
