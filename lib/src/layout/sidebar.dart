@@ -27,10 +27,18 @@ class ThemedSidebar extends StatefulWidget {
   @override
   State<ThemedSidebar> createState() => _ThemedSidebarState();
 
-  static ThemedSidebar asContracted({List<ThemedNavigatorItem> items = const []}) {
+  static ThemedSidebar asContracted({
+    /// [items] is the list of buttons to be displayed in the drawer.
+    List<ThemedNavigatorItem> items = const [],
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    ThemedNavigatorPushFunction? onNavigatorPush,
+  }) {
     return ThemedSidebar(
       items: items,
       contracted: true,
+      onNavigatorPush: onNavigatorPush,
     );
   }
 }

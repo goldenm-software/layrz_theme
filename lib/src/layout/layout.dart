@@ -241,6 +241,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           onThemeSwitchTap: widget.onThemeSwitchTap,
           additionalActions: widget.additionalActions,
           mobileBreakpoint: widget.mobileBreakpoint,
+          onNavigatorPush: widget.onNavigatorPush,
+          onNavigatorPop: widget.onNavigatorPop,
         ),
       );
     }
@@ -335,6 +337,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onProfileTap: widget.onProfileTap,
               onLogoutTap: widget.onLogoutTap,
               additionalActions: widget.additionalActions,
+              onNavigatorPop: widget.onNavigatorPop,
+              onNavigatorPush: widget.onNavigatorPush,
             ),
             Expanded(
               child: Column(
@@ -384,6 +388,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               child: Row(
                 children: [
                   ThemedSidebar.asContracted(
+                    onNavigatorPush: widget.onNavigatorPush,
                     items: [
                       ...childUrls,
                       if (widget.persistentItems.isNotEmpty) ...[
