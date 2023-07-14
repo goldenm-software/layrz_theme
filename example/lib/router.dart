@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:layrz_theme_example/avatars.dart';
 import 'package:layrz_theme_example/buttons.dart';
@@ -6,6 +5,7 @@ import 'package:layrz_theme_example/dynamic_credentials.dart';
 import 'package:layrz_theme_example/empty.dart';
 import 'package:layrz_theme_example/home.dart';
 import 'package:layrz_theme_example/inputs.dart';
+import 'package:layrz_theme_example/layo.dart';
 import 'package:layrz_theme_example/login_example.dart';
 import 'package:layrz_theme_example/tab_bar.dart';
 import 'package:layrz_theme_example/table.dart';
@@ -18,6 +18,10 @@ final goRoutes = [
     builder: (context, state) {
       return const HomeView(name: 'Home');
     },
+  ),
+  GoRoute(
+    path: '/layo',
+    builder: (context, state) => const LayoView(name: 'Layo'),
   ),
   GoRoute(
     path: '/table',

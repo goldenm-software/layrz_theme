@@ -57,7 +57,7 @@ ThemeData generateLightTheme({
     dialogBackgroundColor: kLightBackgroundColor,
     primaryColor: color,
     canvasColor: kLightBackgroundColor,
-    // textTheme: fonts.textTheme,
+    shadowColor: Colors.black.withOpacity(0.3),
 
     // Input
     inputDecorationTheme: InputDecorationTheme(

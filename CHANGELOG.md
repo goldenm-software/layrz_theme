@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.20
+- Updated shadow color on the `generateLightTheme` y `generateDarkTheme` to `Colors.black.withOpacity(0.3)`
+- Added `Layo`
+
 ## 4.0.19
 - Improvements in `ThemedLayout` and layout-related widgets, now will consider `MediaQuery.of(context).padding` to the fixed overlays' locations.
 

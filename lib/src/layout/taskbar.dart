@@ -141,7 +141,7 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
         color: backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).dividerColor,
+            color: Theme.of(context).shadowColor,
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
