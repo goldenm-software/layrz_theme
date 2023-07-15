@@ -134,6 +134,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
   ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
 
   @override
   void initState() {
@@ -160,8 +161,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    _overrideAppBar();
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: widget.scaffoldKey);
 
     List<ThemedNavigatorItem> actions = [
       ...widget.additionalActions,
@@ -180,6 +180,12 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
               ),
             );
           },
+        ),
+      if (widget.onThemeSwitchTap != null)
+        ThemedNavigatorAction(
+          labelText: i18n?.t('layrz.taskbar.toggleTheme') ?? 'Toggle theme',
+          icon: MdiIcons.themeLightDark,
+          onTap: widget.onThemeSwitchTap!,
         ),
       if (widget.onSettingsTap != null)
         ThemedNavigatorAction(

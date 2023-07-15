@@ -454,3 +454,25 @@ enum ThemedLayoutStyle {
   /// Uses the `ThemedAppBar` and `ThemedSidebar.expanded()`.
   sidebar,
 }
+
+void overrideAppBarStyle({required GlobalKey<ScaffoldState> scaffoldKey, required Color backgroundColor}) {
+  if (kIsWeb) return;
+
+  BuildContext? context = scaffoldKey.currentContext;
+  if (context == null) return;
+
+  bool isOpen = scaffoldKey.currentState?.isDrawerOpen ?? false;
+  SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
+
+  if (isOpen) {
+    Brightness brightness = useBlack(color: backgroundColor) ? Brightness.dark : Brightness.light;
+
+    style = style.copyWith(
+      statusBarIconBrightness: brightness,
+      statusBarBrightness: brightness,
+      systemNavigationBarIconBrightness: brightness,
+    );
+  }
+
+  SystemChrome.setSystemUIOverlayStyle(style);
+}

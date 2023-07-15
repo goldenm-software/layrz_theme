@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/router.dart';
+import 'package:layrz_theme_example/store.dart';
+import 'package:vxstate/vxstate.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
+  runApp(VxState(
+    store: AppStore(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -16,32 +21,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode theme = ThemeMode.dark;
-
-  void toggleTheme() {
-    setState(() {
-      theme = theme == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Layrz Theme Example',
-      themeMode: theme,
-      theme: generateLightTheme(),
-      darkTheme: generateDarkTheme(),
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    return VxBuilder<AppStore>(
+      mutations: const {ToggleTheme},
+      builder: (context, store, status) {
+        return MaterialApp.router(
+          title: 'Layrz Theme Example',
+          themeMode: store.themeMode,
+          theme: generateLightTheme(),
+          darkTheme: generateDarkTheme(),
+          debugShowCheckedModeBanner: false,
+          routerConfig: router,
+        );
+      },
     );
-    // return MaterialApp(
-    //   title: 'Layrz Theme Example',
-    //   themeMode: theme,
-    //   theme: generateLightTheme(),
-    //   darkTheme: generateDarkTheme(),
-    //   debugShowCheckedModeBanner: false,
-    //   initialRoute: '/home',
-    //   routes: nativeRoutes,
-    // );
   }
 }

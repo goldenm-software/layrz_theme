@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/empty.dart';
+import 'package:layrz_theme_example/store.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Layout extends StatefulWidget {
@@ -223,6 +224,7 @@ class _LayoutState extends State<Layout> {
       onNavigatorPush: context.go,
       onNavigatorPop: context.pop,
       notifications: notifications,
+      onThemeSwitchTap: () => ToggleTheme(),
     );
   }
 }
