@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.21
+- Changes on Layout widgets to support correctly the System UI Overlay on Android and iOS
+- Added loaders to `drawAvatar` and `ThemedImage`
+
 ## 4.0.20
 - Updated shadow color on the `generateLightTheme` y `generateDarkTheme` to `Colors.black.withOpacity(0.3)`
 - Added `Layo`

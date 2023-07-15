@@ -144,25 +144,12 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
 
   @override
   void dispose() {
-    _overrideAppBar();
     _userExpandController.dispose();
     super.dispose();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(ThemedDrawer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: widget.scaffoldKey);
-
     List<ThemedNavigatorItem> actions = [
       ...widget.additionalActions,
       if (widget.enableAbout)
@@ -380,25 +367,5 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
         ),
       ),
     );
-  }
-
-  void _overrideAppBar() {
-    if (!widget.fromScaffold) return;
-    bool isOpen = widget.scaffoldKey.currentState?.isDrawerOpen ?? false;
-    BuildContext? context = widget.scaffoldKey.currentContext;
-
-    if (context == null) return;
-
-    SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
-
-    if (isOpen) {
-      style = style.copyWith(
-        statusBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-        statusBarBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-        systemNavigationBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-      );
-    }
-
-    SystemChrome.setSystemUIOverlayStyle(style);
   }
 }

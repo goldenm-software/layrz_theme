@@ -26,6 +26,11 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
   ThemedLicense? selectedLicense;
   String paragraph = '';
 
+  List<String> get publicLayrzPackages => [
+        'layrz_theme',
+        'layrz_models',
+      ];
+
   @override
   void initState() {
     super.initState();
@@ -49,7 +54,7 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
       );
 
     for (final package in sortedPackages) {
-      if (package.startsWith('layrz')) {
+      if (package.startsWith('layrz') && !publicLayrzPackages.contains(package)) {
         continue;
       }
       final excerpts = <String>[];
@@ -82,8 +87,6 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
         ),
       );
     }
-
-    debugPrint('Parsed licenses: ${parsedLicenses.length}');
 
     if (mounted) setState(() {});
   }
@@ -121,7 +124,7 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                const Divider(),
+                const SizedBox(height: 10),
                 Expanded(
                   child: parsedLicenses.isNotEmpty
                       ? ListView.builder(
@@ -292,13 +295,14 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
                     ),
                   ],
                   const SizedBox(height: 10),
-                  const Divider(),
-                  const SizedBox(height: 10),
-                  ThemedButton(
-                    icon: MdiIcons.chevronLeft,
-                    labelText: i18n?.t('actions.back') ?? "Back",
-                    color: Colors.red,
-                    onTap: () => Navigator.of(context).pop(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ThemedButton(
+                      icon: MdiIcons.chevronLeft,
+                      labelText: i18n?.t('actions.back') ?? "Back",
+                      color: Colors.red,
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
                   ),
                 ],
               ),

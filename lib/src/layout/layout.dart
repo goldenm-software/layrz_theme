@@ -224,6 +224,11 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         key: _scaffoldKey,
         appBar: appBar,
         body: child,
+        onDrawerChanged: (isExpanded) {
+          Color backgroundColor =
+              widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
+          overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: _scaffoldKey);
+        },
         drawer: ThemedDrawer(
           scaffoldKey: _scaffoldKey,
           fromScaffold: true,
@@ -466,6 +471,10 @@ void overrideAppBarStyle({required GlobalKey<ScaffoldState> scaffoldKey, require
 
   if (isOpen) {
     Brightness brightness = useBlack(color: backgroundColor) ? Brightness.dark : Brightness.light;
+
+    if (Platform.isIOS) {
+      brightness = brightness == Brightness.dark ? Brightness.light : Brightness.dark;
+    }
 
     style = style.copyWith(
       statusBarIconBrightness: brightness,

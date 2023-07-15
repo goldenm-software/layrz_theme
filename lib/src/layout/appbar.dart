@@ -172,6 +172,9 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: widget.scaffoldKey);
+    });
   }
 
   @override

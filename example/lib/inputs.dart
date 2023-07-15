@@ -46,6 +46,12 @@ class _InputsViewState extends State<InputsView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              ThemedColorPicker(
+                labelText: 'Color picker',
+                onChanged: (color) {
+                  debugPrint("Color: $color");
+                },
+              ),
               Text(durationValue.toString()),
               ThemedDurationInput(
                 value: durationValue,

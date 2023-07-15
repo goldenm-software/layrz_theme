@@ -143,6 +143,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                           : ListView.builder(
                               shrinkWrap: true,
                               itemExtent: 56,
+                              padding: kListViewPadding,
                               itemCount: notifications.length,
                               itemBuilder: (context, index) {
                                 ThemedNotificationItem item = notifications[index];

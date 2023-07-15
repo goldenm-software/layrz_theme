@@ -58,6 +58,25 @@ Widget drawAvatar({
   Widget content = const SizedBox();
   double contentSize = size * 0.4;
 
+  Widget loadingProgressIndicator(BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+    if (loadingProgress == null) return child;
+    return Container(
+      width: size,
+      height: size,
+      padding: const EdgeInsets.all(5),
+      child: Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          color: Theme.of(context).dividerColor,
+          backgroundColor: Colors.transparent,
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+              : null,
+        ),
+      ),
+    );
+  }
+
   if (dynamicAvatar != null) {
     switch (dynamicAvatar.type) {
       case AvatarType.emoji:
@@ -79,12 +98,13 @@ Widget drawAvatar({
         );
         break;
       case AvatarType.base64:
-        containerColor = color ?? Colors.transparent;
+        containerColor = color ?? Colors.white;
         if ((dynamicAvatar.base64 ?? '').isEmpty) {
           content = Image.network(
             'https://cdn.layrz.com/resources/layo/layo.png',
             fit: BoxFit.cover,
             filterQuality: FilterQuality.medium,
+            loadingBuilder: loadingProgressIndicator,
           );
         } else {
           content = Image.memory(
@@ -95,11 +115,12 @@ Widget drawAvatar({
         }
         break;
       case AvatarType.url:
-        containerColor = color ?? Colors.transparent;
+        containerColor = color ?? Colors.white;
         content = Image.network(
           dynamicAvatar.url ?? 'https://cdn.layrz.com/resources/layo/layo.png',
           fit: BoxFit.cover,
           filterQuality: FilterQuality.medium,
+          loadingBuilder: loadingProgressIndicator,
         );
         break;
       default:
@@ -119,7 +140,7 @@ Widget drawAvatar({
         break;
     }
   } else if (avatar != null && avatar.isNotEmpty) {
-    containerColor = Colors.transparent;
+    containerColor = Colors.white;
     if (avatar.startsWith('data:')) {
       content = Image.memory(
         base64Decode(avatar.split(',').last),
@@ -131,12 +152,14 @@ Widget drawAvatar({
         avatar,
         fit: BoxFit.cover,
         filterQuality: FilterQuality.medium,
+        loadingBuilder: loadingProgressIndicator,
       );
     } else if (avatar.isEmpty) {
       content = Image.network(
         'https://cdn.layrz.com/resources/layo/layo.png',
         fit: BoxFit.cover,
         filterQuality: FilterQuality.medium,
+        loadingBuilder: loadingProgressIndicator,
       );
     } else {
       content = Image.asset(
