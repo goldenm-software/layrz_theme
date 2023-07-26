@@ -28,6 +28,15 @@ class ThemedColumn<T> {
   /// Also, this property is used to search the value of the column.
   final ValueBuilder<T> valueBuilder;
 
+  /// Compare function for custom sorting of the column.
+  /// If this function is not null it will be used to sort the column.
+  /// If this function is null, the column will be sorted with the default method.
+  /// acceptable return values:
+  /// -1: a < b
+  /// 0: a == b
+  /// 1: a > b
+  final int Function(T a, T b)? customSortingFunction;
+
   /// A column in a table. This is used to define the columns in a table and search properties.
   ThemedColumn({
     this.label,
@@ -35,6 +44,7 @@ class ThemedColumn<T> {
     this.isSortable = true,
     this.alignment = Alignment.centerLeft,
     this.widgetBuilder,
+    this.customSortingFunction,
     required this.valueBuilder,
   }) : assert(label != null || labelText != null);
 }

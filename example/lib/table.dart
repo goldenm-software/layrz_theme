@@ -50,11 +50,18 @@ class _TableViewState extends State<TableView> {
               rowTitleBuilder: (context, columns, item) => Text(item.name),
               rowSubtitleBuilder: (context, columns, item) => Text(item.id),
               idBuilder: (context, item) => item.id,
-              items: List.generate(50000, (i) {
+              items: List.generate(1000, (i) {
                 return Asset(
-                  id: (i + 1).toString(),
-                  name: "Asset ${i + 1}",
-                );
+                    id: (i + 1).toString(),
+                    name: "Asset ${i + 1}",
+                    telemetry: AssetTelemetry(
+                      id: (i + 1).toString(),
+                      receivedAt: Random().nextDouble() > 0.5
+                          ? now
+                          : DateTime(
+                              2022,
+                            ),
+                    ));
               }),
               onShow: (ctx, asset) async {
                 return;
@@ -63,6 +70,11 @@ class _TableViewState extends State<TableView> {
                 ThemedColumn(
                   labelText: 'ID',
                   valueBuilder: (context, item) => item.id,
+                  customSortingFunction: (a, b) {
+                    int aId = int.tryParse(a.id) ?? 0;
+                    int bId = int.tryParse(b.id) ?? 0;
+                    return aId.compareTo(bId);
+                  },
                 ),
                 ThemedColumn(
                   labelText: 'Name',
@@ -73,8 +85,13 @@ class _TableViewState extends State<TableView> {
                   valueBuilder: (context, item) => 'N/A',
                   widgetBuilder: (context, item) {
                     return TelemetryIndicator(
-                      receivedAt: Random().nextDouble() > 0.5 ? now : null,
+                      receivedAt: item.telemetry?.receivedAt,
                     );
+                  },
+                  customSortingFunction: (a, b) {
+                    double aReceivedAt = a.telemetry?.receivedAt.secondsSinceEpoch.toDouble() ?? 0;
+                    double bReceivedAt = b.telemetry?.receivedAt.secondsSinceEpoch.toDouble() ?? 0;
+                    return aReceivedAt.compareTo(bReceivedAt);
                   },
                 ),
               ],

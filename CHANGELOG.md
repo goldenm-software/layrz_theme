@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.22
+- Added `customSortingFunction` to `ThemedColumn` allowing to sort the values of the column using a custom function
+
 ## 4.0.21
 - Changes on Layout widgets to support correctly the System UI Overlay on Android and iOS
 - Added loaders to `drawAvatar` and `ThemedImage`
