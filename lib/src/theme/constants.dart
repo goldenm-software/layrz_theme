@@ -29,3 +29,11 @@ const String kAppTitle = "Layrz";
 
 /// [kHoverDuration] is the standard duration for animations.
 const kHoverDuration = Duration(milliseconds: 100);
+
+/// [kListViewPadding] is the suggested padding of the [ListView] widget.
+/// Corrects the padding for iOS
+EdgeInsets? get kListViewPadding {
+  if (kIsWeb) return null;
+  if (Platform.isIOS) return EdgeInsets.zero;
+  return null;
+}

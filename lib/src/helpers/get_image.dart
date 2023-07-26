@@ -100,6 +100,24 @@ class ThemedImage extends StatelessWidget {
       width: width,
       fit: fit,
       filterQuality: filterQuality,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          width: width,
+          height: height,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: LinearProgressIndicator(
+            color: Theme.of(context).dividerColor,
+            backgroundColor: Colors.transparent,
+            value: loadingProgress.expectedTotalBytes != null
+                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                : null,
+          ),
+        );
+      },
     );
   }
 }

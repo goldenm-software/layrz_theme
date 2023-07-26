@@ -24,6 +24,7 @@ export 'src/inputs/inputs.dart';
 export 'src/helpers/helpers.dart';
 
 export 'src/file.dart';
+export 'src/layo.dart';
 
 // Constructors and constants
 part 'src/theme/constants.dart';

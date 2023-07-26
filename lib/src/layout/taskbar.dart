@@ -20,6 +20,8 @@ class ThemedTaskbar extends StatefulWidget {
   final String dateFormat;
   final String timeFormat;
   final List<ThemedNavigatorItem> additionalActions;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
+  final String? currentPath;
 
   /// [ThemedTaskbar] is the taskbar of the application.
   const ThemedTaskbar({
@@ -86,7 +88,17 @@ class ThemedTaskbar extends StatefulWidget {
     /// [additionalActions] is the list of additional actions to be displayed in
     /// the taskbar.
     this.additionalActions = const [],
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
+
+  static double get height => 55;
 
   @override
   State<ThemedTaskbar> createState() => _ThemedTaskbarState();
@@ -101,10 +113,8 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
   List<ThemedNavigatorItem> get items => widget.items;
   List<ThemedNavigatorItem> get persistentItems => widget.persistentItems;
   List<ThemedNotificationItem> get notifications => widget.notifications;
-  double get height => 55;
-
-  /* 20 = Padding.vertical of main element and 16 = Padding.vertical of the container */
-  double get menuSize => height - (20 + 16);
+  ThemedNavigatorPushFunction get onNavigatorPush =>
+      widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
 
   @override
   void initState() {
@@ -126,12 +136,12 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      height: ThemedTaskbar.height,
       decoration: BoxDecoration(
         color: backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).dividerColor,
+            color: Theme.of(context).shadowColor,
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -169,7 +179,14 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
                       if (items.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
                     ],
                     ...items,
-                  ].map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor)).toList(),
+                  ]
+                      .map((item) => item.toAppBarItem(
+                            context: context,
+                            backgroundColor: backgroundColor,
+                            onNavigatorPush: onNavigatorPush,
+                            currentPath: widget.currentPath,
+                          ))
+                      .toList(),
                 ),
               ),
             ),

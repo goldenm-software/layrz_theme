@@ -4,11 +4,10 @@ import 'package:layrz_theme_example/layout.dart';
 
 class EmptyView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
+
   const EmptyView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -23,7 +22,6 @@ class _EmptyViewState extends State<EmptyView> {
   Widget build(BuildContext context) {
     return Layout(
       showDrawer: true,
-      toggleTheme: widget.toggleTheme,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

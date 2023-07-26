@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
+import 'package:layrz_theme_example/empty.dart';
+import 'package:layrz_theme_example/store.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Layout extends StatefulWidget {
   final bool showDrawer;
   final Widget body;
-  final VoidCallback toggleTheme;
 
   const Layout({
     super.key,
     required this.showDrawer,
     required this.body,
-    required this.toggleTheme,
   });
 
   @override
@@ -82,6 +83,11 @@ class _LayoutState extends State<Layout> {
       ),
       ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
       ThemedNavigatorPage(
+        labelText: 'Layo',
+        path: '/layo',
+      ),
+      ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+      ThemedNavigatorPage(
         labelText: 'Table',
         path: '/table',
       ),
@@ -116,6 +122,17 @@ class _LayoutState extends State<Layout> {
       ThemedNavigatorPage(
         labelText: 'Empty',
         path: '/empty',
+      ),
+      ThemedNavigatorAction(
+        labelText: 'Empty [Native]',
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) {
+              return const EmptyView(name: 'Empty [Native]');
+            },
+            settings: const RouteSettings(name: '/test_empty_native'),
+          ));
+        },
       ),
       ThemedNavigatorSeparator(),
       ThemedNavigatorPage(
@@ -178,7 +195,9 @@ class _LayoutState extends State<Layout> {
         content: "Lorem ipsum dolor sit amet",
       ),
     ];
+
     return ThemedLayout(
+      isBackEnabled: false,
       persistentItems: persistentItems,
       style: _layoutStyle,
       scaffoldKey: _scaffoldKey,
@@ -202,8 +221,10 @@ class _LayoutState extends State<Layout> {
       onSettingsTap: () {
         debugPrint('Settings tapped');
       },
-      onThemeSwitchTap: widget.toggleTheme,
+      onNavigatorPush: context.go,
+      onNavigatorPop: context.pop,
       notifications: notifications,
+      onThemeSwitchTap: () => ToggleTheme(),
     );
   }
 }

@@ -4,11 +4,10 @@ import 'package:layrz_theme_example/layout.dart';
 
 class TabView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
+
   const TabView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -30,7 +29,6 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Layout(
       showDrawer: true,
-      toggleTheme: widget.toggleTheme,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

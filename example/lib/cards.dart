@@ -4,11 +4,10 @@ import 'package:layrz_theme_example/layout.dart';
 
 class CardsView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
+
   const CardsView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -22,7 +21,6 @@ class _CardsViewState extends State<CardsView> {
   @override
   Widget build(BuildContext context) {
     return Layout(
-      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Column(

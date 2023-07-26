@@ -5,12 +5,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 class LoginExampleView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
 
   const LoginExampleView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -30,7 +28,6 @@ class _LoginExampleViewState extends State<LoginExampleView> {
   Widget build(BuildContext context) {
     ThemeMode themeMode = Theme.of(context).brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
     return Layout(
-      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Column(

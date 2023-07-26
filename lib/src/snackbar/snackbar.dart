@@ -85,7 +85,7 @@ class ThemedSnackbar {
     }
 
     if (screenWidth < 500) {
-      return screenWidth * 0.8;
+      return screenWidth - 20;
     }
 
     return 500;
@@ -100,6 +100,7 @@ class ThemedSnackbar {
     if (title != null) {
       Size titleSize = _textSize(titleWidget);
       height += titleSize.height;
+      debugPrint('titleSize: $titleSize');
     }
 
     Size messageSize = _textSize(messageWidget);
@@ -116,6 +117,7 @@ class ThemedSnackbar {
         style: Theme.of(globalContext).textTheme.titleMedium?.copyWith(
               color: validateColor(color: backgroundColor),
             ),
+        maxLines: maxLines,
       );
 
   /// [messageWidget] helps to build the message widget

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/layout.dart';
@@ -5,11 +7,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 class ButtonsView extends StatefulWidget {
   final String name;
-  final VoidCallback toggleTheme;
+
   const ButtonsView({
     super.key,
     this.name = 'Generic View',
-    required this.toggleTheme,
   });
 
   @override
@@ -22,10 +23,25 @@ class _ButtonsViewState extends State<ButtonsView> {
   bool isCooldown = false;
   bool isLoading = false;
 
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      debugPrint("Tick on ButtonsView");
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Layout(
-      toggleTheme: widget.toggleTheme,
       showDrawer: true,
       body: SingleChildScrollView(
         child: Column(

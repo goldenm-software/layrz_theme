@@ -22,6 +22,9 @@ part 'models.dart';
 part 'parts/notification.dart';
 part 'parts/avatar.dart';
 
+typedef ThemedNavigatorPushFunction = void Function(String path);
+typedef ThemdNavigatorPopFunction = void Function();
+
 class ThemedLayout extends StatefulWidget {
   final ThemedLayoutStyle style;
   final Widget body;
@@ -48,6 +51,10 @@ class ThemedLayout extends StatefulWidget {
   final double mobileBreakpoint;
   final EdgeInsets padding;
   final bool disableSafeArea;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
+  final ThemdNavigatorPopFunction? onNavigatorPop;
+  final bool isBackEnabled;
+  final String? currentPath;
 
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
@@ -139,6 +146,22 @@ class ThemedLayout extends StatefulWidget {
     /// [disableSafeArea] is a boolean that disables the safe area.
     /// By default is `false`.
     this.disableSafeArea = false,
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
+
+    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+    /// By default is `Navigator.of(context).pop`
+    this.onNavigatorPop,
+
+    /// [isBackEnabled] is the flag to enable the back button.
+    /// By default is `true`.
+    this.isBackEnabled = true,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
 
   @override
@@ -179,6 +202,9 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       mobileBreakpoint: widget.mobileBreakpoint,
       forceNotificationIcon: widget.style == ThemedLayoutStyle.classic,
       onThemeSwitchTap: widget.onThemeSwitchTap,
+      onNavigatorPush: widget.onNavigatorPush,
+      isBackEnabled: widget.isBackEnabled,
+      currentPath: widget.currentPath,
     );
 
     double width = MediaQuery.of(context).size.width;
@@ -198,6 +224,11 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         key: _scaffoldKey,
         appBar: appBar,
         body: child,
+        onDrawerChanged: (isExpanded) {
+          Color backgroundColor =
+              widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
+          overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: _scaffoldKey);
+        },
         drawer: ThemedDrawer(
           scaffoldKey: _scaffoldKey,
           fromScaffold: true,
@@ -216,6 +247,9 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           onThemeSwitchTap: widget.onThemeSwitchTap,
           additionalActions: widget.additionalActions,
           mobileBreakpoint: widget.mobileBreakpoint,
+          onNavigatorPush: widget.onNavigatorPush,
+          onNavigatorPop: widget.onNavigatorPop,
+          currentPath: widget.currentPath,
         ),
       );
     }
@@ -244,6 +278,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onLogoutTap: widget.onLogoutTap,
               notifications: widget.notifications,
               onThemeSwitchTap: widget.onThemeSwitchTap,
+              onNavigatorPush: widget.onNavigatorPush,
+              currentPath: widget.currentPath,
             ),
           ],
         );
@@ -252,7 +288,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         String? pageName;
         IconData? pageIcon;
 
-        String currentPath = ModalRoute.of(context)?.settings.name ?? '';
+        String currentPath = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
 
         final match = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
           return currentPath.startsWith(page.path);
@@ -309,6 +345,9 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onProfileTap: widget.onProfileTap,
               onLogoutTap: widget.onLogoutTap,
               additionalActions: widget.additionalActions,
+              onNavigatorPop: widget.onNavigatorPop,
+              onNavigatorPush: widget.onNavigatorPush,
+              currentPath: widget.currentPath,
             ),
             Expanded(
               child: Column(
@@ -358,6 +397,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               child: Row(
                 children: [
                   ThemedSidebar.asContracted(
+                    onNavigatorPush: widget.onNavigatorPush,
+                    currentPath: widget.currentPath,
                     items: [
                       ...childUrls,
                       if (widget.persistentItems.isNotEmpty) ...[
@@ -378,14 +419,23 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         break;
     }
 
-    return Scaffold(
+    Widget body = Scaffold(
       key: _scaffoldKey,
       body: content,
+    );
+
+    if (widget.isBackEnabled) {
+      return body;
+    }
+
+    return WillPopScope(
+      child: body,
+      onWillPop: () => Future.value(false),
     );
   }
 
   List<ThemedNavigatorItem> getChildUrls() {
-    String path = ModalRoute.of(context)?.settings.name ?? '';
+    String path = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
     final parent = widget.items.whereType<ThemedNavigatorPage>().where((parents) => path.startsWith(parents.path));
 
     if (parent.isEmpty) {
@@ -408,4 +458,30 @@ enum ThemedLayoutStyle {
   /// [ThemedLayoutStyle.sidebar] is the sidebar style of the layout.
   /// Uses the `ThemedAppBar` and `ThemedSidebar.expanded()`.
   sidebar,
+}
+
+void overrideAppBarStyle({required GlobalKey<ScaffoldState> scaffoldKey, required Color backgroundColor}) {
+  if (kIsWeb) return;
+
+  BuildContext? context = scaffoldKey.currentContext;
+  if (context == null) return;
+
+  bool isOpen = scaffoldKey.currentState?.isDrawerOpen ?? false;
+  SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
+
+  if (isOpen) {
+    Brightness brightness = useBlack(color: backgroundColor) ? Brightness.dark : Brightness.light;
+
+    if (Platform.isIOS) {
+      brightness = brightness == Brightness.dark ? Brightness.light : Brightness.dark;
+    }
+
+    style = style.copyWith(
+      statusBarIconBrightness: brightness,
+      statusBarBrightness: brightness,
+      systemNavigationBarIconBrightness: brightness,
+    );
+  }
+
+  SystemChrome.setSystemUIOverlayStyle(style);
 }

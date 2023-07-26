@@ -187,17 +187,32 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       dynamic bValue;
 
       if (sortBy == -1) {
+        // deafult sort when there are no columns selected
         aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
         bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
       } else {
         ThemedColumn<T> column = columns[sortBy];
+
+        if (column.customSortingFunction != null) {
+          // debugPrint("Sorting using custom function");
+          // only if the column has a custom sorting function
+          if (sortAsc) {
+            // if the sort is ascending
+            return column.customSortingFunction!.call(a, b);
+          } else {
+            // if the sort is descending
+            return column.customSortingFunction!.call(b, a);
+          }
+        }
         aValue = column.valueBuilder(context, a);
         bValue = column.valueBuilder(context, b);
       }
-
+      // default sort using the abstract class Comparable
       if (sortAsc) {
+        // if the sort is ascending
         return Comparable.compare(aValue, bValue);
       } else {
+        // if the sort is descending
         return Comparable.compare(bValue, aValue);
       }
     });

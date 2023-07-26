@@ -21,6 +21,9 @@ class ThemedDrawer extends StatefulWidget {
   final double mobileBreakpoint;
   final Color? backgroundColor;
   final bool fromScaffold;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
+  final ThemdNavigatorPopFunction? onNavigatorPop;
+  final String? currentPath;
 
   const ThemedDrawer({
     super.key,
@@ -90,6 +93,18 @@ class ThemedDrawer extends StatefulWidget {
     /// [fromScaffold] is a boolean that indicates if the drawer is being used from a scaffold.
     /// By default is `false`.
     this.fromScaffold = false,
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
+
+    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+    /// By default is `Navigator.of(context).pop`
+    this.onNavigatorPop,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
 
   @override
@@ -116,6 +131,11 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
   bool isExpanded = false;
   double get width => MediaQuery.of(context).size.width;
 
+  ThemedNavigatorPushFunction get onNavigatorPush =>
+      widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
+  ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+
   @override
   void initState() {
     super.initState();
@@ -124,26 +144,12 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
 
   @override
   void dispose() {
-    _overrideAppBar();
     _userExpandController.dispose();
     super.dispose();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(ThemedDrawer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    _overrideAppBar();
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
-
     List<ThemedNavigatorItem> actions = [
       ...widget.additionalActions,
       if (widget.enableAbout)
@@ -161,6 +167,12 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
               ),
             );
           },
+        ),
+      if (widget.onThemeSwitchTap != null)
+        ThemedNavigatorAction(
+          labelText: i18n?.t('layrz.taskbar.toggleTheme') ?? 'Toggle theme',
+          icon: MdiIcons.themeLightDark,
+          onTap: widget.onThemeSwitchTap!,
         ),
       if (widget.onSettingsTap != null)
         ThemedNavigatorAction(
@@ -283,6 +295,9 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                               context: context,
                               backgroundColor: backgroundColor,
                               fromScaffold: widget.fromScaffold,
+                              onNavigatorPush: onNavigatorPush,
+                              onNavigatorPop: onNavigatorPop,
+                              currentPath: widget.currentPath,
                             ))
                         .toList(),
                   ],
@@ -310,6 +325,9 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
                               context: context,
                               backgroundColor: backgroundColor,
                               fromScaffold: widget.fromScaffold,
+                              onNavigatorPush: onNavigatorPush,
+                              onNavigatorPop: onNavigatorPop,
+                              currentPath: widget.currentPath,
                             ))
                         .toList(),
                   ],
@@ -321,12 +339,14 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
               Divider(color: sidebarTextColor.withOpacity(0.2)),
               InkWell(
                 onTap: () {
-                  openInfoDialog(
-                    context: context,
-                    appTitle: widget.appTitle,
-                    i18n: i18n,
-                    companyName: widget.companyName,
-                    logo: isDark ? widget.favicon.white : widget.favicon.normal,
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ThemedLicensesView(
+                        companyName: companyName,
+                        logo: widget.logo,
+                        version: version,
+                      ),
+                    ),
                   );
                 },
                 child: Container(
@@ -347,25 +367,5 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
         ),
       ),
     );
-  }
-
-  void _overrideAppBar() {
-    if (!widget.fromScaffold) return;
-    bool isOpen = widget.scaffoldKey.currentState?.isDrawerOpen ?? false;
-    BuildContext? context = widget.scaffoldKey.currentContext;
-
-    if (context == null) return;
-
-    SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
-
-    if (isOpen) {
-      style = style.copyWith(
-        statusBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-        statusBarBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-        systemNavigationBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-      );
-    }
-
-    SystemChrome.setSystemUIOverlayStyle(style);
   }
 }

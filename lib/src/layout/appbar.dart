@@ -24,6 +24,11 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   final List<ThemedNotificationItem> notifications;
   final double mobileBreakpoint;
   final bool forceNotificationIcon;
+  final bool disableNotifications;
+  final ThemedNavigatorPushFunction? onNavigatorPush;
+  final ThemdNavigatorPopFunction? onNavigatorPop;
+  final bool isBackEnabled;
+  final String? currentPath;
 
   const ThemedAppBar({
     super.key,
@@ -112,6 +117,26 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     /// [forceNotificationIcon] is the flag to force the notification icon to be displayed.
     /// By default is `false`.
     this.forceNotificationIcon = false,
+
+    /// [disableNotifications] is the flag to disable the notifications.
+    /// By default is `false`.
+    this.disableNotifications = false,
+
+    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+    /// By default is `Navigator.of(context).pushNamed`
+    this.onNavigatorPush,
+
+    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+    /// By default is `Navigator.of(context).pop`
+    this.onNavigatorPop,
+
+    /// [isBackEnabled] is the flag to enable the back button.
+    /// By default is `true`.
+    this.isBackEnabled = true,
+
+    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
+    this.currentPath,
   });
 
   static bool get isMacOS => !kIsWeb && Platform.isMacOS;
@@ -134,26 +159,34 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   double get width => MediaQuery.of(context).size.width;
   bool get isMobile => width < widget.mobileBreakpoint;
 
-  String get currentPath => ModalRoute.of(context)?.settings.name ?? '';
+  String get currentPath => widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
   bool get isHome => currentPath == widget.homePath;
 
   bool get isMacOS => !kIsWeb && Platform.isMacOS;
 
+  ThemedNavigatorPushFunction get onNavigatorPush =>
+      widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
+
+  ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: widget.scaffoldKey);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _overrideAppBar();
+    overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: widget.scaffoldKey);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).dividerColor,
+            color: Theme.of(context).shadowColor,
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -182,12 +215,12 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                   ),
                 ),
                 const SizedBox(width: 10),
-              ] else if (!isHome) ...[
+              ] else if (!isHome && widget.isBackEnabled) ...[
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(50),
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () => onNavigatorPop.call(),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Icon(
@@ -199,8 +232,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                 const SizedBox(width: 10),
               ],
               InkWell(
-                onTap:
-                    (!isMobile && !isHome) ? () => Navigator.of(context).pushReplacementNamed(widget.homePath) : null,
+                onTap: (!isMobile && !isHome) ? () => onNavigatorPush.call(widget.homePath) : null,
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   height: ThemedAppBar.size.height - 10,
@@ -221,9 +253,14 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                       scrollDirection: Axis.horizontal,
                       reverse: true,
                       child: Row(
-                        children: widget.items
-                            .map((item) => item.toAppBarItem(context: context, backgroundColor: backgroundColor))
-                            .toList(),
+                        children: widget.items.map((item) {
+                          return item.toAppBarItem(
+                            context: context,
+                            backgroundColor: backgroundColor,
+                            onNavigatorPush: onNavigatorPush,
+                            currentPath: currentPath,
+                          );
+                        }).toList(),
                       ),
                     ),
                   ),
@@ -233,14 +270,21 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: ThemedNavigatorSeparator(
                       type: ThemedSeparatorType.dots,
-                    ).toAppBarItem(context: context, backgroundColor: backgroundColor),
+                    ).toAppBarItem(
+                      context: context,
+                      backgroundColor: backgroundColor,
+                      onNavigatorPush: onNavigatorPush,
+                      currentPath: currentPath,
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  ThemedNotificationIcon(
-                    notifications: widget.notifications,
-                    backgroundColor: backgroundColor,
-                    inAppBar: true,
-                  ),
+                  if (!widget.disableNotifications) ...[
+                    ThemedNotificationIcon(
+                      notifications: widget.notifications,
+                      backgroundColor: backgroundColor,
+                      inAppBar: true,
+                    ),
+                  ],
                   const SizedBox(width: 10),
                   ThemedAppBarAvatar(
                     appTitle: widget.appTitle,
@@ -261,12 +305,14 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                 ],
               ] else ...[
                 const Spacer(),
-                ThemedNotificationIcon(
-                  notifications: widget.notifications,
-                  backgroundColor: backgroundColor,
-                  inAppBar: true,
-                  forceFullSize: width < kSmallGrid,
-                ),
+                if (!widget.disableNotifications) ...[
+                  ThemedNotificationIcon(
+                    notifications: widget.notifications,
+                    backgroundColor: backgroundColor,
+                    inAppBar: true,
+                    forceFullSize: width < kSmallGrid,
+                  ),
+                ],
                 const SizedBox(width: 10),
               ],
             ],
@@ -274,20 +320,5 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
         ),
       ),
     );
-  }
-
-  void _overrideAppBar() {
-    bool isOpen = widget.scaffoldKey.currentState?.isDrawerOpen ?? false;
-    SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
-
-    if (isOpen) {
-      style = style.copyWith(
-        statusBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-        statusBarBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-        systemNavigationBarIconBrightness: useBlack(color: backgroundColor) ? Brightness.light : Brightness.dark,
-      );
-    }
-
-    SystemChrome.setSystemUIOverlayStyle(style);
   }
 }

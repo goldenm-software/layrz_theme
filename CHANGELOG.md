@@ -1,5 +1,42 @@
 # Changelog
 
+## 4.0.22
+- Added `customSortingFunction` to `ThemedColumn` allowing to sort the values of the column using a custom function
+
+## 4.0.21
+- Changes on Layout widgets to support correctly the System UI Overlay on Android and iOS
+- Added loaders to `drawAvatar` and `ThemedImage`
+
+## 4.0.20
+- Updated shadow color on the `generateLightTheme` y `generateDarkTheme` to `Colors.black.withOpacity(0.3)`
+- Added `Layo`
+
+## 4.0.19
+- Improvements in `ThemedLayout` and layout-related widgets, now will consider `MediaQuery.of(context).padding` to the fixed overlays' locations.
+
+## 4.0.18
+- Some hotfixes in `ThemedLayout` and layout-related widgets
+
+## 4.0.17
+- Added `currentPath` to overrides the currentPath on Layout
+
+## 4.0.16
+- Added support on `ThemedLayout` and layout-related widgets to use different `pushNamed()` and `pop()` navigator methods. (Basically can support go_router)
+
+## 4.0.15
+- Added `elevation`, `shadowColor` and `reverse` properties to `drawAvatar()`
+- Updated functionality of `color` property on `drawAvatar()`, now will apply to `dynamicAvatar`
+- Updated documentation of `reverse` on `generateContainerElevation()`
+
+## 4.0.14
+- Corrections on Text size prediction in `ThemedSnackbar`, should not overflow the text.
+
+## 4.0.13
+- Updated `width` for `ThemedSnackbar`, now, for screens with width mess than `500u` will expand to the full width of the screen
+
+## 4.0.12
+- Added `disableNotifications` to `ThemedAppBar` to disable notification icon.
+
 ## 4.0.11
 - New helper functions `saveFile` and `pickFile` to help in the process to save a file or get a files from the device.
 
