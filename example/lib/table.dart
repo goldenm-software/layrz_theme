@@ -66,6 +66,12 @@ class _TableViewState extends State<TableView> {
               onShow: (ctx, asset) async {
                 return;
               },
+              onEdit: (cxt, asset) async {
+                return;
+              },
+              onDelete: (cxt, asset) async {
+                return;
+              },
               columns: [
                 ThemedColumn(
                   labelText: 'ID',

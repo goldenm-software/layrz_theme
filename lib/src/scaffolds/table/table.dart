@@ -261,17 +261,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   List<T> selectedItems = [];
 
-  BoxDecoration get decoration => BoxDecoration(
-        border: Border(
-          right: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
-          bottom: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
-        ),
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  BorderSide get border => BorderSide(
+        color: Theme.of(context).dividerColor,
+        width: 1,
+      );
+  BorderSide get darkerBorder => BorderSide(
+        color: Theme.of(context).dividerColor,
+        width: 3,
       );
 
   TextStyle? get headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600);
@@ -441,7 +438,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     ),
                   ],
                 ),
-                const Divider(),
               ],
               Expanded(
                 child: CustomScrollView(
@@ -634,6 +630,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           drawCell(
             width: actionsWidth,
             alignment: Alignment.centerRight,
+            isLast: true,
             child: actions,
           ),
         ],
@@ -847,7 +844,12 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         width: width,
         height: rowHeight,
         alignment: alignment,
-        decoration: isLast ? null : decoration,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: darkerBorder,
+            right: isLast ? BorderSide.none : border,
+          ),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: canSort
             ? Row(
@@ -878,7 +880,12 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       width: width,
       height: rowHeight,
       alignment: alignment,
-      decoration: isLast ? null : decoration,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: border,
+          right: isLast ? BorderSide.none : border,
+        ),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: child,
     );
