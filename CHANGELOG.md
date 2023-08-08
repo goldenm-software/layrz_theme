@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.23
+- Fixed `ThemedTable` table mode (Desktop) to show the dividers correctly
+
 ## 4.0.22
 - Added `customSortingFunction` to `ThemedColumn` allowing to sort the values of the column using a custom function
 
