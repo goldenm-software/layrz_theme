@@ -53,3 +53,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/layo/
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
