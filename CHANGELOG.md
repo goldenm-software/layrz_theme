@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.24
+- Improved UX in `ThemedDualListInput` when selecting all while searching
+
 ## 4.0.23
 - Fixed `ThemedTable` table mode (Desktop) to show the dividers correctly
 
