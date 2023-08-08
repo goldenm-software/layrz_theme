@@ -36,20 +36,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
   bool get someHasIcon => widget.items.any((element) => element.icon != null);
 
-  List<ThemedSelectItem<T>> get selectedFiltered => selected.where((element) {
-        if (search.isEmpty) {
-          return true;
-        }
-        return element.label.toLowerCase().contains(search.toLowerCase());
-      }).toList();
-
-  List<ThemedSelectItem<T>> get availableFiltered => available.where((element) {
-        if (search.isEmpty) {
-          return true;
-        }
-
-        return element.label.toLowerCase().contains(search.toLowerCase());
-      }).toList();
+  List<ThemedSelectItem<T>> selectedFiltered = [];
+  List<ThemedSelectItem<T>> availableFiltered = [];
 
   String search = "";
 
@@ -65,6 +53,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         selected.add(available.removeAt(index));
       }
     }
+    availableFiltered = getAvailableFiltered();
+    selectedFiltered = getSelectedFiltered();
   }
 
   @override
@@ -136,6 +126,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
           onChanged: (value) {
             setState(() {
               search = value;
+              availableFiltered = getAvailableFiltered();
+              selectedFiltered = getSelectedFiltered();
             });
           },
         );
@@ -175,6 +167,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                           available.sort((a, b) => a.label.compareTo(b.label));
                           selected.sort((a, b) => a.label.compareTo(b.label));
                           widget.onChanged?.call(selected);
+                          availableFiltered = getAvailableFiltered();
+                          selectedFiltered = getSelectedFiltered();
                           setState(() {});
                         },
                       );
@@ -218,6 +212,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                           available.sort((a, b) => a.label.compareTo(b.label));
                           selected.sort((a, b) => a.label.compareTo(b.label));
                           widget.onChanged?.call(selected);
+                          availableFiltered = getAvailableFiltered();
+                          selectedFiltered = getSelectedFiltered();
                           setState(() {});
                         },
                       );
@@ -321,21 +317,53 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
     );
   }
 
-  void toggleAllToSelected() {
-    selected.addAll(available);
-    available.clear();
+  List<ThemedSelectItem<T>> getSelectedFiltered() => selected.where((element) {
+        if (search.isEmpty) {
+          return true;
+        }
+        return element.label.toLowerCase().contains(search.toLowerCase());
+      }).toList();
 
+  List<ThemedSelectItem<T>> getAvailableFiltered() => available.where((element) {
+        if (search.isEmpty) {
+          return true;
+        }
+
+        return element.label.toLowerCase().contains(search.toLowerCase());
+      }).toList();
+
+  void toggleAllToSelected() {
+    if (search.isNotEmpty) {
+      availableFiltered = getAvailableFiltered();
+      selected.addAll(availableFiltered);
+
+      available.removeWhere((element) => availableFiltered.contains(element));
+    } else {
+      selected.addAll(available);
+      available.clear();
+    }
     selected.sort((a, b) => a.label.compareTo(b.label));
     widget.onChanged?.call(selected);
+    availableFiltered = getAvailableFiltered();
+    selectedFiltered = getSelectedFiltered();
     setState(() {});
   }
 
   void toggleAllToAvailable() {
-    available.addAll(selected);
-    selected.clear();
+    if (search.isNotEmpty) {
+      selectedFiltered = getSelectedFiltered();
+      available.addAll(selectedFiltered);
+
+      selected.removeWhere((element) => selectedFiltered.contains(element));
+    } else {
+      available.addAll(selected);
+      selected.clear();
+    }
 
     available.sort((a, b) => a.label.compareTo(b.label));
     widget.onChanged?.call(selected);
+    availableFiltered = getAvailableFiltered();
+    selectedFiltered = getSelectedFiltered();
     setState(() {});
   }
 }
