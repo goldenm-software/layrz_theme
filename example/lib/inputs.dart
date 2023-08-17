@@ -46,6 +46,9 @@ class _InputsViewState extends State<InputsView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const ThemedWipDatePicker(
+                labelText: "WIP Date Picker",
+              ),
               ThemedColorPicker(
                 labelText: 'Color picker',
                 onChanged: (color) {
