@@ -54,6 +54,8 @@ class _ThemedWipDatePickerState extends State<ThemedWipDatePicker> with TickerPr
   late List<String> daysOfWeek = DateFormat.EEEE(widget.locale?.toString()).dateSymbols.STANDALONEWEEKDAYS;
   late List allDays = [...daysOfWeek, ...daysInMonth];
 
+  late Function(void Function()) overlaySetState;
+
   @override
   void initState() {
     super.initState();
@@ -115,121 +117,127 @@ class _ThemedWipDatePickerState extends State<ThemedWipDatePicker> with TickerPr
     }
 
     overlayEntry = OverlayEntry(
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Material(
-            color: Colors.transparent,
-            child: Stack(
-              children: [
-                Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
-                Positioned(
-                  top: top,
-                  left: left,
-                  right: right,
-                  width: width,
-                  child: AnimatedBuilder(
-                    animation: animationController,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: animationController.value,
-                        child: child,
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      height: widget.maxHeight,
-                      child: Column(children: [
-                        Row(
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context1, setState1) {
+            overlaySetState = setState1;
+            return Material(
+              color: Colors.transparent,
+              child: Stack(
+                children: [
+                  Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
+                  Positioned(
+                    top: top,
+                    left: left,
+                    right: right,
+                    width: width,
+                    child: AnimatedBuilder(
+                      animation: animationController,
+                      builder: (context, child) {
+                        return Opacity(
+                          opacity: animationController.value,
+                          child: child,
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: widget.maxHeight,
+                        child: Column(
                           children: [
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: Text(
+                            //         DateFormat('MMMM').format(focusDay),
+                            //         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            //               color: validateColor(color: Theme.of(context).cardColor),
+                            //               fontWeight: FontWeight.bold,
+                            //             ),
+                            //       ),
+                            //     ),
+                            //     const SizedBox(width: 10),
+                            //     const SizedBox(height: 20, child: VerticalDivider()),
+                            //     const SizedBox(width: 10),
+                            //     Tooltip(
+                            //       message: "Chao",
+                            //       child: InkWell(
+                            //         child: Icon(
+                            //           MdiIcons.calendar,
+                            //           color: validateColor(color: Theme.of(context).cardColor),
+                            //         ),
+                            //         onTap: () {
+                            //           setState(() {
+                            //             focusDay = DateTime.now();
+                            //             _updateDate();
+                            //           });
+                            //         },
+                            //       ),
+                            //     ),
+                            //     const SizedBox(width: 10),
+                            //     const SizedBox(height: 20, child: VerticalDivider()),
+                            //     const SizedBox(width: 10),
+                            //     ThemedButton(
+                            //       labelText: "hola",
+                            //       icon: MdiIcons.chevronLeft,
+                            //       style: ThemedButtonStyle.fab,
+                            //       onTap: () {
+                            //         setState(() {
+                            //           focusDay = focusDay.subtract(Duration(days: focusDay.day + 1));
+                            //           _updateDate();
+                            //         });
+                            //       },
+                            //     ),
+                            //     ThemedButton(
+                            //       labelText: "chao",
+                            //       icon: MdiIcons.chevronRight,
+                            //       style: ThemedButtonStyle.fab,
+                            //       onTap: () {
+                            //         setState(() {
+                            //           DateTime newSearch = focusDay.add(Duration(days: focusDay.day + 1));
+                            //           if (newSearch.month == focusDay.month) {
+                            //             focusDay = newSearch.add(const Duration(days: 2));
+                            //           } else {
+                            //             focusDay = newSearch;
+                            //           }
+                            //           _updateDate();
+                            //         });
+                            //       },
+                            //     ),
+                            //   ],
+                            // ),
+                            _buildToolBar(),
                             Expanded(
-                              child: Text(
-                                DateFormat('MMMM').format(focusDay),
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: validateColor(color: Theme.of(context).cardColor),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
+                              child: _buildCalendar(items: allDays),
                             ),
-                            const SizedBox(width: 10),
-                            const SizedBox(height: 20, child: VerticalDivider()),
-                            const SizedBox(width: 10),
-                            Tooltip(
-                              message: "Chao",
-                              child: InkWell(
-                                child: Icon(
-                                  MdiIcons.calendar,
-                                  color: validateColor(color: Theme.of(context).cardColor),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    focusDay = DateTime.now();
-                                    _updateDate();
-                                  });
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            const SizedBox(height: 20, child: VerticalDivider()),
-                            const SizedBox(width: 10),
-                            ThemedButton(
-                              labelText: "hola",
-                              icon: MdiIcons.chevronLeft,
-                              style: ThemedButtonStyle.fab,
-                              onTap: () {
-                                setState(() {
-                                  focusDay = focusDay.subtract(Duration(days: focusDay.day + 1));
-                                  _updateDate();
-                                });
-                              },
-                            ),
-                            ThemedButton(
-                              labelText: "chao",
-                              icon: MdiIcons.chevronRight,
-                              style: ThemedButtonStyle.fab,
-                              onTap: () {
-                                setState(() {
-                                  DateTime newSearch = focusDay.add(Duration(days: focusDay.day + 1));
-                                  if (newSearch.month == focusDay.month) {
-                                    focusDay = newSearch.add(const Duration(days: 2));
-                                  } else {
-                                    focusDay = newSearch;
-                                  }
-                                  _updateDate();
-                                });
-                              },
-                            ),
+                            // Expanded(
+                            //   child: GridView.builder(
+                            //     gridDelegate: const ThemedGridDelegateWithFixedHeight(
+                            //       crossAxisCount: 7,
+                            //       height: 40,
+                            //     ),
+                            //     itemCount: allDays.length,
+                            //     shrinkWrap: true,
+                            //     itemBuilder: (context, index) {
+                            //       final day = allDays[index];
+                            //       debugPrint('an item was created $day');
+                            //       return _buildDay(day: day, isString: day is String);
+                            //     },
+                            //   ),
+                            // ),
                           ],
                         ),
-                        // _buildToolBar(),
-                        // Expanded(
-                        //   child: _buildCalendar(items: allDays),
-                        // ),
-                        Expanded(
-                          child: GridView.builder(
-                            gridDelegate: const ThemedGridDelegateWithFixedHeight(
-                              crossAxisCount: 7,
-                              height: 40,
-                            ),
-                            itemCount: allDays.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final day = allDays[index];
-                              return _buildDay(day: day, isString: day is String);
-                            },
-                          ),
-                        ),
-                      ]),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        });
+                ],
+              ),
+            );
+          },
+        );
       },
     );
 
@@ -266,7 +274,7 @@ class _ThemedWipDatePickerState extends State<ThemedWipDatePicker> with TickerPr
               color: validateColor(color: Theme.of(context).cardColor),
             ),
             onTap: () {
-              setState(() {
+              overlaySetState(() {
                 focusDay = DateTime.now();
                 _updateDate();
               });
@@ -276,33 +284,52 @@ class _ThemedWipDatePickerState extends State<ThemedWipDatePicker> with TickerPr
         const SizedBox(width: 10),
         const SizedBox(height: 20, child: VerticalDivider()),
         const SizedBox(width: 10),
-        ThemedButton(
-          labelText: "hola",
-          icon: MdiIcons.chevronLeft,
-          style: ThemedButtonStyle.fab,
-          onTap: () {
-            setState(() {
-              focusDay = focusDay.subtract(Duration(days: focusDay.day + 1));
-              _updateDate();
-            });
-          },
+        // ThemedButton(
+        //   labelText: "Previous",
+        //   icon: MdiIcons.chevronLeft,
+        //   style: ThemedButtonStyle.fab,
+        //   onTap: () {
+        //     overlaySetState(() {
+        //       focusDay = focusDay.subtract(Duration(days: focusDay.day + 1));
+        //       _updateDate();
+        //     });
+        //   },
+        // ),
+        Tooltip(
+          message: "Previous",
+          child: InkWell(
+            child: Icon(
+              MdiIcons.chevronLeft,
+              color: validateColor(color: Theme.of(context).cardColor),
+            ),
+            onTap: () {
+              overlaySetState(() {
+                focusDay = focusDay.subtract(Duration(days: focusDay.day + 1));
+                _updateDate();
+              });
+            },
+          ),
         ),
-        ThemedButton(
-          labelText: "chao",
-          icon: MdiIcons.chevronRight,
-          style: ThemedButtonStyle.fab,
-          onTap: () {
-            setState(() {
-              DateTime newSearch = focusDay.add(Duration(days: focusDay.day + 1));
-              if (newSearch.month == focusDay.month) {
-                focusDay = newSearch.add(const Duration(days: 2));
-              } else {
-                focusDay = newSearch;
-              }
-              _updateDate();
-            });
-          },
-        ),
+
+        Builder(builder: (context) {
+          return ThemedButton(
+            labelText: "chao",
+            icon: MdiIcons.chevronRight,
+            style: ThemedButtonStyle.fab,
+            onTap: () {
+              // setState1;
+              overlaySetState(() {
+                DateTime newSearch = focusDay.add(Duration(days: focusDay.day + 1));
+                if (newSearch.month == focusDay.month) {
+                  focusDay = newSearch.add(const Duration(days: 2));
+                } else {
+                  focusDay = newSearch;
+                }
+                _updateDate();
+              });
+            },
+          );
+        }),
       ],
     );
   }
@@ -321,6 +348,7 @@ class _ThemedWipDatePickerState extends State<ThemedWipDatePicker> with TickerPr
       shrinkWrap: true,
       itemBuilder: (context, index) {
         final day = items[index];
+        debugPrint('an item was created $day');
         return _buildDay(day: day, isString: day is String);
       },
     );
