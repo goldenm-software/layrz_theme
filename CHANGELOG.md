@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.25
+- Fixed toggle theme on `ThemedLayout` and `additionalActions` when `ThemedLayoutStyle` is `ThemedLayoutStyle.sidebar`
+
 ## 4.0.24
 - Improved UX in `ThemedDualListInput` when selecting all while searching
 

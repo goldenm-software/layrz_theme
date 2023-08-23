@@ -277,6 +277,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onProfileTap: widget.onProfileTap,
               onLogoutTap: widget.onLogoutTap,
               notifications: widget.notifications,
+              additionalActions: widget.additionalActions,
               onThemeSwitchTap: widget.onThemeSwitchTap,
               onNavigatorPush: widget.onNavigatorPush,
               currentPath: widget.currentPath,
@@ -348,6 +349,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               onNavigatorPop: widget.onNavigatorPop,
               onNavigatorPush: widget.onNavigatorPush,
               currentPath: widget.currentPath,
+              onThemeSwitchTap: widget.onThemeSwitchTap,
             ),
             Expanded(
               child: Column(

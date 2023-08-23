@@ -198,8 +198,9 @@ class _LayoutState extends State<Layout> {
 
     return ThemedLayout(
       isBackEnabled: false,
+      style: ThemedLayoutStyle.sidebar,
       persistentItems: persistentItems,
-      style: _layoutStyle,
+      // style: _layoutStyle,
       scaffoldKey: _scaffoldKey,
       logo: logo,
       favicon: favicon,
@@ -221,6 +222,15 @@ class _LayoutState extends State<Layout> {
       onSettingsTap: () {
         debugPrint('Settings tapped');
       },
+      additionalActions: [
+        ThemedNavigatorAction(
+          icon: MdiIcons.testTube,
+          labelText: "Test",
+          onTap: () {
+            debugPrint('Test tapped');
+          },
+        ),
+      ],
       onNavigatorPush: context.go,
       onNavigatorPop: context.pop,
       notifications: notifications,
