@@ -1,6 +1,6 @@
 part of inputs;
 
-class ThemedAvatarInput extends StatefulWidget {
+class ThemedAvatarInput extends StatelessWidget {
   final String? labelText;
   final Widget? label;
   final String? value;
@@ -21,10 +21,44 @@ class ThemedAvatarInput extends StatefulWidget {
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
-  State<ThemedAvatarInput> createState() => _ThemedAvatarInputState();
+  Widget build(BuildContext context) {
+    return ThemedAvatarPicker(
+      label: label,
+      value: value,
+      labelText: labelText,
+      onChanged: onChanged,
+      disabled: disabled,
+      errors: errors,
+      hideDetails: hideDetails,
+    );
+  }
 }
 
-class _ThemedAvatarInputState extends State<ThemedAvatarInput> with SingleTickerProviderStateMixin {
+class ThemedAvatarPicker extends StatefulWidget {
+  final String? labelText;
+  final Widget? label;
+  final String? value;
+  final void Function(String?)? onChanged;
+  final bool disabled;
+  final List<String> errors;
+  final bool hideDetails;
+
+  const ThemedAvatarPicker({
+    super.key,
+    this.label,
+    this.value,
+    this.labelText,
+    this.onChanged,
+    this.disabled = false,
+    this.errors = const [],
+    this.hideDetails = false,
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+
+  @override
+  State<ThemedAvatarPicker> createState() => _ThemedAvatarPickerState();
+}
+
+class _ThemedAvatarPickerState extends State<ThemedAvatarPicker> with SingleTickerProviderStateMixin {
   late String? _value;
   late AnimationController _controller;
 

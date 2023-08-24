@@ -10,6 +10,7 @@
 - Migrated `ThemedDurationInput` from an `Overlay` to a `Dialog`.
 - New widgets `ThemedMonthPicker` and `ThemedMonthRangePicker`.
 - Updated `ThemedTextInput` to support `choices` to work like a combobox.
+- New widget `ThemedNumberInput`, basically is a `ThemedTextInput` with a `num` of return.
 
 ## 4.0.25
 - Fixed toggle theme on `ThemedLayout` and `additionalActions` when `ThemedLayoutStyle` is `ThemedLayoutStyle.sidebar`

@@ -38,20 +38,35 @@ part 'src/search_input.dart';
 part 'src/select_input.dart';
 part 'src/select_item.dart';
 part 'src/text_input.dart';
-part 'src/time_picker.dart';
+part 'src/pickers/time.dart';
 part 'src/number_input.dart';
 
 // Utilities
 part 'src/utilities/input_like_container.dart';
 
-// Pickers
+/// Pickers
+// Month Pickers
 part 'src/pickers/month/single.dart';
 part 'src/pickers/month/range.dart';
 
+// General pickers
+part 'src/pickers/general/avatar.dart';
+part 'src/pickers/general/color.dart';
+part 'src/pickers/general/emoji.dart';
+part 'src/pickers/general/icon.dart';
+
+// Date Pickers
+part 'src/pickers/date/single.dart';
+part 'src/pickers/date/range.dart';
+
+// Time Pickers
+part 'src/pickers/time/single.dart';
+part 'src/pickers/time/range.dart';
+
+// Date Time Pickers
+part 'src/pickers/datetime/single.dart';
+part 'src/pickers/datetime/range.dart';
+
 part 'src/pickers/datetime_picker.dart';
-part 'src/pickers/avatar_input.dart';
-part 'src/pickers/color_picker.dart';
 part 'src/pickers/datetime_range_picker_variant.dart';
 part 'src/pickers/datetime_range_picker.dart';
-part 'src/pickers/emoji_picker.dart';
-part 'src/pickers/icon_picker.dart';

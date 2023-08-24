@@ -351,7 +351,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                                           },
                                     child: Center(
                                       child: Text(
-                                        t('layrz.monthPicker.monthsShort.$index'),
+                                        t('layrz.monthPicker.months.$index'),
                                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                               color: validateColor(color: decoration.color ?? Colors.white),
                                             ),
