@@ -237,81 +237,72 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
             const SizedBox(height: 10),
             Divider(color: sidebarTextColor.withOpacity(0.2)),
             const SizedBox(height: 10),
-            InkWell(
-              onTap: () async {
-                if (isExpanded) {
-                  await _userExpandController.reverse();
-                } else {
-                  await _userExpandController.forward();
-                }
-                setState(() => isExpanded = !isExpanded);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  drawAvatar(
-                    context: context,
-                    name: widget.userName,
-                    avatar: widget.userAvatar,
-                    dynamicAvatar: widget.userDynamicAvatar,
-                    color: validateColor(color: backgroundColor),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      widget.userName,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: sidebarTextColor,
-                          ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  AnimatedBuilder(
-                    animation: _userExpandController,
-                    child: Icon(
-                      MdiIcons.chevronDown,
-                      color: sidebarTextColor,
-                      size: 20,
-                    ),
-                    builder: (BuildContext context, Widget? child) {
-                      return Transform.rotate(
-                        angle: _userExpandController.value * pi,
-                        child: child,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            AnimatedBuilder(
-              animation: _userExpandController,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  if (isExpanded) {
+                    await _userExpandController.reverse();
+                  } else {
+                    await _userExpandController.forward();
+                  }
+                  setState(() => isExpanded = !isExpanded);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 10),
-                    ...actions
-                        .map((item) => item.toDrawerItem(
-                              context: context,
-                              backgroundColor: backgroundColor,
-                              fromScaffold: widget.fromScaffold,
-                              onNavigatorPush: onNavigatorPush,
-                              onNavigatorPop: onNavigatorPop,
-                              currentPath: widget.currentPath,
-                            ))
-                        .toList(),
+                    drawAvatar(
+                      context: context,
+                      name: widget.userName,
+                      avatar: widget.userAvatar,
+                      dynamicAvatar: widget.userDynamicAvatar,
+                      color: validateColor(color: backgroundColor),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        widget.userName,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: sidebarTextColor,
+                            ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    AnimatedBuilder(
+                      animation: _userExpandController,
+                      child: Icon(
+                        MdiIcons.chevronDown,
+                        color: sidebarTextColor,
+                        size: 20,
+                      ),
+                      builder: (BuildContext context, Widget? child) {
+                        return Transform.rotate(
+                          angle: _userExpandController.value * pi,
+                          child: child,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
-              builder: (BuildContext context, Widget? child) {
-                double originalHeight = (47 * actions.length) + 10;
-
-                return SizedBox(
-                  height: _userExpandController.value * originalHeight,
-                  child: child,
-                );
-              },
             ),
+            if (_userExpandController.value == 1)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 10),
+                  ...actions
+                      .map((item) => item.toDrawerItem(
+                            context: context,
+                            backgroundColor: backgroundColor,
+                            fromScaffold: widget.fromScaffold,
+                            onNavigatorPush: onNavigatorPush,
+                            onNavigatorPop: onNavigatorPop,
+                            currentPath: widget.currentPath,
+                          ))
+                      .toList(),
+                ],
+              ),
             const SizedBox(height: 10),
             Divider(color: sidebarTextColor.withOpacity(0.2)),
             const SizedBox(height: 10),

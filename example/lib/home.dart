@@ -46,6 +46,33 @@ class _HomeViewState extends State<HomeView> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Row(
+              children: [CrossAxisAlignment.start, CrossAxisAlignment.center, CrossAxisAlignment.end].map((cross) {
+                return Expanded(
+                  child: Column(
+                    crossAxisAlignment: cross,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ...ThemedTooltipPosition.values.map((position) {
+                        return Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: ThemedButton(
+                            tooltipPosition: position,
+                            style: ThemedButtonStyle.filledFab,
+                            onTap: () {
+                              debugPrint("Tooltip [$position]");
+                            },
+                            icon: MdiIcons.helpCircle,
+                            labelText: "Tooltip [$position]",
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
             ThemedButton(
               labelText: "Show snackbar [simple]",
               onTap: () {

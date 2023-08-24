@@ -24,6 +24,9 @@ abstract class ThemedNavigatorItem {
   /// [drawerItemPadding] is the padding applied of the element when is rendered using [toDrawerItem].
   static EdgeInsets get drawerItemPadding => const EdgeInsets.symmetric(vertical: 5);
 
+  /// [sidebarSize] is the size of the elements in the sidebar.
+  static double get sidebarSize => 35;
+
   /// [toAppBarItem] is the widget to be displayed in the appbar.
   Widget toAppBarItem({
     required BuildContext context,
@@ -89,6 +92,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
   final IconData? icon;
   final String path;
   final List<ThemedNavigatorItem> children;
+  final bool useDefaultRedirect;
 
   /// [ThemedNavigatorPage] is a helper class to handle the view and their children.
   ThemedNavigatorPage({
@@ -103,6 +107,9 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
 
     /// [children] is the children of the view. by default will be empty.
     this.children = const [],
+
+    /// [useDefaultRedirect] indicates if the view should redirect to the first child when is tapped.
+    this.useDefaultRedirect = true,
   }) : assert(label != null || labelText != null);
 
   /// [toAppBarItem] is the widget to be displayed in the appbar.
@@ -122,9 +129,13 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
       label: label,
       icon: icon,
       onTap: () {
-        final subpages = children.whereType<ThemedNavigatorPage>();
-        if (subpages.isNotEmpty) {
-          onNavigatorPush.call(subpages.first.path);
+        if (useDefaultRedirect) {
+          final subpages = children.whereType<ThemedNavigatorPage>();
+          if (subpages.isNotEmpty) {
+            onNavigatorPush.call(subpages.first.path);
+          } else {
+            onNavigatorPush.call(path);
+          }
         } else {
           onNavigatorPush.call(path);
         }
@@ -156,9 +167,13 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
       label: label,
       icon: icon,
       onTap: () {
-        final subpages = children.whereType<ThemedNavigatorPage>();
-        if (subpages.isNotEmpty) {
-          onNavigatorPush.call(subpages.first.path);
+        if (useDefaultRedirect) {
+          final subpages = children.whereType<ThemedNavigatorPage>();
+          if (subpages.isNotEmpty) {
+            onNavigatorPush.call(subpages.first.path);
+          } else {
+            onNavigatorPush.call(path);
+          }
         } else {
           onNavigatorPush.call(path);
         }
@@ -316,27 +331,31 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
 
     return Padding(
       padding: ThemedNavigatorItem.sidebarItemPadding,
-      child: Tooltip(
+      child: ThemedTooltip(
         message: text,
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: highlight ? validateColor(color: backgroundColor) : Colors.transparent,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(10),
-              onTap: (highlight && !forceOnTap) ? null : onTap,
-              child: Padding(
-                padding: const EdgeInsets.all(7),
-                child: Center(
-                  child: Icon(
-                    icon ?? MdiIcons.help,
-                    size: 16,
-                    color: highlight ? backgroundColor : validateColor(color: backgroundColor),
+        position: ThemedTooltipPosition.right,
+        child: GestureDetector(
+          behavior: HitTestBehavior.deferToChild,
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: highlight ? validateColor(color: backgroundColor) : Colors.transparent,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: (highlight && !forceOnTap) ? null : onTap,
+                child: Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: Center(
+                    child: Icon(
+                      icon ?? MdiIcons.help,
+                      size: 16,
+                      color: highlight ? backgroundColor : validateColor(color: backgroundColor),
+                    ),
                   ),
                 ),
               ),

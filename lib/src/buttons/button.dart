@@ -14,7 +14,9 @@ class ThemedButton extends StatefulWidget {
   final String? hintText;
   final double? width;
   final bool isDisabled;
+  final ThemedTooltipPosition tooltipPosition;
 
+  /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
 
@@ -60,6 +62,10 @@ class ThemedButton extends StatefulWidget {
 
     /// [isDisabled] is used to disable the button.
     this.isDisabled = false,
+
+    /// [tooltipPosition] is used to set the position of the tooltip.
+    /// By default, will use `ThemedTooltipPosition.bottom`.
+    this.tooltipPosition = ThemedTooltipPosition.bottom,
   }) : assert(label != null || labelText != null);
 
   @override
@@ -155,7 +161,8 @@ class _ThemedButtonState extends State<ThemedButton> {
     }
 
     Color contentColor = isDisabled ? disabledColor : color;
-    return Tooltip(
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
       message: message,
       child: AnimatedContainer(
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
@@ -200,7 +207,8 @@ class _ThemedButtonState extends State<ThemedButton> {
     }
 
     Color contentColor = isDisabled ? disabledColor : color;
-    return Tooltip(
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
       message: message,
       child: AnimatedContainer(
         constraints: BoxConstraints(
@@ -251,7 +259,8 @@ class _ThemedButtonState extends State<ThemedButton> {
     }
 
     Color contentColor = isDisabled ? disabledColor : color;
-    return Tooltip(
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
       message: message,
       child: AnimatedContainer(
         constraints: BoxConstraints(

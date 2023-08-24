@@ -59,6 +59,23 @@ ThemeData generateLightTheme({
     canvasColor: kLightBackgroundColor,
     shadowColor: Colors.black.withOpacity(0.3),
 
+    tooltipTheme: TooltipThemeData(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      textStyle: fonts.textTheme.bodySmall?.copyWith(
+        color: kLightBackgroundColor,
+        fontSize: 12,
+      ),
+    ),
     // Input
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.all(10),

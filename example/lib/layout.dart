@@ -74,6 +74,7 @@ class _LayoutState extends State<Layout> {
       ThemedNavigatorPage(
         labelText: 'Nested',
         path: '/nested',
+        useDefaultRedirect: false,
         children: List.generate(5, (i) {
           return ThemedNavigatorPage(
             labelText: "Subpage $i",
@@ -196,11 +197,13 @@ class _LayoutState extends State<Layout> {
       ),
     ];
 
+    debugPrint('layout: $_layoutStyle');
+
     return ThemedLayout(
       isBackEnabled: false,
-      style: ThemedLayoutStyle.sidebar,
+      // style: ThemedLayoutStyle.classic,
       persistentItems: persistentItems,
-      // style: _layoutStyle,
+      style: _layoutStyle,
       scaffoldKey: _scaffoldKey,
       logo: logo,
       favicon: favicon,

@@ -2,7 +2,6 @@ part of layout;
 
 class ThemedSidebar extends StatefulWidget {
   final List<ThemedNavigatorItem> items;
-  final bool contracted;
   final Color? backgroundColor;
   final ThemedNavigatorPushFunction? onNavigatorPush;
   final String? currentPath;
@@ -12,9 +11,6 @@ class ThemedSidebar extends StatefulWidget {
 
     /// [items] is the list of buttons to be displayed in the drawer.
     this.items = const [],
-
-    /// [contracted] is a boolean that enables the contracted sidebar.
-    this.contracted = false,
 
     /// [backgroundColor] is the background color of the sidebar.
     /// If null, it will be the primary color of the theme.
@@ -32,25 +28,7 @@ class ThemedSidebar extends StatefulWidget {
   @override
   State<ThemedSidebar> createState() => _ThemedSidebarState();
 
-  static ThemedSidebar asContracted({
-    /// [items] is the list of buttons to be displayed in the drawer.
-    List<ThemedNavigatorItem> items = const [],
-
-    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
-    /// By default is `Navigator.of(context).pushNamed`
-    ThemedNavigatorPushFunction? onNavigatorPush,
-
-    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
-    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
-    String? currentPath,
-  }) {
-    return ThemedSidebar(
-      items: items,
-      contracted: true,
-      onNavigatorPush: onNavigatorPush,
-      currentPath: currentPath,
-    );
-  }
+  static double get width => 60;
 }
 
 class _ThemedSidebarState extends State<ThemedSidebar> {
@@ -75,16 +53,25 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50,
+      width: ThemedSidebar.width,
       height: double.infinity,
       padding: const EdgeInsets.all(10),
-      color: backgroundColor,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor,
+            blurRadius: 10,
+            offset: const Offset(5, 0),
+          ),
+        ],
+      ),
       child: SafeArea(
         child: SingleChildScrollView(
           controller: _scrollController,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: widget.items
                 .where((item) {
                   bool c1 = item is ThemedNavigatorPage;
@@ -96,8 +83,8 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                 .map((item) => item.toSidebarItem(
                       context: context,
                       backgroundColor: backgroundColor,
-                      width: 30,
-                      height: 30,
+                      width: ThemedNavigatorItem.sidebarSize,
+                      height: ThemedNavigatorItem.sidebarSize,
                       onNavigatorPush: onNavigatorPush,
                       currentPath: widget.currentPath,
                     ))

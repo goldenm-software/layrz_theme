@@ -10,17 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
+import 'package:layrz_theme/src/tooltips/tooltips.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-part 'appbar.dart';
-part 'sidebar.dart';
-part 'drawer.dart';
-part 'taskbar.dart';
-part 'models.dart';
+part 'src/appbar.dart';
+part 'src/sidebar.dart';
+part 'src/drawer.dart';
+part 'src/taskbar.dart';
+part 'src/models.dart';
 
 // Parts
-part 'parts/notification.dart';
-part 'parts/avatar.dart';
+part 'src/parts/notification.dart';
+part 'src/parts/avatar.dart';
 
 typedef ThemedNavigatorPushFunction = void Function(String path);
 typedef ThemdNavigatorPopFunction = void Function();
@@ -180,33 +181,6 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
   @override
   Widget build(BuildContext context) {
-    PreferredSizeWidget appBar = ThemedAppBar(
-      scaffoldKey: _scaffoldKey,
-      items: widget.items,
-      homePath: widget.homePath,
-      disableLeading: widget.disableLeading,
-      appTitle: widget.appTitle,
-      logo: widget.logo,
-      favicon: widget.favicon,
-      version: widget.version,
-      companyName: widget.companyName,
-      userName: widget.userName,
-      userDynamicAvatar: widget.userDynamicAvatar,
-      enableAbout: widget.enableAbout,
-      onSettingsTap: widget.onSettingsTap,
-      onProfileTap: widget.onProfileTap,
-      onLogoutTap: widget.onLogoutTap,
-      additionalActions: widget.additionalActions,
-      backgroundColor: widget.backgroundColor,
-      notifications: widget.notifications,
-      mobileBreakpoint: widget.mobileBreakpoint,
-      forceNotificationIcon: widget.style == ThemedLayoutStyle.classic,
-      onThemeSwitchTap: widget.onThemeSwitchTap,
-      onNavigatorPush: widget.onNavigatorPush,
-      isBackEnabled: widget.isBackEnabled,
-      currentPath: widget.currentPath,
-    );
-
     double width = MediaQuery.of(context).size.width;
 
     Widget child = Container(
@@ -222,7 +196,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     if (width <= widget.mobileBreakpoint) {
       return Scaffold(
         key: _scaffoldKey,
-        appBar: appBar,
+        appBar: _generateAppBar(),
         body: child,
         onDrawerChanged: (isExpanded) {
           Color backgroundColor =
@@ -254,37 +228,59 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       );
     }
 
-    Widget content = const SizedBox.shrink();
-
     switch (widget.style) {
-      case ThemedLayoutStyle.modern:
-        content = Column(
-          children: [
-            appBar,
-            Expanded(child: child),
-            ThemedTaskbar(
-              items: getChildUrls(),
-              persistentItems: widget.persistentItems,
-              appTitle: widget.appTitle,
-              companyName: widget.companyName,
-              logo: widget.logo,
-              favicon: widget.favicon,
-              version: widget.version,
-              userName: widget.userName,
-              userDynamicAvatar: widget.userDynamicAvatar,
-              enableAbout: widget.enableAbout,
-              onSettingsTap: widget.onSettingsTap,
-              onProfileTap: widget.onProfileTap,
-              onLogoutTap: widget.onLogoutTap,
-              notifications: widget.notifications,
-              additionalActions: widget.additionalActions,
-              onThemeSwitchTap: widget.onThemeSwitchTap,
-              onNavigatorPush: widget.onNavigatorPush,
-              currentPath: widget.currentPath,
-            ),
-          ],
+      case ThemedLayoutStyle.classic:
+        final childUrls = getChildUrls();
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: _generateAppBar(),
+          body: Row(
+            children: [
+              ThemedSidebar(
+                onNavigatorPush: widget.onNavigatorPush,
+                currentPath: widget.currentPath,
+                items: [
+                  ...childUrls,
+                  if (widget.persistentItems.isNotEmpty) ...[
+                    if (childUrls.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+                    ...widget.persistentItems,
+                  ],
+                ],
+              ),
+              Expanded(child: child),
+            ],
+          ),
         );
-        break;
+      case ThemedLayoutStyle.modern:
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: _generateAppBar(),
+          body: Column(
+            children: [
+              Expanded(child: child),
+              ThemedTaskbar(
+                items: getChildUrls(),
+                persistentItems: widget.persistentItems,
+                appTitle: widget.appTitle,
+                companyName: widget.companyName,
+                logo: widget.logo,
+                favicon: widget.favicon,
+                version: widget.version,
+                userName: widget.userName,
+                userDynamicAvatar: widget.userDynamicAvatar,
+                enableAbout: widget.enableAbout,
+                onSettingsTap: widget.onSettingsTap,
+                onProfileTap: widget.onProfileTap,
+                onLogoutTap: widget.onLogoutTap,
+                notifications: widget.notifications,
+                additionalActions: widget.additionalActions,
+                onThemeSwitchTap: widget.onThemeSwitchTap,
+                onNavigatorPush: widget.onNavigatorPush,
+                currentPath: widget.currentPath,
+              ),
+            ],
+          ),
+        );
       case ThemedLayoutStyle.sidebar:
         String? pageName;
         IconData? pageIcon;
@@ -323,116 +319,110 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           }
         }
 
-        content = Row(
-          children: [
-            ThemedDrawer(
-              scaffoldKey: _scaffoldKey,
-              items: [
-                ...widget.items,
-                if (widget.persistentItems.isNotEmpty) ...[
-                  ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
-                  ...widget.persistentItems,
-                ],
-              ],
-              appTitle: widget.appTitle,
-              companyName: widget.companyName,
-              logo: widget.logo,
-              favicon: widget.favicon,
-              version: widget.version,
-              userName: widget.userName,
-              userDynamicAvatar: widget.userDynamicAvatar,
-              enableAbout: widget.enableAbout,
-              onSettingsTap: widget.onSettingsTap,
-              onProfileTap: widget.onProfileTap,
-              onLogoutTap: widget.onLogoutTap,
-              additionalActions: widget.additionalActions,
-              onNavigatorPop: widget.onNavigatorPop,
-              onNavigatorPush: widget.onNavigatorPush,
-              currentPath: widget.currentPath,
-              onThemeSwitchTap: widget.onThemeSwitchTap,
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  if (pageName != null) ...[
-                    Container(
-                      height: ThemedAppBar.size.height,
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          if (pageIcon != null) ...[
-                            Icon(
-                              pageIcon,
-                              color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 5),
-                          ],
-                          Expanded(
-                            child: Text(
-                              pageName,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+        return Scaffold(
+          key: _scaffoldKey,
+          body: Row(
+            children: [
+              ThemedDrawer(
+                scaffoldKey: _scaffoldKey,
+                items: [
+                  ...widget.items,
+                  if (widget.persistentItems.isNotEmpty) ...[
+                    ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+                    ...widget.persistentItems,
                   ],
-                  Expanded(child: child),
                 ],
+                appTitle: widget.appTitle,
+                companyName: widget.companyName,
+                logo: widget.logo,
+                favicon: widget.favicon,
+                version: widget.version,
+                userName: widget.userName,
+                userDynamicAvatar: widget.userDynamicAvatar,
+                enableAbout: widget.enableAbout,
+                onSettingsTap: widget.onSettingsTap,
+                onProfileTap: widget.onProfileTap,
+                onLogoutTap: widget.onLogoutTap,
+                additionalActions: widget.additionalActions,
+                onNavigatorPop: widget.onNavigatorPop,
+                onNavigatorPush: widget.onNavigatorPush,
+                currentPath: widget.currentPath,
+                onThemeSwitchTap: widget.onThemeSwitchTap,
               ),
-            ),
-          ],
-        );
-        break;
-      case ThemedLayoutStyle.classic:
-        final childUrls = getChildUrls();
-        content = Column(
-          children: [
-            appBar,
-            Expanded(
-              child: Row(
-                children: [
-                  ThemedSidebar.asContracted(
-                    onNavigatorPush: widget.onNavigatorPush,
-                    currentPath: widget.currentPath,
-                    items: [
-                      ...childUrls,
-                      if (widget.persistentItems.isNotEmpty) ...[
-                        if (childUrls.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
-                        ...widget.persistentItems,
-                      ],
+              Expanded(
+                child: Column(
+                  children: [
+                    if (pageName != null) ...[
+                      Container(
+                        height: ThemedAppBar.size.height,
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (pageIcon != null) ...[
+                              Icon(
+                                pageIcon,
+                                color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 5),
+                            ],
+                            Expanded(
+                              child: Text(
+                                pageName,
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
-                  ),
-                  Expanded(child: child),
-                ],
+                    Expanded(child: child),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
-        break;
       default:
-        content = const SizedBox.shrink();
-        break;
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: _generateAppBar(),
+          body: child,
+        );
     }
+  }
 
-    Widget body = Scaffold(
-      key: _scaffoldKey,
-      body: content,
-    );
-
-    if (widget.isBackEnabled) {
-      return body;
-    }
-
-    return WillPopScope(
-      child: body,
-      onWillPop: () => Future.value(false),
+  ThemedAppBar _generateAppBar() {
+    return ThemedAppBar(
+      scaffoldKey: _scaffoldKey,
+      items: widget.items,
+      homePath: widget.homePath,
+      disableLeading: widget.disableLeading,
+      appTitle: widget.appTitle,
+      logo: widget.logo,
+      favicon: widget.favicon,
+      version: widget.version,
+      companyName: widget.companyName,
+      userName: widget.userName,
+      userDynamicAvatar: widget.userDynamicAvatar,
+      enableAbout: widget.enableAbout,
+      onSettingsTap: widget.onSettingsTap,
+      onProfileTap: widget.onProfileTap,
+      onLogoutTap: widget.onLogoutTap,
+      additionalActions: widget.additionalActions,
+      backgroundColor: widget.backgroundColor,
+      notifications: widget.notifications,
+      mobileBreakpoint: widget.mobileBreakpoint,
+      forceNotificationIcon: widget.style == ThemedLayoutStyle.classic,
+      onThemeSwitchTap: widget.onThemeSwitchTap,
+      onNavigatorPush: widget.onNavigatorPush,
+      isBackEnabled: widget.isBackEnabled,
+      currentPath: widget.currentPath,
     );
   }
 
@@ -462,7 +452,12 @@ enum ThemedLayoutStyle {
   sidebar,
 }
 
-void overrideAppBarStyle({required GlobalKey<ScaffoldState> scaffoldKey, required Color backgroundColor}) {
+void overrideAppBarStyle({
+  required GlobalKey<ScaffoldState> scaffoldKey,
+  required Color backgroundColor,
+  bool mounted = true,
+}) {
+  if (!mounted) return;
   if (kIsWeb) return;
 
   BuildContext? context = scaffoldKey.currentContext;

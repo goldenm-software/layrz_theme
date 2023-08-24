@@ -60,6 +60,10 @@ final goRoutes = [
     builder: (context, state) => const EmptyView(name: 'Empty'),
   ),
   GoRoute(
+    path: '/nested',
+    redirect: (context, state) => '/nested/test2',
+  ),
+  GoRoute(
     path: '/nested/test0',
     builder: (context, state) => const EmptyView(name: 'Test 0'),
   ),

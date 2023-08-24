@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.26
+- New widget `ThemedTooltip`, basically it's an a re-invention of the `Tooltip` widget, provides the option to change the spawn position of the tooltip, and prevents the issue with the default `Tooltip` widget related to the tap gesture, allowing to use any gesture on the child widget.
+- Updated the structure logic of the `ThemedLayout` and layout-related widgets, now, the shadows will overlap correctly.
+- Updated `generateLightTheme()` and `generateDarkTheme()` with `Tooltip` theme.
+- Replaced `Tooltip` for `ThemedTooltip` in the `ThemedButton` widget.
+- Added the property `useDefaultRedirect` on the `ThemedNavigatorPage`, basically allows to push the parent page of the nested pages when is `true`, when is `false` will push the first page of the nested pages.
+
 ## 4.0.25
 - Fixed toggle theme on `ThemedLayout` and `additionalActions` when `ThemedLayoutStyle` is `ThemedLayoutStyle.sidebar`
 
