@@ -20,6 +20,7 @@ import 'src/tooltips/tooltips.dart';
 // Library exports
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
 export 'package:file_picker/file_picker.dart' show FileType;
+export 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;
 
 // Sub-libraries exports
 export 'src/tooltips/tooltips.dart';

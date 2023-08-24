@@ -6,6 +6,10 @@
 - Updated `generateLightTheme()` and `generateDarkTheme()` with `Tooltip` theme.
 - Replaced `Tooltip` for `ThemedTooltip` in the `ThemedButton` widget.
 - Added the property `useDefaultRedirect` on the `ThemedNavigatorPage`, basically allows to push the parent page of the nested pages when is `true`, when is `false` will push the first page of the nested pages.
+- Updated `ThemedColorPicker` to support multiple pickers from the package `flex_color_picker`.
+- Migrated `ThemedDurationInput` from an `Overlay` to a `Dialog`.
+- New widgets `ThemedMonthPicker` and `ThemedMonthRangePicker`.
+- Updated `ThemedTextInput` to support `choices` to work like a combobox.
 
 ## 4.0.25
 - Fixed toggle theme on `ThemedLayout` and `additionalActions` when `ThemedLayoutStyle` is `ThemedLayoutStyle.sidebar`

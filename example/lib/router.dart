@@ -89,7 +89,7 @@ final goRoutes = [
   ),
 ];
 
-final router = GoRouter(initialLocation: '/home', routes: goRoutes);
+final router = GoRouter(initialLocation: '/inputs', routes: goRoutes);
 
 final nativeRoutes = {
   '/home': (context) => const HomeView(name: 'Home'),

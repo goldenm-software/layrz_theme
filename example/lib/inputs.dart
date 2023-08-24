@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/layout.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -23,6 +24,16 @@ class _InputsViewState extends State<InputsView> {
     minutes: 0,
     hours: 0,
   );
+  List<String> searchChoices = [];
+  ThemedMonth? _selectedMonth = const ThemedMonth(year: 2023, month: Month.july);
+  List<ThemedMonth> _selectedMonths = const [
+    ThemedMonth(year: 2023, month: Month.july),
+    ThemedMonth(year: 2023, month: Month.august),
+  ];
+  List<ThemedMonth> _selectedMonths2 = const [
+    ThemedMonth(year: 2023, month: Month.july),
+    ThemedMonth(year: 2023, month: Month.august),
+  ];
   List<ThemedSelectItem<int>> get choices => List.generate(10, (index) {
         return ThemedSelectItem<int>(
           value: index,
@@ -34,6 +45,7 @@ class _InputsViewState extends State<InputsView> {
   bool value = false;
 
   String textInputValue = "";
+  String textInputValue2 = "";
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +58,96 @@ class _InputsViewState extends State<InputsView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const ThemedWipDatePicker(
-                labelText: "WIP Date Picker",
+              ThemedTextInput(
+                labelText: 'Text Input [Plain]',
+                value: textInputValue,
+                onChanged: (value) {
+                  setState(() {
+                    textInputValue = value;
+                  });
+                },
+              ),
+
+              Row(
+                children: [
+                  ThemedButton(
+                    labelText: "Fill choices",
+                    onTap: () {
+                      setState(() {
+                        searchChoices = List.generate(10, (index) => "Choice $index");
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  ThemedButton(
+                    labelText: "Clear choices",
+                    onTap: () {
+                      setState(() {
+                        searchChoices = [];
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+              ThemedTextInput(
+                labelText: 'Text Input [Combobox]',
+                value: textInputValue2,
+                choices: searchChoices,
+                onChanged: (value) {
+                  setState(() {
+                    textInputValue2 = value;
+                  });
+                },
+              ),
+              ThemedMonthPicker(
+                labelText: "Month picker",
+                value: _selectedMonth,
+                minimum: const ThemedMonth(year: 2023, month: Month.january),
+                maximum: const ThemedMonth(year: 2023, month: Month.december),
+                disabledMonths: const [
+                  ThemedMonth(year: 2023, month: Month.january),
+                  ThemedMonth(year: 2023, month: Month.february),
+                  ThemedMonth(year: 2023, month: Month.march),
+                ],
+                onChanged: (month) {
+                  setState(() {
+                    _selectedMonth = month;
+                  });
+                },
+              ),
+              ThemedMonthRangePicker(
+                labelText: "Month range picker [Random]",
+                value: _selectedMonths,
+                minimum: const ThemedMonth(year: 2023, month: Month.january),
+                maximum: const ThemedMonth(year: 2023, month: Month.december),
+                disabledMonths: const [
+                  ThemedMonth(year: 2023, month: Month.january),
+                  ThemedMonth(year: 2023, month: Month.february),
+                  ThemedMonth(year: 2023, month: Month.march),
+                ],
+                onChanged: (months) {
+                  setState(() {
+                    _selectedMonths = months;
+                  });
+                },
+              ),
+              ThemedMonthRangePicker(
+                labelText: "Month range picker [Consecutive]",
+                value: _selectedMonths2,
+                consecutive: true,
+                minimum: const ThemedMonth(year: 2022, month: Month.january),
+                maximum: const ThemedMonth(year: 2024, month: Month.december),
+                disabledMonths: const [
+                  ThemedMonth(year: 2023, month: Month.january),
+                  ThemedMonth(year: 2023, month: Month.february),
+                  ThemedMonth(year: 2023, month: Month.march),
+                ],
+                onChanged: (months) {
+                  setState(() {
+                    _selectedMonths2 = months;
+                  });
+                },
               ),
               ThemedColorPicker(
                 labelText: 'Color picker',
@@ -94,15 +194,6 @@ class _InputsViewState extends State<InputsView> {
                   });
                 },
               ),
-              ThemedTextInput(
-                labelText: 'Text Input',
-                value: textInputValue,
-                onChanged: (value) {
-                  setState(() {
-                    textInputValue = value;
-                  });
-                },
-              ),
               Text('Value: $textInputValue'),
               const Divider(),
               const SizedBox(height: 10),
@@ -127,6 +218,40 @@ class _InputsViewState extends State<InputsView> {
                     ),
                   ],
                 ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ThemedTextInput(
+                      labelText: 'Text Input [Combobox]',
+                      value: textInputValue2,
+                      choices: searchChoices,
+                      onChanged: (value) {
+                        setState(() {
+                          textInputValue2 = value;
+                        });
+                      },
+                      onTap: () {
+                        debugPrint("Combobox tapped");
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: ThemedTextInput(
+                      labelText: 'Text Input [Combobox]',
+                      value: textInputValue2,
+                      choices: searchChoices,
+                      onChanged: (value) {
+                        setState(() {
+                          textInputValue2 = value;
+                        });
+                      },
+                      onTap: () {
+                        debugPrint("Combobox tapped");
+                      },
+                    ),
+                  ),
+                ],
               ),
               const ThemedDynamicAvatarInput(
                 labelText: "Dynamic Avatar Input",
