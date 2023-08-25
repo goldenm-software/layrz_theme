@@ -1,5 +1,26 @@
 # Changelog
 
+## 4.1.0
+- New widget `ThemedTooltip`, basically it's an a re-invention of the `Tooltip` widget, provides the option to change the spawn position of the tooltip, and prevents the issue with the default `Tooltip` widget related to the tap gesture, allowing to use any gesture on the child widget.
+- Updated the structure logic of the `ThemedLayout` and layout-related widgets, now, the shadows will overlap correctly.
+- Updated `generateLightTheme()` and `generateDarkTheme()` with `Tooltip` theme.
+- Replaced `Tooltip` for `ThemedTooltip` in the `ThemedButton` widget.
+- Added the property `useDefaultRedirect` on the `ThemedNavigatorPage`, basically allows to push the parent page of the nested pages when is `true`, when is `false` will push the first page of the nested pages.
+- Updated `ThemedColorPicker` to support multiple pickers from the package `flex_color_picker`.
+- Migrated `ThemedDurationInput` from an `Overlay` to a `Dialog`.
+- Updated `ThemedTextInput` to support `choices` to work like a combobox.
+- New widget `ThemedNumberInput`, basically is a `ThemedTextInput` with a `num` of return.
+- New widget `ThemedCalendar` and helper classes `ThemedCalendarEntry` and `ThemedCalendarRangeEntry`.
+  * FYI, we only support the Monthly calendar, if you want to help us to support the other calendars, please, feel free to open a MR, help is always welcome.
+- New widgets `ThemedMonthPicker` and `ThemedMonthRangePicker`.
+- New widgets `ThemedDatePicker` and `ThemedDateRangePicker`.
+- New widgets `ThemedTimePicker` and `ThemedTimeRangePicker`.
+- Updated widgets `ThemedDateTimePicker` and `ThemedDateTimeRangePicker` to new picker format (From custom Overlay to Dialog).
+- Updated widgets `ThemedAvatarPicker`, `ThemedColorPicker`, `ThemedEmojiPicker` and `ThemedIconPicker` to new picker format (From custom Overlay to Dialog).
+
+## 4.0.25
+- Fixed toggle theme on `ThemedLayout` and `additionalActions` when `ThemedLayoutStyle` is `ThemedLayoutStyle.sidebar`
+
 ## 4.0.24
 - Improved UX in `ThemedDualListInput` when selecting all while searching
 

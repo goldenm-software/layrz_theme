@@ -22,24 +22,31 @@ extension DateTimeExtension on DateTime {
   }
 
   List<DateTime> get thisMonth {
-    DateTime now = DateTime.now();
-    DateTime beginningNextMonth =
-        (now.month != DateTime.december) ? DateTime(now.year, now.month + 1, 1) : DateTime(now.year + 1, 1, 1);
+    late DateTime beginningNextMonth;
+    if (month != DateTime.december) {
+      beginningNextMonth = DateTime(year, month + 1, 1);
+    } else {
+      beginningNextMonth = DateTime(year + 1, 1, 1);
+    }
     DateTime end = beginningNextMonth.subtract(const Duration(days: 1));
     return [
-      DateTime(now.year, now.month, 1),
+      DateTime(year, month, 1),
       end,
     ];
   }
 
   List<DateTime> get lastMonth {
-    DateTime now = DateTime.now();
-    DateTime beginningPreviousMonth =
-        (now.month != DateTime.january) ? DateTime(now.year, now.month - 1, 1) : DateTime(now.year - 1, 12, 1);
+    late DateTime beginningPreviousMonth;
+
+    if (month != DateTime.january) {
+      beginningPreviousMonth = DateTime(year, month - 1, 1);
+    } else {
+      beginningPreviousMonth = DateTime(year - 1, 12, 1);
+    }
 
     return [
       DateTime(beginningPreviousMonth.year, beginningPreviousMonth.month, 1),
-      DateTime(now.year, now.month, 1).subtract(const Duration(days: 1)),
+      DateTime(year, month, 1).subtract(const Duration(days: 1)),
     ];
   }
 

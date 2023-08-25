@@ -16,6 +16,7 @@ class InputsView extends StatefulWidget {
 }
 
 class _InputsViewState extends State<InputsView> {
+  bool isDisabled = false;
   List<int> selected = [];
   Duration? durationValue = const Duration(
     days: 0,
@@ -23,6 +24,33 @@ class _InputsViewState extends State<InputsView> {
     minutes: 0,
     hours: 0,
   );
+  List<String> searchChoices = [];
+
+  DateTime _selectedDateTime = DateTime.now();
+  List<DateTime> _selectedDateTimes = [
+    DateTime(2023, 8, 22, 15, 30),
+    DateTime(2023, 8, 26, 16, 30),
+  ];
+
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 15, minute: 30);
+  List<TimeOfDay> _selectedTimes = [
+    const TimeOfDay(hour: 15, minute: 30),
+    const TimeOfDay(hour: 16, minute: 30),
+  ];
+  DateTime _selectedDate = DateTime.now();
+  List<DateTime> _selectedDates = [
+    DateTime(2023, 8, 22),
+    DateTime(2023, 8, 26),
+  ];
+  ThemedMonth? _selectedMonth = const ThemedMonth(year: 2023, month: Month.july);
+  List<ThemedMonth> _selectedMonths = const [
+    ThemedMonth(year: 2023, month: Month.july),
+    ThemedMonth(year: 2023, month: Month.august),
+  ];
+  List<ThemedMonth> _selectedMonths2 = const [
+    ThemedMonth(year: 2023, month: Month.july),
+    ThemedMonth(year: 2023, month: Month.august),
+  ];
   List<ThemedSelectItem<int>> get choices => List.generate(10, (index) {
         return ThemedSelectItem<int>(
           value: index,
@@ -34,6 +62,7 @@ class _InputsViewState extends State<InputsView> {
   bool value = false;
 
   String textInputValue = "";
+  String textInputValue2 = "";
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +75,242 @@ class _InputsViewState extends State<InputsView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              ThemedButton(
+                labelText: "Lock / Unlock",
+                onTap: () {
+                  setState(() {
+                    isDisabled = !isDisabled;
+                  });
+                },
+              ),
+              ThemedIconPicker(
+                disabled: isDisabled,
+                labelText: 'Icon Picker',
+                onChanged: (value) {
+                  debugPrint("Icon: $value");
+                },
+              ),
+              ThemedEmojiPicker(
+                disabled: isDisabled,
+                labelText: 'Emoji Picker',
+                onChanged: (value) {
+                  debugPrint("Emoji: $value");
+                },
+              ),
+              ThemedAvatarPicker(
+                disabled: isDisabled,
+                labelText: 'Avatar picker',
+                onChanged: (value) {
+                  debugPrint("File: ${value?.length}");
+                },
+              ),
+              ThemedDateTimeRangePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'DateTime picker [24h]',
+                value: _selectedDateTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTimes = value;
+                  });
+                },
+              ),
+              ThemedDateTimeRangePicker(
+                disabled: isDisabled,
+                labelText: 'DateTime picker [AM/PM]',
+                value: _selectedDateTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTimes = value;
+                  });
+                },
+              ),
+              ThemedDateTimePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'DateTime picker [24h]',
+                value: _selectedDateTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTime = value;
+                  });
+                },
+              ),
+              ThemedDateTimePicker(
+                disabled: isDisabled,
+                labelText: 'DateTime picker [AM/PM]',
+                value: _selectedDateTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTime = value;
+                  });
+                },
+              ),
+              ThemedTimeRangePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'Time picker [24h]',
+                value: _selectedTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTimes = value;
+                  });
+                },
+              ),
+              ThemedTimeRangePicker(
+                disabled: isDisabled,
+                labelText: 'Time picker [AM/PM]',
+                value: _selectedTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTimes = value;
+                  });
+                },
+              ),
+              ThemedTimePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'Time picker [24h]',
+                value: _selectedTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTime = value;
+                  });
+                },
+              ),
+              ThemedTimePicker(
+                disabled: isDisabled,
+                labelText: 'Time picker [AM/PM]',
+                value: _selectedTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTime = value;
+                  });
+                },
+              ),
+              ThemedTextInput(
+                disabled: isDisabled,
+                labelText: 'Text Input [Plain]',
+                value: textInputValue,
+                onChanged: (value) {
+                  setState(() {
+                    textInputValue = value;
+                  });
+                },
+              ),
+
+              Row(
+                children: [
+                  ThemedButton(
+                    labelText: "Fill choices",
+                    onTap: () {
+                      setState(() {
+                        searchChoices = List.generate(10, (index) => "Choice $index");
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  ThemedButton(
+                    labelText: "Clear choices",
+                    onTap: () {
+                      setState(() {
+                        searchChoices = [];
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+              ThemedTextInput(
+                disabled: isDisabled,
+                labelText: 'Text Input [Combobox]',
+                value: textInputValue2,
+                choices: searchChoices,
+                onChanged: (value) {
+                  setState(() {
+                    textInputValue2 = value;
+                  });
+                },
+              ),
+              ThemedDatePicker(
+                disabled: isDisabled,
+                labelText: "Date picker",
+                value: _selectedDate,
+                disabledDays: [
+                  DateTime(2023, 8, 20),
+                  DateTime(2023, 8, 26),
+                ],
+                onChanged: (date) {
+                  setState(() {
+                    _selectedDate = date;
+                  });
+                },
+              ),
+              ThemedDateRangePicker(
+                disabled: isDisabled,
+                labelText: "Date range picker",
+                value: _selectedDates,
+                pattern: '%B %d, %Y',
+                onChanged: (dates) {
+                  setState(() {
+                    _selectedDates = dates;
+                  });
+                },
+              ),
+              ThemedMonthPicker(
+                disabled: isDisabled,
+                labelText: "Month picker",
+                value: _selectedMonth,
+                minimum: const ThemedMonth(year: 2023, month: Month.january),
+                maximum: const ThemedMonth(year: 2023, month: Month.december),
+                disabledMonths: const [
+                  ThemedMonth(year: 2023, month: Month.january),
+                  ThemedMonth(year: 2023, month: Month.february),
+                  ThemedMonth(year: 2023, month: Month.march),
+                ],
+                onChanged: (month) {
+                  setState(() {
+                    _selectedMonth = month;
+                  });
+                },
+              ),
+              ThemedMonthRangePicker(
+                disabled: isDisabled,
+                labelText: "Month range picker [Random]",
+                value: _selectedMonths,
+                minimum: const ThemedMonth(year: 2023, month: Month.january),
+                maximum: const ThemedMonth(year: 2023, month: Month.december),
+                disabledMonths: const [
+                  ThemedMonth(year: 2023, month: Month.january),
+                  ThemedMonth(year: 2023, month: Month.february),
+                  ThemedMonth(year: 2023, month: Month.march),
+                ],
+                onChanged: (months) {
+                  setState(() {
+                    _selectedMonths = months;
+                  });
+                },
+              ),
+              ThemedMonthRangePicker(
+                disabled: isDisabled,
+                labelText: "Month range picker [Consecutive]",
+                value: _selectedMonths2,
+                consecutive: true,
+                minimum: const ThemedMonth(year: 2022, month: Month.january),
+                maximum: const ThemedMonth(year: 2024, month: Month.december),
+                disabledMonths: const [
+                  ThemedMonth(year: 2023, month: Month.january),
+                  ThemedMonth(year: 2023, month: Month.february),
+                  ThemedMonth(year: 2023, month: Month.march),
+                ],
+                onChanged: (months) {
+                  setState(() {
+                    _selectedMonths2 = months;
+                  });
+                },
+              ),
               ThemedColorPicker(
+                disabled: isDisabled,
                 labelText: 'Color picker',
                 onChanged: (color) {
                   debugPrint("Color: $color");
@@ -54,6 +318,7 @@ class _InputsViewState extends State<InputsView> {
               ),
               Text(durationValue.toString()),
               ThemedDurationInput(
+                disabled: isDisabled,
                 value: durationValue,
                 // visibleValues: const [
                 //   ThemedDurationInputVisibleValues.hours,
@@ -91,15 +356,6 @@ class _InputsViewState extends State<InputsView> {
                   });
                 },
               ),
-              ThemedTextInput(
-                labelText: 'Text Input',
-                value: textInputValue,
-                onChanged: (value) {
-                  setState(() {
-                    textInputValue = value;
-                  });
-                },
-              ),
               Text('Value: $textInputValue'),
               const Divider(),
               const SizedBox(height: 10),
@@ -125,47 +381,48 @@ class _InputsViewState extends State<InputsView> {
                   ],
                 ),
               ),
-              const ThemedDynamicAvatarInput(
+              ThemedDynamicAvatarInput(
+                disabled: isDisabled,
                 labelText: "Dynamic Avatar Input",
               ),
               ThemedIconPicker(
+                disabled: isDisabled,
                 labelText: "Icon picker",
                 onChanged: (icon) {
                   debugPrint("Icon: $icon");
                 },
               ),
               ThemedEmojiPicker(
+                disabled: isDisabled,
                 value: "🍊",
                 labelText: "Emoji picker",
                 onChanged: (emoji) {
                   debugPrint("Emoji: $emoji");
                 },
               ),
-              const ThemedCodeEditor(
+              ThemedCodeEditor(
+                disabled: isDisabled,
                 labelText: "Code Editor",
               ),
               ThemedTextInput(
+                disabled: isDisabled,
                 labelText: "Text Input",
                 prefixText: "prefix.",
                 suffixIcon: MdiIcons.homeVariant,
               ),
-              const ThemedFileInput(
+              ThemedFileInput(
+                disabled: isDisabled,
                 labelText: "File Input",
               ),
               ThemedTextInput(
+                disabled: isDisabled,
                 labelText: "Text Input",
                 prefixText: "prefix.",
                 suffixIcon: MdiIcons.homeVariant,
                 dense: true,
               ),
-              const ThemedDateTimePicker(
-                labelText: "Date Time Picker",
-                showTime: true,
-              ),
-              const ThemedDateTimeRangePicker(
-                labelText: "Date Time range Picker",
-              ),
               ThemedMultiSelectInput<int>(
+                disabled: isDisabled,
                 labelText: "MultiSelect Input",
                 items: choices,
                 value: null,
@@ -177,6 +434,7 @@ class _InputsViewState extends State<InputsView> {
               ),
               ...ThemedCheckboxInputStyle.values.map((style) {
                 return ThemedCheckboxInput(
+                  disabled: isDisabled,
                   labelText: "Checkbox Input with style $style",
                   style: style,
                   value: value,
@@ -188,14 +446,17 @@ class _InputsViewState extends State<InputsView> {
                 );
               }).toList(),
               ThemedSelectInput<int>(
+                disabled: isDisabled,
                 labelText: "Select Input",
                 items: choices,
               ),
               ThemedRadioInput<int>(
+                disabled: isDisabled,
                 labelText: "Radio Input",
                 items: choices,
               ),
               ThemedDualListInput(
+                disabled: isDisabled,
                 labelText: "Dual List Input",
                 items: choices,
               ),

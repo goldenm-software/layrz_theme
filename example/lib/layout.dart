@@ -74,6 +74,7 @@ class _LayoutState extends State<Layout> {
       ThemedNavigatorPage(
         labelText: 'Nested',
         path: '/nested',
+        useDefaultRedirect: false,
         children: List.generate(5, (i) {
           return ThemedNavigatorPage(
             labelText: "Subpage $i",
@@ -102,6 +103,10 @@ class _LayoutState extends State<Layout> {
       ThemedNavigatorPage(
         labelText: 'Inputs',
         path: '/inputs',
+      ),
+      ThemedNavigatorPage(
+        labelText: 'Calendar',
+        path: '/calendar',
       ),
       ThemedNavigatorPage(
         labelText: 'Dynamic credentials',
@@ -198,6 +203,7 @@ class _LayoutState extends State<Layout> {
 
     return ThemedLayout(
       isBackEnabled: false,
+      // style: ThemedLayoutStyle.classic,
       persistentItems: persistentItems,
       style: _layoutStyle,
       scaffoldKey: _scaffoldKey,
@@ -221,6 +227,15 @@ class _LayoutState extends State<Layout> {
       onSettingsTap: () {
         debugPrint('Settings tapped');
       },
+      additionalActions: [
+        ThemedNavigatorAction(
+          icon: MdiIcons.testTube,
+          labelText: "Test",
+          onTap: () {
+            debugPrint('Test tapped');
+          },
+        ),
+      ],
       onNavigatorPush: context.go,
       onNavigatorPop: context.pop,
       notifications: notifications,
