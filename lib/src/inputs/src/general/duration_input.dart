@@ -32,6 +32,7 @@ class ThemedDurationInput extends StatefulWidget {
   final EdgeInsets padding;
   final List<ThemedDurationInputVisibleValues> visibleValues;
 
+  /// [ThemedDurationInput] is a duration input.
   const ThemedDurationInput({
     super.key,
 

@@ -1,56 +1,53 @@
 part of inputs;
 
 class ThemedFileInput extends StatefulWidget {
-  /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
   final String? labelText;
-
-  /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
   final Widget? label;
-
-  /// [value] is the value of the input.
   final String? value;
-
-  /// [onChanged] is the callback when the input value changes.
-  /// The first parameter is the base64 of the file.
-  /// The second parameter is the byte array of the file.
   final void Function(String, List<int>)? onChanged;
-
-  /// [multiple] is the flag to allow multiple files to be selected.
-  final bool multiple;
-
-  /// [acceptedTypes] is the type of files that can be selected.
   final FileType acceptedTypes;
-
-  /// [disabled] is the flag to disable the input.
   final bool disabled;
-
-  /// [errors] is the list of errors to be displayed.
   final List<String> errors;
-
-  /// [hideDetails] is the flag to hide the details of the input.
   final bool hideDetails;
-
-  /// [isRequired] is the flag to mark the input as required.
   final bool isRequired;
-
-  /// [customWidget] is the custom widget to be displayed.
-  /// Replaces the [ThemedTextInput] widget.
   final Widget? customWidget;
 
   /// [ThemedFileInput] is the input for file selection.
   /// It uses [ThemedTextInput] as the base.
   const ThemedFileInput({
     super.key,
-    this.label,
-    this.value,
+
+    /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
     this.labelText,
+
+    /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
+    this.label,
+
+    /// [value] is the value of the input.
+    this.value,
+
+    /// [onChanged] is the callback when the input value changes.
+    /// The first parameter is the base64 of the file.
+    /// The second parameter is the byte array of the file.
     this.onChanged,
-    @Deprecated('This property will be removed soon') this.multiple = false,
+
+    /// [disabled] is the flag to disable the input.
     this.disabled = false,
-    this.acceptedTypes = FileType.any,
+
+    /// [errors] is the list of errors to be displayed.
     this.errors = const [],
+
+    /// [hideDetails] is the flag to hide the details of the input.
     this.hideDetails = false,
+
+    /// [isRequired] is the flag to mark the input as required.
     this.isRequired = false,
+
+    /// [acceptedTypes] is the type of files that can be selected.
+    this.acceptedTypes = FileType.any,
+
+    /// [customWidget] is the custom widget to be displayed.
+    /// Replaces the [ThemedTextInput] widget.
     this.customWidget,
   });
 

@@ -28,35 +28,86 @@ class ThemedSelectInput<T> extends StatefulWidget {
   final double maxHeight;
   final TextInputType searchKeyboardType;
 
+  /// [ThemedSelectInput] is the input for selecting an item from a list.
   const ThemedSelectInput({
     super.key,
-    required this.items,
-    this.label,
+
+    /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
     this.labelText,
-    String? dialogLabelText,
-    Widget? dialogLabel,
-    this.prefixIcon,
-    this.prefixText,
-    this.onPrefixTap,
+
+    /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
+    this.label,
+
+    /// [items] is the list of items to be selected.
+    required this.items,
+
+    /// [onChanged] is the callback when the input value changes.
     this.onChanged,
+
+    /// [prefixIcon] is the icon to be displayed at the start of the input.
+    this.prefixIcon,
+
+    /// [prefixText] is the text to be displayed at the start of the input.
+    this.prefixText,
+
+    /// [onPrefixTap] is the callback when the prefix is tapped.
+    this.onPrefixTap,
+
+    /// [value] is the value of the input.
     this.value,
+
+    /// [searchLabel] is the label of the search input.
     this.searchLabel = "Search",
+
+    /// [filter] is the callback to filter the items.
     this.filter,
+
+    /// [enableSearch] is the flag to enable the search input.
     this.enableSearch = true,
+
+    /// [disabled] is the flag to disable the input.
     this.disabled = false,
+
+    /// [errors] is the list of errors to be displayed.
     this.errors = const [],
+
+    /// [hideDetails] is the flag to hide the details of the input.
     this.hideDetails = false,
+
+    /// [hideTitle] is the flag to hide the title of the input.
     this.hideTitle = false,
+
+    /// [saveText] is the text of the save button.
     this.saveText = "OK",
+
+    /// [autoclose] is the flag to close the input when an item is selected.
     this.autoclose = true,
+
+    /// [isRequired] is the flag to mark the input as required.
     this.isRequired = false,
+
+    /// [dense] is the flag to make the input dense.
     this.dense = false,
+
+    /// [emptyListText] is the text to be displayed when the list is empty.
     this.padding = const EdgeInsets.all(10),
+
+    /// [emptyListText] is the text to be displayed when the list is empty.
     this.overlayPadding = const EdgeInsets.all(20),
+
+    /// [emptyListText] is the text to be displayed when the list is empty.
     this.emptyText = "No item selected",
+
+    /// [emptyListText] is the text to be displayed when the list is empty.
     this.emptyListText = "Without items available to select",
+
+    /// [heightFactor] is the factor of the height of the input.
     this.heightFactor = 0.7,
+
+    /// [maxHeight] is the maximum height of the input.
     this.maxHeight = 300,
+
+    /// [searchKeyboardType] is the keyboard type of the search input.
     this.searchKeyboardType = TextInputType.text,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 

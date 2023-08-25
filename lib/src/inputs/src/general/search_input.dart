@@ -7,11 +7,21 @@ class ThemedSearchInput extends StatefulWidget {
   final OnSearch onSearch;
   final double maxWidth;
   final String labelText;
+
+  /// [ThemedSearchInput] is a search input.
   const ThemedSearchInput({
     super.key,
+
+    /// [value] is the value of the search input.
     required this.value,
+
+    /// [onSearch] is the callback function when the search input is changed.
     required this.onSearch,
+
+    /// [maxWidth] is the maximum width of the search input.
     this.maxWidth = 300,
+
+    /// [labelText] is the label text of the search input.
     this.labelText = 'Search',
   });
 

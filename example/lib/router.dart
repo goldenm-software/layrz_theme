@@ -94,7 +94,7 @@ final goRoutes = [
   ),
 ];
 
-final router = GoRouter(initialLocation: '/calendar', routes: goRoutes);
+final router = GoRouter(initialLocation: '/inputs', routes: goRoutes);
 
 final nativeRoutes = {
   '/home': (context) => const HomeView(name: 'Home'),

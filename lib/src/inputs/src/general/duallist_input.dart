@@ -12,17 +12,38 @@ class ThemedDualListInput<T> extends StatefulWidget {
   final String selectedText;
   final String searchText;
 
+  /// [ThemedDualListInput] is a dual list input.
   const ThemedDualListInput({
     super.key,
-    required this.items,
-    this.label,
+
+    /// [labelText] is the label text of the dual list input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
+
+    /// [label] is the label widget of the dual list input. Avoid submit [label] and [labelText] at the same time.
+    this.label,
+
+    /// [items] is the list of items of the dual list input.
+    required this.items,
+
+    /// [onChanged] is the callback function when the dual list input is changed.
     this.onChanged,
+
+    /// [value] is the value of the dual list input.
     this.value,
+
+    /// [disabled] is the disabled state of the dual list input.
     this.disabled = false,
+
+    /// [errors] is the list of errors of the dual list input.
     this.errors = const [],
+
+    /// [availableText] is the text of the available list.
     this.availableText = "Available",
+
+    /// [selectedText] is the text of the selected list.
     this.selectedText = "Selected",
+
+    /// [searchText] is the text of the search input.
     this.searchText = "Search",
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 

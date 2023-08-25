@@ -4,9 +4,14 @@ class ThemedFieldDisplayError extends StatelessWidget {
   final List<String> errors;
   final bool hideDetails;
 
+  /// [ThemedFieldDisplayError] is a widget that displays the errors of a field.
   const ThemedFieldDisplayError({
     super.key,
+
+    /// [errors] is the list of errors of the field.
     this.errors = const [],
+
+    /// [hideDetails] is the state of hiding the details of the field.
     this.hideDetails = false,
   });
 

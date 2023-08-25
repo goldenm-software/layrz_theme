@@ -13,23 +13,53 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
   final double heightFactor;
   final double maxHeight;
 
+  /// [ThemedDynamicAvatarInput] is a dynamic avatar input.
+  /// Layrz supports 5 types of avatars:
+  /// - [AvatarType.none] is a no avatar. It is the default value.
+  /// - [AvatarType.url] is an avatar from an URL.
+  /// - [AvatarType.base64] is an avatar from a base64 string.
+  /// - [AvatarType.icon] is an avatar from an icon.
+  /// - [AvatarType.emoji] is an avatar from an emoji.
+  /// To handle this in any form, this is the Widget to use, helps in the process to select the avatar.
   const ThemedDynamicAvatarInput({
     super.key,
-    this.label,
-    this.value,
+
+    /// [labelText] is the label text of the field. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
+
+    /// [label] is the label widget of the field. Avoid submit [label] and [labelText] at the same time.
+    this.label,
+
+    /// [value] is the value of the field.
+    this.value,
+
+    /// [onChanged] is the callback function when the field is changed.
     this.onChanged,
+
+    /// [disabled] is the disabled state of the field.
     this.disabled = false,
+
+    /// [errors] is the list of errors of the field.
     this.errors = const [],
+
+    /// [hideDetails] is the state of hiding the details of the field.
     this.hideDetails = false,
+
+    /// [padding] is the padding of the field.
     this.padding = const EdgeInsets.all(10),
+
+    /// [enabledTypes] is the list of enabled types of the field.
     this.enabledTypes = const [
       AvatarType.url,
       AvatarType.base64,
       AvatarType.icon,
       AvatarType.emoji,
     ],
+
+    /// [heightFactor] is the height factor of the field.
     this.heightFactor = 0.7,
+
+    /// [maxHeight] is the max height of the field.
     this.maxHeight = 350,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 

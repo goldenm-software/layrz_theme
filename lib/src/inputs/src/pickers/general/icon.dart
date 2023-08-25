@@ -1,80 +1,96 @@
 part of inputs;
 
 class ThemedIconPicker extends StatefulWidget {
-  /// [labelText] is the label text of the icon picker. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
-
-  /// [label] is the label widget of the icon picker. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
-
-  /// [onChanged] is the callback function when the icon picker is changed.
   final void Function(IconData)? onChanged;
-
-  /// [value] is the value of the icon picker.
   final IconData? value;
-
-  /// [disabled] is the disabled state of the icon picker.
   final bool disabled;
-
-  /// [errors] is the list of errors of the icon picker.
   final List<String> errors;
-
-  /// [hideDetails] is the state of hiding the details of the icon picker.
   final bool hideDetails;
-
-  /// [padding] is the padding of the icon picker.
   final EdgeInsets padding;
-
-  /// [dense] is the state of the icon picker being dense.
   final bool dense;
-
-  /// [isRequired] is the state of the icon picker being required.
   final bool isRequired;
-
-  /// [focusNode] is the focus node of the icon picker.
   final FocusNode? focusNode;
-
-  /// [borderRadius] is the border radius of the icon picker.
   final double? borderRadius;
-
-  /// [containerHeight] is the height of the icon picker.
-  final double? containerHeight;
-
-  /// [customWidget] replaces the default text field with a custom widget.
   final Widget? customWidget;
+  final Map<String, String> translations;
+  final bool overridesLayrzTranslations;
+  final List<IconData> allowedIcons;
 
   /// [ThemedIconPicker] is an icon picker input. It is a text field that opens an [OverlayEntry]
   /// with a list of icons to select from.
   const ThemedIconPicker({
     super.key,
+
+    /// [labelText] is the label text of the icon picker. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
+
+    /// [label] is the label widget of the icon picker. Avoid submit [label] and [labelText] at the same time.
     this.label,
+
+    /// [onChanged] is the callback function when the icon picker is changed.
     this.disabled = false,
+
+    /// [value] is the value of the icon picker.
     this.onChanged,
+
+    /// [disabled] is the disabled state of the icon picker.
     this.value,
+
+    /// [errors] is the list of errors of the icon picker.
     this.errors = const [],
+
+    /// [hideDetails] is the state of hiding the details of the icon picker.
     this.hideDetails = false,
+
+    /// [padding] is the padding of the icon picker.
     this.padding = const EdgeInsets.all(10),
+
+    /// [dense] is the state of the icon picker being dense.
     this.dense = false,
+
+    /// [isRequired] is the state of the icon picker being required.
     this.isRequired = false,
+
+    /// [focusNode] is the focus node of the icon picker.
     this.focusNode,
+
+    /// [borderRadius] is the border radius of the icon picker.
     this.borderRadius,
-    this.containerHeight,
+
+    /// [customWidget] replaces the default text field with a custom widget.
     this.customWidget,
+
+    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+    /// is the default value of this property.
+    /// Required translations:
+    /// - `actions.cancel` (Cancel)
+    /// - `actions.save` (Save)
+    /// - `helpers.search` (Search an emoji or group)
+    this.translations = const {
+      'actions.cancel': 'Cancel',
+      'actions.save': 'Save',
+      'helpers.search': 'Search an emoji or group',
+    },
+
+    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
+    this.overridesLayrzTranslations = false,
+
+    /// [allowedIcons] is the list of allowed icons to select from.
+    /// If this property is not submitted, all icons will be allowed.
+    this.allowedIcons = const [],
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedIconPicker> createState() => _ThemedIconPickerState();
 }
 
-class _ThemedIconPickerState extends State<ThemedIconPicker> with TickerProviderStateMixin {
-  final TextEditingController _controller = TextEditingController();
-  late AnimationController animation;
-  late OverlayState overlayState;
-  late ThemeData theme;
+class _ThemedIconPickerState extends State<ThemedIconPicker> {
+  final TextEditingController _textController = TextEditingController();
   IconData? _value;
-  OverlayEntry? overlayEntry;
-  String search = '';
+
   List<IconData>? selectedGroup;
   EdgeInsets get widgetPadding => widget.padding;
   bool get isDense => widget.dense;
@@ -87,8 +103,6 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> with TickerProvider
   @override
   void initState() {
     super.initState();
-    animation = AnimationController(vsync: this, duration: kHoverDuration);
-    overlayState = Overlay.of(context, rootOverlay: true);
     _value = widget.value;
   }
 
@@ -98,7 +112,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> with TickerProvider
 
     if (oldWidget.value != widget.value) {
       _value = widget.value;
-      _controller.text = const IconOrNullConverter().toJson(_value) ?? '';
+      _textController.text = const IconOrNullConverter().toJson(_value) ?? '';
     }
   }
 
@@ -107,7 +121,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> with TickerProvider
     if (widget.customWidget != null) {
       return InkWell(
         key: key,
-        onTap: widget.disabled ? null : _handleTap,
+        onTap: widget.disabled ? null : _showPicker,
         child: widget.customWidget,
       );
     }
@@ -124,136 +138,114 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> with TickerProvider
       suffixIcon: widget.disabled ? MdiIcons.lockOutline : MdiIcons.selectGroup,
       labelText: widget.labelText,
       label: widget.label,
-      controller: _controller,
+      controller: _textController,
       dense: isDense,
       disabled: widget.disabled,
       value: const IconOrNullConverter().toJson(_value) ?? '',
-      onTap: widget.disabled ? null : _handleTap,
+      onTap: widget.disabled ? null : _showPicker,
     );
   }
 
-  void _handleTap() {
+  void _showPicker() async {
     if (widget.disabled) return;
-    if (overlayEntry != null) {
-      _destroyOverlay();
-    } else {
-      _buildOverlay();
-    }
-  }
-
-  void _destroyOverlay({VoidCallback? callback}) async {
-    await animation.reverse();
-    overlayEntry?.remove();
-    overlayEntry = null;
-    callback?.call();
-    setState(() {});
-  }
-
-  void _buildOverlay() {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
-    RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    Size screenSize = MediaQuery.of(context).size;
-    double height = widget.containerHeight ?? 300;
-    double? top;
-    double? bottom;
-
-    if (screenSize.height - offset.dy > height) {
-      top = offset.dy + widget.padding.top;
-    } else {
-      bottom = screenSize.height - offset.dy - renderBox.size.height - widget.padding.bottom;
-    }
-    if (height > 300) {
-      height = 300;
-    }
-
-    overlayEntry = OverlayEntry(
+    IconData? result = await showDialog(
+      context: context,
       builder: (context) {
-        return Material(
-          color: Colors.transparent,
-          child: Stack(
-            children: [
-              Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
-              Positioned(
-                top: top,
-                bottom: bottom,
-                left: offset.dx + widget.padding.left,
-                right: screenSize.width - (offset.dx + renderBox.size.width - widget.padding.right),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+        IconData? icon;
+        String search = '';
+
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
+            decoration: generateContainerElevation(context: context, elevation: 3),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FadeTransition(
-                      opacity: animation,
-                      child: StatefulBuilder(
-                        builder: (BuildContext context, setState) {
-                          return Container(
-                            width: double.infinity,
-                            constraints: BoxConstraints(maxHeight: height),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(widget.borderRadius ?? 10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                ThemedTextInput(
-                                  labelText: i18n?.t('helpers.search') ?? 'Search',
-                                  value: search,
-                                  prefixIcon: MdiIcons.magnify,
-                                  dense: true,
-                                  onChanged: (value) {
-                                    setState(() => search = value);
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Divider(),
-                                ),
-                                Expanded(
-                                  child: LayoutBuilder(
-                                    builder: (BuildContext context, BoxConstraints constraints) {
-                                      return _IconGrid(
-                                        iconSize: 16,
-                                        selected: _value,
-                                        constraints: constraints,
-                                        onTap: (icon) {
-                                          _destroyOverlay.call(callback: () {
-                                            widget.onChanged?.call(icon);
-                                            _value = icon;
-                                            _controller.text = const IconOrNullConverter().toJson(_value) ?? '';
-                                            setState(() {});
-                                          });
-                                        },
-                                        search: search,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
+                    Text(
+                      widget.labelText ?? '',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    ThemedTextInput(
+                      labelText: t('helpers.search'),
+                      value: search,
+                      prefixIcon: MdiIcons.magnify,
+                      dense: true,
+                      onChanged: (value) {
+                        setState(() => search = value);
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          return _IconGrid(
+                            iconSize: 16,
+                            selected: icon,
+                            constraints: constraints,
+                            allowedIcons: widget.allowedIcons,
+                            onTap: (newIcon) {
+                              setState(() => icon = newIcon);
+                              Navigator.of(context).pop(icon);
+                            },
+                            search: search,
                           );
                         },
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ThemedButton(
+                          labelText: t('actions.cancel'),
+                          color: Colors.red,
+                          onTap: () => Navigator.of(context).pop(),
+                        ),
+                        ThemedButton(
+                          labelText: t('actions.save'),
+                          color: Colors.green,
+                          onTap: () => Navigator.of(context).pop(icon),
+                        ),
+                      ],
+                    ),
                   ],
-                ),
-              ),
-            ],
+                );
+              },
+            ),
           ),
         );
       },
     );
 
-    Overlay.of(context, rootOverlay: true).insert(overlayEntry!);
-    animation.forward();
+    if (result != null) {
+      setState(() {
+        _value = result;
+        _textController.text = const IconOrNullConverter().toJson(_value) ?? '';
+      });
+      widget.onChanged?.call(result);
+    }
+  }
+
+  String t(String key, [Map<String, dynamic> args = const {}]) {
+    String result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+
+    if (widget.overridesLayrzTranslations) {
+      result = widget.translations[key] ?? key;
+    }
+
+    if (args.isNotEmpty) {
+      args.forEach((key, value) {
+        result = result.replaceAll('{$key}', value.toString());
+      });
+    }
+
+    return result;
   }
 }
 
@@ -265,6 +257,7 @@ class _IconGrid extends StatefulWidget {
   final double iconSize;
   final IconData? selected;
   final BoxConstraints constraints;
+  final List<IconData> allowedIcons;
 
   const _IconGrid({
     required this.iconSize,
@@ -272,6 +265,7 @@ class _IconGrid extends StatefulWidget {
     this.onTap,
     this.search = '',
     this.selected,
+    this.allowedIcons = const [],
   });
 
   @override
@@ -283,6 +277,7 @@ class __IconGridState extends State<_IconGrid> {
   int get numOfColumns => (constraints.maxWidth / (widget.iconSize * 3)).floor();
   late ScrollController _scrollController;
   List<IconData> get icons {
+    if (widget.allowedIcons.isNotEmpty) return widget.allowedIcons;
     return iconMap.entries.where((entry) {
       if (widget.search.isNotEmpty) {
         return entry.key.toLowerCase().contains(widget.search.toLowerCase());
@@ -324,18 +319,22 @@ class __IconGridState extends State<_IconGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
+    return GridView.builder(
       controller: _scrollController,
-      crossAxisCount: numOfColumns,
-      childAspectRatio: 1,
-      children: icons.map((icon) {
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: numOfColumns,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+      ),
+      itemCount: icons.length,
+      itemBuilder: (context, index) {
         return _IconButton(
-          icon: icon,
+          icon: icons[index],
           iconSize: widget.iconSize,
-          onTap: () => widget.onTap?.call(icon),
-          isSelected: widget.selected == icon,
+          onTap: () => widget.onTap?.call(icons[index]),
+          isSelected: widget.selected == icons[index],
         );
-      }).toList(),
+      },
     );
   }
 }

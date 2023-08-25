@@ -17,52 +17,100 @@ class ThemedEmojiPicker extends StatefulWidget {
   final double? borderRadius;
   final int maxLines;
   final double? buttomSize;
-  final double? containerHeight;
   final List<EmojiGroup> enabledGroups;
+  final Map<String, String> translations;
+  final bool overridesLayrzTranslations;
 
+  /// [ThemedEmojiPicker] is a widget that allows the user to pick an emoji.
   const ThemedEmojiPicker({
     super.key,
+
+    /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
+
+    /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-    this.disabled = false,
-    this.onChanged,
+
+    /// [value] is the current value of the input. This value should be a base64 string or an URL.
     this.value,
+
+    /// [onChanged] is the callback that is called when the value of the input changes.
+    this.onChanged,
+
+    /// [disabled] is a flag that indicates if the input is disabled.
+    this.disabled = false,
+
+    /// [errors] is a list of errors that will be displayed below the input.
     this.errors = const [],
+
+    /// [hideDetails] is a flag that indicates if the errors should be displayed.
     this.hideDetails = false,
+
+    /// [padding] is the padding of the input.
     this.padding = const EdgeInsets.all(10),
+
+    /// [dense] is a flag that indicates if the input is dense.
     this.dense = false,
+
+    /// [isRequired] is a flag that indicates if the input is required.
     this.isRequired = false,
+
+    /// [focusNode] is the focus node of the input.
     this.focusNode,
+
+    /// [onSubmitted] is the callback that is called when the user submits the input.
     this.onSubmitted,
+
+    /// [readonly] is a flag that indicates if the input is readonly.
     this.readonly = false,
+
+    /// [borderRadius] is the border radius of the input.
     this.borderRadius,
+
+    /// [maxLines] is the maximum number of lines of the input.
     this.maxLines = 1,
+
+    /// [buttomSize] is the size of the buttom.
     this.buttomSize,
-    this.containerHeight,
+
+    /// [enabledGroups] is a list of groups that will be enabled.
     this.enabledGroups = const [],
+
+    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+    /// is the default value of this property.
+    /// Required translations:
+    /// - `actions.cancel` (Cancel)
+    /// - `actions.save` (Save)
+    /// - `helpers.search` (Search an emoji or group)
+    this.translations = const {
+      'actions.cancel': 'Cancel',
+      'actions.save': 'Save',
+      'helpers.search': 'Search an emoji or group',
+    },
+
+    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
+    this.overridesLayrzTranslations = false,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedEmojiPicker> createState() => _ThemedEmojiPickerState();
 }
 
-class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> with TickerProviderStateMixin {
-  late TextEditingController _controller;
-  late AnimationController animation;
-  late OverlayState overlayState;
-  OverlayEntry? overlayEntry;
-  String search = '';
+class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
+  late ScrollController _filtersController;
+  late ScrollController _emojisController;
+  late TextEditingController _textController;
 
   EmojiGroup? selectedGroup;
-
   Emoji? _value;
-  late ThemeData theme;
+
   List<EmojiGroup?> get groups {
     if (widget.enabledGroups.isNotEmpty) {
       return widget.enabledGroups;
     }
 
-    return [null, ...EmojiGroup.values];
+    return EmojiGroup.values;
   }
 
   double get iconSize => 16;
@@ -74,8 +122,8 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> with TickerProvid
   @override
   void initState() {
     super.initState();
-    animation = AnimationController(vsync: this, duration: kHoverDuration);
-    overlayState = Overlay.of(context, rootOverlay: true);
+    _filtersController = ScrollController();
+    _emojisController = ScrollController();
 
     if (widget.value != null) {
       Emoji? emoji = Emoji.byChar(widget.value!);
@@ -85,11 +133,20 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> with TickerProvid
         selectedGroup = emoji.emojiGroup;
       }
     }
-    _controller = TextEditingController(text: _value?.char);
+
+    _textController = TextEditingController(text: _value?.char ?? '');
 
     if (groups.isNotEmpty && selectedGroup == null) {
       selectedGroup = groups.first;
     }
+  }
+
+  @override
+  void dispose() {
+    _filtersController.dispose();
+    _emojisController.dispose();
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,8 +155,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> with TickerProvid
       key: key,
       labelText: widget.labelText,
       label: widget.label,
-      suffixIcon: widget.disabled ? null : MdiIcons.selectGroup,
-      onSuffixTap: widget.disabled ? null : _handleTap,
+      suffixIcon: widget.disabled ? null : MdiIcons.emoticonOutline,
       focusNode: widget.focusNode,
       padding: widget.padding,
       dense: widget.dense,
@@ -107,172 +163,136 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> with TickerProvid
       disabled: widget.disabled,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
-      controller: _controller,
+      controller: _textController,
       readonly: true,
-      onTap: widget.disabled ? null : _handleTap,
+      onTap: widget.disabled ? null : _showPicker,
     );
   }
 
-  void _handleTap() {
+  void _showPicker() async {
     if (widget.disabled) return;
-    if (overlayEntry != null) {
-      _destroyOverlay();
-    } else {
-      _buildOverlay();
-    }
-  }
 
-  void _destroyOverlay({VoidCallback? callback}) async {
-    await animation.reverse();
-    overlayEntry?.remove();
-    overlayEntry = null;
-
-    callback?.call();
-  }
-
-  void _buildOverlay() {
-    ScrollController filtersController;
-
-    if (_value == null) {
-      filtersController = ScrollController();
-    } else {
-      int index = groups.indexOf(selectedGroup);
-      filtersController = ScrollController(initialScrollOffset: (index * ((iconSize * 2.5) + 10)).toDouble());
-    }
-
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
-    RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    Size screenSize = MediaQuery.of(context).size;
-
-    double height = widget.containerHeight ?? 300;
-    double? top;
-    double? bottom;
-
-    if (screenSize.height - offset.dy > height) {
-      top = offset.dy + widget.padding.top;
-    } else {
-      bottom = screenSize.height - offset.dy - renderBox.size.height - widget.padding.bottom;
-    }
-    if (height > 300) {
-      height = 300;
-    }
-
-    overlayEntry = OverlayEntry(
+    String? result = await showDialog(
+      context: context,
       builder: (context) {
-        return Material(
-          color: Colors.transparent,
-          child: Stack(
-            children: [
-              Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
-              Positioned(
-                top: top,
-                bottom: bottom,
-                left: offset.dx + widget.padding.left,
-                right: screenSize.width - (offset.dx + renderBox.size.width - widget.padding.right),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+        String? result = _value?.char;
+        Emoji? emojiResult = _value;
+        String search = '';
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
+            decoration: generateContainerElevation(context: context, elevation: 3),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FadeTransition(
-                      opacity: animation,
-                      child: StatefulBuilder(
-                        builder: (BuildContext context, setState) {
-                          return Container(
-                            width: double.infinity,
-                            constraints: BoxConstraints(maxHeight: height),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                ThemedTextInput(
-                                  labelText: i18n?.t('helpers.search') ?? 'Search',
-                                  value: search,
-                                  prefixIcon: MdiIcons.magnify,
-                                  dense: true,
-                                  onChanged: (value) {
-                                    setState(() => search = value);
-                                  },
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: SingleChildScrollView(
-                                    controller: filtersController,
-                                    scrollDirection: Axis.horizontal,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: groups.map((group) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(left: 8.0),
-                                            child: _EmojiGroupButton(
-                                              group: group,
-                                              onTap: () {
-                                                setState(() => selectedGroup = group);
-                                              },
-                                              isSelected: selectedGroup == group,
-                                              iconSize: iconSize,
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Divider(),
-                                ),
-                                Expanded(
-                                  child: LayoutBuilder(
-                                    builder: (BuildContext context, BoxConstraints constraints) {
-                                      return _EmojiGrid(
-                                        iconSize: iconSize,
-                                        selected: _value,
-                                        constraints: constraints,
-                                        onTap: (emoji) {
-                                          _destroyOverlay.call(callback: () {
-                                            widget.onChanged?.call(emoji.char);
-                                            _controller.text = emoji.char;
-                                            _value = emoji;
-                                            setState(() {});
-                                          });
-                                        },
-                                        group: selectedGroup,
-                                        search: search,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
+                    Text(
+                      widget.labelText ?? '',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    ThemedTextInput(
+                      labelText: t('helpers.search'),
+                      value: search,
+                      prefixIcon: MdiIcons.magnify,
+                      dense: true,
+                      onChanged: (value) {
+                        setState(() => search = value);
+                      },
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: SingleChildScrollView(
+                        controller: _filtersController,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: groups.map((group) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: _EmojiGroupButton(
+                                group: group,
+                                onTap: () {
+                                  setState(() => selectedGroup = group);
+                                },
+                                isSelected: selectedGroup == group,
+                                iconSize: iconSize,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    const Divider(),
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          return _EmojiGrid(
+                            iconSize: iconSize,
+                            selected: emojiResult,
+                            constraints: constraints,
+                            onTap: (emoji) {
+                              setState(() => result = emoji.char);
+                              Navigator.of(context).pop(result);
+                            },
+                            group: selectedGroup,
+                            search: search,
                           );
                         },
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ThemedButton(
+                          labelText: t('actions.cancel'),
+                          color: Colors.red,
+                          onTap: () => Navigator.of(context).pop(),
+                        ),
+                        ThemedButton(
+                          labelText: t('actions.save'),
+                          color: Colors.green,
+                          onTap: () => Navigator.of(context).pop(result),
+                        ),
+                      ],
+                    ),
                   ],
-                ),
-              ),
-            ],
+                );
+              },
+            ),
           ),
         );
       },
     );
 
-    Overlay.of(context, rootOverlay: true).insert(overlayEntry!);
-    animation.forward();
+    if (result != null) {
+      _textController.text = result;
+      _value = Emoji.byChar(result);
+      widget.onChanged?.call(result);
+    }
+  }
+
+  String t(String key, [Map<String, dynamic> args = const {}]) {
+    String result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+
+    if (widget.overridesLayrzTranslations) {
+      result = widget.translations[key] ?? key;
+    }
+
+    if (args.isNotEmpty) {
+      args.forEach((key, value) {
+        result = result.replaceAll('{$key}', value.toString());
+      });
+    }
+
+    return result;
   }
 }
 
@@ -406,18 +426,22 @@ class __EmojiGridState extends State<_EmojiGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
+    return GridView.builder(
       controller: _scrollController,
-      crossAxisCount: numOfColumns,
-      childAspectRatio: 1,
-      children: emojis.map((emoji) {
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: numOfColumns,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+      ),
+      itemCount: emojis.length,
+      itemBuilder: (context, index) {
         return _EmojiButton(
-          emoji: emoji,
+          emoji: emojis[index],
           iconSize: widget.iconSize,
-          onTap: () => widget.onTap?.call(emoji),
-          isSelected: widget.selected == emoji,
+          onTap: () => widget.onTap?.call(emojis[index]),
+          isSelected: widget.selected == emojis[index],
         );
-      }).toList(),
+      },
     );
   }
 }

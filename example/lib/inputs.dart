@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/layout.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -26,6 +25,18 @@ class _InputsViewState extends State<InputsView> {
     hours: 0,
   );
   List<String> searchChoices = [];
+
+  DateTime _selectedDateTime = DateTime.now();
+  List<DateTime> _selectedDateTimes = [
+    DateTime(2023, 8, 22, 15, 30),
+    DateTime(2023, 8, 26, 16, 30),
+  ];
+
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 15, minute: 30);
+  List<TimeOfDay> _selectedTimes = [
+    const TimeOfDay(hour: 15, minute: 30),
+    const TimeOfDay(hour: 16, minute: 30),
+  ];
   DateTime _selectedDate = DateTime.now();
   List<DateTime> _selectedDates = [
     DateTime(2023, 8, 22),
@@ -69,6 +80,111 @@ class _InputsViewState extends State<InputsView> {
                 onTap: () {
                   setState(() {
                     isDisabled = !isDisabled;
+                  });
+                },
+              ),
+              ThemedIconPicker(
+                disabled: isDisabled,
+                labelText: 'Icon Picker',
+                onChanged: (value) {
+                  debugPrint("Icon: $value");
+                },
+              ),
+              ThemedEmojiPicker(
+                disabled: isDisabled,
+                labelText: 'Emoji Picker',
+                onChanged: (value) {
+                  debugPrint("Emoji: $value");
+                },
+              ),
+              ThemedAvatarPicker(
+                disabled: isDisabled,
+                labelText: 'Avatar picker',
+                onChanged: (value) {
+                  debugPrint("File: ${value?.length}");
+                },
+              ),
+              ThemedDateTimeRangePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'DateTime picker [24h]',
+                value: _selectedDateTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTimes = value;
+                  });
+                },
+              ),
+              ThemedDateTimeRangePicker(
+                disabled: isDisabled,
+                labelText: 'DateTime picker [AM/PM]',
+                value: _selectedDateTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTimes = value;
+                  });
+                },
+              ),
+              ThemedDateTimePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'DateTime picker [24h]',
+                value: _selectedDateTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTime = value;
+                  });
+                },
+              ),
+              ThemedDateTimePicker(
+                disabled: isDisabled,
+                labelText: 'DateTime picker [AM/PM]',
+                value: _selectedDateTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDateTime = value;
+                  });
+                },
+              ),
+              ThemedTimeRangePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'Time picker [24h]',
+                value: _selectedTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTimes = value;
+                  });
+                },
+              ),
+              ThemedTimeRangePicker(
+                disabled: isDisabled,
+                labelText: 'Time picker [AM/PM]',
+                value: _selectedTimes,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTimes = value;
+                  });
+                },
+              ),
+              ThemedTimePicker(
+                use24HourFormat: true,
+                disabled: isDisabled,
+                labelText: 'Time picker [24h]',
+                value: _selectedTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTime = value;
+                  });
+                },
+              ),
+              ThemedTimePicker(
+                disabled: isDisabled,
+                labelText: 'Time picker [AM/PM]',
+                value: _selectedTime,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTime = value;
                   });
                 },
               ),

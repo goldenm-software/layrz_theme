@@ -101,6 +101,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   late int _focusYear;
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get primaryColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   String? get _parsedName {
     if (widget.value.isEmpty) {
@@ -251,7 +252,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                               index,
                               selections: tempPicks.isEmpty ? selections : tempPicks,
                             )
-                                ? Theme.of(context).primaryColor
+                                ? primaryColor
                                 : Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(5),
                           );

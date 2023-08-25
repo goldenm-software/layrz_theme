@@ -94,6 +94,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   late int _focusYear;
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get primaryColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   String? get _parsedName {
     if (widget.value == null) {
@@ -234,9 +235,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                         itemCount: 12,
                         itemBuilder: (context, index) {
                           BoxDecoration decoration = BoxDecoration(
-                            color: _validateSelection(_focusYear, index)
-                                ? Theme.of(context).primaryColor
-                                : Theme.of(context).cardColor,
+                            color: _validateSelection(_focusYear, index) ? primaryColor : Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(5),
                           );
 

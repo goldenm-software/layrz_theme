@@ -146,6 +146,9 @@ class ThemedCalendar extends StatefulWidget {
 class _ThemedCalendarState extends State<ThemedCalendar> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   ThemedCalendarMode get mode => ThemedCalendarMode.month;
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get primaryColor => isDark ? Colors.white : Theme.of(context).primaryColor;
+
   late DateTime _focusDay;
   late DateTime _dayGenerator;
   late DateTime _today;
@@ -646,16 +649,14 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                       decoration: isFocusDay
                                           ? BoxDecoration(
                                               border: Border.all(
-                                                color: Theme.of(context).primaryColor,
+                                                color: primaryColor,
                                                 width: 2,
                                               ),
                                               borderRadius: BorderRadius.circular(100),
                                             )
                                           : (isToday || hightlight) && isCurrentMonth
                                               ? BoxDecoration(
-                                                  color: isToday
-                                                      ? Theme.of(context).primaryColor
-                                                      : Theme.of(context).dividerColor,
+                                                  color: isToday ? primaryColor : Theme.of(context).dividerColor,
                                                   borderRadius: BorderRadius.circular(100),
                                                 )
                                               : null,
@@ -669,7 +670,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                                   color: isFocusDay
                                                       ? Theme.of(context).cardColor
                                                       : isToday
-                                                          ? Theme.of(context).primaryColor
+                                                          ? primaryColor
                                                           : hightlight
                                                               ? Theme.of(context).dividerColor
                                                               : Theme.of(context).cardColor,
@@ -688,7 +689,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                           itemExtent: 25,
                                           itemBuilder: (context, index) {
                                             ThemedCalendarEntry item = joinedEntries[index];
-                                            Color cardColor = item.color ?? Theme.of(context).primaryColor;
+                                            Color cardColor = item.color ?? primaryColor;
 
                                             BorderRadius borderRadius = BorderRadius.circular(5);
 

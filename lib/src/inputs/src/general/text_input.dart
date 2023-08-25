@@ -173,9 +173,6 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     _controller = widget.controller ?? TextEditingController(text: _value);
     _focusNode = widget.focusNode ?? FocusNode();
 
-    _focusNode.addListener(() {
-      debugPrint("FocusNode triggered? ${_focusNode.hasFocus}");
-    });
     super.initState();
   }
 

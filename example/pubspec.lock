@@ -294,7 +294,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.0.25"
+    version: "4.1.0"
   linked_scroll_controller:
     dependency: transitive
     description:

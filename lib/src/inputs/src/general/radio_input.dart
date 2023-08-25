@@ -16,21 +16,50 @@ class ThemedRadioInput<T> extends StatefulWidget {
   final Sizes? lgSize;
   final Sizes? xlSize;
 
+  /// [ThemedRadioInput] is a radio input.
   const ThemedRadioInput({
     super.key,
-    required this.items,
+
+    /// [labelText] is the label text of the radio input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
+
+    /// [label] is the label widget of the radio input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-    this.disabled = false,
+
+    /// [onChanged] is the callback function when the radio input is changed.
     this.onChanged,
+
+    /// [disabled] is the disabled state of the radio input.
+    this.disabled = false,
+
+    /// [value] is the value of the radio input.
     this.value,
+
+    /// [items] is the list of items of the radio input.
+    required this.items,
+
+    /// [errors] is the list of errors of the radio input.
     this.errors = const [],
+
+    /// [hideDetails] is the state of hiding the details of the radio input.
     this.hideDetails = false,
+
+    /// [padding] is the padding of the radio input.
     this.padding = const EdgeInsets.all(10),
+
+    /// [xsSize] is the size of the radio input in extra small screens.
     this.xsSize = Sizes.col12,
+
+    /// [smSize] is the size of the radio input in small screens.
     this.smSize = Sizes.col6,
+
+    /// [mdSize] is the size of the radio input in medium screens.
     this.mdSize = Sizes.col4,
+
+    /// [lgSize] is the size of the radio input in large screens.
     this.lgSize = Sizes.col3,
+
+    /// [xlSize] is the size of the radio input in extra large screens.
     this.xlSize = Sizes.col2,
   }) : assert(label == null || labelText == null);
 
