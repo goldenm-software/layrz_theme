@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/layout.dart';
@@ -51,18 +53,47 @@ class _InputsViewState extends State<InputsView> {
     ThemedMonth(year: 2023, month: Month.july),
     ThemedMonth(year: 2023, month: Month.august),
   ];
-  List<ThemedSelectItem<int>> get choices => List.generate(10, (index) {
-        return ThemedSelectItem<int>(
-          value: index,
-          icon: index % 2 == 0 ? MdiIcons.homeVariant : null,
-          label: "Choice $index un papá, un niño",
-        );
-      });
+  List<ThemedSelectItem<int>> choices = [
+    ...List.generate(1, (index) {
+      return ThemedSelectItem<int>(
+        value: index,
+        icon: index % 2 == 0 ? MdiIcons.homeVariant : null,
+        label: "Choice $index un papá, un niño",
+      );
+    }),
+    ThemedSelectItem<int>(
+      value: -1,
+      label: 'Leading',
+      leading: Container(
+        width: 10,
+        height: 10,
+        color: Colors.red,
+      ),
+    ),
+    ThemedSelectItem<int>(
+      value: -2,
+      label: 'Content',
+      content: Container(
+        width: 10,
+        height: 10,
+        color: Colors.blue,
+      ),
+    ),
+  ];
+  late ThemedSelectItem<int> choice;
+  late List<ThemedSelectItem<int>> selectedChoices;
 
   bool value = false;
 
   String textInputValue = "";
   String textInputValue2 = "";
+
+  @override
+  void initState() {
+    super.initState();
+    choice = choices.last;
+    selectedChoices = [choices.first, choices.last];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +113,46 @@ class _InputsViewState extends State<InputsView> {
                     isDisabled = !isDisabled;
                   });
                 },
+              ),
+              ThemedButton(
+                labelText: "Append choices",
+                onTap: () {
+                  int random = Random().nextInt(100);
+                  setState(() {
+                    choices.add(ThemedSelectItem(
+                      label: "Random $random",
+                      value: random,
+                    ));
+                  });
+                },
+              ),
+              ThemedDualListInput<int>(
+                disabled: isDisabled,
+                labelText: "Dual List Input",
+                items: choices,
+                value: selectedChoices.map((e) => e.value!).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedChoices = value;
+                  });
+                },
+              ),
+              ThemedMultiSelectInput<int>(
+                disabled: isDisabled,
+                labelText: "MultiSelect Input",
+                items: choices,
+                value: selectedChoices.map((e) => e.value!).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selected = value.map((e) => e.value!).toList();
+                  });
+                },
+              ),
+              ThemedSelectInput<int>(
+                disabled: isDisabled,
+                value: choice.value,
+                labelText: "Select Input",
+                items: choices,
               ),
               ThemedIconPicker(
                 disabled: isDisabled,
@@ -421,17 +492,6 @@ class _InputsViewState extends State<InputsView> {
                 suffixIcon: MdiIcons.homeVariant,
                 dense: true,
               ),
-              ThemedMultiSelectInput<int>(
-                disabled: isDisabled,
-                labelText: "MultiSelect Input",
-                items: choices,
-                value: null,
-                onChanged: (value) {
-                  setState(() {
-                    selected = value.map((e) => e.value!).toList();
-                  });
-                },
-              ),
               ...ThemedCheckboxInputStyle.values.map((style) {
                 return ThemedCheckboxInput(
                   disabled: isDisabled,
@@ -445,22 +505,11 @@ class _InputsViewState extends State<InputsView> {
                   },
                 );
               }).toList(),
-              ThemedSelectInput<int>(
-                disabled: isDisabled,
-                labelText: "Select Input",
-                items: choices,
-              ),
               ThemedRadioInput<int>(
                 disabled: isDisabled,
                 labelText: "Radio Input",
                 items: choices,
               ),
-              ThemedDualListInput(
-                disabled: isDisabled,
-                labelText: "Dual List Input",
-                items: choices,
-              ),
-              const SizedBox(height: 10),
             ],
           ),
         ),

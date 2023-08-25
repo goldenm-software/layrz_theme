@@ -118,6 +118,8 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
       padding: widgetPadding,
       dense: isDense,
       enableSearch: false,
+      hideTitle: true,
+      hideButtons: true,
       items: [
         ThemedSelectItem(
           value: true,

@@ -59,6 +59,7 @@ part 'src/orm/orm.dart';
 // Extensions
 part 'src/extensions/datetime.dart';
 part 'src/extensions/color.dart';
+part 'src/extensions/page_builder.dart';
 
 // Snackbar
 part 'src/snackbar/snackbar.dart';
