@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.1.1
+- New page builder called `ThemedPageTransition` to help to create a page transition with a fade animation.
+- Updated `ThemedSelectInput` and `ThemedMultiSelectInput` to comply with the new schema of pickers.
+- Updated `ThemedDualListInput` to comply with the new schema of apps. Also, now will append new items when is updated.
+
 ## 4.1.0
 - New widget `ThemedTooltip`, basically it's an a re-invention of the `Tooltip` widget, provides the option to change the spawn position of the tooltip, and prevents the issue with the default `Tooltip` widget related to the tap gesture, allowing to use any gesture on the child widget.
 - Updated the structure logic of the `ThemedLayout` and layout-related widgets, now, the shadows will overlap correctly.

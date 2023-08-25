@@ -33,11 +33,11 @@ part 'src/general/number_input.dart';
 part 'src/general/text_input.dart';
 part 'src/general/radio_input.dart';
 part 'src/general/search_input.dart';
+part 'src/general/select_input.dart';
+part 'src/general/multiselect_input.dart';
 
 // Not-reviewed inputs (Basically not documented and/or upgraded to new format)
-part 'src/select_input.dart';
 part 'src/code_editor.dart';
-part 'src/multiselect_input.dart';
 
 // Utilities
 part 'src/utilities/select_item.dart';

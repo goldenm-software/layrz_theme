@@ -11,6 +11,12 @@ class ThemedDualListInput<T> extends StatefulWidget {
   final String availableText;
   final String selectedText;
   final String searchText;
+  final Map<String, String> translations;
+  final bool overridesLayrzTranslations;
+  final double height;
+  final String availableListName;
+  final String selectedListName;
+  final double mobileScaleFactor;
 
   /// [ThemedDualListInput] is a dual list input.
   const ThemedDualListInput({
@@ -38,13 +44,46 @@ class ThemedDualListInput<T> extends StatefulWidget {
     this.errors = const [],
 
     /// [availableText] is the text of the available list.
-    this.availableText = "Available",
+    @Deprecated("Field unused") this.availableText = "Available",
 
     /// [selectedText] is the text of the selected list.
-    this.selectedText = "Selected",
+    @Deprecated("Field unused") this.selectedText = "Selected",
 
     /// [searchText] is the text of the search input.
-    this.searchText = "Search",
+    @Deprecated("Field unused") this.searchText = "Search",
+
+    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+    /// is the default value of this property.
+    /// Required translations:
+    /// - `actions.cancel` (Cancel)
+    /// - `actions.save` (Save)
+    /// - `layrz.duallist.search` (Search in {name})
+    /// - `layrz.duallist.toggleToSelected` (Toggle all to selected)
+    /// - `layrz.duallist.toggleToAvailable` (Toggle all to available)
+    this.translations = const {
+      'actions.cancel': 'Cancel',
+      'actions.save': 'Save',
+      'layrz.duallist.search': 'Search in {name}',
+      'layrz.duallist.toggleToSelected': 'Toggle all to selected',
+      'layrz.duallist.toggleToAvailable': 'Toggle all to available',
+    },
+
+    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
+    this.overridesLayrzTranslations = false,
+
+    /// [height] is the height of the dual list input.
+    /// In mobile mode, the height is multiplied by [mobileScaleFactor].
+    this.height = 400,
+
+    /// [availableListName] is the name of the available list.
+    this.availableListName = "Available",
+
+    /// [selectedListName] is the name of the selected list.
+    this.selectedListName = "Selected",
+
+    /// [mobileScaleFactor] is the scale factor of the height in mobile mode.
+    this.mobileScaleFactor = 2,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -52,49 +91,54 @@ class ThemedDualListInput<T> extends StatefulWidget {
 }
 
 class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
-  final List<ThemedSelectItem<T>> available = [];
-  final List<ThemedSelectItem<T>> selected = [];
-
   bool get someHasIcon => widget.items.any((element) => element.icon != null);
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+
+  List<ThemedSelectItem<T>> available = [];
+  List<ThemedSelectItem<T>> selected = [];
 
   List<ThemedSelectItem<T>> selectedFiltered = [];
   List<ThemedSelectItem<T>> availableFiltered = [];
 
-  String search = "";
+  String searchAvailable = "";
+  String searchSelected = "";
 
   @override
   void initState() {
     super.initState();
-
-    available.addAll(widget.items);
-
-    for (final item in widget.value ?? []) {
-      final index = available.indexWhere((element) => element.value == item);
-      if (index != -1) {
-        selected.add(available.removeAt(index));
-      }
-    }
-    availableFiltered = getAvailableFiltered();
-    selectedFiltered = getSelectedFiltered();
+    _handleUpdate();
   }
 
   @override
-  void didUpdateWidget(covariant ThemedDualListInput<T> oldWidget) {
+  void didUpdateWidget(ThemedDualListInput<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _handleUpdate();
+  }
 
-    for (final item in widget.value ?? []) {
-      final index = available.indexWhere((element) => element.value == item);
-      if (index != -1) {
-        selected.add(available.removeAt(index));
+  void _handleUpdate() {
+    Function eq = const ListEquality().equals;
+    available = List<ThemedSelectItem<T>>.from(widget.items);
+    selected = [];
+
+    if (!eq(selected, widget.value)) {
+      for (T item in widget.value ?? []) {
+        final index = available.indexWhere((element) => element.value == item);
+        if (index != -1) {
+          selected.add(available.removeAt(index));
+        }
       }
     }
+
+    searchAvailable = "";
+    searchSelected = "";
+    availableFiltered = getAvailableFiltered();
+    selectedFiltered = getSelectedFiltered();
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        bool isDark = Theme.of(context).brightness == Brightness.dark;
         IconData allToSelected = MdiIcons.chevronDoubleRight;
         IconData allToAvailable = MdiIcons.chevronDoubleLeft;
         bool displayVertical = false;
@@ -112,13 +156,18 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
             child: Container(
               width: 30,
               height: 30,
-              decoration: BoxDecoration(
+              decoration: generateContainerElevation(
+                context: context,
+                elevation: 2,
                 color: buttonsColors,
-                borderRadius: BorderRadius.circular(30),
               ),
-              child: InkWell(
-                onTap: () => toggleAllToSelected(),
-                child: Icon(allToSelected, color: validateColor(color: buttonsColors)),
+              clipBehavior: Clip.antiAlias,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => toggleAllToSelected(),
+                  child: Icon(allToSelected, color: validateColor(color: buttonsColors)),
+                ),
               ),
             ),
           ),
@@ -127,75 +176,76 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
             child: Container(
               width: 30,
               height: 30,
-              decoration: BoxDecoration(
+              decoration: generateContainerElevation(
+                context: context,
+                elevation: 2,
                 color: buttonsColors,
-                borderRadius: BorderRadius.circular(30),
               ),
-              child: InkWell(
-                onTap: () => toggleAllToAvailable(),
-                child: Icon(allToAvailable, color: validateColor(color: buttonsColors)),
+              clipBehavior: Clip.antiAlias,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => toggleAllToAvailable(),
+                  child: Icon(allToAvailable, color: validateColor(color: buttonsColors)),
+                ),
               ),
             ),
           ),
         ];
 
-        Widget searchWidget = ThemedTextInput(
-          labelText: widget.searchText,
-          value: search,
-          prefixIcon: MdiIcons.magnify,
-          dense: true,
-          onChanged: (value) {
-            setState(() {
-              search = value;
-              availableFiltered = getAvailableFiltered();
-              selectedFiltered = getSelectedFiltered();
-            });
-          },
-        );
-
         Widget availableWidget = Padding(
           padding: const EdgeInsets.all(10),
           child: Container(
-            decoration: generateContainerElevation(context: context, elevation: 1),
+            decoration: generateContainerElevation(context: context, elevation: 2),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(
-                    widget.availableText,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "${widget.availableListName} (${available.length})",
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                    ThemedSearchInput(
+                      labelText: t('layrz.duallist.search', {'name': widget.availableListName}),
+                      value: searchAvailable,
+                      onSearch: (value) {
+                        searchAvailable = value;
+                        availableFiltered = getAvailableFiltered();
+                        setState(() {});
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: ListView.separated(
+                  child: ListView.builder(
                     itemCount: availableFiltered.length,
-                    separatorBuilder: (context, index) => const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(),
-                    ),
                     itemBuilder: (context, index) {
                       final item = availableFiltered[index];
 
-                      return generateItem(
+                      return _ThemedSelectItem<T>(
+                        showCheckbox: false,
                         item: item,
-                        onTap: widget.disabled
-                            ? null
-                            : () {
-                                final availableGlobal = available.indexOf(item);
+                        onTap: () {
+                          item.onTap?.call();
 
-                                selected.add(available[availableGlobal]);
-                                available.removeAt(availableGlobal);
-                                available.sort((a, b) => a.label.compareTo(b.label));
-                                selected.sort((a, b) => a.label.compareTo(b.label));
-                                widget.onChanged?.call(selected);
-                                availableFiltered = getAvailableFiltered();
-                                selectedFiltered = getSelectedFiltered();
-                                setState(() {});
-                              },
+                          final availableGlobal = available.indexOf(item);
+
+                          selected.add(available[availableGlobal]);
+                          available.removeAt(availableGlobal);
+                          available.sort((a, b) => a.label.compareTo(b.label));
+                          selected.sort((a, b) => a.label.compareTo(b.label));
+                          widget.onChanged?.call(selected);
+                          availableFiltered = getAvailableFiltered();
+                          selectedFiltered = getSelectedFiltered();
+                          setState(() {});
+                        },
                       );
                     },
                   ),
@@ -208,43 +258,56 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         Widget selectedWidget = Padding(
           padding: const EdgeInsets.all(10),
           child: Container(
-            decoration: generateContainerElevation(context: context, elevation: 1),
+            decoration: generateContainerElevation(context: context, elevation: 2),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(
-                    widget.selectedText,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "${widget.selectedListName} (${selected.length})",
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                    ThemedSearchInput(
+                      labelText: t('layrz.duallist.search', {'name': widget.selectedListName}),
+                      value: searchAvailable,
+                      onSearch: (value) {
+                        searchAvailable = value;
+                        availableFiltered = getAvailableFiltered();
+                        setState(() {});
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: ListView.separated(
+                  child: ListView.builder(
                     itemCount: selectedFiltered.length,
-                    separatorBuilder: (context, index) => const Divider(),
                     itemBuilder: (context, index) {
                       final item = selectedFiltered[index];
 
-                      return generateItem(
+                      return _ThemedSelectItem<T>(
+                        showCheckbox: false,
                         item: item,
-                        onTap: widget.disabled
-                            ? null
-                            : () {
-                                final selectedGlobal = selected.indexOf(item);
+                        onTap: () {
+                          item.onTap?.call();
 
-                                available.add(selected[selectedGlobal]);
-                                selected.removeAt(selectedGlobal);
-                                available.sort((a, b) => a.label.compareTo(b.label));
-                                selected.sort((a, b) => a.label.compareTo(b.label));
-                                widget.onChanged?.call(selected);
-                                availableFiltered = getAvailableFiltered();
-                                selectedFiltered = getSelectedFiltered();
-                                setState(() {});
-                              },
+                          final selectedGlobal = selected.indexOf(item);
+
+                          available.add(selected[selectedGlobal]);
+                          selected.removeAt(selectedGlobal);
+                          available.sort((a, b) => a.label.compareTo(b.label));
+                          selected.sort((a, b) => a.label.compareTo(b.label));
+                          widget.onChanged?.call(selected);
+                          availableFiltered = getAvailableFiltered();
+                          selectedFiltered = getSelectedFiltered();
+                          setState(() {});
+                        },
                       );
                     },
                   ),
@@ -254,11 +317,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
           ),
         );
 
-        return Container(
-          constraints: BoxConstraints(
-            maxWidth: constraints.maxWidth,
-          ),
-          height: displayVertical ? null : 400,
+        return SizedBox(
+          height: widget.height * (displayVertical ? widget.mobileScaleFactor : 1),
           child: displayVertical
               ? Column(
                   children: [
@@ -270,21 +330,14 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                         ),
                       ],
                     ),
-                    searchWidget,
-                    SizedBox(
-                      height: 300,
-                      child: availableWidget,
-                    ),
+                    Expanded(child: availableWidget),
                     if (!widget.disabled) ...[
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: actions,
                       ),
                     ],
-                    SizedBox(
-                      height: 300,
-                      child: selectedWidget,
-                    ),
+                    Expanded(child: selectedWidget),
                   ],
                 )
               : Column(
@@ -294,22 +347,17 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: widget.label ?? Text(widget.labelText ?? ''),
                     ),
-                    searchWidget,
                     Expanded(
                       child: Row(
                         children: [
-                          Expanded(
-                            child: availableWidget,
-                          ),
+                          Expanded(child: availableWidget),
                           if (!widget.disabled) ...[
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: actions,
                             ),
                           ],
-                          Expanded(
-                            child: selectedWidget,
-                          ),
+                          Expanded(child: selectedWidget),
                         ],
                       ),
                     ),
@@ -351,22 +399,22 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
   }
 
   List<ThemedSelectItem<T>> getSelectedFiltered() => selected.where((element) {
-        if (search.isEmpty) {
+        if (searchSelected.isEmpty) {
           return true;
         }
-        return element.label.toLowerCase().contains(search.toLowerCase());
+        return element.label.toLowerCase().contains(searchSelected.toLowerCase());
       }).toList();
 
   List<ThemedSelectItem<T>> getAvailableFiltered() => available.where((element) {
-        if (search.isEmpty) {
+        if (searchAvailable.isEmpty) {
           return true;
         }
 
-        return element.label.toLowerCase().contains(search.toLowerCase());
+        return element.label.toLowerCase().contains(searchAvailable.toLowerCase());
       }).toList();
 
   void toggleAllToSelected() {
-    if (search.isNotEmpty) {
+    if (searchAvailable.isNotEmpty) {
       availableFiltered = getAvailableFiltered();
       selected.addAll(availableFiltered);
 
@@ -377,13 +425,15 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
     }
     selected.sort((a, b) => a.label.compareTo(b.label));
     widget.onChanged?.call(selected);
+    searchAvailable = "";
+    searchSelected = "";
     availableFiltered = getAvailableFiltered();
     selectedFiltered = getSelectedFiltered();
     setState(() {});
   }
 
   void toggleAllToAvailable() {
-    if (search.isNotEmpty) {
+    if (searchSelected.isNotEmpty) {
       selectedFiltered = getSelectedFiltered();
       available.addAll(selectedFiltered);
 
@@ -395,8 +445,31 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
     available.sort((a, b) => a.label.compareTo(b.label));
     widget.onChanged?.call(selected);
+    searchAvailable = "";
+    searchSelected = "";
     availableFiltered = getAvailableFiltered();
     selectedFiltered = getSelectedFiltered();
     setState(() {});
+  }
+
+  String t(String key, [Map<String, dynamic> args = const {}]) {
+    late String result;
+    try {
+      result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+    } catch (_) {
+      result = widget.translations[key] ?? key;
+    }
+
+    if (widget.overridesLayrzTranslations) {
+      result = widget.translations[key] ?? key;
+    }
+
+    if (args.isNotEmpty) {
+      args.forEach((key, value) {
+        result = result.replaceAll('{$key}', value.toString());
+      });
+    }
+
+    return result;
   }
 }

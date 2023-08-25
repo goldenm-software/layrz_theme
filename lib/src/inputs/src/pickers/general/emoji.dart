@@ -100,7 +100,6 @@ class ThemedEmojiPicker extends StatefulWidget {
 class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
   late ScrollController _filtersController;
   late ScrollController _emojisController;
-  late TextEditingController _textController;
 
   EmojiGroup? selectedGroup;
   Emoji? _value;
@@ -134,8 +133,6 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
       }
     }
 
-    _textController = TextEditingController(text: _value?.char ?? '');
-
     if (groups.isNotEmpty && selectedGroup == null) {
       selectedGroup = groups.first;
     }
@@ -145,7 +142,6 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
   void dispose() {
     _filtersController.dispose();
     _emojisController.dispose();
-    _textController.dispose();
     super.dispose();
   }
 
@@ -163,7 +159,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
       disabled: widget.disabled,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
-      controller: _textController,
+      value: _value?.char,
       readonly: true,
       onTap: widget.disabled ? null : _showPicker,
     );
@@ -273,8 +269,8 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
     );
 
     if (result != null) {
-      _textController.text = result;
       _value = Emoji.byChar(result);
+      setState(() {});
       widget.onChanged?.call(result);
     }
   }

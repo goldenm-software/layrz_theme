@@ -71,7 +71,7 @@ class _ThemedAnimatedCheckboxState extends State<ThemedAnimatedCheckbox> with Ti
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: _handleTap,
+      onTap: widget.onChanged == null ? null : _handleTap,
       borderRadius: BorderRadius.circular(100),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
