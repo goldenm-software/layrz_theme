@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:layrz_theme_example/avatars.dart';
 import 'package:layrz_theme_example/buttons.dart';
+import 'package:layrz_theme_example/calendar.dart';
 import 'package:layrz_theme_example/dynamic_credentials.dart';
 import 'package:layrz_theme_example/empty.dart';
 import 'package:layrz_theme_example/home.dart';
@@ -22,6 +23,10 @@ final goRoutes = [
   GoRoute(
     path: '/layo',
     builder: (context, state) => const LayoView(name: 'Layo'),
+  ),
+  GoRoute(
+    path: '/calendar',
+    builder: (context, state) => const CalendarView(),
   ),
   GoRoute(
     path: '/table',
@@ -89,7 +94,7 @@ final goRoutes = [
   ),
 ];
 
-final router = GoRouter(initialLocation: '/inputs', routes: goRoutes);
+final router = GoRouter(initialLocation: '/calendar', routes: goRoutes);
 
 final nativeRoutes = {
   '/home': (context) => const HomeView(name: 'Home'),

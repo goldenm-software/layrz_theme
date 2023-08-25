@@ -271,8 +271,6 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       );
     }
 
-    debugPrint("_entry: ${_entry}");
-
     InputDecoration decoration = InputDecoration(
       label: label,
       hintText: widget.placeholder,

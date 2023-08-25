@@ -18,6 +18,7 @@ class ThemedMonthPicker extends StatefulWidget {
   final ThemedMonth? maximum;
   final List<ThemedMonth> disabledMonths;
 
+  /// [ThemedMonthPicker] is a input to select a month and year.
   const ThemedMonthPicker({
     super.key,
 
@@ -59,60 +60,12 @@ class ThemedMonthPicker extends StatefulWidget {
     /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
     /// is the default value of this property.
     /// Required translations:
-    /// - `layrz.monthPicker.months.0` (January)
-    /// - `layrz.monthPicker.months.1` (February)
-    /// - `layrz.monthPicker.months.2` (March)
-    /// - `layrz.monthPicker.months.3` (April)
-    /// - `layrz.monthPicker.months.4` (May)
-    /// - `layrz.monthPicker.months.5` (June)
-    /// - `layrz.monthPicker.months.6` (July)
-    /// - `layrz.monthPicker.months.7` (August)
-    /// - `layrz.monthPicker.months.8` (September)
-    /// - `layrz.monthPicker.months.9` (October)
-    /// - `layrz.monthPicker.months.10` (November)
-    /// - `layrz.monthPicker.months.11` (December)
-    /// - `layrz.monthPicker.monthsShort.0` (Jan)
-    /// - `layrz.monthPicker.monthsShort.1` (Feb)
-    /// - `layrz.monthPicker.monthsShort.2` (Mar)
-    /// - `layrz.monthPicker.monthsShort.3` (Apr)
-    /// - `layrz.monthPicker.monthsShort.4` (May)
-    /// - `layrz.monthPicker.monthsShort.5` (Jun)
-    /// - `layrz.monthPicker.monthsShort.6` (Jul)
-    /// - `layrz.monthPicker.monthsShort.7` (Aug)
-    /// - `layrz.monthPicker.monthsShort.8` (Sep)
-    /// - `layrz.monthPicker.monthsShort.9` (Oct)
-    /// - `layrz.monthPicker.monthsShort.10` (Nov)
-    /// - `layrz.monthPicker.monthsShort.11` (Dec)
     /// - `actions.cancel` (Cancel)
     /// - `actions.save` (Save)
     /// - `layrz.monthPicker.year` (Year {year})
     /// - `layrz.monthPicker.back` (Previous year)
     /// - `layrz.monthPicker.next` (Next year)
     this.translations = const {
-      'layrz.monthPicker.months.0': 'January',
-      'layrz.monthPicker.months.1': 'February',
-      'layrz.monthPicker.months.2': 'March',
-      'layrz.monthPicker.months.3': 'April',
-      'layrz.monthPicker.months.4': 'May',
-      'layrz.monthPicker.months.5': 'June',
-      'layrz.monthPicker.months.6': 'July',
-      'layrz.monthPicker.months.7': 'August',
-      'layrz.monthPicker.months.8': 'September',
-      'layrz.monthPicker.months.9': 'October',
-      'layrz.monthPicker.months.10': 'November',
-      'layrz.monthPicker.months.11': 'December',
-      'layrz.monthPicker.monthsShort.0': 'Jan',
-      'layrz.monthPicker.monthsShort.1': 'Feb',
-      'layrz.monthPicker.monthsShort.2': 'Mar',
-      'layrz.monthPicker.monthsShort.3': 'Apr',
-      'layrz.monthPicker.monthsShort.4': 'May',
-      'layrz.monthPicker.monthsShort.5': 'Jun',
-      'layrz.monthPicker.monthsShort.6': 'Jul',
-      'layrz.monthPicker.monthsShort.7': 'Aug',
-      'layrz.monthPicker.monthsShort.8': 'Sep',
-      'layrz.monthPicker.monthsShort.9': 'Oct',
-      'layrz.monthPicker.monthsShort.10': 'Nov',
-      'layrz.monthPicker.monthsShort.11': 'Dec',
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
       'layrz.monthPicker.year': 'Year {year}',
@@ -138,6 +91,7 @@ class ThemedMonthPicker extends StatefulWidget {
 }
 
 class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   late int _focusYear;
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
@@ -146,7 +100,8 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
       return null;
     }
 
-    return '${t('layrz.monthPicker.months.${widget.value!.month.index}')} ${widget.value!.year}';
+    return '${DateTime(2023, widget.value!.month.index + 1, 1).format(pattern: '%B', i18n: i18n)} '
+        '${widget.value!.year}';
   }
 
   @override
@@ -307,7 +262,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                                           },
                                     child: Center(
                                       child: Text(
-                                        t('layrz.monthPicker.months.$index'),
+                                        DateTime(2023, index + 1, 1).format(pattern: '%B', i18n: i18n),
                                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                               color: validateColor(color: decoration.color ?? Colors.white),
                                             ),

@@ -42,8 +42,11 @@ part 'src/buttons/actions_buttons.dart';
 part 'src/buttons/checkbox.dart';
 
 // Views
-part 'src/views/wip.dart';
 part 'src/views/about.dart';
+
+// General widgets
+part 'src/widgets/wip.dart';
+part 'src/widgets/calendar.dart';
 
 // Responsive grid
 part 'src/responsive/sizes.dart';

@@ -8,9 +8,14 @@
 - Added the property `useDefaultRedirect` on the `ThemedNavigatorPage`, basically allows to push the parent page of the nested pages when is `true`, when is `false` will push the first page of the nested pages.
 - Updated `ThemedColorPicker` to support multiple pickers from the package `flex_color_picker`.
 - Migrated `ThemedDurationInput` from an `Overlay` to a `Dialog`.
-- New widgets `ThemedMonthPicker` and `ThemedMonthRangePicker`.
 - Updated `ThemedTextInput` to support `choices` to work like a combobox.
 - New widget `ThemedNumberInput`, basically is a `ThemedTextInput` with a `num` of return.
+- New widget `ThemedCalendar` and helper classes `ThemedCalendarEntry` and `ThemedCalendarRangeEntry`.
+  * FYI, we only support the Monthly calendar, if you want to help us to support the other calendars, please, feel free to open a MR, help is always welcome.
+- New widgets `ThemedMonthPicker` and `ThemedMonthRangePicker`.
+- New widgets `ThemedDatePicker` and `ThemedDateRangePicker`.
+- New widgets `ThemedTimePicker` and `ThemedTimeRangePicker`. [WIP]
+- New widget `ThemedDateTimePicker` and `ThemedDateTimeRangePicker`. [WIP]
 
 ## 4.0.25
 - Fixed toggle theme on `ThemedLayout` and `additionalActions` when `ThemedLayoutStyle` is `ThemedLayoutStyle.sidebar`

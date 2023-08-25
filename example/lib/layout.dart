@@ -105,6 +105,10 @@ class _LayoutState extends State<Layout> {
         path: '/inputs',
       ),
       ThemedNavigatorPage(
+        labelText: 'Calendar',
+        path: '/calendar',
+      ),
+      ThemedNavigatorPage(
         labelText: 'Dynamic credentials',
         path: '/dynamic_credentials',
       ),
@@ -196,8 +200,6 @@ class _LayoutState extends State<Layout> {
         content: "Lorem ipsum dolor sit amet",
       ),
     ];
-
-    debugPrint('layout: $_layoutStyle');
 
     return ThemedLayout(
       isBackEnabled: false,

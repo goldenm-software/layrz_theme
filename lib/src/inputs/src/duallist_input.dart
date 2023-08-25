@@ -141,12 +141,14 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Text(widget.availableText, style: Theme.of(context).textTheme.titleSmall),
+                  child: Text(
+                    widget.availableText,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Divider(),
-                ),
+                const SizedBox(height: 10),
                 Expanded(
                   child: ListView.separated(
                     itemCount: availableFiltered.length,
@@ -159,18 +161,20 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
                       return generateItem(
                         item: item,
-                        onTap: () {
-                          final availableGlobal = available.indexOf(item);
+                        onTap: widget.disabled
+                            ? null
+                            : () {
+                                final availableGlobal = available.indexOf(item);
 
-                          selected.add(available[availableGlobal]);
-                          available.removeAt(availableGlobal);
-                          available.sort((a, b) => a.label.compareTo(b.label));
-                          selected.sort((a, b) => a.label.compareTo(b.label));
-                          widget.onChanged?.call(selected);
-                          availableFiltered = getAvailableFiltered();
-                          selectedFiltered = getSelectedFiltered();
-                          setState(() {});
-                        },
+                                selected.add(available[availableGlobal]);
+                                available.removeAt(availableGlobal);
+                                available.sort((a, b) => a.label.compareTo(b.label));
+                                selected.sort((a, b) => a.label.compareTo(b.label));
+                                widget.onChanged?.call(selected);
+                                availableFiltered = getAvailableFiltered();
+                                selectedFiltered = getSelectedFiltered();
+                                setState(() {});
+                              },
                       );
                     },
                   ),
@@ -189,12 +193,14 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Text(widget.selectedText, style: Theme.of(context).textTheme.titleSmall),
+                  child: Text(
+                    widget.selectedText,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Divider(),
-                ),
+                const SizedBox(height: 10),
                 Expanded(
                   child: ListView.separated(
                     itemCount: selectedFiltered.length,
@@ -204,18 +210,20 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
                       return generateItem(
                         item: item,
-                        onTap: () {
-                          final selectedGlobal = selected.indexOf(item);
+                        onTap: widget.disabled
+                            ? null
+                            : () {
+                                final selectedGlobal = selected.indexOf(item);
 
-                          available.add(selected[selectedGlobal]);
-                          selected.removeAt(selectedGlobal);
-                          available.sort((a, b) => a.label.compareTo(b.label));
-                          selected.sort((a, b) => a.label.compareTo(b.label));
-                          widget.onChanged?.call(selected);
-                          availableFiltered = getAvailableFiltered();
-                          selectedFiltered = getSelectedFiltered();
-                          setState(() {});
-                        },
+                                available.add(selected[selectedGlobal]);
+                                selected.removeAt(selectedGlobal);
+                                available.sort((a, b) => a.label.compareTo(b.label));
+                                selected.sort((a, b) => a.label.compareTo(b.label));
+                                widget.onChanged?.call(selected);
+                                availableFiltered = getAvailableFiltered();
+                                selectedFiltered = getSelectedFiltered();
+                                setState(() {});
+                              },
                       );
                     },
                   ),
@@ -246,10 +254,12 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                       height: 300,
                       child: availableWidget,
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: actions,
-                    ),
+                    if (!widget.disabled) ...[
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: actions,
+                      ),
+                    ],
                     SizedBox(
                       height: 300,
                       child: selectedWidget,
@@ -270,10 +280,12 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                           Expanded(
                             child: availableWidget,
                           ),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: actions,
-                          ),
+                          if (!widget.disabled) ...[
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: actions,
+                            ),
+                          ],
                           Expanded(
                             child: selectedWidget,
                           ),
@@ -287,7 +299,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
     );
   }
 
-  Widget generateItem({required ThemedSelectItem<T> item, required VoidCallback onTap}) {
+  Widget generateItem({required ThemedSelectItem<T> item, VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       child: InkWell(
