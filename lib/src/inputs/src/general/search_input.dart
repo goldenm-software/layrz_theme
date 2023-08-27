@@ -3,40 +3,39 @@ part of inputs;
 typedef OnSearch = void Function(String value);
 
 class ThemedSearchInput extends StatefulWidget {
+  /// [value] is the value of the search input.
   final String value;
+
+  /// [onSearch] is the callback function when the search input is changed.
   final OnSearch onSearch;
+
+  /// [maxWidth] is the maximum width of the search input.
   final double maxWidth;
+
+  /// [labelText] is the label text of the search input.
   final String labelText;
+
+  /// [customChild] is the custom widget to be displayed.
+  /// Replaces the [ThemedTextInput] widget.
   final Widget? customChild;
+
+  /// [disabled] is the flag to disable the search input.
+  /// Defaults to `false`.
   final bool disabled;
+
+  /// [position] is the position of the search input.
+  /// Defaults to [ThemedSearchPosition.auto].
   final ThemedSearchPosition position;
 
   /// [ThemedSearchInput] is a search input.
   const ThemedSearchInput({
     super.key,
-
-    /// [value] is the value of the search input.
     required this.value,
-
-    /// [onSearch] is the callback function when the search input is changed.
     required this.onSearch,
-
-    /// [maxWidth] is the maximum width of the search input.
     this.maxWidth = 300,
-
-    /// [labelText] is the label text of the search input.
     this.labelText = 'Search',
-
-    /// [customChild] is the custom widget to be displayed.
-    /// Replaces the [ThemedTextInput] widget.
     this.customChild,
-
-    /// [disabled] is the flag to disable the search input.
-    /// Defaults to `false`.
     this.disabled = false,
-
-    /// [position] is the position of the search input.
-    /// Defaults to [ThemedSearchPosition.auto].
     this.position = ThemedSearchPosition.left,
   });
 

@@ -2,52 +2,45 @@ part of helpers;
 
 /// [drawAvatar] is a helper function to generate a [CircleAvatar] using the avatar and the name
 /// (as failover) of the entity.
+///
 /// The priority order of each property is:
 /// 1. [dynamicAvatar]
 /// 2. [avatar]
 /// 3. [icon]
 /// 4. [name]
+///
+/// [dynamicAvatar] is the new avatar engine, can be nullable.
+/// Prevent submit [avatar] and [icon] if you are using this.
+/// Nothing will happend but is less code to you :)
+/// [avatar] is the avatar of the user. Can be nullable
+/// [icon] is the icon of the user. Can be nullable
+/// [name] is the name of the user. Can be nullable
+/// [size] is the size of the avatar.
+/// By default, it is 30.
+/// You can control the radius using [radius] property
+/// By default, it is 30. (The same as the [size])
+/// [color] is the color of the avatar. By default, it is [Theme.of(context).primaryColor].
+/// Only when [dynamicAvatar] is not null, the default value of the color is based on the different types of avatars.
+/// For [AvatarType.emoji], the default color is [Colors.grey.shade900].
+/// For [AvatarType.icon], the default color is [Theme.of(context).primaryColor].
+/// For [AvatarType.base64] and [AvatarType.url], the default color is [Colors.transparent].
+/// For [AvatarType.none], the default color is [Theme.of(context).primaryColor].
+/// [elevation] is the elevation of the avatar. By default, it is 1.
+/// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
+/// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
+/// [context] is the context of the widget.
+
 Widget drawAvatar({
-  /// [dynamicAvatar] is the new avatar engine, can be nullable.
-  /// Prevent submit [avatar] and [icon] if you are using this.
-  /// Nothing will happend but is less code to you :)
   Avatar? dynamicAvatar,
-
-  /// [avatar] is the avatar of the user. Can be nullable
   String? avatar,
-
-  /// [icon] is the icon of the user. Can be nullable
   IconData? icon,
-
-  /// [name] is the name of the user. Can be nullable
   String? name,
-
-  /// [size] is the size of the avatar.
-  /// By default, it is 30.
   double size = 30,
-
-  /// You can control the radius using [radius] property
-  /// By default, it is 30. (The same as the [size])
   double radius = 30,
-
-  /// [color] is the color of the avatar. By default, it is [Theme.of(context).primaryColor].
-  /// Only when [dynamicAvatar] is not null, the default value of the color is based on the different types of avatars.
-  /// For [AvatarType.emoji], the default color is [Colors.grey.shade900].
-  /// For [AvatarType.icon], the default color is [Theme.of(context).primaryColor].
-  /// For [AvatarType.base64] and [AvatarType.url], the default color is [Colors.transparent].
-  /// For [AvatarType.none], the default color is [Theme.of(context).primaryColor].
   Color? color,
-
-  /// [elevation] is the elevation of the avatar. By default, it is 1.
   double elevation = 1,
-
-  /// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
   Color? shadowColor,
-
-  /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
   bool reverse = false,
-
-  /// [context] is the context of the widget.
   required BuildContext context,
 }) {
   assert(elevation <= 5, 'The elevation must be less than or equal to 5');

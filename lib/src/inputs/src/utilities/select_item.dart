@@ -34,6 +34,7 @@ class _ThemedSelectItem<T> extends StatefulWidget {
   final VoidCallback? onTap;
   final bool selected;
   final bool showCheckbox;
+  final bool canUnselect;
 
   const _ThemedSelectItem({
     super.key,
@@ -41,6 +42,7 @@ class _ThemedSelectItem<T> extends StatefulWidget {
     this.onTap,
     this.selected = false,
     this.showCheckbox = true,
+    this.canUnselect = true,
   });
 
   @override
@@ -57,7 +59,16 @@ class __ThemedSelectItemState<T> extends State<_ThemedSelectItem<T>> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: widget.selected ? null : widget.onTap,
+          mouseCursor: widget.selected
+              ? widget.canUnselect
+                  ? SystemMouseCursors.click
+                  : SystemMouseCursors.forbidden
+              : SystemMouseCursors.click,
+          onTap: widget.selected
+              ? widget.canUnselect
+                  ? widget.onTap
+                  : null
+              : widget.onTap,
           borderRadius: BorderRadius.circular(5),
           child: Padding(
             padding: const EdgeInsets.all(5),

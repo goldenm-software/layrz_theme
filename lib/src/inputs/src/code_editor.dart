@@ -16,7 +16,7 @@ class ThemedCodeEditor extends StatefulWidget {
   final List<String> errors;
   final EdgeInsets padding;
   final FocusNode? focusNode;
-  final void Function()? onSubmitted;
+  final VoidCallback? onSubmitted;
   final LayrzSupportedLanguage language;
   final BoxConstraints? constraints;
   final List<LintError> lintErrors;

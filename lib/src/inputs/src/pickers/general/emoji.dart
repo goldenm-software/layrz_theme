@@ -12,15 +12,19 @@ class ThemedEmojiPicker extends StatefulWidget {
   final bool dense;
   final bool isRequired;
   final FocusNode? focusNode;
-  final void Function()? onSubmitted;
+  final VoidCallback? onSubmitted;
   final bool readonly;
-  final double? borderRadius;
   final int maxLines;
   final double? buttomSize;
   final List<EmojiGroup> enabledGroups;
   final Map<String, String> translations;
   final bool overridesLayrzTranslations;
   final Widget? customChild;
+  final Color hoverColor;
+  final Color focusColor;
+  final Color splashColor;
+  final Color highlightColor;
+  final BorderRadius borderRadius;
 
   /// [ThemedEmojiPicker] is a widget that allows the user to pick an emoji.
   const ThemedEmojiPicker({
@@ -65,9 +69,6 @@ class ThemedEmojiPicker extends StatefulWidget {
     /// [readonly] is a flag that indicates if the input is readonly.
     this.readonly = false,
 
-    /// [borderRadius] is the border radius of the input.
-    this.borderRadius,
-
     /// [maxLines] is the maximum number of lines of the input.
     this.maxLines = 1,
 
@@ -96,6 +97,26 @@ class ThemedEmojiPicker extends StatefulWidget {
     /// [customChild] is a custom child that will be displayed instead of the default input.
     /// If this property is submitted, the input will be render as a [ThemedTextInput].
     this.customChild,
+
+    /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.hoverColor = Colors.transparent,
+
+    /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.focusColor = Colors.transparent,
+
+    /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.splashColor = Colors.transparent,
+
+    /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.highlightColor = Colors.transparent,
+
+    /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `BorderRadius.circular(10)`.
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -154,6 +175,11 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
   Widget build(BuildContext context) {
     if (widget.customChild != null) {
       return InkWell(
+        hoverColor: widget.hoverColor,
+        focusColor: widget.focusColor,
+        splashColor: widget.splashColor,
+        highlightColor: widget.highlightColor,
+        borderRadius: widget.borderRadius,
         onTap: widget.disabled ? null : _showPicker,
         child: widget.customChild!,
       );

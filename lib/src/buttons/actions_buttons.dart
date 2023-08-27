@@ -1,14 +1,27 @@
 part of layrz_theme;
 
 class ThemedActionsButtons extends StatefulWidget {
+  /// [actions] is the list of actions to be displayed.
   final List<ThemedActionButton> actions;
+
+  /// [actionsLabel] is the label to be displayed on the button.
   final String actionsLabel;
+
+  /// [forceMobileMode] forces the button to be displayed as a FAB.
   final bool forceMobileMode;
+
+  /// [mobileBreakpoint] is the breakpoint to be used to determine if it's mobile or not.
+  final double mobileBreakpoint;
+
+  /// Creates a [ThemedActionsButtons] widget. This utility is to create a list of actions to be displayed.
+  /// When it's in desktop mode (Before [mobileBreakpoint] width), it will display a row of buttons.
+  /// Otherwise, it will display a button with a dropdown menu.
   const ThemedActionsButtons({
     super.key,
     required this.actions,
     this.actionsLabel = "Actions",
     this.forceMobileMode = false,
+    this.mobileBreakpoint = kSmallGrid,
   });
 
   @override
@@ -20,6 +33,8 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
   OverlayEntry? _overlayEntry;
   late AnimationController _animationController;
   final GlobalKey _key = GlobalKey();
+  double get width => MediaQuery.of(context).size.width;
+  bool get isMobile => width <= widget.mobileBreakpoint;
 
   @override
   void initState() {
@@ -36,9 +51,6 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    bool isMobile = width <= kSmallGrid;
-
     if (widget.actions.isEmpty) {
       return const SizedBox();
     }

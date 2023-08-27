@@ -1,9 +1,21 @@
 part of inputs;
 
+/// [ThemedDurationInputVisibleValues] is the list of values to display in the input.
+///
+/// It can be days, hours, minutes or seconds.
+///
+/// In the usage of this enum in the [ThemedDurationInput], you can combine the values.
 enum ThemedDurationInputVisibleValues {
+  /// [days] is the value of days.
   days,
+
+  /// [hours] is the value of hours.
   hours,
+
+  /// [minutes] is the value of minutes.
   minutes,
+
+  /// [seconds] is the value of seconds.
   seconds;
 
   Units toUnit() {
@@ -21,49 +33,48 @@ enum ThemedDurationInputVisibleValues {
 }
 
 class ThemedDurationInput extends StatefulWidget {
+  /// [value] is the value of the input
   final Duration? value;
+
+  /// [onChanged] is the callback when the value of the input change
   final Function(Duration?)? onChanged;
+
+  /// [errors] is the list of errors to display under the input
   final List<String> errors;
+
+  /// [labelText] is the text of the label
   final String? labelText;
+
+  /// [label] is the widget of the label
   final Widget? label;
+
+  /// [suffixIcon] is the icon to display at the end of the input
   final IconData? suffixIcon;
+
+  /// [prefixIcon] is the icon to display at the start of the input
   final IconData? prefixIcon;
+
+  /// [padding] is the padding of the input
   final bool disabled;
+
+  /// [disabled] is the state of the input
   final EdgeInsets padding;
+
+  /// [visibleValues] is the list of values to display in the input
   final List<ThemedDurationInputVisibleValues> visibleValues;
 
   /// [ThemedDurationInput] is a duration input.
   const ThemedDurationInput({
     super.key,
-
-    /// [value] is the value of the input
     this.value,
-
-    /// [onChanged] is the callback when the value of the input change
     this.onChanged,
-
-    /// [errors] is the list of errors to display under the input
     this.errors = const [],
-
-    /// [labelText] is the text of the label
     this.labelText,
-
-    /// [label] is the widget of the label
     this.label,
-
-    /// [suffixIcon] is the icon to display at the end of the input
     this.suffixIcon,
-
-    /// [prefixIcon] is the icon to display at the start of the input
     this.prefixIcon,
-
-    /// [padding] is the padding of the input
     this.padding = const EdgeInsets.all(10.0),
-
-    /// [disabled] is the state of the input
     this.disabled = false,
-
-    /// [visibleValues] is the list of values to display in the input
     this.visibleValues = const [
       ThemedDurationInputVisibleValues.days,
       ThemedDurationInputVisibleValues.hours,

@@ -12,11 +12,15 @@ class ThemedIconPicker extends StatefulWidget {
   final bool dense;
   final bool isRequired;
   final FocusNode? focusNode;
-  final double? borderRadius;
   final Map<String, String> translations;
   final bool overridesLayrzTranslations;
   final List<IconData> allowedIcons;
   final Widget? customChild;
+  final Color hoverColor;
+  final Color focusColor;
+  final Color splashColor;
+  final Color highlightColor;
+  final BorderRadius borderRadius;
 
   /// [ThemedIconPicker] is an icon picker input. It is a text field that opens an [OverlayEntry]
   /// with a list of icons to select from.
@@ -56,9 +60,6 @@ class ThemedIconPicker extends StatefulWidget {
     /// [focusNode] is the focus node of the icon picker.
     this.focusNode,
 
-    /// [borderRadius] is the border radius of the icon picker.
-    this.borderRadius,
-
     /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
     /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
     /// is the default value of this property.
@@ -82,6 +83,26 @@ class ThemedIconPicker extends StatefulWidget {
     /// [customChild] is the custom child of the icon picker.
     /// If it is submitted, the icon picker will be ignored.
     this.customChild,
+
+    /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.hoverColor = Colors.transparent,
+
+    /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.focusColor = Colors.transparent,
+
+    /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.splashColor = Colors.transparent,
+
+    /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.highlightColor = Colors.transparent,
+
+    /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `BorderRadius.circular(10)`.
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -121,6 +142,11 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
   Widget build(BuildContext context) {
     if (widget.customChild != null) {
       return InkWell(
+        hoverColor: widget.hoverColor,
+        focusColor: widget.focusColor,
+        splashColor: widget.splashColor,
+        highlightColor: widget.highlightColor,
+        borderRadius: widget.borderRadius,
         onTap: widget.disabled ? null : _showPicker,
         child: widget.customChild!,
       );

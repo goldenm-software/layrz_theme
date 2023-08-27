@@ -92,7 +92,9 @@ class _InputsViewState extends State<InputsView> {
   void initState() {
     super.initState();
     choice = choices.last;
-    selectedChoices = [choices.first, choices.last];
+    // choices.first, choices.last
+    selectedChoices = [];
+    pickFile(pickDialogTitle: )
   }
 
   @override
@@ -106,6 +108,26 @@ class _InputsViewState extends State<InputsView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: ThemedDateTimeRangePicker(
+                    use24HourFormat: true,
+                    disabled: isDisabled,
+                    labelText: 'DateTime picker [24h]',
+                    customChild: Text("Custom"),
+                    value: _selectedDateTimes,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedDateTimes = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
               Row(
                 children: [
                   ThemedButton(
@@ -217,16 +239,20 @@ class _InputsViewState extends State<InputsView> {
                 disabled: isDisabled,
                 labelText: "MultiSelect Input",
                 items: choices,
+                autoselectFirst: true,
+                waitUntilClosedToSubmit: false,
                 value: selectedChoices.map((e) => e.value!).toList(),
                 onChanged: (value) {
+                  debugPrint("Mutliselect values: $value");
                   setState(() {
-                    selected = value.map((e) => e.value!).toList();
+                    selectedChoices = value;
                   });
                 },
               ),
               ThemedSelectInput<int>(
                 disabled: isDisabled,
                 value: choice.value,
+                canUnselect: true,
                 labelText: "Select Input",
                 items: choices,
               ),

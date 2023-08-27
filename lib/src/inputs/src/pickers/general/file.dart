@@ -87,6 +87,11 @@ class ThemedFilePicker extends StatefulWidget {
   final bool isRequired;
   final Widget? customChild;
   final Widget? customWidget;
+  final Color hoverColor;
+  final Color focusColor;
+  final Color splashColor;
+  final Color highlightColor;
+  final BorderRadius borderRadius;
 
   /// [ThemedFilePicker] is the input for file selection.
   /// It uses [ThemedTextInput] as the base.
@@ -129,6 +134,26 @@ class ThemedFilePicker extends StatefulWidget {
     /// [customWidget] is the custom widget to be displayed.
     /// Replaces the [ThemedTextInput] widget.
     @Deprecated('Use `customChild` instead') this.customWidget,
+
+    /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.hoverColor = Colors.transparent,
+
+    /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.focusColor = Colors.transparent,
+
+    /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.splashColor = Colors.transparent,
+
+    /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `Colors.transparent`.
+    this.highlightColor = Colors.transparent,
+
+    /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+    /// By default, it will use `BorderRadius.circular(10)`.
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   });
 
   @override
@@ -152,8 +177,13 @@ class _ThemedFilePickerState extends State<ThemedFilePicker> with SingleTickerPr
   Widget build(BuildContext context) {
     if (customChild != null) {
       return InkWell(
+        hoverColor: widget.hoverColor,
+        focusColor: widget.focusColor,
+        splashColor: widget.splashColor,
+        highlightColor: widget.highlightColor,
+        borderRadius: widget.borderRadius,
         onTap: widget.disabled ? null : _requestFile,
-        child: customChild,
+        child: customChild!,
       );
     }
 

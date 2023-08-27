@@ -23,7 +23,7 @@ part 'src/parts/notification.dart';
 part 'src/parts/avatar.dart';
 
 typedef ThemedNavigatorPushFunction = void Function(String path);
-typedef ThemdNavigatorPopFunction = void Function();
+typedef ThemdNavigatorPopFunction = VoidCallback;
 
 class ThemedLayout extends StatefulWidget {
   final ThemedLayoutStyle style;
