@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.4
+- Correction on `ThemedTextInput`, now you can set the `position` of the combobox choices. By default will always display below the `ThemedTextInput` widget.
+
 ## 4.1.3
 - In all Pickers, now you can submit a `customWidget` to overrides the default `ThemedTextInput`-like widget.
 - New page transition `ThemedPageBuilder` to help to create a page transition with a fade animation. The main difference with `ThemedPageTransition` is that `ThemedPageBuilder` allows to use a custom `builder` to build the page, and `ThemedPageTransition` only allows to use a `child` widget, basically you can return something.

@@ -237,11 +237,29 @@ class _InputsViewState extends State<InputsView> {
                   debugPrint("Icon: $value");
                 },
               ),
+
               ThemedEmojiPicker(
                 disabled: isDisabled,
                 labelText: 'Emoji Picker',
                 onChanged: (value) {
                   debugPrint("Emoji: $value");
+                },
+              ),
+              ThemedTextInput(
+                disabled: isDisabled,
+                labelText: 'Text Input [Combobox]',
+                value: textInputValue2,
+                choices: searchChoices,
+                enableCombobox: true,
+                position: ThemedComboboxPosition.above,
+                onChanged: (value) {
+                  setState(() {
+                    textInputValue2 = value;
+                    searchChoices = List.generate(Random().nextInt(10), (index) {
+                      return "Choice $index";
+                    });
+                    debugPrint("Search: $value - ${searchChoices.length}");
+                  });
                 },
               ),
               ThemedAvatarPicker(

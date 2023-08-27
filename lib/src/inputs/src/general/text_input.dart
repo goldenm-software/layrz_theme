@@ -39,6 +39,7 @@ class ThemedTextInput extends StatefulWidget {
   final int maxChoicesToDisplay;
   final bool enableCombobox;
   final String emptyChoicesText;
+  final ThemedComboboxPosition position;
 
   /// [ThemedTextInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
@@ -159,6 +160,10 @@ class ThemedTextInput extends StatefulWidget {
 
     /// [emptyChoicesText] is the text to display when the choices list is empty.
     this.emptyChoicesText = "No choices",
+
+    /// [position] is the position of the combobox.
+    /// By default, it is [ThemedComboboxPosition.below].
+    this.position = ThemedComboboxPosition.below,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -172,7 +177,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   late String _value;
   late FocusNode _focusNode;
   OverlayEntry? _entry;
-  bool _isEntryOnTop = false;
+  bool get _isEntryOnTop => widget.position == ThemedComboboxPosition.above;
 
   EdgeInsets get widgetPadding => widget.padding;
   bool get isDense => widget.dense;
@@ -404,15 +409,16 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     double? top;
     double? bottom;
 
-    double predictedTop = offset.dy + renderBox.size.height - widgetPadding.bottom;
-
-    if (predictedTop + height > screenSize.height) {
-      top = offset.dy - height + widgetPadding.top;
-      _isEntryOnTop = true;
+    if (widget.position == ThemedComboboxPosition.above) {
+      bottom = (screenSize.height - offset.dy) - widget.padding.top;
+      top = null;
     } else {
-      top = predictedTop;
-      _isEntryOnTop = false;
+      debugPrint('Below');
+      top = offset.dy + renderBox.size.height - widget.padding.bottom;
+      bottom = null;
     }
+
+    debugPrint('top: $top, bottom: $bottom, left: $left, right: $right');
 
     _entry = OverlayEntry(
       builder: (context) {
@@ -507,4 +513,13 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     await _animationController.forward();
     setState(() {});
   }
+}
+
+/// [ThemedComboboxPosition] is the position of the combobox choices.
+enum ThemedComboboxPosition {
+  /// [top] is the position of the combobox choices on top of the input.
+  above,
+
+  /// [bottom] is the position of the combobox choices below the input.
+  below,
 }
