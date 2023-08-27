@@ -13,10 +13,10 @@ class ThemedIconPicker extends StatefulWidget {
   final bool isRequired;
   final FocusNode? focusNode;
   final double? borderRadius;
-  final Widget? customWidget;
   final Map<String, String> translations;
   final bool overridesLayrzTranslations;
   final List<IconData> allowedIcons;
+  final Widget? customChild;
 
   /// [ThemedIconPicker] is an icon picker input. It is a text field that opens an [OverlayEntry]
   /// with a list of icons to select from.
@@ -59,9 +59,6 @@ class ThemedIconPicker extends StatefulWidget {
     /// [borderRadius] is the border radius of the icon picker.
     this.borderRadius,
 
-    /// [customWidget] replaces the default text field with a custom widget.
-    this.customWidget,
-
     /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
     /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
     /// is the default value of this property.
@@ -81,6 +78,10 @@ class ThemedIconPicker extends StatefulWidget {
     /// [allowedIcons] is the list of allowed icons to select from.
     /// If this property is not submitted, all icons will be allowed.
     this.allowedIcons = const [],
+
+    /// [customChild] is the custom child of the icon picker.
+    /// If it is submitted, the icon picker will be ignored.
+    this.customChild,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -118,13 +119,13 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.customWidget != null) {
+    if (widget.customChild != null) {
       return InkWell(
-        key: key,
         onTap: widget.disabled ? null : _showPicker,
-        child: widget.customWidget,
+        child: widget.customChild!,
       );
     }
+
     return ThemedTextInput(
       key: key,
       prefixWidget: Padding(

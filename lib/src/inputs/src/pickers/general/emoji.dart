@@ -20,6 +20,7 @@ class ThemedEmojiPicker extends StatefulWidget {
   final List<EmojiGroup> enabledGroups;
   final Map<String, String> translations;
   final bool overridesLayrzTranslations;
+  final Widget? customChild;
 
   /// [ThemedEmojiPicker] is a widget that allows the user to pick an emoji.
   const ThemedEmojiPicker({
@@ -91,6 +92,10 @@ class ThemedEmojiPicker extends StatefulWidget {
 
     /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
+
+    /// [customChild] is a custom child that will be displayed instead of the default input.
+    /// If this property is submitted, the input will be render as a [ThemedTextInput].
+    this.customChild,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -147,6 +152,13 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.customChild != null) {
+      return InkWell(
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild!,
+      );
+    }
+
     return ThemedTextInput(
       key: key,
       labelText: widget.labelText,

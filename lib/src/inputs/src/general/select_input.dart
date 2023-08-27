@@ -30,6 +30,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
   final Map<String, String> translations;
   final bool overridesLayrzTranslations;
   final bool hideButtons;
+  final Widget? customChild;
 
   /// [ThemedSelectInput] is the input for selecting an item from a list.
   const ThemedSelectInput({
@@ -134,6 +135,10 @@ class ThemedSelectInput<T> extends StatefulWidget {
 
     /// [hideButtons] is the flag to hide the buttons of the input.
     this.hideButtons = false,
+
+    /// [customChild] is the custom widget to be displayed.
+    /// Replaces the [ThemedTextInput] widget.
+    this.customChild,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -189,6 +194,13 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
 
   @override
   Widget build(BuildContext context) {
+    if (widget.customChild != null) {
+      return InkWell(
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild,
+      );
+    }
+
     return ThemedTextInput(
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
@@ -339,6 +351,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     _focusNode.unfocus();
     if (result == null) return;
     setState(() => selected = result);
+    widget.onChanged?.call(result);
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {

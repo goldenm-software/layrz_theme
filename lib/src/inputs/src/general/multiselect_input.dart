@@ -31,6 +31,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
   final Map<String, String> translations;
   final bool overridesLayrzTranslations;
   final bool dense;
+  final Widget? customChild;
 
   /// [ThemedMultiSelectInput] is a multi select input that allows the user to select multiple items from a list.
   const ThemedMultiSelectInput({
@@ -142,6 +143,10 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
 
     /// [dense] is a flag that indicates if the input is dense.
     this.dense = false,
+
+    /// [customChild] is the custom widget to be displayed.
+    /// Replaces the [ThemedTextInput] widget.
+    this.customChild,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -197,6 +202,13 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
 
   @override
   Widget build(BuildContext context) {
+    if (widget.customChild != null) {
+      return InkWell(
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild,
+      );
+    }
+
     return ThemedTextInput(
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
@@ -364,6 +376,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
     _focusNode.unfocus();
     if (result == null) return;
     setState(() => selected = result);
+    widget.onChanged?.call(result);
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {

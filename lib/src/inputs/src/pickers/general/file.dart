@@ -1,6 +1,6 @@
 part of inputs;
 
-class ThemedFileInput extends StatefulWidget {
+class ThemedFileInput extends StatelessWidget {
   final String? labelText;
   final Widget? label;
   final String? value;
@@ -10,10 +10,12 @@ class ThemedFileInput extends StatefulWidget {
   final List<String> errors;
   final bool hideDetails;
   final bool isRequired;
+  final Widget? customChild;
   final Widget? customWidget;
 
   /// [ThemedFileInput] is the input for file selection.
   /// It uses [ThemedTextInput] as the base.
+  @Deprecated('Use `ThemedFilePicker` instead')
   const ThemedFileInput({
     super.key,
 
@@ -46,17 +48,96 @@ class ThemedFileInput extends StatefulWidget {
     /// [acceptedTypes] is the type of files that can be selected.
     this.acceptedTypes = FileType.any,
 
+    /// [customChild] is the custom widget to be displayed.
+    /// Replaces the [ThemedTextInput] widget.
+    this.customChild,
+
     /// [customWidget] is the custom widget to be displayed.
     /// Replaces the [ThemedTextInput] widget.
-    this.customWidget,
+    @Deprecated('Use `customChild` instead') this.customWidget,
   });
 
   @override
-  State<ThemedFileInput> createState() => _ThemedFileInputState();
+  Widget build(BuildContext context) {
+    return ThemedFilePicker(
+      labelText: labelText,
+      label: label,
+      value: value,
+      onChanged: onChanged,
+      acceptedTypes: acceptedTypes,
+      disabled: disabled,
+      errors: errors,
+      hideDetails: hideDetails,
+      isRequired: isRequired,
+      customChild: customChild,
+      customWidget: customWidget,
+    );
+  }
 }
 
-class _ThemedFileInputState extends State<ThemedFileInput> with SingleTickerProviderStateMixin {
+class ThemedFilePicker extends StatefulWidget {
+  final String? labelText;
+  final Widget? label;
+  final String? value;
+  final void Function(String, List<int>)? onChanged;
+  final FileType acceptedTypes;
+  final bool disabled;
+  final List<String> errors;
+  final bool hideDetails;
+  final bool isRequired;
+  final Widget? customChild;
+  final Widget? customWidget;
+
+  /// [ThemedFilePicker] is the input for file selection.
+  /// It uses [ThemedTextInput] as the base.
+  const ThemedFilePicker({
+    super.key,
+
+    /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
+    this.labelText,
+
+    /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
+    this.label,
+
+    /// [value] is the value of the input.
+    this.value,
+
+    /// [onChanged] is the callback when the input value changes.
+    /// The first parameter is the base64 of the file.
+    /// The second parameter is the byte array of the file.
+    this.onChanged,
+
+    /// [disabled] is the flag to disable the input.
+    this.disabled = false,
+
+    /// [errors] is the list of errors to be displayed.
+    this.errors = const [],
+
+    /// [hideDetails] is the flag to hide the details of the input.
+    this.hideDetails = false,
+
+    /// [isRequired] is the flag to mark the input as required.
+    this.isRequired = false,
+
+    /// [acceptedTypes] is the type of files that can be selected.
+    this.acceptedTypes = FileType.any,
+
+    /// [customChild] is the custom widget to be displayed.
+    /// Replaces the [ThemedTextInput] widget.
+    this.customChild,
+
+    /// [customWidget] is the custom widget to be displayed.
+    /// Replaces the [ThemedTextInput] widget.
+    @Deprecated('Use `customChild` instead') this.customWidget,
+  });
+
+  @override
+  State<ThemedFilePicker> createState() => _ThemedFilePickerState();
+}
+
+class _ThemedFilePickerState extends State<ThemedFilePicker> with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
+  Widget? get customChild => widget.customChild ?? widget.customWidget;
 
   String _value = "";
 
@@ -69,12 +150,13 @@ class _ThemedFileInputState extends State<ThemedFileInput> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    if (widget.customWidget != null) {
+    if (customChild != null) {
       return InkWell(
         onTap: widget.disabled ? null : _requestFile,
-        child: widget.customWidget,
+        child: customChild,
       );
     }
+
     return ThemedTextInput(
       value: _value,
       label: widget.label,

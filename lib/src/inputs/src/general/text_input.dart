@@ -36,6 +36,9 @@ class ThemedTextInput extends StatefulWidget {
   final bool autofocus;
   final Widget? suffixWidget;
   final List<String> choices;
+  final int maxChoicesToDisplay;
+  final bool enableCombobox;
+  final String emptyChoicesText;
 
   /// [ThemedTextInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
@@ -145,9 +148,17 @@ class ThemedTextInput extends StatefulWidget {
     /// [suffixWidget] is the widget of the suffix of the input.
     this.suffixWidget,
 
-    /// [choices] is the list of choices of the input. When this list is not empty,
-    /// the input will be a combobox, otherwise it will be a text input.
+    /// [choices] is the list of choices of the input. Only will affect if [enableCombobox] is true.
     this.choices = const [],
+
+    /// [maxChoicesToDisplay] is the maximum number of choices to display.
+    this.maxChoicesToDisplay = 5,
+
+    /// [enableCombobox] is the state of the input to enable the combobox.
+    this.enableCombobox = false,
+
+    /// [emptyChoicesText] is the text to display when the choices list is empty.
+    this.emptyChoicesText = "No choices",
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -155,6 +166,7 @@ class ThemedTextInput extends StatefulWidget {
 }
 
 class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderStateMixin {
+  final StreamController _streamController = StreamController<List<String>>.broadcast();
   late AnimationController _animationController;
   late TextEditingController _controller;
   late String _value;
@@ -207,6 +219,10 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
           offset: previousCursorOffset,
         ),
       );
+    }
+
+    if (widget.choices != oldWidget.choices) {
+      _streamController.add(widget.choices);
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -292,7 +308,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                           topLeft: Radius.circular(widget.borderRadius!),
                           topRight: Radius.circular(widget.borderRadius!),
                         )
-                      : BorderRadius.circular(widget.borderRadius!))
+                      : BorderRadius.circular(widget.borderRadius!),
+                )
               : null,
       suffixIcon: suffix,
     );
@@ -340,14 +357,13 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         onChanged: (String value) async {
           if (widget.validator?.call(value) ?? true) {
             setState(() => _value = value);
-            await _destroyEntry();
             widget.onChanged?.call(value);
           }
         },
         autofillHints: widget.autofillHints,
         onTap: widget.disabled
             ? null
-            : widget.choices.isEmpty
+            : !widget.enableCombobox
                 ? widget.onTap
                 : () async {
                     widget.onTap?.call();
@@ -356,6 +372,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         onSubmitted: widget.disabled
             ? null
             : (_) {
+                _destroyEntry();
                 widget.onSubmitted?.call();
               },
       ),
@@ -377,7 +394,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
 
     double maxHeight = 300;
     double itemExtent = 30;
-    double height = widget.choices.length * itemExtent;
+    // 20 = padding - 5 = divider
+    double height = min(widget.choices.length, widget.maxChoicesToDisplay) * itemExtent + 20 + 5;
 
     Size screenSize = MediaQuery.of(context).size;
     double left = offset.dx + widgetPadding.left;
@@ -410,53 +428,73 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                 right: right,
                 child: FadeTransition(
                   opacity: _animationController,
-                  child: Container(
-                    height: height,
-                    constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                        bottomRight: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                        topLeft: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                        topRight: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        if (!_isEntryOnTop) const Divider(),
-                        Expanded(
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(10),
-                            itemCount: widget.choices.length,
-                            itemExtent: itemExtent,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(5),
-                                  onTap: () async {
-                                    await _destroyEntry();
-                                    _controller.text = widget.choices[index];
-                                    widget.onChanged?.call(widget.choices[index]);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.choices[index],
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                  child: StreamBuilder(
+                      initialData: widget.choices,
+                      stream: _streamController.stream,
+                      builder: (context, snapshot) {
+                        List<String> choices = snapshot.data as List<String>;
+                        // 20 = padding - 5 = divider
+                        height = min(choices.length, widget.maxChoicesToDisplay) * itemExtent + 20 + 5;
+
+                        return AnimatedContainer(
+                          duration: kHoverDuration,
+                          height: height,
+                          constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
+                              bottomRight: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
+                              topLeft: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
+                              topRight: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
+                            ),
                           ),
-                        ),
-                        if (_isEntryOnTop) const Divider(),
-                      ],
-                    ),
-                  ),
+                          child: Column(
+                            children: [
+                              if (!_isEntryOnTop) const Divider(),
+                              Expanded(
+                                child: choices.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          widget.emptyChoicesText,
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        padding: const EdgeInsets.all(10),
+                                        itemCount: choices.length,
+                                        itemExtent: itemExtent,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          final itm = choices[index];
+                                          return SizedBox(
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(5),
+                                                onTap: () async {
+                                                  await _destroyEntry();
+                                                  _controller.text = itm;
+                                                  widget.onChanged?.call(itm);
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Text(
+                                                    itm,
+                                                    style: Theme.of(context).textTheme.bodyMedium,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                              ),
+                              if (_isEntryOnTop) const Divider(),
+                            ],
+                          ),
+                        );
+                      }),
                 ),
               ),
             ],

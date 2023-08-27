@@ -98,14 +98,12 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
   @override
   Widget build(BuildContext context) {
     if (widget.customChild != null) {
-      return ThemedTooltip(
-        message: widget.labelText ?? widget.label?.toString() ?? "",
-        child: InkWell(
-          onTap: widget.disabled ? null : _pickAColor,
-          child: widget.customChild,
-        ),
+      return InkWell(
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild!,
       );
     }
+
     return ThemedTextInput(
       label: widget.label,
       labelText: widget.labelText,
@@ -126,7 +124,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
       onPrefixTap: widget.onPrefixTap,
       suffixIcon: MdiIcons.palette,
       disabled: widget.disabled,
-      onTap: widget.disabled ? null : _pickAColor,
+      onTap: widget.disabled ? null : _showPicker,
       dense: widget.dense,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
@@ -135,7 +133,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
     );
   }
 
-  void _pickAColor() async {
+  void _showPicker() async {
     Color value = await showColorPickerDialog(
       context,
       _value,

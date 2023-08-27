@@ -98,12 +98,9 @@ class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
   @override
   Widget build(BuildContext context) {
     if (widget.customChild != null) {
-      return ThemedTooltip(
-        message: widget.labelText ?? '',
-        child: InkWell(
-          onTap: widget.disabled ? null : _showPicker,
-          child: widget.customChild!,
-        ),
+      return InkWell(
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild!,
       );
     }
 

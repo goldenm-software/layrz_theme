@@ -7,6 +7,9 @@ class ThemedSearchInput extends StatefulWidget {
   final OnSearch onSearch;
   final double maxWidth;
   final String labelText;
+  final Widget? customChild;
+  final bool disabled;
+  final ThemedSearchPosition position;
 
   /// [ThemedSearchInput] is a search input.
   const ThemedSearchInput({
@@ -23,6 +26,18 @@ class ThemedSearchInput extends StatefulWidget {
 
     /// [labelText] is the label text of the search input.
     this.labelText = 'Search',
+
+    /// [customChild] is the custom widget to be displayed.
+    /// Replaces the [ThemedTextInput] widget.
+    this.customChild,
+
+    /// [disabled] is the flag to disable the search input.
+    /// Defaults to `false`.
+    this.disabled = false,
+
+    /// [position] is the position of the search input.
+    /// Defaults to [ThemedSearchPosition.auto].
+    this.position = ThemedSearchPosition.left,
   });
 
   @override
@@ -30,6 +45,7 @@ class ThemedSearchInput extends StatefulWidget {
 }
 
 class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProviderStateMixin {
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
   late AnimationController animation;
   OverlayEntry? overlay;
   final GlobalKey _key = GlobalKey();
@@ -45,34 +61,39 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    if (widget.customChild != null) {
+      return InkWell(
+        onTap: widget.disabled ? null : _handleTap,
+        child: widget.customChild,
+      );
+    }
 
-    return InkWell(
-      key: _key,
-      onTap: handleTap,
-      onHover: (value) {
-        setState(() => isHovering = value);
-      },
-      borderRadius: BorderRadius.circular(10),
-      child: AnimatedContainer(
-        duration: kHoverDuration,
-        width: height,
-        height: height,
-        decoration: BoxDecoration(
+    return Container(
+      width: height,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          key: _key,
+          onTap: _handleTap,
           borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: Icon(
-            MdiIcons.magnify,
-            size: 15,
-            color: isDark ? Colors.grey.shade300 : Colors.grey.shade500,
+          child: Center(
+            child: Icon(
+              MdiIcons.magnify,
+              size: 15,
+              color: isDark ? Colors.grey.shade300 : Colors.grey.shade500,
+            ),
           ),
         ),
       ),
     );
   }
 
-  void handleTap() {
+  void _handleTap() {
     if (overlay == null) {
       _buildOverlay();
     } else {
@@ -80,73 +101,123 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
     }
   }
 
+  _PredictedPosition _predictPosition({
+    required Offset offset,
+    required Size size,
+    required double screenWidth,
+    required double maxWidth,
+    ThemedSearchPosition? overridePosition,
+  }) {
+    ThemedSearchPosition position = overridePosition ?? widget.position;
+
+    double left = 0;
+    double right = 0;
+
+    if (position == ThemedSearchPosition.right) {
+      left = offset.dx;
+      right = screenWidth - (left + maxWidth);
+
+      if (right < 10) {
+        right = 10;
+      }
+    } else {
+      right = screenWidth - (offset.dx + size.width);
+      left = screenWidth - (right + maxWidth);
+
+      if (left < 10) {
+        left = 10;
+      }
+    }
+
+    return _PredictedPosition(
+      left: left,
+      right: right,
+    );
+  }
+
   void _buildOverlay() {
-    TextEditingController controller = TextEditingController(text: widget.value);
     RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
     Offset offset = box.localToGlobal(Offset.zero);
     double screenWidth = MediaQuery.of(context).size.width;
-    double widgetWidth = widget.maxWidth;
-    double rightOffset = 0;
 
-    if (screenWidth <= widget.maxWidth) {
-      rightOffset = screenWidth - offset.dy;
-      widgetWidth = screenWidth - offset.dy;
-    }
+    _PredictedPosition position = _predictPosition(
+      offset: offset,
+      size: box.size,
+      screenWidth: screenWidth,
+      maxWidth: widget.maxWidth,
+    );
 
-    double? left;
-    double? right;
-
-    if ((offset.dx + widgetWidth + rightOffset) <= screenWidth) {
-      left = offset.dx;
-    } else {
-      right = screenWidth - offset.dx - box.size.width;
-    }
+    double left = position.left;
+    double right = position.right;
 
     overlay = OverlayEntry(
       builder: (context) {
-        return Material(
-          color: Colors.transparent,
-          child: Stack(
-            children: [
-              Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
-              Positioned(
-                top: offset.dy,
-                left: left,
-                right: right,
-                child: Column(
-                  children: [
-                    ScaleTransition(
-                      scale: Tween<double>(begin: 0, end: 1).animate(animation),
-                      alignment: left == null ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        height: height,
-                        width: widgetWidth,
-                        decoration: generateContainerElevation(context: context),
-                        child: TextField(
-                          controller: controller,
-                          onChanged: widget.onSearch,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
+        return WillPopScope(
+          onWillPop: () async {
+            _destroyOverlay();
+            return false;
+          },
+          child: Material(
+            color: Colors.transparent,
+            child: Stack(
+              children: [
+                Positioned.fill(child: GestureDetector(onTap: _destroyOverlay)),
+                Positioned(
+                  top: offset.dy,
+                  left: left,
+                  right: right,
+                  child: Column(
+                    children: [
+                      ScaleTransition(
+                        scale: Tween<double>(begin: 0, end: 1).animate(animation),
+                        alignment:
+                            widget.position == ThemedSearchPosition.left ? Alignment.centerRight : Alignment.centerLeft,
+                        child: Actions(
+                          actions: {
+                            DismissIntent: CallbackAction<DismissIntent>(
+                              onInvoke: (DismissIntent intent) {
+                                _destroyOverlay();
+                                return null;
+                              },
                             ),
-                            hintText: widget.labelText,
-                            labelStyle: Theme.of(context).textTheme.labelSmall,
-                            prefixIcon: Icon(MdiIcons.magnify),
-                            filled: true,
-                            isDense: true,
-                          ),
-                          onSubmitted: (value) {
-                            widget.onSearch.call(value);
-                            _destroyOverlay();
                           },
+                          child: Container(
+                            height: height,
+                            decoration: generateContainerElevation(context: context),
+                            child: RawKeyboardListener(
+                              focusNode: FocusNode(),
+                              onKey: (ev) {
+                                if (ev.logicalKey == LogicalKeyboardKey.escape) {
+                                  _destroyOverlay();
+                                }
+                              },
+                              child: TextField(
+                                onChanged: widget.onSearch,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  hintText: widget.labelText,
+                                  labelStyle: Theme.of(context).textTheme.labelSmall,
+                                  prefixIcon: Icon(MdiIcons.magnify),
+                                  filled: true,
+                                  isDense: true,
+                                ),
+                                onSubmitted: (value) {
+                                  widget.onSearch.call(value);
+                                  _destroyOverlay();
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -160,5 +231,30 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
     await animation.reverse();
     overlay?.remove();
     overlay = null;
+  }
+}
+
+/// [ThemedSearchPosition] is the position of the search input.
+/// Basically means the position of the search input when is active.
+enum ThemedSearchPosition {
+  /// [ThemedSearchPosition.left] is the position of the search input on the left, will spawn to the left.
+  left,
+
+  /// [ThemedSearchPosition.right] is the position of the search input on the right, will spawn to the right.
+  right,
+}
+
+class _PredictedPosition {
+  final double left;
+  final double right;
+
+  const _PredictedPosition({
+    required this.left,
+    required this.right,
+  });
+
+  @override
+  String toString() {
+    return '_PredictedPosition{left: $left, right: $right}';
   }
 }

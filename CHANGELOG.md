@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.1.3
+- In all Pickers, now you can submit a `customWidget` to overrides the default `ThemedTextInput`-like widget.
+- New page transition `ThemedPageBuilder` to help to create a page transition with a fade animation. The main difference with `ThemedPageTransition` is that `ThemedPageBuilder` allows to use a custom `builder` to build the page, and `ThemedPageTransition` only allows to use a `child` widget, basically you can return something.
+- Renamed widget `ThemedFileInput` to `ThemedFilePicker`, to backward compatibility, we added an alias to `ThemedFileInput` to `ThemedFilePicker` with a dart deprecation warning.
+
+## 4.1.2
+- Hotfix on `ThemedSelectInput` and `ThemedDualListInput`.  
 ## 4.1.1
 - New page builder called `ThemedPageTransition` to help to create a page transition with a fade animation.
 - Updated `ThemedSelectInput` and `ThemedMultiSelectInput` to comply with the new schema of pickers.
