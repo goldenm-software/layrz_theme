@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.6
+- Fixed conditional import for `pickFile` and `saveFile` to support web.
+
 ## 4.1.5
 - Updated all pickers to support hover, splash and highlight colors' proerties when customChild is submitted.
 - Updated `ThemedSelectInput` and `ThemedMultiSelectInput` to support 
