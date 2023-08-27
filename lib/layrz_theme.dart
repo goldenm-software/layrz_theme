@@ -16,6 +16,7 @@ import 'package:highlight/highlight.dart';
 import 'src/helpers/helpers.dart';
 import 'src/inputs/inputs.dart';
 import 'src/tooltips/tooltips.dart';
+import 'src/theme/theme.dart';
 
 // Library exports
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
@@ -29,13 +30,9 @@ export 'src/inputs/inputs.dart';
 export 'src/helpers/helpers.dart';
 export 'src/file.dart';
 export 'src/layo.dart';
+export 'src/theme/theme.dart';
 
 /// Parts
-// Constructors and constants
-part 'src/theme/constants.dart';
-part 'src/theme/light_theme.dart';
-part 'src/theme/dark_theme.dart';
-
 // Buittons and actions
 part 'src/buttons/button.dart';
 part 'src/buttons/actions_buttons.dart';

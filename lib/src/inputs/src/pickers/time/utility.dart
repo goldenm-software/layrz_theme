@@ -1,20 +1,39 @@
 part of inputs;
 
 class _ThemedTimeUtility extends StatefulWidget {
+  /// [value] is the value of the input.
   final TimeOfDay? value;
-  final bool use24HourFormat;
-  final String titleText;
-  final String hoursText;
-  final String minutesText;
-  final String saveText;
-  final String cancelText;
-  final bool inDialog;
+
+  /// [onChanged] is the callback function when the input is changed.
   final void Function(TimeOfDay)? onChanged;
 
+  /// [use24HourFormat] is the flag to use 24 hour format. By default is true, so it will use 24 hour format.
+  final bool use24HourFormat;
+
+  /// [titleText] is the title text of the input. Avoid submit [label] and [labelText] at the same time.
+  final String titleText;
+
+  /// [hoursText] is the hours text of the input.
+  final String hoursText;
+
+  /// [minutesText] is the minutes text of the input.
+  final String minutesText;
+
+  /// [saveText] is the text that will be displayed on the save button.
+  final String saveText;
+
+  /// [cancelText] is the text that will be displayed on the cancel button.
+  final String cancelText;
+
+  /// [inDialog] is the flag to display the input in a dialog.
+  final bool inDialog;
+
+  /// [_ThemedTimeUtility] is a time utility input.
   const _ThemedTimeUtility({
     // ignore: unused_element
     super.key,
     this.value,
+    this.onChanged,
     this.use24HourFormat = true,
     this.titleText = '',
     this.hoursText = 'Hours',
@@ -22,7 +41,6 @@ class _ThemedTimeUtility extends StatefulWidget {
     this.saveText = 'Save',
     this.cancelText = 'Cancel',
     this.inDialog = true,
-    this.onChanged,
   });
 
   @override

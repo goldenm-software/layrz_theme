@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of theme;
 
 /// [generateLightTheme] is a helper function to generate a [ThemeData] with the
 /// [Brightness.light] theme.

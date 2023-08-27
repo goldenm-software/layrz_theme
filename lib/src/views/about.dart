@@ -1,10 +1,18 @@
 part of layrz_theme;
 
 class ThemedLicensesView extends StatefulWidget {
+  /// [companyName] is the name of the company.
   final String companyName;
+
+  /// [version] is the version of the app.
   final String? version;
+
+  /// [logo] is the logo of the app. Only supported from assets.
   final AppThemedAsset? logo;
 
+  /// [ThemedLicensesView] is a custom view to show the licenses of the app.
+  ///
+  /// It's a replacement of the default [AboutPage] of Flutter.
   const ThemedLicensesView({
     super.key,
     this.companyName = 'Golden M, Inc,',

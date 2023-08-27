@@ -49,7 +49,7 @@ class ThemedScaffoldView<T> extends StatefulWidget {
   /// [prefixSidebarIcon] is the prefix of the sidebar icon. Should return an [IconData]
   final IconData? Function(BuildContext, T)? prefixIconBuilder;
 
-  /// <b>ThemedScaffoldView</b> is a widget to easly configure the scaffold details view.
+  /// [ThemedScaffoldView] is a widget to easly configure the scaffold details view.
   /// Helps with the sidebar and their button in mobile size (Refer to [mobileBreakpoint] for more details).
   const ThemedScaffoldView({
     super.key,

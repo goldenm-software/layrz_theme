@@ -4,6 +4,7 @@
 - Updated all pickers to support hover, splash and highlight colors' proerties when customChild is submitted.
 - Updated `ThemedSelectInput` and `ThemedMultiSelectInput` to support 
 - Re-documented all widgets to standarize the format of the documentation.
+- Updated `README.md`
 
 ## 4.1.4
 - Correction on `ThemedTextInput`, now you can set the `position` of the combobox choices. By default will always display below the `ThemedTextInput` widget.

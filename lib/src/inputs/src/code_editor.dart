@@ -9,20 +9,45 @@ class ThemedCodeEditor extends StatefulWidget {
   /// to handle dark mode or related things
   final Widget? label;
 
-  /// The function that will be called when the text changes
+  /// [onChanged] is the function that will be called when the text changes
   final void Function(String)? onChanged;
+
+  /// The [value] of the text field
+  /// If you don't provide a value, the widget will create one for you.
+  /// Important: Is you perform changes on the value of this field, consider using the controller, because when the
+  /// widget is build again, the value will not propagate to internal variables.
   final String? value;
+
+  /// [disabled] indicates if the field is disabled or not
   final bool disabled;
+
+  /// [errors] is the list of strings with the errors of the field
   final List<String> errors;
+
+  /// [padding] is the padding of the field
   final EdgeInsets padding;
+
+  /// The [focusNode] of the field
+  /// If you don't provide a focus node, the widget will create one for you.
   final FocusNode? focusNode;
+
+  /// [onSubmitted]  is the function that will be called when the user submits the field
+  /// This is useful when you want to perform an action when the user press enter.
   final VoidCallback? onSubmitted;
+
+  /// [language] is the language of the editor
   final LayrzSupportedLanguage language;
+
+  /// [constraints] is the constraints of the editor
   final BoxConstraints? constraints;
+
+  /// [lintErrors] is the list of errors of the editor
   final List<LintError> lintErrors;
+
+  /// [i18n] is the i18n of the editor
   final LayrzAppLocalizations? i18n;
 
-  /// Strings to add a shurtcut to insert them in the editor
+  /// [customInsers] is a list of Strings to add a shurtcut to insert them in the editor
   final List<String> customInserts;
 
   const ThemedCodeEditor({
@@ -30,44 +55,16 @@ class ThemedCodeEditor extends StatefulWidget {
     this.labelText,
     this.label,
     this.onChanged,
-
-    /// The value of the text field
-    /// If you don't provide a value, the widget will create one for you.
-    /// Important: Is you perform changes on the value of this field, consider using the controller, because when the
-    /// widget is build again, the value will not propagate to internal variables.
     this.value,
-
-    /// Indicates if the field is disabled.
     this.disabled = false,
-
-    /// The errors of the field
     this.errors = const [],
-
-    /// The padding of the field
     this.padding = const EdgeInsets.all(10),
-
-    /// The focus node of the field
-    /// If you don't provide a focus node, the widget will create one for you.
     this.focusNode,
-
-    /// The function that will be called when the user submits the field
-    /// This is useful when you want to perform an action when the user press enter.
     this.onSubmitted,
-
-    /// The language of the code editor
     this.language = LayrzSupportedLanguage.lcl,
-
-    /// The constraints of the field
-    /// If you don't provide a constraints, the widget will create one for you.
     this.constraints,
-
-    /// The lint errors of the field
     this.lintErrors = const [],
-
-    /// The i18n of the field
     this.i18n,
-
-    /// List of custom inserts
     this.customInserts = const [],
   });
 

@@ -36,67 +36,66 @@ class ThemedAvatarInput extends StatelessWidget {
 }
 
 class ThemedAvatarPicker extends StatefulWidget {
+  /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [value] is the current value of the input. This value should be a base64 string or an URL.
   final String? value;
+
+  /// [onChanged] is the callback that is called when the value of the input changes.
   final void Function(String?)? onChanged;
+
+  /// [disabled] is a flag that indicates if the input is disabled.
   final bool disabled;
+
+  /// [errors] is a list of errors that will be displayed below the input.
   final List<String> errors;
+
+  /// [hideDetails] is a flag that indicates if the errors should be displayed.
   final bool hideDetails;
+
+  /// [customChild] is a custom child that will be displayed instead of the default input.
+  /// If this property is submitted, the input will be ignored.
   final Widget? customChild;
+
+  /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color hoverColor;
+
+  /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color focusColor;
+
+  /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color splashColor;
+
+  /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color highlightColor;
+
+  /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `BorderRadius.circular(10)`.
   final BorderRadius borderRadius;
 
   /// [ThemedAvatarPicker] is a widget that allows the user to pick an avatar.
   const ThemedAvatarPicker({
     super.key,
-
-    /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [value] is the current value of the input. This value should be a base64 string or an URL.
     this.value,
-
-    /// [onChanged] is the callback that is called when the value of the input changes.
     this.onChanged,
-
-    /// [disabled] is a flag that indicates if the input is disabled.
     this.disabled = false,
-
-    /// [errors] is a list of errors that will be displayed below the input.
     this.errors = const [],
-
-    /// [hideDetails] is a flag that indicates if the errors should be displayed.
     this.hideDetails = false,
-
-    /// [customChild] is a custom child that will be displayed instead of the default input.
-    /// If this property is submitted, the input will be ignored.
     this.customChild,
-
-    /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.hoverColor = Colors.transparent,
-
-    /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.focusColor = Colors.transparent,
-
-    /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.splashColor = Colors.transparent,
-
-    /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.highlightColor = Colors.transparent,
-
-    /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `BorderRadius.circular(10)`.
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 

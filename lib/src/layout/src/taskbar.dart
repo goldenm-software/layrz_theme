@@ -1,100 +1,99 @@
 part of layout;
 
 class ThemedTaskbar extends StatefulWidget {
+  /// [items] is the list of buttons to be displayed in the taskbar.
   final List<ThemedNavigatorItem> items;
+
+  /// [persistentItems] is the list of buttons to be displayed in the taskbar.
   final List<ThemedNavigatorItem> persistentItems;
+
+  /// [appTitle] is the title of the app.
   final String appTitle;
+
+  /// [companyName] is the name of the company.
   final String companyName;
+
+  /// [logo] is the logo of the app. Can be a path or a url.
   final AppThemedAsset logo;
+
+  /// [favicon] is the favicon of the app. Can be a path or a url.
   final AppThemedAsset favicon;
+
+  /// [version] is the version of the app.
   final String? version;
+
+  /// [userName] is the name of the user.
   final String userName;
+
+  /// [userDynamicAvatar] is the dynamic avatar of the user.
   final Avatar? userDynamicAvatar;
+
+  /// [enableAbout] is a boolean that enables the about button and page.
   final bool enableAbout;
+
+  /// [onSettingsTap] is a callback that is called when the settings button is
   final VoidCallback? onSettingsTap;
+
+  /// [onProfileTap] is a callback that is called when the profile button is
   final VoidCallback? onProfileTap;
+
+  /// [onLogoutTap] is a callback that is called when the logout button is
   final VoidCallback? onLogoutTap;
+
+  /// [onThemeSwitchTap] is a callback that is called when the theme switch
+  /// button is tapped.
   final VoidCallback? onThemeSwitchTap;
+
+  /// [backgroundColor] is the background color of the taskbar.
   final Color? backgroundColor;
+
+  /// [notifications] is the list of notifications to be displayed in the
+  /// taskbar.
   final List<ThemedNotificationItem> notifications;
+
+  /// [dateFormat] is the format of the date.
+  /// See https://strftime.org/ for more information.
   final String dateFormat;
+
+  /// [timeFormat] is the format of the time.
+  /// See https://strftime.org/ for more information.
   final String timeFormat;
+
+  /// [additionalActions] is the list of additional actions to be displayed in
+  /// the taskbar.
   final List<ThemedNavigatorItem> additionalActions;
+
+  /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+  /// By default is `Navigator.of(context).pushNamed`
   final ThemedNavigatorPushFunction? onNavigatorPush;
+
+  /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+  /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
   /// [ThemedTaskbar] is the taskbar of the application.
   const ThemedTaskbar({
     super.key,
-
-    /// [items] is the list of buttons to be displayed in the taskbar.
     required this.items,
-
-    /// [persistentItems] is the list of buttons to be displayed in the taskbar.
     this.persistentItems = const [],
-
-    /// [appTitle] is the title of the app.
     required this.appTitle,
-
-    /// [companyName] is the name of the company.
     this.companyName = 'Golden M, Inc',
-
-    /// [logo] is the logo of the app. Can be a path or a url.
     required this.logo,
-
-    /// [favicon] is the favicon of the app. Can be a path or a url.
     required this.favicon,
-
-    /// [version] is the version of the app.
     this.version,
-
-    /// [userName] is the name of the user.
     this.userName = "Golden M",
-
-    /// [userDynamicAvatar] is the dynamic avatar of the user.
     this.userDynamicAvatar,
-
-    /// [enableAbout] is a boolean that enables the about button and page.
     this.enableAbout = true,
-
-    /// [onSettingsTap] is a callback that is called when the settings button is
     this.onSettingsTap,
-
-    /// [onProfileTap] is a callback that is called when the profile button is
     this.onProfileTap,
-
-    /// [onLogoutTap] is a callback that is called when the logout button is
     this.onLogoutTap,
-
-    /// [onThemeSwitchTap] is a callback that is called when the theme switch
-    /// button is tapped.
     this.onThemeSwitchTap,
-
-    /// [backgroundColor] is the background color of the taskbar.
     this.backgroundColor,
-
-    /// [notifications] is the list of notifications to be displayed in the
-    /// taskbar.
     this.notifications = const [],
-
-    /// [dateFormat] is the format of the date.
-    /// See https://strftime.org/ for more information.
     this.dateFormat = '%Y/%m/%d',
-
-    /// [timeFormat] is the format of the time.
-    /// See https://strftime.org/ for more information.
     this.timeFormat = '%H:%M %p',
-
-    /// [additionalActions] is the list of additional actions to be displayed in
-    /// the taskbar.
     this.additionalActions = const [],
-
-    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
-    /// By default is `Navigator.of(context).pushNamed`
     this.onNavigatorPush,
-
-    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
-    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
     this.currentPath,
   });
 

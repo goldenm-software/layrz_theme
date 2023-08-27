@@ -1,22 +1,21 @@
 part of tooltips;
 
 class ThemedTooltip extends StatefulWidget {
+  /// [child] is the widget that will be wrapped by the tooltip.
   final Widget child;
+
+  /// [message] is the message that will be displayed in the tooltip.
   final String message;
+
+  /// [position] is the position of the tooltip relative to the child.
   final ThemedTooltipPosition position;
 
   /// [ThemedTooltip] is a widget that displays a tooltip with a custom message.
   /// It's a re-interpretation of the [Tooltip] widget, but fixing/allowing the tap gesture to the child element.
   const ThemedTooltip({
     super.key,
-
-    /// [child] is the widget that will be wrapped by the tooltip.
     required this.child,
-
-    /// [message] is the message that will be displayed in the tooltip.
     required this.message,
-
-    /// [position] is the position of the tooltip relative to the child.
     this.position = ThemedTooltipPosition.bottom,
   });
 

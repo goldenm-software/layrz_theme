@@ -4,34 +4,33 @@ import 'package:layrz_theme/layrz_theme.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 class Layo extends StatelessWidget {
+  /// [size] is thez size of the layo.
   final double size;
+
+  /// [emotion] is the emotion of the layo.
   final LayoEmotions emotion;
+
+  /// [elevation] is the elevation of the layo.
   final int elevation;
+
+  /// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
   final Color? shadowColor;
+
+  /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
   final bool reverse;
+
+  /// The [radius] is the radius of the [BorderRadius.circular] of the [BoxDecoration], by default it
+  /// is the `size`. The minimum value is 0.
   final double radius;
 
   /// [Layo] is a widget that shows a Layo.
   const Layo({
     super.key,
-
-    /// [size] is the size of the layo.
     required this.size,
-
-    /// [emotion] is the emotion of the layo.
     this.emotion = LayoEmotions.standard,
-
-    /// The [radius] is the radius of the [BorderRadius.circular] of the [BoxDecoration], by default it
-    /// is the `size`. The minimum value is 0.
     double? radius,
-
-    /// [elevation] is the elevation of the layo.
     this.elevation = 1,
-
-    /// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
     this.shadowColor,
-
-    /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
     this.reverse = false,
   })  : radius = radius ?? size,
         assert(elevation <= 5, 'The elevation must be less than or equal to 5'),

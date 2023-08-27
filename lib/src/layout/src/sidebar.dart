@@ -1,27 +1,28 @@
 part of layout;
 
 class ThemedSidebar extends StatefulWidget {
+  /// [items] is the list of buttons to be displayed in the drawer.
   final List<ThemedNavigatorItem> items;
+
+  /// [backgroundColor] is the background color of the sidebar.
+  /// If null, it will be the primary color of the theme.
   final Color? backgroundColor;
+
+  /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+  /// By default is `Navigator.of(context).pushNamed`
   final ThemedNavigatorPushFunction? onNavigatorPush;
+
+  /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+  /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
+  /// [ThemedSidebar] is the sidebar of the app in desktop mode, only will work in desktop.
+  /// On mobile or tablet devices, this widget could not work as expected.
   const ThemedSidebar({
     super.key,
-
-    /// [items] is the list of buttons to be displayed in the drawer.
     this.items = const [],
-
-    /// [backgroundColor] is the background color of the sidebar.
-    /// If null, it will be the primary color of the theme.
     this.backgroundColor,
-
-    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
-    /// By default is `Navigator.of(context).pushNamed`
     this.onNavigatorPush,
-
-    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
-    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
     this.currentPath,
   });
 

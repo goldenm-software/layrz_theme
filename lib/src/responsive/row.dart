@@ -31,7 +31,8 @@ class ResponsiveRow extends StatelessWidget {
   /// [kMediumGrid] = Desktop size, width between [kSmallGrid] and [kLargeGrid].
   /// [kLargeGrid] = Large desktop size, width between [kMediumGrid] and [kExtraLargeGrid].
   /// [kExtraLargeGrid] = Extra large desktop size, width greater than [kLargeGrid].
-  /// This component is based over flutter widget [Wrap], and the [mainAxisAlignment] and [crossAxisAlignment] are the same as the [Wrap] ones.
+  /// This component is based over flutter widget [Wrap], and the [mainAxisAlignment] and [crossAxisAlignment]
+  /// are the same as the [Wrap] ones.
   /// [children] The children to wrap. Only will receive a list of [ResponsiveCol], if you need a divider or something like that,
   /// you should use `const ResponsiveCol(child: Divider())`.
   final List<ResponsiveCol> children;
@@ -42,6 +43,8 @@ class ResponsiveRow extends StatelessWidget {
   /// [crossAxisAlignment] The alignment of the children in the cross axis.
   final WrapCrossAlignment crossAxisAlignment;
 
+  /// [ResponsiveRow] is a component to generate a grid system using 12 columns (as standard),
+  /// uses the following constants as breakpoints:
   const ResponsiveRow({
     super.key,
     required this.children,

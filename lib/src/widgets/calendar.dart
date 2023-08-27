@@ -1,67 +1,106 @@
 part of layrz_theme;
 
 class ThemedCalendar extends StatefulWidget {
+  /// [focusDay] is the day that will be focused when the calendar is first displayed.
+  /// If [focusDay] is null, the calendar will default to the current day.
   final DateTime? focusDay;
-  // final ThemedCalendarMode mode;
-  // final void Function(ThemedCalendarMode)? onModeChanged;
+
+  /// [translations] is the translations of the calendar. By default we use [LayrzAppLocalizations] for translations,
+  /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+  /// is the default value of this property.
+  /// Required translations:
+  /// - `layrz.calendar.year.back` (Previous year)
+  /// - `layrz.calendar.year.next` (Next year)
+  /// - `layrz.calendar.month.back` (Previous month)
+  /// - `layrz.calendar.month.next` (Next month)
+  /// - `layrz.calendar.week.back` (Previous week)
+  /// - `layrz.calendar.week.next` (Next week)
+  /// - `layrz.calendar.day.back` (Previous day)
+  /// - `layrz.calendar.day.next` (Next day)
+  /// - `layrz.calendar.today` (Today)
+  /// - `layrz.calendar.year` (View as year)
+  /// - `layrz.calendar.month` (View as month)
+  /// - `layrz.calendar.week` (View as week)
+  /// - `layrz.calendar.day` (View as day)
+  /// - `layrz.calendar.view_as` (View as)
+  /// - `layrz.calendar.pickMonth` (Pick a month)
+  ///
+  /// Note: The translations of weekdays and months is from [LayrzAppLocalizations], you cannot override it.
+  /// Read more about it in `DateTime.format()` extension included in Layrz Theme.
   final Map<String, String> translations;
+
+  /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
   final bool overridesLayrzTranslations;
+
+  /// [dayFormat] is the format of the day. By default, we use `%A %B %Y`.
+  /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
   final String dayFormat;
+
+  /// [weekFormat] is the format of the week. By default, we use `%B %Y`.
+  /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
   final String weekFormat;
+
+  /// [monthFormat] is the format of the month. By default, we use `%B %Y`.
+  /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
   final String monthFormat;
+
+  /// [yearFormat] is the format of the year. By default, we use `%Y`.
+  /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
   final String yearFormat;
+
+  /// [entries] is the list of entries that will be displayed in the calendar.
   final List<ThemedCalendarEntry> entries;
+
+  /// [rangeEntries] is the list of range entries that will be displayed in the calendar.
+  /// A range entry is an entry that has a start date and an end date.
   final List<ThemedCalendarRangeEntry> rangeEntries;
+
+  /// [highlightedDays] is the list of days that will be highlighted in the calendar.
+  /// When the calendar is in `day` or `week`, the highlight will consider the time-part of the dates.
   final List<DateTime> highlightedDays;
+
+  /// [showEntries] is the flag to hide the entries in the calendar.
+  /// By default, the entries will be displayed.
   final bool showEntries;
+
+  /// [onDayTap] is the callback that will be called when the user taps a day.
+  /// If [onDayTap] is null, the days will not be tappable.
   final void Function(DateTime)? onDayTap;
+
+  /// [isHighlightDaysAsRange] is the flag to highlight the days as a range.
+  /// By default, the days will be highlighted as a single day using the default style
   final bool isHighlightDaysAsRange;
+
+  /// [smallWeekdays] is the flag to display the weekdays in a small size.
+  /// By default, the weekdays will be displayed in a normal size.
   final bool smallWeekdays;
+
+  /// [disabledDays] is the list of disabled days.
+  /// Does not work when [isHighlightDaysAsRange] is true.
   final List<DateTime> disabledDays;
+
+  /// [todayIndicator] is the flag to display the today indicator.
+  /// By default, the today indicator will be displayed.
   final bool todayIndicator;
+
+  /// [todayButton] is the flag to display the today button.
+  /// By default, the today button will be displayed.
   final bool todayButton;
+
+  /// [mode] is the mode that the calendar will be displayed in.
+  /// By default, the calendar will be displayed in [ThemedCalendarMode.month] mode.
+  // final ThemedCalendarMode mode;
+
+  /// [onModeChanged] is a callback that will be called when the user changes the mode of the calendar.
+  /// If [onModeChanged] is null, the calendar will not be able to change modes.
+  // final void Function(ThemedCalendarMode)? onModeChanged;
 
   /// [ThemedCalendar] is a widget that displays a calendar.
   /// To do:
   /// - Add support for other modes. Right now we only support `month` mode.
   const ThemedCalendar({
     super.key,
-
-    /// [focusDay] is the day that will be focused when the calendar is first displayed.
-    /// If [focusDay] is null, the calendar will default to the current day.
     this.focusDay,
-
-    /// [mode] is the mode that the calendar will be displayed in.
-    /// By default, the calendar will be displayed in [ThemedCalendarMode.month] mode.
-    // this.mode = ThemedCalendarMode.month,
-
-    /// [onModeChanged] is a callback that will be called when the user changes the mode of the calendar.
-    /// If [onModeChanged] is null, the calendar will not be able to change modes.
-    // this.onModeChanged,
-
-    /// [translations] is the translations of the calendar. By default we use [LayrzAppLocalizations] for translations,
-    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
-    /// is the default value of this property.
-    /// Required translations:
-    /// - `layrz.calendar.year.back` (Previous year)
-    /// - `layrz.calendar.year.next` (Next year)
-    /// - `layrz.calendar.month.back` (Previous month)
-    /// - `layrz.calendar.month.next` (Next month)
-    /// - `layrz.calendar.week.back` (Previous week)
-    /// - `layrz.calendar.week.next` (Next week)
-    /// - `layrz.calendar.day.back` (Previous day)
-    /// - `layrz.calendar.day.next` (Next day)
-    /// - `layrz.calendar.today` (Today)
-    /// - `layrz.calendar.year` (View as year)
-    /// - `layrz.calendar.month` (View as month)
-    /// - `layrz.calendar.week` (View as week)
-    /// - `layrz.calendar.day` (View as day)
-    /// - `layrz.calendar.view_as` (View as)
-    /// - `layrz.calendar.pickMonth` (Pick a month)
-    ///
-    /// Note: The translations of weekdays and months is from [LayrzAppLocalizations], you cannot override it.
-    /// Read more about it in `DateTime.format()` extension included in Layrz Theme.
-
     this.translations = const {
       'layrz.calendar.year.back': 'Previous year',
       'layrz.calendar.year.next': 'Next year',
@@ -79,64 +118,23 @@ class ThemedCalendar extends StatefulWidget {
       'layrz.calendar.view_as': 'View as',
       'layrz.calendar.pickMonth': 'Pick a month',
     },
-
-    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
-
-    /// [dayFormat] is the format of the day. By default, we use `%A %B %Y`.
-    /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
     this.dayFormat = '%A %B %Y',
-
-    /// [weekFormat] is the format of the week. By default, we use `%B %Y`.
-    /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
     this.weekFormat = '%B %Y',
-
-    /// [monthFormat] is the format of the month. By default, we use `%B %Y`.
-    /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
     this.monthFormat = '%B %Y',
-
-    /// [yearFormat] is the format of the year. By default, we use `%Y`.
-    /// For pattern equivalences, refer to `DateTime` extension format method included in Layrz Theme.
     this.yearFormat = '%Y',
-
-    /// [entries] is the list of entries that will be displayed in the calendar.
     this.entries = const [],
-
-    /// [rangeEntries] is the list of range entries that will be displayed in the calendar.
-    /// A range entry is an entry that has a start date and an end date.
     this.rangeEntries = const [],
-
-    /// [highlightedDays] is the list of days that will be highlighted in the calendar.
-    /// When the calendar is in `day` or `week`, the highlight will consider the time-part of the dates.
     this.highlightedDays = const [],
-
-    /// [showEntries] is the flag to hide the entries in the calendar.
-    /// By default, the entries will be displayed.
     this.showEntries = true,
-
-    /// [onDayTap] is the callback that will be called when the user taps a day.
-    /// If [onDayTap] is null, the days will not be tappable.
     this.onDayTap,
-
-    /// [isHighlightDaysAsRange] is the flag to highlight the days as a range.
-    /// By default, the days will be highlighted as a single day using the default style
     this.isHighlightDaysAsRange = false,
-
-    /// [smallWeekdays] is the flag to display the weekdays in a small size.
-    /// By default, the weekdays will be displayed in a normal size.
     this.smallWeekdays = false,
-
-    /// [disabledDays] is the list of disabled days.
-    /// Does not work when [isHighlightDaysAsRange] is true.
     this.disabledDays = const [],
-
-    /// [todayIndicator] is the flag to display the today indicator.
-    /// By default, the today indicator will be displayed.
     this.todayIndicator = true,
-
-    /// [todayButton] is the flag to display the today button.
-    /// By default, the today button will be displayed.
     this.todayButton = true,
+    // this.mode = ThemedCalendarMode.month,
+    // this.onModeChanged,
   });
 
   @override

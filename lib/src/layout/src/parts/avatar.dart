@@ -1,84 +1,82 @@
 part of layout;
 
 class ThemedAppBarAvatar extends StatefulWidget {
+  /// [appTitle] is the title of the app.
   final String appTitle;
+
+  /// [logo] is the logo of the app. Can be a path or a url.
   final AppThemedAsset logo;
+
+  /// [favicon] is the favicon of the app. Can be a path or a url.
   final AppThemedAsset favicon;
+
+  /// [version] is the version of the app.
   final String? version;
+
+  /// [companyName] is the name of the company.
   final String companyName;
+
+  /// [userName] is the name of the user.
   final String userName;
+
+  /// [userDynamicAvatar] is the dynamic avatar of the user.
+  /// In other components like `ThemedDrawer`, the prop is `ThemedDrawer.userDynamicAvatar`.
   final Avatar? userDynamicAvatar;
+
+  /// [enableAbout] is a boolean that enables the about button.
   final bool enableAbout;
+
+  /// [onSettingsTap] is the callback to be executed when the settings button
   final VoidCallback? onSettingsTap;
+
+  /// [onProfileTap] is the callback to be executed when the profile button
   final VoidCallback? onProfileTap;
+
+  /// [onLogoutTap] is the callback to be executed when the logout button
   final VoidCallback? onLogoutTap;
+
+  /// [onThemeSwitchTap] is a callback that is called when the theme switch
+  /// button is tapped.
   final VoidCallback? onThemeSwitchTap;
+
+  /// [additionalActions] is the list of additional actions to be displayed in the app bar.
+  /// By default is `[]`.
   final List<ThemedNavigatorItem> additionalActions;
+
+  /// [backgroundColor] is the background color of the app bar.
+  /// Overrides the default background color from `Theme.of(context).scaffoldBackgroundColor`.
   final Color? backgroundColor;
+
+  /// [asTaskBar] is a boolean that indicates if the app bar is used as a task bar.
   final bool asTaskBar;
+
+  /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+  /// By default is `Navigator.of(context).pushNamed`
   final ThemedNavigatorPushFunction? onNavigatorPush;
+
+  /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+  /// By default is `Navigator.of(context).pop`
   final ThemdNavigatorPopFunction? onNavigatorPop;
 
+  /// Creates a [ThemedAppBarAvatar] widget.
   const ThemedAppBarAvatar({
     super.key,
-
-    /// [enableAbout] is a boolean that enables the about button.
     this.enableAbout = true,
-
-    /// [onSettingsTap] is the callback to be executed when the settings button
     this.onSettingsTap,
-
-    /// [onProfileTap] is the callback to be executed when the profile button
     this.onProfileTap,
-
-    /// [onLogoutTap] is the callback to be executed when the logout button
     this.onLogoutTap,
-
-    /// [onThemeSwitchTap] is a callback that is called when the theme switch
-    /// button is tapped.
     this.onThemeSwitchTap,
-
-    /// [appTitle] is the title of the app.
     required this.appTitle,
-
-    /// [companyName] is the name of the company.
     this.companyName = 'Golden M, Inc',
-
-    /// [logo] is the logo of the app. Can be a path or a url.
     required this.logo,
-
-    /// [favicon] is the favicon of the app. Can be a path or a url.
     required this.favicon,
-
-    /// [userName] is the name of the user.
     this.userName = "Golden M",
-
-    /// [userDynamicAvatar] is the dynamic avatar of the user.
-    /// In other components like `ThemedDrawer`, the prop is `ThemedDrawer.userDynamicAvatar`.
     this.userDynamicAvatar,
-
-    /// [version] is the version of the app.
     this.version,
-
-    /// [additionalActions] is the list of additional actions to be displayed in the app bar.
-    /// By default is `[]`.
-    /// Its important to note that the additional actions are displayed in the app bar only if
-    /// [enableAlternativeUserMenu] is `true`.
     this.additionalActions = const [],
-
-    /// [backgroundColor] is the background color of the app bar.
-    /// Overrides the default background color from `Theme.of(context).scaffoldBackgroundColor`.
     this.backgroundColor,
-
-    /// [asTaskBar] is a boolean that indicates if the app bar is used as a task bar.
     this.asTaskBar = false,
-
-    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
-    /// By default is `Navigator.of(context).pushNamed`
     this.onNavigatorPush,
-
-    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
-    /// By default is `Navigator.of(context).pop`
     this.onNavigatorPop,
   });
 

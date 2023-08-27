@@ -76,83 +76,82 @@ class ThemedFileInput extends StatelessWidget {
 }
 
 class ThemedFilePicker extends StatefulWidget {
+  /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
   final String? labelText;
+
+  /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
   final Widget? label;
+
+  /// [value] is the value of the input.
   final String? value;
+
+  /// [onChanged] is the callback when the input value changes.
+  /// The first parameter is the base64 of the file.
+  /// The second parameter is the byte array of the file.
   final void Function(String, List<int>)? onChanged;
-  final FileType acceptedTypes;
+
+  /// [disabled] is the flag to disable the input.
   final bool disabled;
+
+  /// [errors] is the list of errors to be displayed.
   final List<String> errors;
+
+  /// [hideDetails] is the flag to hide the details of the input.
   final bool hideDetails;
+
+  /// [isRequired] is the flag to mark the input as required.
   final bool isRequired;
+
+  /// [acceptedTypes] is the type of files that can be selected.
+  final FileType acceptedTypes;
+
+  /// [customChild] is the custom widget to be displayed.
+  /// Replaces the [ThemedTextInput] widget.
   final Widget? customChild;
+
+  /// [customWidget] is the custom widget to be displayed.
+  /// Replaces the [ThemedTextInput] widget.
   final Widget? customWidget;
+
+  /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color hoverColor;
+
+  /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color focusColor;
+
+  /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color splashColor;
+
+  /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
   final Color highlightColor;
+
+  /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `BorderRadius.circular(10)`.
   final BorderRadius borderRadius;
 
   /// [ThemedFilePicker] is the input for file selection.
   /// It uses [ThemedTextInput] as the base.
   const ThemedFilePicker({
     super.key,
-
-    /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
     this.labelText,
-
-    /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
     this.label,
-
-    /// [value] is the value of the input.
     this.value,
-
-    /// [onChanged] is the callback when the input value changes.
-    /// The first parameter is the base64 of the file.
-    /// The second parameter is the byte array of the file.
     this.onChanged,
-
-    /// [disabled] is the flag to disable the input.
     this.disabled = false,
-
-    /// [errors] is the list of errors to be displayed.
     this.errors = const [],
-
-    /// [hideDetails] is the flag to hide the details of the input.
     this.hideDetails = false,
-
-    /// [isRequired] is the flag to mark the input as required.
     this.isRequired = false,
-
-    /// [acceptedTypes] is the type of files that can be selected.
     this.acceptedTypes = FileType.any,
-
-    /// [customChild] is the custom widget to be displayed.
-    /// Replaces the [ThemedTextInput] widget.
     this.customChild,
-
-    /// [customWidget] is the custom widget to be displayed.
-    /// Replaces the [ThemedTextInput] widget.
     @Deprecated('Use `customChild` instead') this.customWidget,
-
-    /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.hoverColor = Colors.transparent,
-
-    /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.focusColor = Colors.transparent,
-
-    /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.splashColor = Colors.transparent,
-
-    /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `Colors.transparent`.
     this.highlightColor = Colors.transparent,
-
-    /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
-    /// By default, it will use `BorderRadius.circular(10)`.
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   });
 

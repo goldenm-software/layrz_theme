@@ -26,141 +26,141 @@ typedef ThemedNavigatorPushFunction = void Function(String path);
 typedef ThemdNavigatorPopFunction = VoidCallback;
 
 class ThemedLayout extends StatefulWidget {
+  /// [style] is the style of the layout. Defaults to [ThemedLayoutStyle.modern].
   final ThemedLayoutStyle style;
+
+  /// [body] is the body of the layout. It is the main content of the application.
   final Widget body;
+
+  /// [scaffoldKey] is the key of the scaffold. It is used to open the drawer.
+  /// Defaults to [GlobalKey<ScaffoldState>()].
   final GlobalKey<ScaffoldState>? scaffoldKey;
+
+  /// [items] is the list of buttons to be displayed in the drawer.
   final List<ThemedNavigatorItem> items;
+
+  /// [homePath] is the path of the home page.
   final String homePath;
+
+  /// [disableLeading] is a boolean that prevents the back button from being
   final bool disableLeading;
+
+  /// [appTitle] is the title of the app.
   final String appTitle;
+
+  /// [logo] is the logo of the app. Can be a path or a url.
   final AppThemedAsset logo;
+
+  /// [favicon] is the favicon of the app. Can be a path or a url.
   final AppThemedAsset favicon;
+
+  /// [version] is the version of the app.
   final String? version;
+
+  /// [companyName] is the name of the company.
   final String companyName;
+
+  /// [userName] is the name of the user.
   final String userName;
+
+  /// [userDynamicAvatar] is the dynamic avatar of the user.
+  /// In other components like `ThemedDrawer`, the prop is `ThemedDrawer.userDynamicAvatar`.
   final Avatar? userDynamicAvatar;
+
+  /// [enableAbout] is a boolean that enables the about button.
   final bool enableAbout;
+
+  /// [buttons] is the list of buttons to be displayed in the drawer.
+  /// displayed.
+  /// [onSettingsTap] is the callback to be executed when the settings button
   final VoidCallback? onSettingsTap;
+
+  /// [onProfileTap] is the callback to be executed when the profile button
   final VoidCallback? onProfileTap;
+
+  /// [onLogoutTap] is the callback to be executed when the logout button
   final VoidCallback? onLogoutTap;
+
+  /// [onThemeSwitchTap] is the callback to be executed when the theme switch button
   final VoidCallback? onThemeSwitchTap;
+
+  /// [additionalActions] is the list of additional actions to be displayed in the app bar.
+  /// By default is `[]`.
   final List<ThemedNavigatorItem> additionalActions;
+
+  /// Its important to note that the additional actions are displayed in the app bar only if
+  /// [enableAlternativeUserMenu] is `true`.
+  /// [backgroundColor] is the background color of the app bar.
+  /// Overrides the default background color from `Theme.of(context).scaffoldBackgroundColor`.
   final Color? backgroundColor;
+
+  /// [persistentItems] is the list of persistent items to be displayed in the taskbar.
+  /// By default is `[]`.
   final List<ThemedNavigatorItem> persistentItems;
+
+  /// [notifications] is the list of notifications to be displayed in the taskbar or sidebar.
+  /// By default is `[]`.
   final List<ThemedNotificationItem> notifications;
+
+  /// [mobileBreakpoint] is the breakpoint for mobile devices.
+  /// By default is `kMediumGrid`.
   final double mobileBreakpoint;
+
+  /// [padding] is the padding of the layout.
+  /// By default is `EdgeInsets.all(10)`.
   final EdgeInsets padding;
+
+  /// [disableSafeArea] is a boolean that disables the safe area.
+  /// By default is `false`.
   final bool disableSafeArea;
+
+  /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+  /// By default is `Navigator.of(context).pushNamed`
   final ThemedNavigatorPushFunction? onNavigatorPush;
+
+  /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+  /// By default is `Navigator.of(context).pop`
   final ThemdNavigatorPopFunction? onNavigatorPop;
+
+  /// [isBackEnabled] is the flag to enable the back button.
+  /// By default is `true`.
   final bool isBackEnabled;
+
+  /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+  /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
     super.key,
-
-    /// [style] is the style of the layout. Defaults to [ThemedLayoutStyle.modern].
     this.style = ThemedLayoutStyle.modern,
-
-    /// [body] is the body of the layout. It is the main content of the application.
     required this.body,
-
-    /// [scaffoldKey] is the key of the scaffold. It is used to open the drawer.
-    /// Defaults to [GlobalKey<ScaffoldState>()].
     this.scaffoldKey,
-
-    /// [buttons] is the list of buttons to be displayed in the drawer.
     this.items = const [],
-
-    /// [homePath] is the path of the home page.
     this.homePath = '/home',
-
-    /// [disableLeading] is a boolean that prevents the back button from being
-    /// displayed.
     this.disableLeading = false,
-
-    /// [enableAbout] is a boolean that enables the about button.
     this.enableAbout = true,
-
-    /// [onSettingsTap] is the callback to be executed when the settings button
     this.onSettingsTap,
-
-    /// [onProfileTap] is the callback to be executed when the profile button
     this.onProfileTap,
-
-    /// [onLogoutTap] is the callback to be executed when the logout button
     this.onLogoutTap,
-
-    /// [onThemeSwitchTap] is the callback to be executed when the theme switch button
     this.onThemeSwitchTap,
-
-    /// [appTitle] is the title of the app.
     required this.appTitle,
-
-    /// [companyName] is the name of the company.
     this.companyName = 'Golden M, Inc',
-
-    /// [logo] is the logo of the app. Can be a path or a url.
     required this.logo,
-
-    /// [favicon] is the favicon of the app. Can be a path or a url.
     required this.favicon,
-
-    /// [userName] is the name of the user.
     this.userName = "Golden M",
-
-    /// [userDynamicAvatar] is the dynamic avatar of the user.
-    /// In other components like `ThemedDrawer`, the prop is `ThemedDrawer.userDynamicAvatar`.
     this.userDynamicAvatar,
-
-    /// [version] is the version of the app.
     this.version,
-
-    /// [additionalActions] is the list of additional actions to be displayed in the app bar.
-    /// By default is `[]`.
-    /// Its important to note that the additional actions are displayed in the app bar only if
-    /// [enableAlternativeUserMenu] is `true`.
     this.additionalActions = const [],
-
-    /// [backgroundColor] is the background color of the app bar.
-    /// Overrides the default background color from `Theme.of(context).scaffoldBackgroundColor`.
     this.backgroundColor,
-
-    /// [persistentItems] is the list of persistent items to be displayed in the taskbar.
-    /// By default is `[]`.
     this.persistentItems = const [],
-
-    /// [notifications] is the list of notifications to be displayed in the taskbar or sidebar.
-    /// By default is `[]`.
     this.notifications = const [],
-
-    /// [mobileBreakpoint] is the breakpoint for mobile devices.
-    /// By default is `kMediumGrid`.
     this.mobileBreakpoint = kMediumGrid,
-
-    /// [padding] is the padding of the layout.
-    /// By default is `EdgeInsets.all(10)`.
     this.padding = const EdgeInsets.all(10),
-
-    /// [disableSafeArea] is a boolean that disables the safe area.
-    /// By default is `false`.
     this.disableSafeArea = false,
-
-    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
-    /// By default is `Navigator.of(context).pushNamed`
     this.onNavigatorPush,
-
-    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
-    /// By default is `Navigator.of(context).pop`
     this.onNavigatorPop,
-
-    /// [isBackEnabled] is the flag to enable the back button.
-    /// By default is `true`.
     this.isBackEnabled = true,
-
-    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
-    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
     this.currentPath,
   });
 

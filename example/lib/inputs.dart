@@ -94,7 +94,6 @@ class _InputsViewState extends State<InputsView> {
     choice = choices.last;
     // choices.first, choices.last
     selectedChoices = [];
-    pickFile(pickDialogTitle: )
   }
 
   @override
