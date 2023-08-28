@@ -70,6 +70,7 @@ class ThemedFileInput extends StatelessWidget {
       hideDetails: hideDetails,
       isRequired: isRequired,
       customChild: customChild,
+      // ignore: deprecated_member_use_from_same_package
       customWidget: customWidget,
     );
   }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.1.7
+- Fixed some errors with the display in the `ThemedDrawer` in nested pages.
+- Expandend documentation of `ThemedTable` to explain how to use some builders and related.
+- Fixed `ThemedSelectInput` update when the object from outside comes null, before, the selected value was not updated.
+
 ## 4.1.6
 - Fixed conditional import for `pickFile` and `saveFile` to support web.
 

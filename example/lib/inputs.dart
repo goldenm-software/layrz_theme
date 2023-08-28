@@ -117,7 +117,7 @@ class _InputsViewState extends State<InputsView> {
                     use24HourFormat: true,
                     disabled: isDisabled,
                     labelText: 'DateTime picker [24h]',
-                    customChild: Text("Custom"),
+                    customChild: const Text("Custom"),
                     value: _selectedDateTimes,
                     onChanged: (value) {
                       setState(() {
@@ -532,7 +532,7 @@ class _InputsViewState extends State<InputsView> {
                 prefixText: "prefix.",
                 suffixIcon: MdiIcons.homeVariant,
               ),
-              ThemedFileInput(
+              ThemedFilePicker(
                 disabled: isDisabled,
                 labelText: "File Input",
               ),

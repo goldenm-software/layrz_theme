@@ -439,7 +439,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
               overflow: TextOverflow.visible,
               textAlign: TextAlign.justify,
             ),
-            ThemedFileInput(
+            ThemedFilePicker(
               labelText: i18n?.t('helpers.dynamicAvatar.types.BASE64.file') ?? "File",
               acceptedTypes: FileType.image,
               value: _value.base64,

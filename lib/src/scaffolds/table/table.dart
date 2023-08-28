@@ -3,7 +3,8 @@ part of layrz_theme;
 bool kThemedTableCanTrue(BuildContext context, item) => true;
 
 class ThemedTable<T> extends StatefulWidget {
-  /// Represents the columns or headers of the table.
+  /// Represents the columns or headers of the table. This columns only will be displayed in desktop size.
+  /// For mobile mode, refer to the [rowTitleBuilder], [rowSubtitleBuilder] and [rowAvatarBuilder] properties.
   final List<ThemedColumn<T>> columns;
 
   /// Is the list of items to display
@@ -51,15 +52,21 @@ class ThemedTable<T> extends StatefulWidget {
   final Widget? title;
 
   /// Represents the builders of row avatar when the table is in mobile size.
+  /// This will appear at the left of the row, before the title and subtitle.
   final ThemedTableAvatar Function(BuildContext, List<ThemedColumn<T>>, T) rowAvatarBuilder;
 
   /// Represents the builders of row title when the table is in mobile size.
+  /// This will appear at the center of the row, after the avatar and above the subtitle.
+  /// This widget returned will be inside in a [Expanded][Column] widget.
   final Widget Function(BuildContext, List<ThemedColumn<T>>, T) rowTitleBuilder;
 
   /// Represents the builders of row subtitle when the table is in mobile size.
+  /// This will appear at the center of the row, after the title and below the avatar.
+  /// This widget returned will be inside in a [Expanded][Column] widget.
   final Widget Function(BuildContext, List<ThemedColumn<T>>, T) rowSubtitleBuilder;
 
   /// Represents the builder of the id of the item.
+  /// This will be used to sort the items by id, and will appear as the first column of the table.
   final String Function(BuildContext, T) idBuilder;
 
   /// Represents the multiple selection is enabled

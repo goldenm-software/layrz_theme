@@ -14,10 +14,10 @@ class ThemedScaffoldView<T> extends StatefulWidget {
   /// This property changes the sidebar behavior to a button and a [BottomSheet] in mobile size.
   final double mobileBreakpoint;
 
-  /// Represents the content of the view
+  /// Represents the content of the view. The 'content' of the view.
   final Widget child;
 
-  /// Represents the items of the sidebar
+  /// Represents the items of the sidebar list.
   final List<T> items;
 
   /// Represents the current item
@@ -26,13 +26,22 @@ class ThemedScaffoldView<T> extends StatefulWidget {
   /// Represents the callback when an item is selected
   final void Function(T) onTap;
 
-  /// Represents the builders of row avatar when the table is in mobile size.
+  /// Represents the builders of row avatar in the [ListView] of the sidebar.
+  /// In mobile mode, this sidebar will be replaced as a bottom sheet.
+  ///
+  /// This avatar will be in the left of the row, before the title and subtitle.
   final ThemedTableAvatar Function(BuildContext, T) avatarBuilder;
 
-  /// Represents the builder of row title when the table is in mobile size.
+  /// Represents the builder of row title in the [ListView] of the sidebar.
+  /// In mobile mode, this sidebar will be replaced as a bottom sheet.
+  ///
+  /// This title will be in the center of the row, after the avatar and above the subtitle.
   final String Function(BuildContext, T) titleBuilder;
 
-  /// Represents the builder of row subtitle when the table is in mobile size.
+  /// Represents the builder of row subtitle in the [ListView] of the sidebar.
+  /// In mobile mode, this sidebar will be replaced as a bottom sheet.
+  ///
+  /// This subtitle will be in the center of the row, after the avatar and below the title.
   final String Function(BuildContext, T) subtitleBuilder;
 
   /// Represents the builder of id

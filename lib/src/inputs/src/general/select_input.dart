@@ -207,9 +207,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     if (widget.items.isNotEmpty) {
       try {
         ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
-        if (value != null) {
-          setState(() => selected = value);
-        }
+        setState(() => selected = value);
 
         Future.delayed(Duration.zero, () {
           widget.onChanged?.call(selected);

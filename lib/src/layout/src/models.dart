@@ -221,6 +221,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
               forceOnTap: true,
             ).toDrawerItem(
               context: context,
+              currentPath: currentPath,
               backgroundColor: backgroundColor,
               width: width,
               height: height,
@@ -244,6 +245,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
                   callback: callback,
                   onNavigatorPush: onNavigatorPush,
                   onNavigatorPop: onNavigatorPop,
+                  currentPath: currentPath,
                 ),
             ],
           ],
