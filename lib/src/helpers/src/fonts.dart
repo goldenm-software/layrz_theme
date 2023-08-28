@@ -1,11 +1,17 @@
 part of helpers;
 
 class FoundFont {
+  /// [titleFont] is the font family of the title text.
   final String titleFont;
+
+  /// [textFont] is the font family of the text.
   final String textFont;
+
+  /// [textTheme] is the text theme of the app.
   final TextTheme textTheme;
 
-  FoundFont({
+  /// [FoundFont] is the constructor of the [FoundFont] class.
+  const FoundFont({
     required this.titleFont,
     required this.textFont,
     required this.textTheme,
@@ -13,24 +19,22 @@ class FoundFont {
 }
 
 /// [getFont] is a helper function to get the font from a name.
+///
 /// Will return a [FoundFont] with the font family and the text theme.
 /// It's important to note that if the font is not found, it will return the default font. of Layrz
 /// - Cabin for titles (From Google Fonts)
 /// - Fira Sans Condensed for texts (From Google Fonts)
+///
+/// [titleFont] is the name of the titleFont.
+/// [textFont] is the name of the textFont.
+/// [isLocalFont] is a boolean to indicate if the font family is a local font.
+/// [titleTextColor] is the color of the title text.
+/// [isDark] is a boolean to indicate if the theme is dark.
 FoundFont getFonts({
-  /// [titleFont] is the name of the titleFont.
   required String titleFont,
-
-  /// [textFont] is the name of the textFont.
   required String textFont,
-
-  /// [isLocalFont] is a boolean to indicate if the font family is a local font.
   bool isLocalFont = false,
-
-  /// [titleTextColor] is the color of the title text.
   required Color titleTextColor,
-
-  /// [isDark] is a boolean to indicate if the theme is dark.
   bool isDark = false,
 }) {
   if (isLocalFont) {

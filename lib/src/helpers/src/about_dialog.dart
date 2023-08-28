@@ -1,20 +1,20 @@
 part of helpers;
 
 /// [openInfoDialog] is a helper function to open an info dialog using the structure of Layrz.
+///
+/// This function implements the default AboutPage of Flutter. To implement the Layrz-like AboutPage,
+/// use the view `ThemedLicensesView` instead.
+///
+/// [context] is the context to use to open the dialog.
+/// [appTitle] is the title of the app.
+/// [i18n] is the i18n to use to translate the dialog.
+/// [logo] is the logo of the app. Only supported from assets.
+/// [companyName] is the name of the company.
 void openInfoDialog({
-  /// [context] is the context to use to open the dialog.
   required BuildContext context,
-
-  /// [appTitle] is the title of the app.
   required String appTitle,
-
-  /// [i18n] is the i18n to use to translate the dialog.
   required LayrzAppLocalizations? i18n,
-
-  /// [logo] is the logo of the app. Only supported from assets.
   required String logo,
-
-  /// [companyName] is the name of the company.
   required String companyName,
 
   ///

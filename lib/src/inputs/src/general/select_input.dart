@@ -1,139 +1,172 @@
 part of inputs;
 
 class ThemedSelectInput<T> extends StatefulWidget {
+  /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
   final String? labelText;
+
+  /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
   final Widget? label;
+
+  /// [items] is the list of items to be selected.
   final List<ThemedSelectItem<T>> items;
+
+  /// [onChanged] is the callback when the input value changes.
   final IconData? prefixIcon;
+
+  /// [prefixIcon] is the icon to be displayed at the start of the input.
   final String? prefixText;
+
+  /// [prefixText] is the text to be displayed at the start of the input.
   final VoidCallback? onPrefixTap;
+
+  /// [onPrefixTap] is the callback when the prefix is tapped.
   final void Function(ThemedSelectItem<T>?)? onChanged;
+
+  /// [value] is the value of the input.
   final T? value;
+
+  /// [searchLabel] is the label of the search input.
   final String searchLabel;
+
+  /// [filter] is the callback to filter the items.
   final bool Function(String, ThemedSelectItem<T>)? filter;
+
+  /// [enableSearch] is the flag to enable the search input.
   final bool enableSearch;
+
+  /// [disabled] is the flag to disable the input.
   final bool disabled;
+
+  /// [errors] is the list of errors to be displayed.
   final List<String> errors;
+
+  /// [hideDetails] is the flag to hide the details of the input.
   final bool hideDetails;
+
+  /// [hideTitle] is the flag to hide the title of the input.
+  /// Important, when this property is true, automatically the search field is disabled.
   final bool hideTitle;
+
+  /// [saveText] is the text of the save button.
   final String saveText;
+
+  /// [autoclose] is the flag to close the input when an item is selected.
   final bool autoclose;
+
+  /// [isRequired] is the flag to mark the input as required.
   final bool isRequired;
+
+  /// [dense] is the flag to make the input dense.
   final bool dense;
+
+  /// [emptyListText] is the text to be displayed when the list is empty.
   final String emptyListText;
+
+  /// [emptyListText] is the text to be displayed when the list is empty.
   final String emptyText;
+
+  /// [emptyListText] is the text to be displayed when the list is empty.
   final EdgeInsets padding;
+
+  /// [emptyListText] is the text to be displayed when the list is empty.
   final EdgeInsets overlayPadding;
+
+  /// [heightFactor] is the factor of the height of the input.
   final double heightFactor;
+
+  /// [maxHeight] is the maximum height of the input.
   final double maxHeight;
+
+  /// [searchKeyboardType] is the keyboard type of the search input.
   final TextInputType searchKeyboardType;
+
+  /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+  /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+  /// is the default value of this property.
+  /// Required translations:
+  /// - `actions.cancel` (Cancel)
+  /// - `actions.save` (Save)
+  /// - `layrz.select.search` (Search in the list)
+  /// - `layrz.select.empty` (No item found)
   final Map<String, String> translations;
+
+  /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
   final bool overridesLayrzTranslations;
+
+  /// [hideButtons] is the flag to hide the buttons of the input.
   final bool hideButtons;
+
+  /// [customChild] is the custom widget to be displayed.
+  /// Replaces the [ThemedTextInput] widget.
+  final Widget? customChild;
+
+  /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color hoverColor;
+
+  /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color focusColor;
+
+  /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color splashColor;
+
+  /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color highlightColor;
+
+  /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `BorderRadius.circular(10)`.
+  final BorderRadius borderRadius;
+
+  /// [canUnselect] is the flag to allow unselecting an item.
+  final bool canUnselect;
 
   /// [ThemedSelectInput] is the input for selecting an item from a list.
   const ThemedSelectInput({
     super.key,
-
-    /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.
     this.labelText,
-
-    /// [label] is the label of the input. Avoid using this if you are using [labelText] instead.
     this.label,
-
-    /// [items] is the list of items to be selected.
     required this.items,
-
-    /// [onChanged] is the callback when the input value changes.
     this.onChanged,
-
-    /// [prefixIcon] is the icon to be displayed at the start of the input.
     this.prefixIcon,
-
-    /// [prefixText] is the text to be displayed at the start of the input.
     this.prefixText,
-
-    /// [onPrefixTap] is the callback when the prefix is tapped.
     this.onPrefixTap,
-
-    /// [value] is the value of the input.
     this.value,
-
-    /// [searchLabel] is the label of the search input.
     @Deprecated("Field unused") this.searchLabel = "Search",
-
-    /// [filter] is the callback to filter the items.
     this.filter,
-
-    /// [enableSearch] is the flag to enable the search input.
     this.enableSearch = true,
-
-    /// [disabled] is the flag to disable the input.
     this.disabled = false,
-
-    /// [errors] is the list of errors to be displayed.
     this.errors = const [],
-
-    /// [hideDetails] is the flag to hide the details of the input.
     this.hideDetails = false,
-
-    /// [hideTitle] is the flag to hide the title of the input.
-    /// Important, when this property is true, automatically the search field is disabled.
     this.hideTitle = false,
-
-    /// [saveText] is the text of the save button.
     @Deprecated("Field unused") this.saveText = "OK",
-
-    /// [autoclose] is the flag to close the input when an item is selected.
     this.autoclose = true,
-
-    /// [isRequired] is the flag to mark the input as required.
     this.isRequired = false,
-
-    /// [dense] is the flag to make the input dense.
     this.dense = false,
-
-    /// [emptyListText] is the text to be displayed when the list is empty.
     this.padding = const EdgeInsets.all(10),
-
-    /// [emptyListText] is the text to be displayed when the list is empty.
     @Deprecated("Field unused") this.overlayPadding = const EdgeInsets.all(20),
-
-    /// [emptyListText] is the text to be displayed when the list is empty.
     @Deprecated("Field unused") this.emptyText = "No item selected",
-
-    /// [emptyListText] is the text to be displayed when the list is empty.
     @Deprecated("Field unused") this.emptyListText = "Without items available to select",
-
-    /// [heightFactor] is the factor of the height of the input.
     @Deprecated("Field unused") this.heightFactor = 0.7,
-
-    /// [maxHeight] is the maximum height of the input.
     @Deprecated("Field unused") this.maxHeight = 300,
-
-    /// [searchKeyboardType] is the keyboard type of the search input.
     this.searchKeyboardType = TextInputType.text,
-
-    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
-    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
-    /// is the default value of this property.
-    /// Required translations:
-    /// - `actions.cancel` (Cancel)
-    /// - `actions.save` (Save)
-    /// - `layrz.select.search` (Search in the list)
-    /// - `layrz.select.empty` (No item found)
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
       'layrz.select.search': 'Search in the list',
       'layrz.select.empty': 'No item found',
     },
-
-    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
-
-    /// [hideButtons] is the flag to hide the buttons of the input.
     this.hideButtons = false,
+    this.customChild,
+    this.hoverColor = Colors.transparent,
+    this.focusColor = Colors.transparent,
+    this.splashColor = Colors.transparent,
+    this.highlightColor = Colors.transparent,
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.canUnselect = false,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -174,9 +207,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     if (widget.items.isNotEmpty) {
       try {
         ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
-        if (value != null) {
-          setState(() => selected = value);
-        }
+        setState(() => selected = value);
 
         Future.delayed(Duration.zero, () {
           widget.onChanged?.call(selected);
@@ -189,6 +220,13 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
 
   @override
   Widget build(BuildContext context) {
+    if (widget.customChild != null) {
+      return InkWell(
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild,
+      );
+    }
+
     return ThemedTextInput(
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
@@ -231,114 +269,125 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
           }
         }
 
-        return Dialog(
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(20),
-                constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
-                decoration: generateContainerElevation(context: context, elevation: 3),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (!widget.hideTitle) ...[
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              widget.labelText ?? '',
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+        return WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: Dialog(
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                  decoration: generateContainerElevation(context: context, elevation: 3),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (!widget.hideTitle) ...[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.labelText ?? '',
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                            if (widget.enableSearch) ...[
+                              const SizedBox(height: 10),
+                              Expanded(
+                                child: ThemedTextInput(
+                                  labelText: t('layrz.select.search'),
+                                  onChanged: (value) => setState(() => searchText = value),
+                                  prefixIcon: MdiIcons.magnify,
+                                  suffixIcon: searchText.isNotEmpty ? MdiIcons.close : null,
+                                  onSuffixTap: searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
+                                  hideDetails: true,
+                                  dense: true,
+                                  keyboardType: widget.searchKeyboardType,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                      const SizedBox(height: 10),
+                      if (items.isEmpty) ...[
+                        Center(
+                          child: Text(
+                            t('layrz.select.empty'),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ] else ...[
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 300),
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            child: ListView.builder(
+                              itemCount: items.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return _ThemedSelectItem<T>(
+                                  item: items[index],
+                                  selected: temp?.value == items[index].value,
+                                  canUnselect: widget.canUnselect,
+                                  onTap: () {
+                                    items[index].onTap?.call();
+                                    if (temp?.value == items[index].value && widget.canUnselect) {
+                                      setState(() => temp = null);
+                                      Navigator.of(context).pop(null);
+                                    } else {
+                                      setState(() => temp = items[index]);
+                                      Navigator.of(context).pop(temp);
+                                    }
+                                  },
+                                );
+                              },
                             ),
                           ),
-                          if (widget.enableSearch) ...[
-                            const SizedBox(height: 10),
-                            Expanded(
-                              child: ThemedTextInput(
-                                labelText: t('layrz.select.search'),
-                                onChanged: (value) => setState(() => searchText = value),
-                                prefixIcon: MdiIcons.magnify,
-                                suffixIcon: searchText.isNotEmpty ? MdiIcons.close : null,
-                                onSuffixTap: searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
-                                hideDetails: true,
-                                dense: true,
-                                keyboardType: widget.searchKeyboardType,
-                              ),
+                        ),
+                      ],
+                      if (!widget.hideButtons) ...[
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ThemedButton(
+                              style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
+                              icon: MdiIcons.close,
+                              labelText: t('actions.cancel'),
+                              color: Colors.red,
+                              onTap: () => Navigator.of(context).pop(null),
+                            ),
+                            ThemedButton(
+                              style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
+                              icon: MdiIcons.check,
+                              labelText: t('actions.save'),
+                              color: Colors.green,
+                              onTap: () => Navigator.of(context).pop(temp),
                             ),
                           ],
-                        ],
-                      ),
-                    ],
-                    const SizedBox(height: 10),
-                    if (items.isEmpty) ...[
-                      Center(
-                        child: Text(
-                          t('layrz.select.empty'),
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
-                    ] else ...[
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 300),
-                        child: SingleChildScrollView(
-                          controller: scrollController,
-                          child: ListView.builder(
-                            itemCount: items.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return _ThemedSelectItem<T>(
-                                item: items[index],
-                                selected: temp?.value == items[index].value,
-                                onTap: () {
-                                  items[index].onTap?.call();
-                                  setState(() => temp = items[index]);
-                                  Navigator.of(context).pop(temp);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                      ],
                     ],
-                    if (!widget.hideButtons) ...[
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ThemedButton(
-                            style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                            icon: MdiIcons.close,
-                            labelText: t('actions.cancel'),
-                            color: Colors.red,
-                            onTap: () => Navigator.of(context).pop(),
-                          ),
-                          ThemedButton(
-                            style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                            icon: MdiIcons.check,
-                            labelText: t('actions.save'),
-                            color: Colors.green,
-                            onTap: () => Navigator.of(context).pop(temp),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ],
-                ),
-              );
-            },
+                  ),
+                );
+              },
+            ),
           ),
         );
       },
     );
 
     _focusNode.unfocus();
-    if (result == null) return;
     setState(() => selected = result);
+    widget.onChanged?.call(result);
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {

@@ -1,26 +1,23 @@
 part of helpers;
 
 /// [generateContainerElevation] is a helper generator for the [BoxDecoration] of the [Container] widget.
+///
 /// It generates the [BoxDecoration] with the given [elevation] and [radius].
+///
+/// The [elevation] is the number of shadows to be generated, by default it is 1.
+/// The maximum value is 5.
+/// The minimum value is 0.
+/// The [radius] is the radius of the `BorderRadius.circular` of the `BoxDecoration`, by default it is 10.
+/// The minimum value is 0.
+/// The [color] is the color of the `BoxDecoration`, by default it is `Theme.of(context).cardColor`.
+/// The [shadowColor] is the color of the `BoxShadow`, by default it is `Theme.of(context).shadowColor`.
+/// The [reverse] is the boolean to reverse shadow of the `BoxDecoration`, by default it is false.
 BoxDecoration generateContainerElevation({
   required BuildContext context,
-
-  /// The [elevation] is the number of shadows to be generated, by default it is 1.
-  /// The maximum value is 5.
-  /// The minimum value is 0.
   int elevation = 1,
-
-  /// The [radius] is the radius of the `BorderRadius.circular` of the `BoxDecoration`, by default it is 10.
-  /// The minimum value is 0.
   double radius = 10,
-
-  /// The [color] is the color of the `BoxDecoration`, by default it is `Theme.of(context).cardColor`.
   Color? color,
-
-  /// The [shadowColor] is the color of the `BoxShadow`, by default it is `Theme.of(context).shadowColor`.
   Color? shadowColor,
-
-  /// The [reverse] is the boolean to reverse shadow of the `BoxDecoration`, by default it is false.
   bool reverse = false,
 }) {
   assert(elevation <= 5, 'The elevation must be less than or equal to 5');

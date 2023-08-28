@@ -1,70 +1,78 @@
 part of layrz_theme;
 
 class ThemedButton extends StatefulWidget {
+  /// [label] and [labelText] is the label of the button. Cannot provide both.
+  /// [label] is for send a custom widget and control the colors and related things.
+  /// Avoid using [label] and [labelText] at the same time. We will prefer [label] over [labelText].
   final Widget? label;
+
+  /// [labelText] is for send only the String and assume the component will adapt the colors and related
+  /// things automatically.
+  /// Avoid using [label] and [labelText] at the same time. We will prefer [label] over [labelText].
   final String? labelText;
+
+  /// [icon] is the icon of the button, when [style] is ThemedButtonStyle.fab, will only shows the icon and use
+  /// the [labelText] as tooltip.
   final IconData? icon;
+
+  /// [onTap] is called when the button is tapped.
   final VoidCallback? onTap;
+
+  /// [isLoading] is used to show a loading indicator.
   final bool isLoading;
+
+  /// [color] is used to override the color of the button.
+  /// By default, the color will be `Theme.of(context).primaryColor`.
   final Color? color;
+
+  /// [style] is the design of the button, based on Material 3 rules. For more info go to
+  /// https://m3.material.io/components/all-buttons.
   final ThemedButtonStyle style;
+
+  /// Information about of the cooldown indicator.
+  /// [isCooldown] indicates to the widget when the cooldown was started.
+  /// [cooldown] indicates the duration of the cooldown, by default, will use 5 seconds duration.
+  /// [onCooldownFinish] will be called when the cooldown is finished.
   final bool isCooldown;
-  final Duration cooldownDuration;
-  final VoidCallback? onCooldownFinish;
+
+  /// [hintText] is the hint text of the button, will display as tooltip.
   final String? hintText;
+
+  /// [width] is the width of the button.
   final double? width;
+
+  /// [isDisabled] is used to disable the button.
   final bool isDisabled;
+
+  /// [cooldownDuration] is used to set the duration of the cooldown.
+  final Duration cooldownDuration;
+
+  /// [onCooldownFinish] will be called when the cooldown is finished.
+  /// Take care about this callback, because it will be called every time when the cooldown is finished.
+  /// To prevent excesive `setState` or something like that in your app, we recommend to use this callback
+  /// in one of the buttons presents in the screen.
+  final VoidCallback? onCooldownFinish;
+
+  /// [tooltipPosition] is used to set the position of the tooltip.
+  /// By default, will use `ThemedTooltipPosition.bottom`.
   final ThemedTooltipPosition tooltipPosition;
 
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
-
-    /// [label] and [labelText] is the label of the button. Cannot provide both.
-    /// [label] is for send a custom widget and control the colors and related things.
     this.label,
-
-    /// [labelText] is for send only the String and assume the component will adapt the colors and related
-    /// things automatically.
     this.labelText,
-
-    /// [icon] is the icon of the button, when [style] is ThemedButtonStyle.fab, will only shows the icon and use
-    /// the [labelText] as tooltip.
     this.icon,
-
-    /// [onTap] is called when the button is tapped.
     this.onTap,
-
-    /// [isLoading] is used to show a loading indicator.
     this.isLoading = false,
-
-    /// [color] is used to override the color of the button.
-    /// By default, the color will be [defaultColor].
     this.color,
-
-    /// [style] is the design of the button, based on Material 3 rules. For more info go to
-    /// https://m3.material.io/components/all-buttons.
     this.style = ThemedButtonStyle.filledTonal,
-
-    /// Information about of the cooldown indicator.
-    /// [isCooldown] indicates to the widget when the cooldown was started.
-    /// [cooldown] indicates the duration of the cooldown, by default, will use 5 seconds duration.
-    /// [onCooldownFinish] will be called when the cooldown is finished.
     this.isCooldown = false,
     this.cooldownDuration = const Duration(seconds: 5),
     this.onCooldownFinish,
-
-    /// [hintText] is the hint text of the button, will display as tooltip.
     this.hintText,
-
-    /// [width] is the width of the button.
     this.width,
-
-    /// [isDisabled] is used to disable the button.
     this.isDisabled = false,
-
-    /// [tooltipPosition] is used to set the position of the tooltip.
-    /// By default, will use `ThemedTooltipPosition.bottom`.
     this.tooltipPosition = ThemedTooltipPosition.bottom,
   }) : assert(label != null || labelText != null);
 

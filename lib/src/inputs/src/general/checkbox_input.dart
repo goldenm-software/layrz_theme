@@ -1,5 +1,8 @@
 part of inputs;
 
+/// [ThemedCheckboxInputStyle] is the style of the checkbox.
+///
+/// It can be a field, switch or flutter checkbox.
 enum ThemedCheckboxInputStyle {
   /// [ThemedCheckboxInputStyle.asField] is a checkbox that is displayed as a field.
   asField,
@@ -15,50 +18,49 @@ enum ThemedCheckboxInputStyle {
 }
 
 class ThemedCheckboxInput extends StatefulWidget {
+  /// [labelText] is the label text of the checkbox. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the checkbox. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [onChanged] is the callback function when the checkbox is changed.
   final void Function(bool)? onChanged;
+
+  /// [value] is the value of the checkbox.
   final bool value;
+
+  /// [disabled] is the disabled state of the checkbox.
   final bool disabled;
+
+  /// [errors] is the list of errors of the checkbox.
   final List<String> errors;
+
+  /// [hideDetails] is the state of hiding the details of the checkbox.
   final bool hideDetails;
+
+  /// [padding] is the padding of the checkbox.
   final EdgeInsets padding;
+
+  /// [dense] is the state of the checkbox being dense.
   final bool dense;
+
+  /// [style] is the style of the checkbox.
   final ThemedCheckboxInputStyle style;
 
   /// [ThemedCheckboxInput] is a checkbox input.
   /// It can be a flutter checkbox, field or switch, control that using [style] property.
   const ThemedCheckboxInput({
     super.key,
-
-    /// [labelText] is the label text of the checkbox. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the checkbox. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [onChanged] is the callback function when the checkbox is changed.
     this.disabled = false,
-
-    /// [value] is the value of the checkbox.
     this.onChanged,
-
-    /// [disabled] is the disabled state of the checkbox.
     this.value = false,
-
-    /// [errors] is the list of errors of the checkbox.
     this.errors = const [],
-
-    /// [hideDetails] is the state of hiding the details of the checkbox.
     this.hideDetails = false,
-
-    /// [padding] is the padding of the checkbox.
     this.padding = const EdgeInsets.all(10),
-
-    /// [dense] is the state of the checkbox being dense.
     this.dense = false,
-
-    /// [style] is the style of the checkbox.
     this.style = ThemedCheckboxInputStyle.asCheckbox2,
   }) : assert(label == null || labelText == null);
 

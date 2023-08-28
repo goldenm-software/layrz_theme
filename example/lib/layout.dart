@@ -130,13 +130,15 @@ class _LayoutState extends State<Layout> {
       ),
       ThemedNavigatorAction(
         labelText: 'Empty [Native]',
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
+        onTap: () async {
+          bool res = await Navigator.of(context).push(ThemedPageBuilder(
             builder: (context) {
               return const EmptyView(name: 'Empty [Native]');
             },
             settings: const RouteSettings(name: '/test_empty_native'),
           ));
+
+          debugPrint('Empty [Native] result: $res');
         },
       ),
       ThemedNavigatorSeparator(),

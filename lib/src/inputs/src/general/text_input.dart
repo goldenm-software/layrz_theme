@@ -1,153 +1,168 @@
 part of inputs;
 
 class ThemedTextInput extends StatefulWidget {
+  /// [keyboardType] is the type of the keyboard.
+  /// By default, it is [TextInputType.text].
   final TextInputType keyboardType;
+
+  /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [placeholder] is the placeholder of the input.
   final String? placeholder;
+
+  /// [prefixText] is the prefix text of the input.
   final String? prefixText;
+
+  /// [prefixIcon] is the prefix icon of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
   final IconData? prefixIcon;
+
+  /// [prefixWidget] is the prefix widget of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
   final Widget? prefixWidget;
-  final void Function()? onPrefixTap;
+
+  /// [onPrefixTap] is the callback function when the prefix is tapped.
+  final VoidCallback? onPrefixTap;
+
+  /// [suffixIcon] is the suffix icon of the input.
   final IconData? suffixIcon;
+
+  /// [suffixText] is the suffix text of the input.
   final String? suffixText;
-  final void Function()? onSuffixTap;
+
+  /// [onSuffixTap] is the callback function when the suffix is tapped.
+  final VoidCallback? onSuffixTap;
+
+  /// [obscureText] is the state of the input being obscured.
   final bool obscureText;
+
+  /// [controller] is the controller of the input.
   final TextEditingController? controller;
+
+  /// [onChanged] is the callback function when the input is changed.
   final void Function(String)? onChanged;
+
+  /// [onTap] is the callback function when the input is tapped.
   final VoidCallback? onTap;
+
+  /// [value] is the value of the input.
   final String? value;
+
+  /// [disabled] is the disabled state of the input.
   final bool disabled;
+
+  /// [errors] is the list of errors of the input.
   final List<String> errors;
+
+  /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
+
+  /// [padding] is the padding of the input.
   final EdgeInsets padding;
+
+  /// [dense] is the state of the input being dense.
   final bool dense;
+
+  /// [isRequired] is the state of the input being required.
   final bool isRequired;
+
+  /// [focusNode] is the focus node of the input.
   final FocusNode? focusNode;
+
+  /// [validator] is the validator of the input.
   final bool Function(String)? validator;
+
+  /// [onSubmitted] is the callback function when the input is submitted.
   final VoidCallback? onSubmitted;
+
+  /// [readonly] is the state of the input being readonly.
   final bool readonly;
+
+  /// [inputFormatters] is the list of input formatters of the input.
   final List<TextInputFormatter> inputFormatters;
+
+  /// [autofillHints] is the list of autofill hints of the input.
   final List<String> autofillHints;
+
+  /// [autofocus] is the state of the input being autofocus.
   final double? borderRadius;
+
+  /// [maxLines] is the maximum number of lines of the input.
   final int maxLines;
+
+  /// [autocorrect] is the state of the input for enabling autocorrect.
   final bool autocorrect;
+
+  /// [enableSuggestions] is the state of the input to enable suggestions.
   final bool enableSuggestions;
+
+  /// [autofocus] is the state of the input to be autofocused.
   final bool autofocus;
+
+  /// [suffixWidget] is the widget of the suffix of the input.
   final Widget? suffixWidget;
+
+  /// [choices] is the list of choices of the input. Only will affect if [enableCombobox] is true.
   final List<String> choices;
+
+  /// [maxChoicesToDisplay] is the maximum number of choices to display.
+  final int maxChoicesToDisplay;
+
+  /// [enableCombobox] is the state of the input to enable the combobox.
+  final bool enableCombobox;
+
+  /// [emptyChoicesText] is the text to display when the choices list is empty.
+  final String emptyChoicesText;
+
+  /// [position] is the position of the combobox.
+  /// By default, it is [ThemedComboboxPosition.below].
+  final ThemedComboboxPosition position;
 
   /// [ThemedTextInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedTextInput({
     super.key,
-
-    /// [keyboardType] is the type of the keyboard.
-    /// By default, it is [TextInputType.text].
     this.keyboardType = TextInputType.text,
-
-    /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [placeholder] is the placeholder of the input.
     this.disabled = false,
-
-    /// [prefixText] is the prefix text of the input.
     this.placeholder,
-
-    /// [prefixIcon] is the prefix icon of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
     this.prefixText,
-
-    /// [prefixWidget] is the prefix widget of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
     this.prefixIcon,
-
-    /// [onPrefixTap] is the callback function when the prefix is tapped.
     this.prefixWidget,
-
-    /// [suffixIcon] is the suffix icon of the input.
     this.onPrefixTap,
-
-    /// [suffixText] is the suffix text of the input.
     this.suffixIcon,
-
-    /// [onSuffixTap] is the callback function when the suffix is tapped.
     this.suffixText,
-
-    /// [obscureText] is the state of the input being obscured.
     this.onSuffixTap,
-
-    /// [controller] is the controller of the input.
     this.onTap,
-
-    /// [onChanged] is the callback function when the input is changed.
     this.obscureText = false,
-
-    /// [onTap] is the callback function when the input is tapped.
     this.controller,
-
-    /// [value] is the value of the input.
     this.onChanged,
-
-    /// [disabled] is the disabled state of the input.
     this.value,
-
-    /// [errors] is the list of errors of the input.
     this.errors = const [],
-
-    /// [hideDetails] is the state of hiding the details of the input.
     this.hideDetails = false,
-
-    /// [padding] is the padding of the input.
     this.padding = const EdgeInsets.all(10),
-
-    /// [dense] is the state of the input being dense.
     this.dense = false,
-
-    /// [isRequired] is the state of the input being required.
     this.isRequired = false,
-
-    /// [focusNode] is the focus node of the input.
     this.focusNode,
-
-    /// [validator] is the validator of the input.
     this.validator,
-
-    /// [onSubmitted] is the callback function when the input is submitted.
     this.onSubmitted,
-
-    /// [readonly] is the state of the input being readonly.
     this.readonly = false,
-
-    /// [inputFormatters] is the list of input formatters of the input.
     this.inputFormatters = const [],
-
-    /// [autofillHints] is the list of autofill hints of the input.
     this.autofillHints = const [],
-
-    /// [autofocus] is the state of the input being autofocus.
     this.borderRadius,
-
-    /// [maxLines] is the maximum number of lines of the input.
     this.maxLines = 1,
-
-    /// [autocorrect] is the state of the input for enabling autocorrect.
     this.autocorrect = true,
-
-    /// [enableSuggestions] is the state of the input to enable suggestions.
     this.enableSuggestions = true,
-
-    /// [autofocus] is the state of the input to be autofocused.
     this.autofocus = false,
-
-    /// [suffixWidget] is the widget of the suffix of the input.
     this.suffixWidget,
-
-    /// [choices] is the list of choices of the input. When this list is not empty,
-    /// the input will be a combobox, otherwise it will be a text input.
     this.choices = const [],
+    this.maxChoicesToDisplay = 5,
+    this.enableCombobox = false,
+    this.emptyChoicesText = "No choices",
+    this.position = ThemedComboboxPosition.below,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -155,12 +170,13 @@ class ThemedTextInput extends StatefulWidget {
 }
 
 class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderStateMixin {
+  final StreamController _streamController = StreamController<List<String>>.broadcast();
   late AnimationController _animationController;
   late TextEditingController _controller;
   late String _value;
   late FocusNode _focusNode;
   OverlayEntry? _entry;
-  bool _isEntryOnTop = false;
+  bool get _isEntryOnTop => widget.position == ThemedComboboxPosition.above;
 
   EdgeInsets get widgetPadding => widget.padding;
   bool get isDense => widget.dense;
@@ -207,6 +223,10 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
           offset: previousCursorOffset,
         ),
       );
+    }
+
+    if (widget.choices != oldWidget.choices) {
+      _streamController.add(widget.choices);
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -292,7 +312,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                           topLeft: Radius.circular(widget.borderRadius!),
                           topRight: Radius.circular(widget.borderRadius!),
                         )
-                      : BorderRadius.circular(widget.borderRadius!))
+                      : BorderRadius.circular(widget.borderRadius!),
+                )
               : null,
       suffixIcon: suffix,
     );
@@ -340,14 +361,13 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         onChanged: (String value) async {
           if (widget.validator?.call(value) ?? true) {
             setState(() => _value = value);
-            await _destroyEntry();
             widget.onChanged?.call(value);
           }
         },
         autofillHints: widget.autofillHints,
         onTap: widget.disabled
             ? null
-            : widget.choices.isEmpty
+            : !widget.enableCombobox
                 ? widget.onTap
                 : () async {
                     widget.onTap?.call();
@@ -356,6 +376,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         onSubmitted: widget.disabled
             ? null
             : (_) {
+                _destroyEntry();
                 widget.onSubmitted?.call();
               },
       ),
@@ -377,7 +398,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
 
     double maxHeight = 300;
     double itemExtent = 30;
-    double height = widget.choices.length * itemExtent;
+    // 20 = padding - 5 = divider
+    double height = min(widget.choices.length, widget.maxChoicesToDisplay) * itemExtent + 20 + 5;
 
     Size screenSize = MediaQuery.of(context).size;
     double left = offset.dx + widgetPadding.left;
@@ -386,15 +408,16 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     double? top;
     double? bottom;
 
-    double predictedTop = offset.dy + renderBox.size.height - widgetPadding.bottom;
-
-    if (predictedTop + height > screenSize.height) {
-      top = offset.dy - height + widgetPadding.top;
-      _isEntryOnTop = true;
+    if (widget.position == ThemedComboboxPosition.above) {
+      bottom = (screenSize.height - offset.dy) - widget.padding.top;
+      top = null;
     } else {
-      top = predictedTop;
-      _isEntryOnTop = false;
+      debugPrint('Below');
+      top = offset.dy + renderBox.size.height - widget.padding.bottom;
+      bottom = null;
     }
+
+    debugPrint('top: $top, bottom: $bottom, left: $left, right: $right');
 
     _entry = OverlayEntry(
       builder: (context) {
@@ -410,53 +433,73 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                 right: right,
                 child: FadeTransition(
                   opacity: _animationController,
-                  child: Container(
-                    height: height,
-                    constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                        bottomRight: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                        topLeft: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                        topRight: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        if (!_isEntryOnTop) const Divider(),
-                        Expanded(
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(10),
-                            itemCount: widget.choices.length,
-                            itemExtent: itemExtent,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(5),
-                                  onTap: () async {
-                                    await _destroyEntry();
-                                    _controller.text = widget.choices[index];
-                                    widget.onChanged?.call(widget.choices[index]);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.choices[index],
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                  child: StreamBuilder(
+                      initialData: widget.choices,
+                      stream: _streamController.stream,
+                      builder: (context, snapshot) {
+                        List<String> choices = snapshot.data as List<String>;
+                        // 20 = padding - 5 = divider
+                        height = min(choices.length, widget.maxChoicesToDisplay) * itemExtent + 20 + 5;
+
+                        return AnimatedContainer(
+                          duration: kHoverDuration,
+                          height: height,
+                          constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
+                              bottomRight: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
+                              topLeft: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
+                              topRight: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
+                            ),
                           ),
-                        ),
-                        if (_isEntryOnTop) const Divider(),
-                      ],
-                    ),
-                  ),
+                          child: Column(
+                            children: [
+                              if (!_isEntryOnTop) const Divider(),
+                              Expanded(
+                                child: choices.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          widget.emptyChoicesText,
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        padding: const EdgeInsets.all(10),
+                                        itemCount: choices.length,
+                                        itemExtent: itemExtent,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          final itm = choices[index];
+                                          return SizedBox(
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(5),
+                                                onTap: () async {
+                                                  await _destroyEntry();
+                                                  _controller.text = itm;
+                                                  widget.onChanged?.call(itm);
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Text(
+                                                    itm,
+                                                    style: Theme.of(context).textTheme.bodyMedium,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                              ),
+                              if (_isEntryOnTop) const Divider(),
+                            ],
+                          ),
+                        );
+                      }),
                 ),
               ),
             ],
@@ -469,4 +512,13 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     await _animationController.forward();
     setState(() {});
   }
+}
+
+/// [ThemedComboboxPosition] is the position of the combobox choices.
+enum ThemedComboboxPosition {
+  /// [top] is the position of the combobox choices on top of the input.
+  above,
+
+  /// [bottom] is the position of the combobox choices below the input.
+  below,
 }

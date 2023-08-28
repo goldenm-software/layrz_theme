@@ -37,6 +37,12 @@ class _EmptyViewState extends State<EmptyView> {
             },
           ),
           Text("Empty view ${widget.name}"),
+          ThemedButton(
+            labelText: "Back",
+            onTap: () {
+              Navigator.of(context).pop(true);
+            },
+          ),
         ],
       ),
     );

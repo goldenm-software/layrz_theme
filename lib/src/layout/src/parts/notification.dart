@@ -1,27 +1,27 @@
 part of layout;
 
 class ThemedNotificationIcon extends StatefulWidget {
+  /// [notifications] is the list of notifications to be displayed in the
+  /// notification icon.
   final List<ThemedNotificationItem> notifications;
+
+  /// [backgroundColor] is the background color of the notification icon.
   final Color backgroundColor;
+
+  /// [inAppBar] is a boolean that indicates whether the notification icon is
+  /// in the app bar or not.
   final bool inAppBar;
+
+  /// [forceFullSize] is a boolean that forces the notification icon to be
+  /// displayed in full size.
   final bool forceFullSize;
 
+  /// Creates a [ThemedNotificationIcon] widget.
   const ThemedNotificationIcon({
     super.key,
-
-    /// [notifications] is the list of notifications to be displayed in the
-    /// notification icon.
     required this.notifications,
-
-    /// [backgroundColor] is the background color of the notification icon.
     required this.backgroundColor,
-
-    /// [inAppBar] is a boolean that indicates whether the notification icon is
-    /// in the app bar or not.
     this.inAppBar = false,
-
-    /// [forceFullSize] is a boolean that forces the notification icon to be
-    /// displayed in full size.
     this.forceFullSize = false,
   });
 

@@ -2,6 +2,7 @@ library inputs;
 
 // Dependencies
 import 'dart:async';
+import 'dart:math';
 import 'package:code_text_field/code_text_field.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -27,7 +28,6 @@ part 'src/general/duallist_input.dart';
 part 'src/general/duration_input.dart';
 part 'src/general/dynamic_avatar_input.dart';
 part 'src/general/dynamic_credentials_input.dart';
-part 'src/general/file_input.dart';
 part 'src/general/number_input.dart';
 part 'src/general/text_input.dart';
 part 'src/general/radio_input.dart';
@@ -49,10 +49,11 @@ part 'src/pickers/month/single.dart';
 part 'src/pickers/month/range.dart';
 
 // General pickers
+part 'src/pickers/general/file.dart';
 part 'src/pickers/general/avatar.dart';
 part 'src/pickers/general/color.dart';
 part 'src/pickers/general/emoji.dart';
-part 'src/pickers/general/icon.dart'; // To do
+part 'src/pickers/general/icon.dart';
 
 // Date Pickers
 part 'src/pickers/date/single.dart';

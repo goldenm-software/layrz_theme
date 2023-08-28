@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of theme;
 
 /// [generateDarkTheme] is a helper function to generate a [ThemeData] with the
 /// [Brightness.dark] theme.

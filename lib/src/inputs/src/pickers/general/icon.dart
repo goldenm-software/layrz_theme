@@ -1,86 +1,107 @@
 part of inputs;
 
 class ThemedIconPicker extends StatefulWidget {
+  /// [labelText] is the label text of the icon picker. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the icon picker. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [onChanged] is the callback function when the icon picker is changed.
   final void Function(IconData)? onChanged;
+
+  /// [value] is the value of the icon picker.
   final IconData? value;
+
+  /// [disabled] is the disabled state of the icon picker.
   final bool disabled;
+
+  /// [errors] is the list of errors of the icon picker.
   final List<String> errors;
+
+  /// [hideDetails] is the state of hiding the details of the icon picker.
   final bool hideDetails;
+
+  /// [padding] is the padding of the icon picker.
   final EdgeInsets padding;
+
+  /// [dense] is the state of the icon picker being dense.
   final bool dense;
+
+  /// [isRequired] is the state of the icon picker being required.
   final bool isRequired;
+
+  /// [focusNode] is the focus node of the icon picker.
   final FocusNode? focusNode;
-  final double? borderRadius;
-  final Widget? customWidget;
+
+  /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+  /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+  /// is the default value of this property.
+  /// Required translations:
+  /// - `actions.cancel` (Cancel)
+  /// - `actions.save` (Save)
+  /// - `helpers.search` (Search an emoji or group)
   final Map<String, String> translations;
+
+  /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
   final bool overridesLayrzTranslations;
+
+  /// [allowedIcons] is the list of allowed icons to select from.
+  /// If this property is not submitted, all icons will be allowed.
   final List<IconData> allowedIcons;
+
+  /// [customChild] is the custom child of the icon picker.
+  /// If it is submitted, the icon picker will be ignored.
+  final Widget? customChild;
+
+  /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color hoverColor;
+
+  /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color focusColor;
+
+  /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color splashColor;
+
+  /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color highlightColor;
+
+  /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `BorderRadius.circular(10)`.
+  final BorderRadius borderRadius;
 
   /// [ThemedIconPicker] is an icon picker input. It is a text field that opens an [OverlayEntry]
   /// with a list of icons to select from.
   const ThemedIconPicker({
     super.key,
-
-    /// [labelText] is the label text of the icon picker. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the icon picker. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [onChanged] is the callback function when the icon picker is changed.
     this.disabled = false,
-
-    /// [value] is the value of the icon picker.
     this.onChanged,
-
-    /// [disabled] is the disabled state of the icon picker.
     this.value,
-
-    /// [errors] is the list of errors of the icon picker.
     this.errors = const [],
-
-    /// [hideDetails] is the state of hiding the details of the icon picker.
     this.hideDetails = false,
-
-    /// [padding] is the padding of the icon picker.
     this.padding = const EdgeInsets.all(10),
-
-    /// [dense] is the state of the icon picker being dense.
     this.dense = false,
-
-    /// [isRequired] is the state of the icon picker being required.
     this.isRequired = false,
-
-    /// [focusNode] is the focus node of the icon picker.
     this.focusNode,
-
-    /// [borderRadius] is the border radius of the icon picker.
-    this.borderRadius,
-
-    /// [customWidget] replaces the default text field with a custom widget.
-    this.customWidget,
-
-    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
-    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
-    /// is the default value of this property.
-    /// Required translations:
-    /// - `actions.cancel` (Cancel)
-    /// - `actions.save` (Save)
-    /// - `helpers.search` (Search an emoji or group)
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
       'helpers.search': 'Search an emoji or group',
     },
-
-    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
-
-    /// [allowedIcons] is the list of allowed icons to select from.
-    /// If this property is not submitted, all icons will be allowed.
     this.allowedIcons = const [],
+    this.customChild,
+    this.hoverColor = Colors.transparent,
+    this.focusColor = Colors.transparent,
+    this.splashColor = Colors.transparent,
+    this.highlightColor = Colors.transparent,
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -118,13 +139,18 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.customWidget != null) {
+    if (widget.customChild != null) {
       return InkWell(
-        key: key,
+        hoverColor: widget.hoverColor,
+        focusColor: widget.focusColor,
+        splashColor: widget.splashColor,
+        highlightColor: widget.highlightColor,
+        borderRadius: widget.borderRadius,
         onTap: widget.disabled ? null : _showPicker,
-        child: widget.customWidget,
+        child: widget.customChild!,
       );
     }
+
     return ThemedTextInput(
       key: key,
       prefixWidget: Padding(

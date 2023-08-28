@@ -1,81 +1,113 @@
 part of inputs;
 
 class ThemedDateTimePicker extends StatefulWidget {
+  /// [value] is the value of the input.
   final DateTime? value;
+
+  /// [onChanged] is the callback function when the input is changed.
   final void Function(DateTime)? onChanged;
+
+  /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [placeholder] is the placeholder of the input.
   final String? placeholder;
+
+  /// [prefixText] is the prefix text of the input.
   final String? prefixText;
+
+  /// [prefixIcon] is the prefix icon of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
   final IconData? prefixIcon;
+
+  /// [prefixWidget] is the prefix widget of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
   final Widget? prefixWidget;
-  final void Function()? onPrefixTap;
+
+  /// [onPrefixTap] is the callback function when the prefix is tapped.
+  final VoidCallback? onPrefixTap;
+
+  /// [customChild] is the custom child of the input.
+  /// If it is submitted, the input will be ignored.
   final Widget? customChild;
+
+  /// [disabled] is the disabled state of the input.
   final bool disabled;
+
+  /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+  /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+  /// is the default value of this property.
+  /// Required translations:
+  /// - `actions.cancel` (Cancel)
+  /// - `actions.save` (Save)
+  /// - `layrz.monthPicker.year` (Year {year})
+  /// - `layrz.monthPicker.back` (Previous year)
+  /// - `layrz.monthPicker.next` (Next year)
+  /// - `layrz.datetimePicker.date` (Date)
+  /// - `layrz.datetimePicker.time` (Time)
+  /// - `layrz.timePicker.hours` (Hours)
+  /// - `layrz.timePicker.minutes` (Minutes)
+  /// - `layrz.calendar.month.back` (Previous month)
+  /// - `layrz.calendar.month.next` (Next month)
+  /// - `layrz.calendar.today` (Today)
+  /// - `layrz.calendar.month` (View as month)
+  /// - `layrz.calendar.pickMonth` (Pick a month)
   final Map<String, String> translations;
+
+  /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
   final bool overridesLayrzTranslations;
+
+  /// [disabledMonths] is the list of disabled months.
   final List<DateTime> disabledDays;
+
+  /// [datePattern] is the date pattern of the date. By default is `%Y-%m-%d`.
   final String datePattern;
+
+  /// [timePattern] is the time pattern of the date. By default, depending of [use24HourFormat] we use
+  ///  `%I:%M %p` or `%H:%M`. If [timePattern] is submitted, this will be used instead of the default.
   final String? timePattern;
+
+  /// [use24HourFormat] is the flag to use 24 hour format. By default is false, so it will use 12 hour format.
   final bool use24HourFormat;
+
+  /// [patternSeparator] is the separator between date and time. By default is ` ` (space).
   final String patternSeparator;
+
+  /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color hoverColor;
+
+  /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color focusColor;
+
+  /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color splashColor;
+
+  /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color highlightColor;
+
+  /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `BorderRadius.circular(10)`.
+  final BorderRadius borderRadius;
 
   /// [ThemedDateTimePicker] is a date time picker input. It is a wrapper of [ThemedTextInput] with a date time picker.
   const ThemedDateTimePicker({
     super.key,
-
-    /// [value] is the value of the input.
     this.value,
-
-    /// [onChanged] is the callback function when the input is changed.
     this.onChanged,
-
-    /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [placeholder] is the placeholder of the input.
     this.placeholder,
-
-    /// [prefixText] is the prefix text of the input.
     this.prefixText,
-
-    /// [prefixIcon] is the prefix icon of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
     this.prefixIcon,
-
-    /// [prefixWidget] is the prefix widget of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
     this.prefixWidget,
-
-    /// [onPrefixTap] is the callback function when the prefix is tapped.
     this.onPrefixTap,
-
-    /// [customChild] is the custom child of the input.
-    /// If it is submitted, the input will be ignored.
     this.customChild,
-
-    /// [disabled] is the disabled state of the input.
     this.disabled = false,
-
-    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
-    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
-    /// is the default value of this property.
-    /// Required translations:
-    /// - `actions.cancel` (Cancel)
-    /// - `actions.save` (Save)
-    /// - `layrz.monthPicker.year` (Year {year})
-    /// - `layrz.monthPicker.back` (Previous year)
-    /// - `layrz.monthPicker.next` (Next year)
-    /// - `layrz.datetimePicker.date` (Date)
-    /// - `layrz.datetimePicker.time` (Time)
-    /// - `layrz.timePicker.hours` (Hours)
-    /// - `layrz.timePicker.minutes` (Minutes)
-    /// - `layrz.calendar.month.back` (Previous month)
-    /// - `layrz.calendar.month.next` (Next month)
-    /// - `layrz.calendar.today` (Today)
-    /// - `layrz.calendar.month` (View as month)
-    /// - `layrz.calendar.pickMonth` (Pick a month)
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
@@ -92,25 +124,17 @@ class ThemedDateTimePicker extends StatefulWidget {
       'layrz.calendar.month': 'View as month',
       'layrz.calendar.pickMonth': 'Pick a month',
     },
-
-    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
-
-    /// [disabledMonths] is the list of disabled months.
     this.disabledDays = const [],
-
-    /// [datePattern] is the date pattern of the date. By default is `%Y-%m-%d`.
     this.datePattern = '%Y-%m-%d',
-
-    /// [timePattern] is the time pattern of the date. By default, depending of [use24HourFormat] we use
-    ///  `%I:%M %p` or `%H:%M`. If [timePattern] is submitted, this will be used instead of the default.
     this.timePattern,
-
-    /// [use24HourFormat] is the flag to use 24 hour format. By default is false, so it will use 12 hour format.
     this.use24HourFormat = false,
-
-    /// [patternSeparator] is the separator between date and time. By default is ` ` (space).
     this.patternSeparator = ' ',
+    this.hoverColor = Colors.transparent,
+    this.focusColor = Colors.transparent,
+    this.splashColor = Colors.transparent,
+    this.highlightColor = Colors.transparent,
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -153,12 +177,14 @@ class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with Single
   @override
   Widget build(BuildContext context) {
     if (widget.customChild != null) {
-      return ThemedTooltip(
-        message: widget.labelText ?? '',
-        child: InkWell(
-          onTap: widget.disabled ? null : _showPicker,
-          child: widget.customChild!,
-        ),
+      return InkWell(
+        hoverColor: widget.hoverColor,
+        focusColor: widget.focusColor,
+        splashColor: widget.splashColor,
+        highlightColor: widget.highlightColor,
+        borderRadius: widget.borderRadius,
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild!,
       );
     }
 

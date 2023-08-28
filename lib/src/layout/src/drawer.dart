@@ -1,109 +1,109 @@
 part of layout;
 
 class ThemedDrawer extends StatefulWidget {
+  /// [scaffoldKey] is the key of the scaffold.
   final GlobalKey<ScaffoldState> scaffoldKey;
+
+  /// [items] is the list of buttons to be displayed in the drawer.
   final List<ThemedNavigatorItem> items;
+
+  /// [enableAbout] is a boolean that enables the about button.
   final bool enableAbout;
+
+  /// [onSettingsTap] is the callback to be executed when the settings button
   final VoidCallback? onSettingsTap;
+
+  /// [onProfileTap] is the callback to be executed when the profile button
   final VoidCallback? onProfileTap;
+
+  /// [onLogoutTap] is the callback to be executed when the logout button
   final VoidCallback? onLogoutTap;
+
+  /// [onThemeSwitchTap] is a callback that is called when the theme switch
+  /// button is tapped.
   final VoidCallback? onThemeSwitchTap;
+
+  /// [appTitle] is the title of the app.
   final String appTitle;
+
+  /// [companyName] is the name of the company.
   final String companyName;
+
+  /// [logo] is the logo of the app. Can be a path or a url.
   final AppThemedAsset logo;
+
+  /// [favicon] is the favicon of the app. Can be a path or a url.
   final AppThemedAsset favicon;
+
+  /// [userName] is the name of the user.
   final String userName;
+
+  /// [userAvatar] is the avatar of the user. Can be a path or a url.
   final String? userAvatar;
+
+  /// [userDynamicAvatar] is the dynamic avatar of the user.
   final Avatar? userDynamicAvatar;
+
+  /// [version] is the version of the app.
   final String? version;
+
+  /// [paddingAmplifier] is the padding amplifier of the drawer.
+  /// Only will affect when the children contains more children. By default is `7`.
   final double paddingAmplifier;
+
+  /// [additionalActions] is the list of additional actions to be displayed in the drawer.
+  /// This actions will be displayed before the about, settings, profile and logout buttons.
   final List<ThemedNavigatorItem> additionalActions;
+
+  /// [mobileBreakpoint] is the breakpoint to be used to determine if the device is mobile or not.
+  /// By default is `kMediumGrid`.
   final double mobileBreakpoint;
+
+  /// [backgroundColor] is the background color of the drawer.
+  /// By default is `Theme.of(context).primaryColor`.
   final Color? backgroundColor;
+
+  /// [fromScaffold] is a boolean that indicates if the drawer is being used from a scaffold.
+  /// By default is `false`.
   final bool fromScaffold;
+
+  /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
+  /// By default is `Navigator.of(context).pushNamed`
   final ThemedNavigatorPushFunction? onNavigatorPush;
+
+  /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
+  /// By default is `Navigator.of(context).pop`
   final ThemdNavigatorPopFunction? onNavigatorPop;
+
+  /// [currentPath] is the current path of the navigator. Overrides the default path detection.
+  /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
+  /// [ThemedDrawer] is the custom native [Drawer]
   const ThemedDrawer({
     super.key,
-
-    /// [scaffoldKey] is the key of the scaffold.
     required this.scaffoldKey,
-
-    /// [items] is the list of buttons to be displayed in the drawer.
     this.items = const [],
-
-    /// [enableAbout] is a boolean that enables the about button.
     this.enableAbout = true,
-
-    /// [onSettingsTap] is the callback to be executed when the settings button
     this.onSettingsTap,
-
-    /// [onProfileTap] is the callback to be executed when the profile button
     this.onProfileTap,
-
-    /// [onLogoutTap] is the callback to be executed when the logout button
     this.onLogoutTap,
-
-    /// [onThemeSwitchTap] is a callback that is called when the theme switch
-    /// button is tapped.
     this.onThemeSwitchTap,
-
-    /// [appTitle] is the title of the app.
     required this.appTitle,
-
-    /// [companyName] is the name of the company.
     this.companyName = 'Golden M, Inc',
-
-    /// [logo] is the logo of the app. Can be a path or a url.
     required this.logo,
-
-    /// [favicon] is the favicon of the app. Can be a path or a url.
     required this.favicon,
-
-    /// [userName] is the name of the user.
     this.userName = "Golden M",
-
-    /// [userAvatar] is the avatar of the user. Can be a path or a url.
     this.userAvatar,
-
-    /// [userDynamicAvatar] is the dynamic avatar of the user.
     this.userDynamicAvatar,
-
-    /// [version] is the version of the app.
     this.version,
-
-    /// [paddingAmplifier] is the padding amplifier of the drawer.
-    /// Only will affect when the children contains more children. By default is `7`.
     this.paddingAmplifier = 7,
-
-    /// [additionalActions] is the list of additional actions to be displayed in the drawer.
-    /// This actions will be displayed before the about, settings, profile and logout buttons.
     this.additionalActions = const [],
-
-    /// [mobileBreakpoint] is the breakpoint to be used to determine if the device is mobile or not.
-    /// By default is `kMediumGrid`.
     this.mobileBreakpoint = kMediumGrid,
-
-    /// [backgroundColor] is the background color of the drawer.
-    /// By default is `Theme.of(context).primaryColor`.
     this.backgroundColor,
-
-    /// [fromScaffold] is a boolean that indicates if the drawer is being used from a scaffold.
-    /// By default is `false`.
     this.fromScaffold = false,
-
-    /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
-    /// By default is `Navigator.of(context).pushNamed`
     this.onNavigatorPush,
-
-    /// [onNavigatorPop] is the callback to be executed when the back button is tapped.
-    /// By default is `Navigator.of(context).pop`
     this.onNavigatorPop,
-
-    /// [currentPath] is the current path of the navigator. Overrides the default path detection.
-    /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
     this.currentPath,
   });
 

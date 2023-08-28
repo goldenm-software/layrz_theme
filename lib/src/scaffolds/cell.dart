@@ -7,14 +7,19 @@ class ThemedScaffoldCell extends StatelessWidget {
 
   /// [value] is the value of the cell.
   /// Will be displayed using the [Theme.of(context).textTheme.bodyText2].
-  final String value;
+  final String? value;
+
+  /// [child] is the child of the cell.
+  /// Will replace the [value] prop.
+  final Widget? child;
 
   /// [ThemedScaffoldCell] adds the style of a cell to a [Column] widget.
   /// Receives a [title] and a [value] to display.
   const ThemedScaffoldCell({
     super.key,
     required this.title,
-    required this.value,
+    this.value,
+    this.child,
   });
 
   @override
@@ -29,10 +34,11 @@ class ThemedScaffoldCell extends StatelessWidget {
             title,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
           ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child ??
+              Text(
+                value ?? '',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
         ],
       ),
     );

@@ -92,7 +92,8 @@ class _InputsViewState extends State<InputsView> {
   void initState() {
     super.initState();
     choice = choices.last;
-    selectedChoices = [choices.first, choices.last];
+    // choices.first, choices.last
+    selectedChoices = [];
   }
 
   @override
@@ -106,6 +107,102 @@ class _InputsViewState extends State<InputsView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: ThemedDateTimeRangePicker(
+                    use24HourFormat: true,
+                    disabled: isDisabled,
+                    labelText: 'DateTime picker [24h]',
+                    customChild: const Text("Custom"),
+                    value: _selectedDateTimes,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedDateTimes = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  ThemedButton(
+                    labelText: "Fill choices",
+                    onTap: () {
+                      setState(() {
+                        searchChoices = List.generate(10, (index) => "Choice $index");
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  ThemedButton(
+                    labelText: "Clear choices",
+                    onTap: () {
+                      setState(() {
+                        searchChoices = [];
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+              ThemedTextInput(
+                disabled: isDisabled,
+                labelText: 'Text Input [Combobox]',
+                value: textInputValue2,
+                choices: searchChoices,
+                enableCombobox: true,
+                onChanged: (value) {
+                  setState(() {
+                    textInputValue2 = value;
+                    searchChoices = List.generate(Random().nextInt(10), (index) {
+                      return "Choice $index";
+                    });
+                    debugPrint("Search: $value - ${searchChoices.length}");
+                  });
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    ThemedSearchInput(
+                      position: ThemedSearchPosition.right,
+                      value: '',
+                      onSearch: (value) {
+                        debugPrint("Search full left: $value");
+                      },
+                    ),
+                    const Spacer(),
+                    ThemedSearchInput(
+                      position: ThemedSearchPosition.right,
+                      value: '',
+                      onSearch: (value) {
+                        debugPrint("Search middle left: $value");
+                      },
+                    ),
+                    const Text("< Search input >"),
+                    ThemedSearchInput(
+                      position: ThemedSearchPosition.left,
+                      value: '',
+                      onSearch: (value) {
+                        debugPrint("Search middle right: $value");
+                      },
+                    ),
+                    const Spacer(),
+                    ThemedSearchInput(
+                      position: ThemedSearchPosition.left,
+                      value: '',
+                      onSearch: (value) {
+                        debugPrint("Search full right: $value");
+                      },
+                    ),
+                  ],
+                ),
+              ),
               ThemedButton(
                 labelText: "Lock / Unlock",
                 onTap: () {
@@ -141,16 +238,20 @@ class _InputsViewState extends State<InputsView> {
                 disabled: isDisabled,
                 labelText: "MultiSelect Input",
                 items: choices,
+                autoselectFirst: true,
+                waitUntilClosedToSubmit: false,
                 value: selectedChoices.map((e) => e.value!).toList(),
                 onChanged: (value) {
+                  debugPrint("Mutliselect values: $value");
                   setState(() {
-                    selected = value.map((e) => e.value!).toList();
+                    selectedChoices = value;
                   });
                 },
               ),
               ThemedSelectInput<int>(
                 disabled: isDisabled,
                 value: choice.value,
+                canUnselect: true,
                 labelText: "Select Input",
                 items: choices,
               ),
@@ -161,11 +262,29 @@ class _InputsViewState extends State<InputsView> {
                   debugPrint("Icon: $value");
                 },
               ),
+
               ThemedEmojiPicker(
                 disabled: isDisabled,
                 labelText: 'Emoji Picker',
                 onChanged: (value) {
                   debugPrint("Emoji: $value");
+                },
+              ),
+              ThemedTextInput(
+                disabled: isDisabled,
+                labelText: 'Text Input [Combobox]',
+                value: textInputValue2,
+                choices: searchChoices,
+                enableCombobox: true,
+                position: ThemedComboboxPosition.above,
+                onChanged: (value) {
+                  setState(() {
+                    textInputValue2 = value;
+                    searchChoices = List.generate(Random().nextInt(10), (index) {
+                      return "Choice $index";
+                    });
+                    debugPrint("Search: $value - ${searchChoices.length}");
+                  });
                 },
               ),
               ThemedAvatarPicker(
@@ -270,39 +389,6 @@ class _InputsViewState extends State<InputsView> {
                 },
               ),
 
-              Row(
-                children: [
-                  ThemedButton(
-                    labelText: "Fill choices",
-                    onTap: () {
-                      setState(() {
-                        searchChoices = List.generate(10, (index) => "Choice $index");
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  ThemedButton(
-                    labelText: "Clear choices",
-                    onTap: () {
-                      setState(() {
-                        searchChoices = [];
-                      });
-                    },
-                  ),
-                ],
-              ),
-
-              ThemedTextInput(
-                disabled: isDisabled,
-                labelText: 'Text Input [Combobox]',
-                value: textInputValue2,
-                choices: searchChoices,
-                onChanged: (value) {
-                  setState(() {
-                    textInputValue2 = value;
-                  });
-                },
-              ),
               ThemedDatePicker(
                 disabled: isDisabled,
                 labelText: "Date picker",
@@ -416,42 +502,7 @@ class _InputsViewState extends State<InputsView> {
                 labelText: "Input like container",
                 child: Text(""),
               ),
-              const SizedBox(height: 30),
-              const Divider(),
-              const Text('Text Input reactive cursor example'),
-              ThemedButton(
-                labelText: "Update text input value",
-                onTap: () {
-                  setState(() {
-                    textInputValue = "Updated value";
-                  });
-                },
-              ),
-              Text('Value: $textInputValue'),
-              const Divider(),
               const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    ThemedSearchInput(
-                      value: '',
-                      onSearch: (value) {
-                        debugPrint("Search: $value");
-                      },
-                    ),
-                    const Spacer(),
-                    const Text("< Search input >"),
-                    const Spacer(),
-                    ThemedSearchInput(
-                      value: '',
-                      onSearch: (value) {
-                        debugPrint("Search 2: $value");
-                      },
-                    ),
-                  ],
-                ),
-              ),
               ThemedDynamicAvatarInput(
                 disabled: isDisabled,
                 labelText: "Dynamic Avatar Input",
@@ -481,7 +532,7 @@ class _InputsViewState extends State<InputsView> {
                 prefixText: "prefix.",
                 suffixIcon: MdiIcons.homeVariant,
               ),
-              ThemedFileInput(
+              ThemedFilePicker(
                 disabled: isDisabled,
                 labelText: "File Input",
               ),

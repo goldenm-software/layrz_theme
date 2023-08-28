@@ -8,6 +8,25 @@ import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// [saveFile] is a helper function to save a file to the device.
+///
+/// This function is only for native implementations, that is, Android, iOS, Windows, and macOS.
+/// To implement this function multiplatform, follow this example
+/// ```dart
+/// import 'package:layrz_theme/src/helpers/save_file/native.dart'
+///   if (dart.library.html) 'package:layrz_theme/src/helpers/save_file/web.dart';
+/// // ...
+/// saveFile() // <- this function
+/// ```
+///
+/// Returns a [ThemedFile]. If the user cancels the save, it returns null.
+///
+
+/// [filename] is the name of the file to save.
+/// [bytes] is the bytes of the file to save.
+/// [saveDialogTitle] is the title of the pick dialog. When [i18n] is not null, this is ignored and use the
+/// translation `layrz.file.save` instead.
+/// [i18n] is the localization object.
 Future<ThemedFile?> saveFile({
   required String filename,
   required Uint8List bytes,

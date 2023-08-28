@@ -1,53 +1,42 @@
 part of layrz_theme;
 
+/// [DateTimeExtension] is an extension to extend the [DateTime] class.
 extension DateTimeExtension on DateTime {
+  /// [secondsSinceEpoch] is an extension to get the seconds since epoch.
   double get secondsSinceEpoch {
     return millisecondsSinceEpoch / 1000;
   }
 
+  /// [thisWeek] is an extension to get the first and last day of the week.
   List<DateTime> get thisWeek {
-    DateTime start = DateTime.now().subtract(Duration(days: DateTime.now().weekday));
-    return [
-      start,
-      start.add(const Duration(days: 6)),
-    ];
+    DateTime start = subtract(Duration(days: weekday - 1));
+    DateTime end = add(Duration(days: DateTime.daysPerWeek - weekday));
+
+    return [start, end];
   }
 
+  /// [lastWeek] is an extension to get the first and last day of the last week.
   List<DateTime> get lastWeek {
-    DateTime end = DateTime.now().subtract(Duration(days: DateTime.now().weekday + 1));
-    return [
-      end.subtract(const Duration(days: 6)),
-      end,
-    ];
+    DateTime start = subtract(Duration(days: weekday + DateTime.daysPerWeek - 1));
+    DateTime end = subtract(Duration(days: weekday));
+
+    return [start, end];
   }
 
+  /// [thisMonth] is an extension to get the first and last day of the month.
   List<DateTime> get thisMonth {
-    late DateTime beginningNextMonth;
-    if (month != DateTime.december) {
-      beginningNextMonth = DateTime(year, month + 1, 1);
-    } else {
-      beginningNextMonth = DateTime(year + 1, 1, 1);
-    }
-    DateTime end = beginningNextMonth.subtract(const Duration(days: 1));
-    return [
-      DateTime(year, month, 1),
-      end,
-    ];
+    DateTime start = DateTime(year, month, 1);
+    DateTime end = DateTime(year, month + 1, 1).subtract(const Duration(days: 1));
+
+    return [start, end];
   }
 
+  /// [lastMonth] is an extension to get the first and last day of the last month.
   List<DateTime> get lastMonth {
-    late DateTime beginningPreviousMonth;
+    DateTime start = DateTime(year, month - 1, 1);
+    DateTime end = DateTime(year, month, 1).subtract(const Duration(days: 1));
 
-    if (month != DateTime.january) {
-      beginningPreviousMonth = DateTime(year, month - 1, 1);
-    } else {
-      beginningPreviousMonth = DateTime(year - 1, 12, 1);
-    }
-
-    return [
-      DateTime(beginningPreviousMonth.year, beginningPreviousMonth.month, 1),
-      DateTime(year, month, 1).subtract(const Duration(days: 1)),
-    ];
+    return [start, end];
   }
 
   String get standard => '%Y-%d-%d %I:%M %p %z';
@@ -61,71 +50,222 @@ extension DateTimeExtension on DateTime {
   ///
   /// Additionally, we added this new patterns
   ///   - %:z - timezone offset in the format of +HH:MM or -HH:MM
-  String format({String? pattern, LayrzAppLocalizations? i18n}) {
+  String format({
+    /// [pattern] is the pattern to apply to the date.
+    String? pattern,
+
+    /// [i18n] is the localization to apply to the date.
+    LayrzAppLocalizations? i18n,
+
+    /// [translationOverrides] is the translation overrides to apply to the date.
+    ///
+    /// The required translations are:
+    /// - `theme.helpers.datetime.monday`: `Monday`
+    /// - `theme.helpers.datetime.tuesday`: `Tuesday`
+    /// - `theme.helpers.datetime.wednesday`: `Wednesday`
+    /// - `theme.helpers.datetime.thursday`: `Thursday`
+    /// - `theme.helpers.datetime.friday`: `Friday`
+    /// - `theme.helpers.datetime.saturday`: `Saturday`
+    /// - `theme.helpers.datetime.sunday`: `Sunday`
+    /// - `theme.helpers.datetime.january`: `January`
+    /// - `theme.helpers.datetime.february`: `February`
+    /// - `theme.helpers.datetime.march`: `March`
+    /// - `theme.helpers.datetime.april`: `April`
+    /// - `theme.helpers.datetime.may`: `May`
+    /// - `theme.helpers.datetime.june`: `June`
+    /// - `theme.helpers.datetime.july`: `July`
+    /// - `theme.helpers.datetime.august`: `August`
+    /// - `theme.helpers.datetime.september`: `September`
+    /// - `theme.helpers.datetime.october`: `October`
+    /// - `theme.helpers.datetime.november`: `November`
+    /// - `theme.helpers.datetime.december`: `December`
+    ///
+    /// When `LayrzAppLocalizations.of(context)` is null or the translation was not found,
+    /// the default [translationOverrides] will be used.
+    Map<String, String> translationOverrides = const {
+      'theme.helpers.datetime.monday': 'Monday',
+      'theme.helpers.datetime.tuesday': 'Tuesday',
+      'theme.helpers.datetime.wednesday': 'Wednesday',
+      'theme.helpers.datetime.thursday': 'Thursday',
+      'theme.helpers.datetime.friday': 'Friday',
+      'theme.helpers.datetime.saturday': 'Saturday',
+      'theme.helpers.datetime.sunday': 'Sunday',
+      'theme.helpers.datetime.january': 'January',
+      'theme.helpers.datetime.february': 'February',
+      'theme.helpers.datetime.march': 'March',
+      'theme.helpers.datetime.april': 'April',
+      'theme.helpers.datetime.may': 'May',
+      'theme.helpers.datetime.june': 'June',
+      'theme.helpers.datetime.july': 'July',
+      'theme.helpers.datetime.august': 'August',
+      'theme.helpers.datetime.september': 'September',
+      'theme.helpers.datetime.october': 'October',
+      'theme.helpers.datetime.november': 'November',
+      'theme.helpers.datetime.december': 'December',
+    },
+
+    /// [useTranslationOverridesFirst] is a flag to indicate if the [translationOverrides] should be used first.
+    bool useTranslationOverridesFirst = false,
+  }) {
     String weekdayString = "";
 
     switch (weekday) {
       case DateTime.monday:
-        weekdayString = i18n?.t('theme.helpers.datetime.monday') ?? "Monday";
+        weekdayString = _translate(
+          'theme.helpers.datetime.monday',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.tuesday:
-        weekdayString = i18n?.t('theme.helpers.datetime.tuesday') ?? "Tuesday";
+        weekdayString = _translate(
+          'theme.helpers.datetime.tuesday',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.wednesday:
-        weekdayString = i18n?.t('theme.helpers.datetime.wednesday') ?? "Wednesday";
+        weekdayString = _translate(
+          'theme.helpers.datetime.wednesday',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.thursday:
-        weekdayString = i18n?.t('theme.helpers.datetime.thursday') ?? "Thursday";
+        weekdayString = _translate(
+          'theme.helpers.datetime.thursday',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.friday:
-        weekdayString = i18n?.t('theme.helpers.datetime.friday') ?? "Friday";
+        weekdayString = _translate(
+          'theme.helpers.datetime.friday',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.saturday:
-        weekdayString = i18n?.t('theme.helpers.datetime.saturday') ?? "Saturday";
+        weekdayString = _translate(
+          'theme.helpers.datetime.saturday',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.sunday:
       default:
-        weekdayString = i18n?.t('theme.helpers.datetime.sunday') ?? "Sunday";
+        weekdayString = _translate(
+          'theme.helpers.datetime.sunday',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
     }
 
     String monthString = "";
     switch (month) {
       case DateTime.january:
-        monthString = i18n?.t('theme.helpers.datetime.january') ?? "January";
+        monthString = _translate(
+          'theme.helpers.datetime.january',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.february:
-        monthString = i18n?.t('theme.helpers.datetime.february') ?? "February";
+        monthString = _translate(
+          'theme.helpers.datetime.february',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.march:
-        monthString = i18n?.t('theme.helpers.datetime.march') ?? "March";
+        monthString = _translate(
+          'theme.helpers.datetime.march',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.april:
-        monthString = i18n?.t('theme.helpers.datetime.april') ?? "April";
+        monthString = _translate(
+          'theme.helpers.datetime.april',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.may:
-        monthString = i18n?.t('theme.helpers.datetime.may') ?? "May";
+        monthString = _translate(
+          'theme.helpers.datetime.may',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.june:
-        monthString = i18n?.t('theme.helpers.datetime.june') ?? "June";
+        monthString = _translate(
+          'theme.helpers.datetime.june',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.july:
-        monthString = i18n?.t('theme.helpers.datetime.july') ?? "July";
+        monthString = _translate(
+          'theme.helpers.datetime.july',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.august:
-        monthString = i18n?.t('theme.helpers.datetime.august') ?? "August";
+        monthString = _translate(
+          'theme.helpers.datetime.august',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.september:
-        monthString = i18n?.t('theme.helpers.datetime.september') ?? "September";
+        monthString = _translate(
+          'theme.helpers.datetime.september',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.october:
-        monthString = i18n?.t('theme.helpers.datetime.october') ?? "October";
+        monthString = _translate(
+          'theme.helpers.datetime.october',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.november:
-        monthString = i18n?.t('theme.helpers.datetime.november') ?? "November";
+        monthString = _translate(
+          'theme.helpers.datetime.november',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
       case DateTime.december:
-        monthString = i18n?.t('theme.helpers.datetime.december') ?? "December";
+        monthString = _translate(
+          'theme.helpers.datetime.december',
+          i18n: i18n,
+          translationOverrides: translationOverrides,
+          useTranslationOverridesFirst: useTranslationOverridesFirst,
+        );
         break;
     }
 
@@ -160,6 +300,35 @@ extension DateTimeExtension on DateTime {
     patterns.forEach((key, value) {
       result = result.replaceAll(key, value);
     });
+    return result;
+  }
+
+  String _translate(
+    String key, {
+    LayrzAppLocalizations? i18n,
+    required Map<String, String> translationOverrides,
+    bool useTranslationOverridesFirst = false,
+  }) {
+    String result = "";
+
+    if (useTranslationOverridesFirst) {
+      if (translationOverrides.containsKey(key)) {
+        result = translationOverrides[key]!;
+      } else if (i18n?.hasTranslation(key) ?? false) {
+        result = i18n!.translate(key);
+      } else {
+        result = "Translation missing $key";
+      }
+    } else {
+      if (i18n?.hasTranslation(key) ?? false) {
+        result = i18n!.translate(key);
+      } else if (translationOverrides.containsKey(key)) {
+        result = translationOverrides[key]!;
+      } else {
+        result = "Translation missing $key";
+      }
+    }
+
     return result;
   }
 }

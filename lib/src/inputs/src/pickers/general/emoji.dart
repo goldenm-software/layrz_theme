@@ -1,96 +1,121 @@
 part of inputs;
 
 class ThemedEmojiPicker extends StatefulWidget {
+  /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [value] is the current value of the input. This value should be a base64 string or an URL.
   final void Function(String)? onChanged;
+
+  /// [onChanged] is the callback that is called when the value of the input changes.
   final String? value;
+
+  /// [disabled] is a flag that indicates if the input is disabled.
   final bool disabled;
+
+  /// [errors] is a list of errors that will be displayed below the input.
   final List<String> errors;
+
+  /// [hideDetails] is a flag that indicates if the errors should be displayed.
   final bool hideDetails;
+
+  /// [padding] is the padding of the input.
   final EdgeInsets padding;
+
+  /// [dense] is a flag that indicates if the input is dense.
   final bool dense;
+
+  /// [isRequired] is a flag that indicates if the input is required.
   final bool isRequired;
+
+  /// [focusNode] is the focus node of the input.
   final FocusNode? focusNode;
-  final void Function()? onSubmitted;
+
+  /// [onSubmitted] is the callback that is called when the user submits the input.
+  final VoidCallback? onSubmitted;
+
+  /// [readonly] is a flag that indicates if the input is readonly.
   final bool readonly;
-  final double? borderRadius;
+
+  /// [maxLines] is the maximum number of lines of the input.
   final int maxLines;
+
+  /// [buttomSize] is the size of the buttom.
   final double? buttomSize;
+
+  /// [enabledGroups] is a list of groups that will be enabled.
   final List<EmojiGroup> enabledGroups;
+
+  /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+  /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+  /// is the default value of this property.
+  /// Required translations:
+  /// - `actions.cancel` (Cancel)
+  /// - `actions.save` (Save)
+  /// - `helpers.search` (Search an emoji or group)
   final Map<String, String> translations;
+
+  /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
   final bool overridesLayrzTranslations;
+
+  /// [customChild] is the custom child of the input.
+  /// If this is not null, the input will be render as a [ThemedTextInput].
+  final Widget? customChild;
+
+  /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color hoverColor;
+
+  /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color focusColor;
+
+  /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color splashColor;
+
+  /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color highlightColor;
+
+  /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `BorderRadius.circular(10)`.
+  final BorderRadius borderRadius;
 
   /// [ThemedEmojiPicker] is a widget that allows the user to pick an emoji.
   const ThemedEmojiPicker({
     super.key,
-
-    /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [value] is the current value of the input. This value should be a base64 string or an URL.
     this.value,
-
-    /// [onChanged] is the callback that is called when the value of the input changes.
     this.onChanged,
-
-    /// [disabled] is a flag that indicates if the input is disabled.
     this.disabled = false,
-
-    /// [errors] is a list of errors that will be displayed below the input.
     this.errors = const [],
-
-    /// [hideDetails] is a flag that indicates if the errors should be displayed.
     this.hideDetails = false,
-
-    /// [padding] is the padding of the input.
     this.padding = const EdgeInsets.all(10),
-
-    /// [dense] is a flag that indicates if the input is dense.
     this.dense = false,
-
-    /// [isRequired] is a flag that indicates if the input is required.
     this.isRequired = false,
-
-    /// [focusNode] is the focus node of the input.
     this.focusNode,
-
-    /// [onSubmitted] is the callback that is called when the user submits the input.
     this.onSubmitted,
-
-    /// [readonly] is a flag that indicates if the input is readonly.
     this.readonly = false,
-
-    /// [borderRadius] is the border radius of the input.
-    this.borderRadius,
-
-    /// [maxLines] is the maximum number of lines of the input.
     this.maxLines = 1,
-
-    /// [buttomSize] is the size of the buttom.
     this.buttomSize,
-
-    /// [enabledGroups] is a list of groups that will be enabled.
     this.enabledGroups = const [],
-
-    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
-    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
-    /// is the default value of this property.
-    /// Required translations:
-    /// - `actions.cancel` (Cancel)
-    /// - `actions.save` (Save)
-    /// - `helpers.search` (Search an emoji or group)
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
       'helpers.search': 'Search an emoji or group',
     },
-
-    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
+    this.customChild,
+    this.hoverColor = Colors.transparent,
+    this.focusColor = Colors.transparent,
+    this.splashColor = Colors.transparent,
+    this.highlightColor = Colors.transparent,
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -147,6 +172,18 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.customChild != null) {
+      return InkWell(
+        hoverColor: widget.hoverColor,
+        focusColor: widget.focusColor,
+        splashColor: widget.splashColor,
+        highlightColor: widget.highlightColor,
+        borderRadius: widget.borderRadius,
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild!,
+      );
+    }
+
     return ThemedTextInput(
       key: key,
       labelText: widget.labelText,

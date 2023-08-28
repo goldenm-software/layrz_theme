@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of theme;
 
 /// [kExtraSmallGrid] is the extra small grid size.
 const double kExtraSmallGrid = 600;

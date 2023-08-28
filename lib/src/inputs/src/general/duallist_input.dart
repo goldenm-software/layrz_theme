@@ -1,66 +1,76 @@
 part of inputs;
 
 class ThemedDualListInput<T> extends StatefulWidget {
+  /// [labelText] is the label text of the dual list input. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the dual list input. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [items] is the list of items of the dual list input.
   final List<ThemedSelectItem<T>> items;
+
+  /// [onChanged] is the callback function when the dual list input is changed.
   final void Function(List<ThemedSelectItem<T>>)? onChanged;
+
+  /// [value] is the value of the dual list input.
   final List<T>? value;
+
+  /// [disabled] is the disabled state of the dual list input.
   final bool disabled;
+
+  /// [errors] is the list of errors of the dual list input.
   final List<String> errors;
+
+  /// [availableText] is the text of the available list.
   final String availableText;
+
+  /// [selectedText] is the text of the selected list.
   final String selectedText;
+
+  /// [searchText] is the text of the search input.
   final String searchText;
+
+  /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+  /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+  /// is the default value of this property.
+  /// Required translations:
+  /// - `actions.cancel` (Cancel)
+  /// - `actions.save` (Save)
+  /// - `layrz.duallist.search` (Search in {name})
+  /// - `layrz.duallist.toggleToSelected` (Toggle all to selected)
+  /// - `layrz.duallist.toggleToAvailable` (Toggle all to available)
   final Map<String, String> translations;
+
+  /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
   final bool overridesLayrzTranslations;
+
+  /// [height] is the height of the dual list input.
+  /// In mobile mode, the height is multiplied by [mobileScaleFactor].
   final double height;
+
+  /// [availableListName] is the name of the available list.
   final String availableListName;
+
+  /// [selectedListName] is the name of the selected list.
   final String selectedListName;
+
+  /// [mobileScaleFactor] is the scale factor of the height in mobile mode.
   final double mobileScaleFactor;
 
   /// [ThemedDualListInput] is a dual list input.
   const ThemedDualListInput({
     super.key,
-
-    /// [labelText] is the label text of the dual list input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the dual list input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [items] is the list of items of the dual list input.
     required this.items,
-
-    /// [onChanged] is the callback function when the dual list input is changed.
     this.onChanged,
-
-    /// [value] is the value of the dual list input.
     this.value,
-
-    /// [disabled] is the disabled state of the dual list input.
     this.disabled = false,
-
-    /// [errors] is the list of errors of the dual list input.
     this.errors = const [],
-
-    /// [availableText] is the text of the available list.
     @Deprecated("Field unused") this.availableText = "Available",
-
-    /// [selectedText] is the text of the selected list.
     @Deprecated("Field unused") this.selectedText = "Selected",
-
-    /// [searchText] is the text of the search input.
     @Deprecated("Field unused") this.searchText = "Search",
-
-    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
-    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
-    /// is the default value of this property.
-    /// Required translations:
-    /// - `actions.cancel` (Cancel)
-    /// - `actions.save` (Save)
-    /// - `layrz.duallist.search` (Search in {name})
-    /// - `layrz.duallist.toggleToSelected` (Toggle all to selected)
-    /// - `layrz.duallist.toggleToAvailable` (Toggle all to available)
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
@@ -68,21 +78,10 @@ class ThemedDualListInput<T> extends StatefulWidget {
       'layrz.duallist.toggleToSelected': 'Toggle all to selected',
       'layrz.duallist.toggleToAvailable': 'Toggle all to available',
     },
-
-    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
-
-    /// [height] is the height of the dual list input.
-    /// In mobile mode, the height is multiplied by [mobileScaleFactor].
     this.height = 400,
-
-    /// [availableListName] is the name of the available list.
     this.availableListName = "Available",
-
-    /// [selectedListName] is the name of the selected list.
     this.selectedListName = "Selected",
-
-    /// [mobileScaleFactor] is the scale factor of the height in mobile mode.
     this.mobileScaleFactor = 2,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 

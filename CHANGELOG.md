@@ -1,5 +1,29 @@
 # Changelog
 
+## 4.1.7
+- Fixed some errors with the display in the `ThemedDrawer` in nested pages.
+- Expandend documentation of `ThemedTable` to explain how to use some builders and related.
+- Fixed `ThemedSelectInput` update when the object from outside comes null, before, the selected value was not updated.
+
+## 4.1.6
+- Fixed conditional import for `pickFile` and `saveFile` to support web.
+
+## 4.1.5
+- Updated all pickers to support hover, splash and highlight colors' proerties when customChild is submitted.
+- Updated `ThemedSelectInput` and `ThemedMultiSelectInput` to support 
+- Re-documented all widgets to standarize the format of the documentation.
+- Updated `README.md`
+
+## 4.1.4
+- Correction on `ThemedTextInput`, now you can set the `position` of the combobox choices. By default will always display below the `ThemedTextInput` widget.
+
+## 4.1.3
+- In all Pickers, now you can submit a `customWidget` to overrides the default `ThemedTextInput`-like widget.
+- New page transition `ThemedPageBuilder` to help to create a page transition with a fade animation. The main difference with `ThemedPageTransition` is that `ThemedPageBuilder` allows to use a custom `builder` to build the page, and `ThemedPageTransition` only allows to use a `child` widget, basically you can return something.
+- Renamed widget `ThemedFileInput` to `ThemedFilePicker`, to backward compatibility, we added an alias to `ThemedFileInput` to `ThemedFilePicker` with a dart deprecation warning.
+
+## 4.1.2
+- Hotfix on `ThemedSelectInput` and `ThemedDualListInput`.  
 ## 4.1.1
 - New page builder called `ThemedPageTransition` to help to create a page transition with a fade animation.
 - Updated `ThemedSelectInput` and `ThemedMultiSelectInput` to comply with the new schema of pickers.

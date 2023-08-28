@@ -1,71 +1,97 @@
 part of inputs;
 
 class ThemedTimeRangePicker extends StatefulWidget {
+  /// [value] is the value of the input.
   final List<TimeOfDay> value;
+
+  /// [onChanged] is the callback function when the input is changed.
   final void Function(List<TimeOfDay>)? onChanged;
+
+  /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;
+
+  /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [placeholder] is the placeholder of the input.
   final String? placeholder;
+
+  /// [prefixText] is the prefix text of the input.
   final String? prefixText;
+
+  /// [prefixIcon] is the prefix icon of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
   final IconData? prefixIcon;
+
+  /// [prefixWidget] is the prefix widget of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
   final Widget? prefixWidget;
-  final void Function()? onPrefixTap;
+
+  /// [onPrefixTap] is the callback function when the prefix is tapped.
+  final VoidCallback? onPrefixTap;
+
+  /// [customChild] is the custom child of the input.
+  /// If it is submitted, the input will be ignored.
   final Widget? customChild;
+
+  /// [disabled] is the disabled state of the input.
   final bool disabled;
+
+  /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
+  /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
+  /// is the default value of this property.
+  /// Required translations:
+  /// - `actions.cancel` (Cancel)
+  /// - `actions.save` (Save)
+  /// - `layrz.timePicker.hours` (Hours)
+  /// - `layrz.timePicker.minutes` (Minutes)
+  /// - `layrz.timePicker.start` (Start time)
+  /// - `layrz.timePicker.end` (End time)
   final Map<String, String> translations;
+
+  /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
   final bool overridesLayrzTranslations;
+
+  /// [pattern] is the pattern of the date. By default, depending of [use24HourFormat] we use `%I:%M %p` or `%H:%M`.
+  /// If [pattern] is submitted, this will be used instead of the default.
   final String? pattern;
+
+  /// [use24HourFormat] is the flag to use 24 hour format. By default is false, so it will use 12 hour format.
   final bool use24HourFormat;
+
+  /// [hoverColor] is the hover color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color hoverColor;
+
+  /// [focusColor] is the focus color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color focusColor;
+
+  /// [splashColor] is the splash color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color splashColor;
+
+  /// [highlightColor] is the highlight color of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `Colors.transparent`.
+  final Color highlightColor;
+
+  /// [borderRadius] is the border radius of the input. Only will affect when [customChild] is submitted.
+  /// By default, it will use `BorderRadius.circular(10)`.
+  final BorderRadius borderRadius;
 
   /// [ThemedTimeRangePicker] is a time range picker input. It is a wrapper of [ThemedTextInput]
   /// with a time range picker.
   const ThemedTimeRangePicker({
     super.key,
-
-    /// [value] is the value of the input.
     this.value = const [],
-
-    /// [onChanged] is the callback function when the input is changed.
     this.onChanged,
-
-    /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
     this.labelText,
-
-    /// [label] is the label widget of the input. Avoid submit [label] and [labelText] at the same time.
     this.label,
-
-    /// [placeholder] is the placeholder of the input.
     this.placeholder,
-
-    /// [prefixText] is the prefix text of the input.
     this.prefixText,
-
-    /// [prefixIcon] is the prefix icon of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
     this.prefixIcon,
-
-    /// [prefixWidget] is the prefix widget of the input. Avoid submit [prefixIcon] and [prefixWidget] at the same time.
     this.prefixWidget,
-
-    /// [onPrefixTap] is the callback function when the prefix is tapped.
     this.onPrefixTap,
-
-    /// [customChild] is the custom child of the input.
-    /// If it is submitted, the input will be ignored.
     this.customChild,
-
-    /// [disabled] is the disabled state of the input.
     this.disabled = false,
-
-    /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
-    /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
-    /// is the default value of this property.
-    /// Required translations:
-    /// - `actions.cancel` (Cancel)
-    /// - `actions.save` (Save)
-    /// - `layrz.timePicker.hours` (Hours)
-    /// - `layrz.timePicker.minutes` (Minutes)
-    /// - `layrz.timePicker.start` (Start time)
-    /// - `layrz.timePicker.end` (End time)
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
@@ -74,16 +100,14 @@ class ThemedTimeRangePicker extends StatefulWidget {
       'layrz.timePicker.start': 'Start time',
       'layrz.timePicker.end': 'End time',
     },
-
-    /// [overridesLayrzTranslations] is the flag to override the default translations of Layrz.
     this.overridesLayrzTranslations = false,
-
-    /// [pattern] is the pattern of the date. By default, depending of [use24HourFormat] we use `%I:%M %p` or `%H:%M`.
-    /// If [pattern] is submitted, this will be used instead of the default.
     this.pattern,
-
-    /// [use24HourFormat] is the flag to use 24 hour format. By default is false, so it will use 12 hour format.
     this.use24HourFormat = false,
+    this.hoverColor = Colors.transparent,
+    this.focusColor = Colors.transparent,
+    this.splashColor = Colors.transparent,
+    this.highlightColor = Colors.transparent,
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -107,12 +131,14 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
   @override
   Widget build(BuildContext context) {
     if (widget.customChild != null) {
-      return ThemedTooltip(
-        message: widget.labelText ?? '',
-        child: InkWell(
-          onTap: widget.disabled ? null : _showPicker,
-          child: widget.customChild!,
-        ),
+      return InkWell(
+        hoverColor: widget.hoverColor,
+        focusColor: widget.focusColor,
+        splashColor: widget.splashColor,
+        highlightColor: widget.highlightColor,
+        borderRadius: widget.borderRadius,
+        onTap: widget.disabled ? null : _showPicker,
+        child: widget.customChild!,
       );
     }
 

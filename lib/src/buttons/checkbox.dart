@@ -1,26 +1,27 @@
 part of layrz_theme;
 
 class ThemedAnimatedCheckbox extends StatefulWidget {
-  /// Represents the active color of the checkbox.
-  /// By default will take [Theme.of(context).primaryColor]
   final Color? activeColor;
-
-  /// Is the value/state of the button.
   final bool value;
-
-  /// The callback that is called when the value of the checkbox changes.
   final ValueChanged<bool>? onChanged;
-
-  /// Represents the duration of the animation/transition, by default will take [kHoverDuration]
   final Duration animationDuration;
 
   /// Creates a [ThemedAnimatedCheckbox] widget.
   /// The concept is simple, use an animation to translate between unselected icon and selected icon.
   const ThemedAnimatedCheckbox({
     super.key,
+
+    /// Represents the active color of the checkbox.
+    /// By default will take [Theme.of(context).primaryColor]
     this.activeColor,
+
+    /// Is the value/state of the button.
     required this.value,
+
+    /// The callback that is called when the value of the checkbox changes.
     this.onChanged,
+
+    /// Represents the duration of the animation/transition, by default will take [kHoverDuration]
     this.animationDuration = const Duration(milliseconds: 100),
   });
 

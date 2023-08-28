@@ -1,31 +1,29 @@
 part of inputs;
 
 class ThemedInputLikeContainer extends StatelessWidget {
-  /// A list of errors to display
+  /// [errors] is a list of errors to display
   final List<String> errors;
 
-  /// The child widget
+  /// [child] is the child widget
   final Widget child;
 
-  /// The label text
+  /// [labelText] is the label text
   final String? labelText;
 
-  /// The label widget
+  /// [label] is the label widget
   final Widget? label;
 
-  /// The suffix icon
+  /// [suffixIcon] is the suffix icon
   final Widget? suffixIcon;
 
-  /// The prefix icon
+  /// [prefixIcon] is the prefix icon
   final Widget? prefixIcon;
 
+  /// [padding] is the padding of the container
   final EdgeInsets padding;
 
-  /// A container widget that looks like an input
-  /// but it is not an input
-  ///
-  /// and can have any widget as a child
-  ///
+  /// [ThemedInputLikeContainer] is a container widget that looks like an input
+  /// but it is not an input and can have any widget as a child
   const ThemedInputLikeContainer({
     super.key,
     this.errors = const [],

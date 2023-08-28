@@ -2,19 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:mime/mime.dart';
 
 class ThemedFile {
+  /// [name] is the name of the file.
   final String name;
+
+  /// [path] is the path of the file. Only will return a value on native platforms (Android, iOS, Windows, macOS, Linux)
   final String? path;
+
+  /// [bytes] is the bytes of the file.
   final Uint8List bytes;
 
   /// [ThemedFile] is a wrapper around [Uint8List] that adds a name and path to the file.
   ThemedFile({
-    /// [name] is the name of the file.
     required this.name,
-
-    /// [path] is the path of the file. Only will return a value on native platforms (Android, iOS, Windows, macOS, Linux)
     this.path,
-
-    /// [bytes] is the bytes of the file.
     required this.bytes,
   });
 

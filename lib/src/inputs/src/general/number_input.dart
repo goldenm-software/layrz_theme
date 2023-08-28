@@ -1,82 +1,81 @@
 part of inputs;
 
 class ThemedNumberInput extends StatefulWidget {
+  /// [labelText] is the text of the label of the input.
   final String? labelText;
+
+  /// [label] is the widget of the label of the input.
   final Widget? label;
+
+  /// [disabled] is the state of the input being disabled.
   final String? placeholder;
+
+  /// [placeholder] is the placeholder of the input.
   final void Function(num?)? onChanged;
+
+  /// [onChanged] is the callback function when the input is changed.
   final num? value;
+
+  /// [value] is the value of the input.
   final bool disabled;
+
+  /// [errors] is the list of errors of the input.
   final List<String> errors;
+
+  /// [hideDetails] is the state of the input to hide the details.
   final bool hideDetails;
+
+  /// [padding] is the padding of the input.
   final EdgeInsets padding;
+
+  /// [dense] is the state of the input being dense.
   final bool dense;
+
+  /// [isRequired] is the state of the input being required.
   final bool isRequired;
+
+  /// [onSubmitted] is the callback function when the input is submitted.
   final VoidCallback? onSubmitted;
+
+  /// [readonly] is the state of the input being readonly.
   final bool readonly;
+
+  /// [inputFormatters] is the list of input formatters of the input.
   final List<TextInputFormatter> inputFormatters;
+
+  /// [borderRadius] is the border radius of the input.
   final double? borderRadius;
+
+  /// [minimum] is the minimum value of the input.
   final num? minimum;
+
+  /// [maximum] is the maximum value of the input.
   final num? maximum;
+
+  /// [step] is the step of the input.
   final num? step;
 
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
     super.key,
-
-    /// [labelText] is the text of the label of the input.
     this.labelText,
-
-    /// [label] is the widget of the label of the input.
     this.label,
-
-    /// [disabled] is the state of the input being disabled.
     this.disabled = false,
-
-    /// [placeholder] is the placeholder of the input.
     this.placeholder,
-
-    /// [onChanged] is the callback function when the input is changed.
     this.onChanged,
-
-    /// [value] is the value of the input.
     this.value,
-
-    /// [errors] is the list of errors of the input.
     this.errors = const [],
-
-    /// [hideDetails] is the state of the input to hide the details.
     this.hideDetails = false,
-
-    /// [padding] is the padding of the input.
     this.padding = const EdgeInsets.all(10),
-
-    /// [dense] is the state of the input being dense.
     this.dense = false,
-
-    /// [isRequired] is the state of the input being required.
     this.isRequired = false,
-
-    /// [onSubmitted] is the callback function when the input is submitted.
     this.onSubmitted,
-
-    /// [readonly] is the state of the input being readonly.
     this.readonly = false,
-
-    /// [inputFormatters] is the list of input formatters of the input.
     this.inputFormatters = const [],
-
-    /// [borderRadius] is the border radius of the input.
     this.borderRadius,
-
-    /// [minimum] is the minimum value of the input.
     this.minimum,
-
-    /// [maximum] is the maximum value of the input.
     this.maximum,
-
-    /// [step] is the step of the input.
     this.step,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 

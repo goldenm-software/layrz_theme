@@ -1,5 +1,11 @@
 part of helpers;
 
+/// [getThemeColor] is a helper function to get the theme color of the app.
+///
+/// Uses the Layrz theme standard to get the color.
+/// If [theme] is not supported, it will return [kPrimaryColor] instead.
+///
+/// To get more information about the themes, check the `layrz_models` enum `AppTheme`.
 MaterialColor getThemeColor({required String theme, Color color = kPrimaryColor}) {
   switch (theme) {
     case 'CUSTOM':

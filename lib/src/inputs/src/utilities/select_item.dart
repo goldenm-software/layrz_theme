@@ -1,14 +1,31 @@
 part of inputs;
 
 class ThemedSelectItem<T> {
+  /// [content] is the content of the item.
   final Widget? content;
+
+  /// [label] is the label of the item. Depending of the implementation of this class, we priorize in this order:
+  ///
+  /// [content] > [leading] > [icon] > [label].
+  /// Usually, this class is used on the [ThemedSelectInput], [ThemedMultiSelectInput] and [ThemedDualListInput].
   final String label;
+
+  /// [value] is the value of the item.
   final T? value;
+
+  /// [icon] is the icon of the item.
   final IconData? icon;
+
+  /// [leading] is the leading widget of the item.
   final Widget? leading;
+
+  /// [onTap] is the callback function when the item is tapped.
   final VoidCallback? onTap;
+
+  /// [canDelete] is the flag to enable the delete button of the item.
   final bool canDelete;
 
+  /// [ThemedSelectItem] is the item of the [ThemedSelectInput], [ThemedMultiSelectInput] and [ThemedDualListInput].
   const ThemedSelectItem({
     required this.label,
     required this.value,
@@ -34,6 +51,7 @@ class _ThemedSelectItem<T> extends StatefulWidget {
   final VoidCallback? onTap;
   final bool selected;
   final bool showCheckbox;
+  final bool canUnselect;
 
   const _ThemedSelectItem({
     super.key,
@@ -41,6 +59,7 @@ class _ThemedSelectItem<T> extends StatefulWidget {
     this.onTap,
     this.selected = false,
     this.showCheckbox = true,
+    this.canUnselect = true,
   });
 
   @override
@@ -57,7 +76,16 @@ class __ThemedSelectItemState<T> extends State<_ThemedSelectItem<T>> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: widget.selected ? null : widget.onTap,
+          mouseCursor: widget.selected
+              ? widget.canUnselect
+                  ? SystemMouseCursors.click
+                  : SystemMouseCursors.forbidden
+              : SystemMouseCursors.click,
+          onTap: widget.selected
+              ? widget.canUnselect
+                  ? widget.onTap
+                  : null
+              : widget.onTap,
           borderRadius: BorderRadius.circular(5),
           child: Padding(
             padding: const EdgeInsets.all(5),
