@@ -1,30 +1,33 @@
 image: registry.gitlab.com/goldenm-software/layrz/docker-containers/flutter-web-builder:flutter-3.10.5
 
 stages:
-  # - deploy
-  - gen-example
+  - deploy
+  - pages
 
-# deploy:
-#   stage: deploy
+deploy:
+  stage: deploy
 
-#   before_script:
-#     - gcloud auth activate-service-account --key-file=$PUB_TOKEN
-#     - gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
+  before_script:
+    - gcloud auth activate-service-account --key-file=$PUB_TOKEN
+    - gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
 
-#   script:
-#     - dart pub publish -f
+  script:
+    - dart pub publish -f
 
-#   after_script:
-#     - dart pub token remove https://pub.dev
+  after_script:
+    - dart pub token remove https://pub.dev
 
-#   tags:
-#     - saas-linux-small-amd64
+  tags:
+    - saas-linux-small-amd64
 
-#   only:
-#     - main
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /NOPUB/ 
+      when: never
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
 
-gen-example:
-  stage: gen-example
+pages:
+  stage: pages
 
   before_script:
     - cd $CI_PROJECT_DIR/example
