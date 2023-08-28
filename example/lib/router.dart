@@ -1,116 +1,100 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:layrz_theme_example/avatars.dart';
-import 'package:layrz_theme_example/buttons.dart';
-import 'package:layrz_theme_example/calendar.dart';
-import 'package:layrz_theme_example/dynamic_credentials.dart';
-import 'package:layrz_theme_example/empty.dart';
-import 'package:layrz_theme_example/home.dart';
-import 'package:layrz_theme_example/inputs.dart';
-import 'package:layrz_theme_example/layo.dart';
-import 'package:layrz_theme_example/login_example.dart';
-import 'package:layrz_theme_example/tab_bar.dart';
-import 'package:layrz_theme_example/table.dart';
-import 'package:layrz_theme_example/text.dart';
-import 'package:layrz_theme_example/cards.dart';
+import 'package:layrz_theme/layrz_theme.dart';
+import 'package:layrz_theme_example/views/avatars/avatars.dart';
+import 'package:layrz_theme_example/views/home.dart';
+import 'package:layrz_theme_example/views/inputs/inputs.dart';
+import 'package:layrz_theme_example/views/landing.dart';
+import 'package:layrz_theme_example/views/layo.dart';
+import 'package:layrz_theme_example/views/theme_generation.dart';
+
+Page<void> customTransitionBuilder(BuildContext context, GoRouterState state, Widget child) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: kHoverDuration * 1.5,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      // Combine both animations to a single one
+      final combinedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeIn,
+        reverseCurve: Curves.easeOut,
+      );
+
+      // Fade in
+      return FadeTransition(
+        opacity: combinedAnimation,
+        child: child,
+      );
+    },
+  );
+}
 
 final goRoutes = [
   GoRoute(
+    path: '/',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const LandingView()),
+  ),
+  GoRoute(
     path: '/home',
-    builder: (context, state) {
-      return const HomeView(name: 'Home');
-    },
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const HomeView()),
+  ),
+  GoRoute(
+    path: '/theme',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const ThemeGenerationView()),
   ),
   GoRoute(
     path: '/layo',
-    builder: (context, state) => const LayoView(name: 'Layo'),
-  ),
-  GoRoute(
-    path: '/calendar',
-    builder: (context, state) => const CalendarView(),
-  ),
-  GoRoute(
-    path: '/table',
-    builder: (context, state) => const TableView(name: 'Table'),
-  ),
-  GoRoute(
-    path: '/inputs',
-    builder: (context, state) => const InputsView(name: 'Inputs'),
-  ),
-  GoRoute(
-    path: '/text',
-    builder: (context, state) => const TextView(name: 'Text'),
-  ),
-  GoRoute(
-    path: '/cards',
-    builder: (context, state) => const CardsView(name: 'Cards'),
-  ),
-  GoRoute(
-    path: '/tabBar',
-    builder: (context, state) => const TabView(name: 'Tab Bar'),
-  ),
-  GoRoute(
-    path: '/buttons',
-    builder: (context, state) => const ButtonsView(name: 'Empty'),
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const LayoView()),
   ),
   GoRoute(
     path: '/avatars',
-    builder: (context, state) => const AvatarsView(name: 'Avatars'),
+    redirect: (context, state) => '/avatars/static',
   ),
   GoRoute(
-    path: '/dynamic_credentials',
-    builder: (context, state) => const DynamicCredentialsView(name: 'Dynamic Credentials'),
+    path: '/avatars/static',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const StaticAvatarsView()),
   ),
   GoRoute(
-    path: '/empty',
-    builder: (context, state) => const EmptyView(name: 'Empty'),
+    path: '/avatars/dynamic',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const DynamicAvatarsView()),
   ),
   GoRoute(
-    path: '/nested',
-    redirect: (context, state) => '/nested/test2',
+    path: '/inputs',
+    redirect: (context, state) => '/inputs/text',
   ),
   GoRoute(
-    path: '/nested/test0',
-    builder: (context, state) => const EmptyView(name: 'Test 0'),
+    path: '/inputs/text',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const TextInputView()),
   ),
   GoRoute(
-    path: '/nested/test1',
-    builder: (context, state) => const EmptyView(name: 'Test 1'),
+    path: '/inputs/buttons',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const ButtonsView()),
   ),
   GoRoute(
-    path: '/nested/test2',
-    builder: (context, state) => const EmptyView(name: 'Test 2'),
+    path: '/inputs/checkboxes',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const CheckboxesView()),
   ),
   GoRoute(
-    path: '/nested/test3',
-    builder: (context, state) => const EmptyView(name: 'Test 3'),
+    path: '/inputs/radiobuttons',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const RadioButtonsView()),
   ),
   GoRoute(
-    path: '/nested/test4',
-    builder: (context, state) => const EmptyView(name: 'Test 4'),
+    path: '/inputs/selectors/general',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const GeneralPickersView()),
   ),
   GoRoute(
-    path: '/login_example',
-    builder: (context, state) => const LoginExampleView(name: 'Login Example'),
+    path: '/inputs/selectors/datetime',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const DateTimePickersView()),
+  ),
+  GoRoute(
+    path: '/inputs/calendar',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const CalendarView()),
   ),
 ];
 
-final router = GoRouter(initialLocation: '/inputs', routes: goRoutes);
-
-final nativeRoutes = {
-  '/home': (context) => const HomeView(name: 'Home'),
-  '/table': (context) => const TableView(name: 'Table'),
-  '/inputs': (context) => const InputsView(name: 'Inputs'),
-  '/text': (context) => const TextView(name: 'Text'),
-  '/cards': (context) => const CardsView(name: 'Cards'),
-  '/tabBar': (context) => const TabView(name: 'Tab Bar'),
-  '/buttons': (context) => const ButtonsView(name: 'Empty'),
-  '/avatars': (context) => const AvatarsView(name: 'Avatars'),
-  '/dynamic_credentials': (context) => const DynamicCredentialsView(name: 'Dynamic Credentials'),
-  '/empty': (context) => const EmptyView(name: 'Empty'),
-  '/nested/test0': (context) => const EmptyView(name: 'Test 0'),
-  '/nested/test1': (context) => const EmptyView(name: 'Test 1'),
-  '/nested/test2': (context) => const EmptyView(name: 'Test 2'),
-  '/nested/test3': (context) => const EmptyView(name: 'Test 3'),
-  '/nested/test4': (context) => const EmptyView(name: 'Test 4'),
-  '/login_example': (context) => const LoginExampleView(name: 'Login Example'),
-};
+final router = GoRouter(
+  initialLocation: kDebugMode ? '/home' : '/',
+  routes: goRoutes,
+);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.8
+- New example with the automatic generation and GitLab hosting on https://theme.layrz.com
+- New widget `ThemedCodeSnippet` to display snippets with an integrated copy-to-clipboard button.
+
 ## 4.1.7
 - Fixed some errors with the display in the `ThemedDrawer` in nested pages.
 - Expandend documentation of `ThemedTable` to explain how to use some builders and related.

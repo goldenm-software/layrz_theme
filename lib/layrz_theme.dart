@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:layrz_models/layrz_models.dart';
@@ -42,6 +43,7 @@ part 'src/views/about.dart';
 // General widgets
 part 'src/widgets/wip.dart';
 part 'src/widgets/calendar.dart';
+part 'src/widgets/snippet.dart';
 
 // Responsive grid
 part 'src/responsive/sizes.dart';
@@ -62,9 +64,11 @@ part 'src/snackbar/function.dart';
 part 'src/snackbar/controller.dart';
 
 // Language theme
+part 'src/languages/common.dart';
 part 'src/languages/layrz_compute_language.dart';
 part 'src/languages/layrz_markup_language.dart';
 part 'src/languages/mjml_language.dart';
+part 'src/languages/dart_language.dart';
 
 // Scaffolds
 part 'src/scaffolds/sidebar.dart';
