@@ -20,8 +20,6 @@ deploy:
   tags:
     - saas-linux-small-amd64
 
-  # Add the rule to, if the NOPUB is present in the commit message, do not publish
-  # Otherwise, if the commit is from the main branch, publish
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /NOPUB/ 
       when: never
