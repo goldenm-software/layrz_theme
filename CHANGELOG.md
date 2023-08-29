@@ -1,7 +1,6 @@
 # Changelog
 
 ## 4.1.8
-- New example with the automatic generation and GitLab hosting on https://theme.layrz.com
 - New widget `ThemedCodeSnippet` to display snippets with an integrated copy-to-clipboard button.
 
 ## 4.1.7

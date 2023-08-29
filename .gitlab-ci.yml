@@ -26,28 +26,28 @@ deploy:
     - if: $CI_COMMIT_BRANCH == "main"
       when: always
 
-pages:
-  stage: pages
+# pages:
+#   stage: pages
 
-  before_script:
-    - cd $CI_PROJECT_DIR/example
-    - flutter clean
-    - cd ..
-    - flutter clean
-    - flutter pub get
+#   before_script:
+#     - cd $CI_PROJECT_DIR/example
+#     - flutter clean
+#     - cd ..
+#     - flutter clean
+#     - flutter pub get
 
-  script:
-    - cd $CI_PROJECT_DIR/example
-    - flutter build web
-    - mv build/web $CI_PROJECT_DIR/public
+#   script:
+#     - cd $CI_PROJECT_DIR/example
+#     - flutter build web
+#     - mv build/web $CI_PROJECT_DIR/public
 
-  tags:
-    - saas-linux-small-amd64
+#   tags:
+#     - saas-linux-small-amd64
 
-  only:
-    - main
-    - development
+#   only:
+#     - main
+#     - development
 
-  artifacts:
-    paths:
-      - public
+#   artifacts:
+#     paths:
+#       - public
