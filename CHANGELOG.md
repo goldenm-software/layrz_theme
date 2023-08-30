@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.10
+- Fixes on `ThemedPageBuilder`
+
 ## 4.1.9
 - Updated `ThemedPageBuilder` to supports return value from the `builder` function.
 

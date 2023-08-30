@@ -66,7 +66,17 @@ class ThemedPageBuilder<T> extends PageRoute<T> {
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     return builder(context);
   }
-}
 
-/// Creates a [PageRoute] that uses a fade transition.
-/// If you want to return nothing, use [ThemedPageTransition] instead.
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
+}
