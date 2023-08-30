@@ -36,38 +36,37 @@ class ThemedPageTransition extends PageRouteBuilder {
         );
 }
 
-class ThemedPageBuilder extends PageRouteBuilder {
-  /// [builder] is the widget to be shown.
-  final Widget Function(BuildContext context) builder;
+class ThemedPageBuilder<T> extends PageRoute<T> {
+  /// [pageBuilder] is the widget to be shown.
+  final Widget Function(BuildContext) builder;
 
   /// [settings] is the settings for the route.
   @override
   final RouteSettings settings;
 
+  @override
+  final bool maintainState = true;
+
+  @override
+  final Duration transitionDuration = const Duration(milliseconds: 300);
+
   /// Creates a [PageRoute] that uses a fade transition.
-  /// If you don't want to return something, use [ThemedPageTransition] instead.
   ThemedPageBuilder({
     required this.builder,
     required this.settings,
-  }) : super(
-          settings: settings,
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) {
-            return builder(context);
-          },
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
-        );
+  }) : super(settings: settings);
+
+  @override
+  Color? get barrierColor => null;
+
+  @override
+  String? get barrierLabel => null;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+    return builder(context);
+  }
 }
+
+/// Creates a [PageRoute] that uses a fade transition.
+/// If you want to return nothing, use [ThemedPageTransition] instead.

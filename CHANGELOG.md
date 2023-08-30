@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.9
+- Updated `ThemedPageBuilder` to supports return value from the `builder` function.
+
 ## 4.1.8
 - New widget `ThemedCodeSnippet` to display snippets with an integrated copy-to-clipboard button.
 
