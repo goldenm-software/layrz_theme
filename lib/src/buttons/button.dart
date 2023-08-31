@@ -172,6 +172,7 @@ class _ThemedButtonState extends State<ThemedButton> {
     return ThemedTooltip(
       position: widget.tooltipPosition,
       message: message,
+      color: contentColor,
       child: AnimatedContainer(
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         key: _key,
@@ -218,6 +219,7 @@ class _ThemedButtonState extends State<ThemedButton> {
     return ThemedTooltip(
       position: widget.tooltipPosition,
       message: message,
+      color: contentColor,
       child: AnimatedContainer(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width,
@@ -270,6 +272,7 @@ class _ThemedButtonState extends State<ThemedButton> {
     return ThemedTooltip(
       position: widget.tooltipPosition,
       message: message,
+      color: contentColor,
       child: AnimatedContainer(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width,

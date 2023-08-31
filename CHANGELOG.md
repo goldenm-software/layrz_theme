@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.11
+- Fixed `ThemedSelectInput` to prevent return null when is dismissed
+- Added `ThemedTooltip` property `color` to overrides the color of the tooltip
+- Updated position of the tooltip of the buttons in `ThemedTable` to be on the left side of the button
+- Deprecation notice of `onPressed` callback in `ThemedActionButton`
+
 ## 4.1.10
 - Fixes on `ThemedPageBuilder`
 

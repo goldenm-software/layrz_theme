@@ -10,6 +10,9 @@ class ThemedTooltip extends StatefulWidget {
   /// [position] is the position of the tooltip relative to the child.
   final ThemedTooltipPosition position;
 
+  /// [color] is the color of the tooltip. By default, we use the `Theme.of(context).tooltipTheme.decoration` object.
+  final Color? color;
+
   /// [ThemedTooltip] is a widget that displays a tooltip with a custom message.
   /// It's a re-interpretation of the [Tooltip] widget, but fixing/allowing the tap gesture to the child element.
   const ThemedTooltip({
@@ -17,6 +20,7 @@ class ThemedTooltip extends StatefulWidget {
     required this.child,
     required this.message,
     this.position = ThemedTooltipPosition.bottom,
+    this.color,
   });
 
   @override
@@ -29,14 +33,9 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   final GlobalKey _key = GlobalKey();
   OverlayEntry? _entry;
 
-  bool get _isDark => Theme.of(context).brightness == Brightness.dark;
-
   TextStyle? get _defaultTextStyle {
     try {
-      return Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: validateColor(color: _isDark ? kDarkBackgroundColor : Theme.of(context).primaryColor),
-            fontSize: 12,
-          );
+      return Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 12);
     } catch (_) {
       return null;
     }
@@ -231,6 +230,16 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
         break;
     }
 
+    BoxDecoration decoration = BoxDecoration(color: Theme.of(context).primaryColor);
+
+    if (Theme.of(context).tooltipTheme.decoration is BoxDecoration) {
+      decoration = Theme.of(context).tooltipTheme.decoration as BoxDecoration;
+    }
+
+    if (widget.color != null) {
+      decoration = decoration.copyWith(color: widget.color);
+    }
+
     _entry = OverlayEntry(
       builder: (context) {
         return Stack(
@@ -251,11 +260,13 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
                   );
                 },
                 child: Container(
-                  decoration: Theme.of(context).tooltipTheme.decoration,
+                  decoration: decoration,
                   padding: _defaultPadding,
                   child: Text(
                     widget.message,
-                    style: _defaultTextStyle,
+                    style: _defaultTextStyle?.copyWith(
+                      color: validateColor(color: decoration.color ?? Theme.of(context).primaryColor),
+                    ),
                   ),
                 ),
               ),

@@ -73,7 +73,8 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
             style: ThemedButtonStyle.fab,
             icon: action.icon,
             labelText: action.labelText,
-            onTap: action.onPressed,
+            onTap: action.onTap ?? action.onPressed,
+            tooltipPosition: action.tooltipPosition,
             isLoading: action.isLoading,
             color: action.color,
           );
@@ -87,7 +88,8 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
             label: action.label,
             labelText: action.labelText,
             color: action.color,
-            onTap: action.onPressed,
+            onTap: action.onTap ?? action.onPressed,
+            tooltipPosition: action.tooltipPosition,
             isLoading: action.isLoading,
             cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
             isCooldown: action.isCooldown,
@@ -218,27 +220,54 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
 }
 
 class ThemedActionButton {
+  /// [label] is the label to be displayed on the button.
   final Widget? label;
+
+  /// [labelText] is the label to be displayed on the button.
   final String? labelText;
+
+  /// [icon] is the icon to be displayed on the button.
   final IconData icon;
-  final VoidCallback onPressed;
+
+  /// [onPressed] is the callback to be called when the button is pressed.
+  final VoidCallback? onPressed;
+
+  /// [onTap] is the callback to be called when the button is tapped.
+  final VoidCallback? onTap;
+
+  /// [color] is the color to be used on the button.
   final Color? color;
+
+  /// [onlyIcon] forces the button to be displayed as an icon.
   final bool onlyIcon;
+
+  /// [isLoading] forces the button to be displayed as a loading button.
   final bool isLoading;
+
+  /// [cooldown] is the cooldown duration to be used on the button.
   final Duration? cooldown;
+
+  /// [isCooldown] forces the button to be displayed as a cooldown button.
   final bool isCooldown;
+
+  /// [onCooldownFinish] is the callback to be called when the cooldown is finished.
   final VoidCallback? onCooldownFinish;
+
+  /// [tooltip] is the tooltip to be displayed on the button.
+  final ThemedTooltipPosition tooltipPosition;
 
   const ThemedActionButton({
     this.label,
     this.labelText,
     required this.icon,
-    required this.onPressed,
+    @Deprecated('Use `onTap` instead') this.onPressed,
+    this.onTap,
     this.color,
     this.onlyIcon = false,
     this.isLoading = false,
     this.cooldown,
     this.isCooldown = false,
     this.onCooldownFinish,
+    this.tooltipPosition = ThemedTooltipPosition.bottom,
   }) : assert(label != null || labelText != null);
 }
