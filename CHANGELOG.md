@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.12
+- Fixed `ThemedDualListInput` search field, the bug filters the available list instead of the selected list.
+
 ## 4.1.11
 - Fixed `ThemedSelectInput` to prevent return null when is dismissed
 - Added `ThemedTooltip` property `color` to overrides the color of the tooltip
