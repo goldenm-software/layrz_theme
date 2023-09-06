@@ -88,6 +88,8 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
         return Mode(refs: {}, disableAutodetect: true);
       case LayrzSupportedLanguage.mjml:
         return mjmlLang;
+      case LayrzSupportedLanguage.dart:
+        return dartLang;
       case LayrzSupportedLanguage.python:
       default:
         return python_lang.python;
@@ -453,5 +455,8 @@ enum LayrzSupportedLanguage {
 
   /// MJML
   mjml,
+
+  /// dart
+  dart,
   ;
 }

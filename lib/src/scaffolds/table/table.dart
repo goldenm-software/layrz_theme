@@ -493,35 +493,38 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         if (widget.onShow != null)
           ThemedActionButton(
             onlyIcon: true,
+            tooltipPosition: ThemedTooltipPosition.left,
             labelText: t('helpers.buttons.show'),
             icon: MdiIcons.magnifyScan,
             color: Colors.blue,
             isLoading: widget.isLoading,
             isCooldown: widget.isCooldown,
             onCooldownFinish: widget.onCooldown,
-            onPressed: () => widget.onShow?.call(context, item),
+            onTap: () => widget.onShow?.call(context, item),
           ),
         if (widget.onEdit != null && widget.canEdit.call(context, item))
           ThemedActionButton(
             onlyIcon: true,
+            tooltipPosition: ThemedTooltipPosition.left,
             labelText: t('helpers.buttons.edit'),
             icon: MdiIcons.squareEditOutline,
             color: Colors.orange,
             isLoading: widget.isLoading,
             isCooldown: widget.isCooldown,
             onCooldownFinish: widget.onCooldown,
-            onPressed: () => widget.onEdit?.call(context, item),
+            onTap: () => widget.onEdit?.call(context, item),
           ),
         if (widget.onDelete != null && widget.canDelete.call(context, item))
           ThemedActionButton(
             onlyIcon: true,
+            tooltipPosition: ThemedTooltipPosition.left,
             labelText: t('helpers.buttons.delete'),
             icon: MdiIcons.trashCan,
             color: Colors.red,
             isLoading: widget.isLoading,
             isCooldown: widget.isCooldown,
             onCooldownFinish: widget.onCooldown,
-            onPressed: () async {
+            onTap: () async {
               bool confirmation = await deleteConfirmationDialog(
                 context: context,
                 isCooldown: widget.isCooldown,

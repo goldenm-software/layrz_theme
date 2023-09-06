@@ -303,10 +303,22 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: (highlight && !forceOnTap) ? null : onTap,
-            child: super.toAppBarItem(
-              context: context,
-              backgroundColor: backgroundColor,
-              onNavigatorPush: onNavigatorPush,
+            child: Padding(
+              padding: ThemedNavigatorItem.topBarItemPadding,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[
+                    Icon(
+                      icon ?? MdiIcons.help,
+                      size: 16,
+                      color: highlight ? activeColor : validateColor(color: backgroundColor),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  label ?? Text(labelText ?? ''),
+                ],
+              ),
             ),
           ),
         ),

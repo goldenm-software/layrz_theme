@@ -123,6 +123,14 @@ class ThemedSelectInput<T> extends StatefulWidget {
   /// [canUnselect] is the flag to allow unselecting an item.
   final bool canUnselect;
 
+  /// [returnNullOnClose] is the flag to return null when the dialog is closed and isn't selected something and/or
+  /// have a value.
+  final bool returnNullOnClose;
+
+  /// [autoSelectFirst] is the flag to auto select the first item of the list. Only will apply
+  /// when [value] is null and it's the first render of the object (when the [initState] is called).
+  final bool autoSelectFirst;
+
   /// [ThemedSelectInput] is the input for selecting an item from a list.
   const ThemedSelectInput({
     super.key,
@@ -167,6 +175,8 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.canUnselect = false,
+    this.returnNullOnClose = false,
+    this.autoSelectFirst = false,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -190,7 +200,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
   @override
   void initState() {
     super.initState();
-    _handleUpdate(force: true);
+    _handleUpdate(force: true, autoselect: widget.autoSelectFirst);
   }
 
   @override
@@ -201,20 +211,24 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     }
   }
 
-  void _handleUpdate({bool force = false}) {
+  void _handleUpdate({bool force = false, bool autoselect = false}) {
     if (selected?.value == widget.value && !force) return;
 
     if (widget.items.isNotEmpty) {
       try {
         ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
         setState(() => selected = value);
-
-        Future.delayed(Duration.zero, () {
-          widget.onChanged?.call(selected);
-        });
       } on StateError catch (_) {
         setState(() => selected = null);
       }
+
+      if (autoselect && selected == null) {
+        setState(() => selected = widget.items.first);
+      }
+
+      Future.delayed(Duration.zero, () {
+        widget.onChanged?.call(selected);
+      });
     }
   }
 
@@ -271,7 +285,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
 
         return WillPopScope(
           onWillPop: () async {
-            return false;
+            return widget.hideButtons || temp != null;
           },
           child: Dialog(
             child: StatefulBuilder(
@@ -386,8 +400,13 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     );
 
     _focusNode.unfocus();
-    setState(() => selected = result);
-    widget.onChanged?.call(result);
+    if (widget.returnNullOnClose && result == null) {
+      widget.onChanged?.call(null);
+      setState(() => selected = result);
+    } else if (result != null) {
+      widget.onChanged?.call(result);
+      setState(() => selected = result);
+    }
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {

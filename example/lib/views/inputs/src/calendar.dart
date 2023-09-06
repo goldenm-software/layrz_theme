@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:layrz_theme/layrz_theme.dart';
-import 'package:layrz_theme_example/layout.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+part of inputs;
 
 class CalendarView extends StatefulWidget {
   const CalendarView({super.key});
@@ -20,9 +17,16 @@ class _CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     return Layout(
-      showDrawer: true,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            "This is an example of our calendar, you can show or hide the entries using the button below.",
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 10),
           ThemedButton(
             labelText: "Show / hide entries",
             onTap: () => setState(() => showEntries = !showEntries),
@@ -56,6 +60,16 @@ class _CalendarViewState extends State<CalendarView> {
                   title: "Evento 3",
                   caption: "Evento 3 caption",
                   color: Colors.blue,
+                  icon: MdiIcons.calendar,
+                  onTap: () {
+                    debugPrint("Evento 3 tapped");
+                  },
+                ),
+                ThemedCalendarEntry(
+                  at: DateTime(2023, 8, 10, 12, 0, 0),
+                  title: "Evento 1",
+                  caption: "Evento 3 caption",
+                  color: Colors.pink,
                   icon: MdiIcons.calendar,
                   onTap: () {
                     debugPrint("Evento 3 tapped");

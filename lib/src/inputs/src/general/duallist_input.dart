@@ -274,10 +274,10 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                     ),
                     ThemedSearchInput(
                       labelText: t('layrz.duallist.search', {'name': widget.selectedListName}),
-                      value: searchAvailable,
+                      value: searchSelected,
                       onSearch: (value) {
-                        searchAvailable = value;
-                        availableFiltered = getAvailableFiltered();
+                        searchSelected = value;
+                        selectedFiltered = getSelectedFiltered();
                         setState(() {});
                       },
                     ),

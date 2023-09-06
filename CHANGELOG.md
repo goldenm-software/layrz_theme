@@ -1,4 +1,26 @@
 # Changelog
+## 4.1.14
+- Fixed [ThemedCalendar] whene generate a [ThemedCalendarEntry]
+## 4.1.13
+- Fixed `ThemedTooltip` to destroy inmediatly when the widget is disposed.
+
+## 4.1.12
+- Fixed `ThemedDualListInput` search field, the bug filters the available list instead of the selected list.
+
+## 4.1.11
+- Fixed `ThemedSelectInput` to prevent return null when is dismissed
+- Added `ThemedTooltip` property `color` to overrides the color of the tooltip
+- Updated position of the tooltip of the buttons in `ThemedTable` to be on the left side of the button
+- Deprecation notice of `onPressed` callback in `ThemedActionButton`
+
+## 4.1.10
+- Fixes on `ThemedPageBuilder`
+
+## 4.1.9
+- Updated `ThemedPageBuilder` to supports return value from the `builder` function.
+
+## 4.1.8
+- New widget `ThemedCodeSnippet` to display snippets with an integrated copy-to-clipboard button.
 
 ## 4.1.7
 - Fixed some errors with the display in the `ThemedDrawer` in nested pages.
