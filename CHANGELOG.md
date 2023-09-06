@@ -1,5 +1,6 @@
 # Changelog
-
+## 4.1.14
+- Fixed [ThemedCalendar] whene generate a [ThemedCalendarEntry]
 ## 4.1.13
 - Fixed `ThemedTooltip` to destroy inmediatly when the widget is disposed.
 

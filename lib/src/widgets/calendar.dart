@@ -761,7 +761,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     List<ThemedCalendarEntry> entries = widget.entries.where((entry) {
       switch (mode) {
         case ThemedCalendarMode.month:
-          return entry.at.year == day.year && entry.at.month == day.month;
+          return entry.at.year == day.year && entry.at.month == day.month && entry.at.day == day.day;
         default:
           return false;
       }

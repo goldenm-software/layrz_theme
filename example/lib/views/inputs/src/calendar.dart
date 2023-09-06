@@ -65,6 +65,16 @@ class _CalendarViewState extends State<CalendarView> {
                     debugPrint("Evento 3 tapped");
                   },
                 ),
+                ThemedCalendarEntry(
+                  at: DateTime(2023, 8, 10, 12, 0, 0),
+                  title: "Evento 1",
+                  caption: "Evento 3 caption",
+                  color: Colors.pink,
+                  icon: MdiIcons.calendar,
+                  onTap: () {
+                    debugPrint("Evento 3 tapped");
+                  },
+                ),
               ],
               rangeEntries: [
                 ThemedCalendarRangeEntry(
