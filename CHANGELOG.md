@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.13
+- Fixed `ThemedTooltip` to destroy inmediatly when the widget is disposed.
+
 ## 4.1.12
 - Fixed `ThemedDualListInput` search field, the bug filters the available list instead of the selected list.
 

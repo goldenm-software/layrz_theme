@@ -107,9 +107,9 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
 
   @override
   void dispose() {
+    _removeEntry(immediately: true);
     GestureBinding.instance.pointerRouter.removeGlobalRoute(_handlePointerEvent);
     RendererBinding.instance.mouseTracker.removeListener(_handleMouseTrackerChange);
-    _removeEntry();
     _controller.dispose();
     super.dispose();
   }

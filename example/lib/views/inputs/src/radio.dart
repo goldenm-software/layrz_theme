@@ -8,6 +8,7 @@ class RadioButtonsView extends StatefulWidget {
 }
 
 class _RadioButtonsViewState extends State<RadioButtonsView> {
+  // ignore: prefer_final_fields
   bool _value = false;
   @override
   Widget build(BuildContext context) {
