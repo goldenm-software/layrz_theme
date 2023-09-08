@@ -157,6 +157,11 @@ ThemeData generateDarkTheme({
       indent: 0,
       endIndent: 0,
     ),
+    scrollbarTheme: ScrollbarThemeData(
+      thumbColor: MaterialStateColor.resolveWith((states) {
+        return Colors.grey.shade700.withOpacity(0.4);
+      }),
+    ),
 
     // Inputs
     checkboxTheme: CheckboxThemeData(
