@@ -1,4 +1,7 @@
 # Changelog
+## 4.1.16
+- Fixes on [ThemedActionsButtons], now will use `onTap ?? onPressed` instead of only `onPressed` to handle the tap gesture.
+
 ## 4.1.15
 - Fixed `ScrollbarThemeData` on `generateLightTheme()` and `generateDarkTheme()` to use a specific color.
 
