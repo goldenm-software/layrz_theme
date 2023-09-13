@@ -1,4 +1,7 @@
 # Changelog
+## 4.1.17
+- New widget [ThemedTab]
+
 ## 4.1.16
 - Fixes on [ThemedActionsButtons], now will use `onTap ?? onPressed` instead of only `onPressed` to handle the tap gesture.
 
