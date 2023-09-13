@@ -280,7 +280,7 @@ extension DateTimeExtension on DateTime {
       '%y': year.toString().substring(2),
       '%Y': year.toString(),
       '%H': hour.toString().padLeft(2, '0'),
-      '%I': ((hour % 12 == 0) ? 1 : hour % 12).toString().padLeft(2, '0'),
+      '%I': ((hour % 12 == 0) ? 12 : hour % 12).toString().padLeft(2, '0'),
       '%p': (hour < 12) ? "AM" : "PM",
       '%M': minute.toString().padLeft(2, '0'),
       '%S': second.toString().padLeft(2, '0'),
