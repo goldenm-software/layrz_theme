@@ -1,4 +1,7 @@
 # Changelog
+## 4.1.18
+- Fixed a bug where the 12 hour date format in AM PM will display as 0
+
 ## 4.1.17
 - New widget [ThemedTab]
 
