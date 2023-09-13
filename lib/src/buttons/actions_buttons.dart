@@ -73,7 +73,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
             style: ThemedButtonStyle.fab,
             icon: action.icon,
             labelText: action.labelText,
-            onTap: action.onTap ?? action.onPressed,
+            onTap: action.onTap ?? action.onTap ?? action.onPressed,
             tooltipPosition: action.tooltipPosition,
             isLoading: action.isLoading,
             color: action.color,
@@ -88,7 +88,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
             label: action.label,
             labelText: action.labelText,
             color: action.color,
-            onTap: action.onTap ?? action.onPressed,
+            onTap: action.onTap ?? action.onTap ?? action.onPressed,
             tooltipPosition: action.tooltipPosition,
             isLoading: action.isLoading,
             cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
@@ -150,6 +150,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                             maxHeight: 300,
                           ),
                           decoration: generateContainerElevation(context: context, elevation: 2),
+                          clipBehavior: Clip.antiAlias,
                           child: ListView.separated(
                             shrinkWrap: true,
                             padding: EdgeInsets.zero,
@@ -161,8 +162,9 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                             itemBuilder: (context, index) {
                               ThemedActionButton action = widget.actions[index];
                               return InkWell(
+                                borderRadius: BorderRadius.circular(5),
                                 onTap: () {
-                                  _removeOverlay(callback: action.onPressed);
+                                  _removeOverlay(callback: action.onTap ?? action.onPressed);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
@@ -215,6 +217,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
     await _animationController.reverse();
     _overlayEntry?.remove();
     _overlayEntry = null;
+    debugPrint("Callback: $callback");
     callback?.call();
   }
 }

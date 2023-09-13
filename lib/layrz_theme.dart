@@ -12,6 +12,7 @@ import 'package:layrz_models/layrz_models.dart';
 import 'package:highlight/highlight.dart';
 
 // Internal dependencies
+//import 'src/tabs/tabs.dart';
 import 'src/helpers/helpers.dart';
 import 'src/inputs/inputs.dart';
 import 'src/tooltips/tooltips.dart';
@@ -23,6 +24,7 @@ export 'package:file_picker/file_picker.dart' show FileType;
 export 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;
 
 // Sub-libraries exports
+export 'src/tabs/tabs.dart';
 export 'src/tooltips/tooltips.dart';
 export 'src/layout/layout.dart';
 export 'src/inputs/inputs.dart';

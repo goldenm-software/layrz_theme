@@ -72,6 +72,9 @@ class ThemedColorPicker extends StatefulWidget {
   /// By default, it will use `BorderRadius.circular(10)`.
   final BorderRadius borderRadius;
 
+  /// [maxWidth] is the max width of the dialog.
+  final double maxWidth;
+
   /// [ThemedColorPicker] is a [ThemedTextInput] that allows the user to pick a color.
   const ThemedColorPicker({
     super.key,
@@ -99,6 +102,7 @@ class ThemedColorPicker extends StatefulWidget {
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.maxWidth = 400,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -164,40 +168,87 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
   }
 
   void _showPicker() async {
-    Color value = await showColorPickerDialog(
-      context,
-      _value,
-      copyPasteBehavior: const ColorPickerCopyPasteBehavior(
-        copyFormat: ColorPickerCopyFormat.numHexRRGGBB,
-        pasteButton: true,
-      ),
-      actionButtons: ColorPickerActionButtons(
-        dialogActionButtons: true,
-        dialogActionIcons: false,
-        dialogOkButtonType: ColorPickerActionButtonType.outlined,
-        dialogCancelButtonType: ColorPickerActionButtonType.text,
-        dialogOkButtonLabel: widget.saveText,
-        dialogCancelButtonLabel: widget.cancelText,
-      ),
-      enableShadesSelection: false,
-      showColorCode: true,
-      enableTonalPalette: false,
-      enableOpacity: false,
-      colorCodeHasColor: true,
-      showColorValue: false,
-      pickersEnabled: {
-        ColorPickerType.both: widget.enabledTypes.contains(ColorPickerType.both),
-        ColorPickerType.primary: widget.enabledTypes.contains(ColorPickerType.primary),
-        ColorPickerType.accent: widget.enabledTypes.contains(ColorPickerType.accent),
-        ColorPickerType.bw: widget.enabledTypes.contains(ColorPickerType.bw),
-        ColorPickerType.custom: widget.enabledTypes.contains(ColorPickerType.custom),
-        ColorPickerType.wheel: widget.enabledTypes.contains(ColorPickerType.wheel),
+    Color? value = await showDialog<Color>(
+      context: context,
+      builder: (context) {
+        Color currentColor = _value;
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            decoration: generateContainerElevation(context: context, elevation: 3),
+            constraints: BoxConstraints(maxWidth: widget.maxWidth),
+            padding: const EdgeInsets.all(10),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ColorPicker(
+                      color: currentColor,
+                      copyPasteBehavior: const ColorPickerCopyPasteBehavior(
+                        copyFormat: ColorPickerCopyFormat.numHexRRGGBB,
+                        pasteButton: true,
+                      ),
+                      actionButtons: ColorPickerActionButtons(
+                        dialogActionButtons: true,
+                        dialogActionIcons: false,
+                        dialogOkButtonType: ColorPickerActionButtonType.outlined,
+                        dialogCancelButtonType: ColorPickerActionButtonType.text,
+                        dialogOkButtonLabel: widget.saveText,
+                        dialogCancelButtonLabel: widget.cancelText,
+                      ),
+                      enableShadesSelection: false,
+                      showColorCode: true,
+                      enableTonalPalette: false,
+                      enableOpacity: false,
+                      colorCodeHasColor: true,
+                      showColorValue: false,
+                      pickersEnabled: {
+                        ColorPickerType.both: widget.enabledTypes.contains(ColorPickerType.both),
+                        ColorPickerType.primary: widget.enabledTypes.contains(ColorPickerType.primary),
+                        ColorPickerType.accent: widget.enabledTypes.contains(ColorPickerType.accent),
+                        ColorPickerType.bw: widget.enabledTypes.contains(ColorPickerType.bw),
+                        ColorPickerType.custom: widget.enabledTypes.contains(ColorPickerType.custom),
+                        ColorPickerType.wheel: widget.enabledTypes.contains(ColorPickerType.wheel),
+                      },
+                      onColorChanged: (value) {
+                        debugPrint(value.toString());
+                        setState(() {
+                          currentColor = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ThemedButton(
+                          style: ThemedButtonStyle.filledTonal,
+                          icon: MdiIcons.close,
+                          labelText: widget.cancelText,
+                          color: Colors.red,
+                          onTap: () => Navigator.of(context).pop(null),
+                        ),
+                        ThemedButton(
+                          style: ThemedButtonStyle.filledTonal,
+                          icon: MdiIcons.check,
+                          labelText: widget.saveText,
+                          color: Colors.green,
+                          onTap: () => Navigator.of(context).pop(currentColor),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
       },
     );
 
-    setState(() {
-      _value = value;
-    });
+    if (value == null) return;
+    setState(() => _value = value);
     widget.onChanged?.call(value);
     _controller.text = "#${_value.hex}";
   }

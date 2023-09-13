@@ -1,6 +1,16 @@
 # Changelog
+## 4.1.17
+- New widget [ThemedTab]
+
+## 4.1.16
+- Fixes on [ThemedActionsButtons], now will use `onTap ?? onPressed` instead of only `onPressed` to handle the tap gesture.
+
+## 4.1.15
+- Fixed `ScrollbarThemeData` on `generateLightTheme()` and `generateDarkTheme()` to use a specific color.
+
 ## 4.1.14
 - Fixed [ThemedCalendar] whene generate a [ThemedCalendarEntry]
+
 ## 4.1.13
 - Fixed `ThemedTooltip` to destroy inmediatly when the widget is disposed.
 

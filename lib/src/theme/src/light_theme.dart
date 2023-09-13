@@ -43,6 +43,9 @@ ThemeData generateLightTheme({
     isDark: false,
   );
 
+  Color dividerColor = Colors.grey.shade300;
+
+  // isDark ? const Color(0x1FFFFFFF) : const Color(0x1F000000);
   return ThemeData.from(
     textTheme: fonts.textTheme,
     colorScheme: ColorScheme.fromSwatch(primarySwatch: color, brightness: Brightness.light).copyWith(
@@ -158,13 +161,18 @@ ThemeData generateLightTheme({
     ),
 
     // Divider
-    dividerColor: Colors.grey.shade300,
+    dividerColor: Colors.black.withOpacity(0.1),
     dividerTheme: DividerThemeData(
-      color: Colors.grey.shade300,
+      color: Colors.black.withOpacity(0.1),
       thickness: 1,
       space: 3,
       indent: 0,
       endIndent: 0,
+    ),
+    scrollbarTheme: ScrollbarThemeData(
+      thumbColor: MaterialStateColor.resolveWith((states) {
+        return Colors.black.withOpacity(0.4);
+      }),
     ),
 
     // Inputs
