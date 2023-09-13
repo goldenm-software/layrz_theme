@@ -21,6 +21,18 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
           value: 3,
           label: "Choice 3",
         ),
+        const ThemedSelectItem(
+          value: 4,
+          label: "Choice 4",
+        ),
+        const ThemedSelectItem(
+          value: 22,
+          label: "Choice 22",
+        ),
+        const ThemedSelectItem(
+          value: 12,
+          label: "Choice 12",
+        ),
       ];
 
   List<int> selectedMultiple = [];
@@ -98,6 +110,7 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                     const Text("DualList input"),
                     ThemedDualListInput<int>(
                       labelText: "Example label",
+                      availableListName: 'Veniam do adipisicing officia nisi. Veniam do adipisicing officia nisi.',
                       items: _choices,
                       value: selectedMultiple,
                       onChanged: (v) => setState(() => selectedMultiple = v.map((e) => e.value!).toList()),
