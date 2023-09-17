@@ -31,6 +31,9 @@ class ThemedTab extends StatelessWidget {
   /// [padding] is the Padding of the tab
   final EdgeInsets padding;
 
+  /// [color] is the color of the tab
+  final Color? color;
+
   /// [ThemedTab] is a tab for the [TabBar] widget
   const ThemedTab({
     super.key,
@@ -42,6 +45,7 @@ class ThemedTab extends StatelessWidget {
     this.trailing,
     this.trailingIcon,
     this.padding = const EdgeInsets.all(10),
+    this.color,
   }) : assert(labelText != null || label != null);
 
   @override
@@ -55,16 +59,18 @@ class ThemedTab extends StatelessWidget {
                 Icon(
                   leadingIcon!,
                   size: iconSize,
+                  color: color,
                 ),
             const SizedBox(width: 10),
           ],
-          label ?? Text(labelText ?? ''),
+          label ?? Text(labelText ?? '', style: TextStyle(color: color)),
           if (trailing != null || trailingIcon != null) ...[
             const SizedBox(width: 10),
             trailing ??
                 Icon(
                   trailingIcon!,
                   size: iconSize,
+                  color: color,
                 ),
           ],
         ],

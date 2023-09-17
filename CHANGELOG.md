@@ -1,4 +1,10 @@
 # Changelog
+
+## 4.1.20
+- Updated [ThemedDualListInput] to handle `errors`
+- Updated [ThemedTab] to handle `color`
+- Updated [ThemedFieldDisplayError] to change the padding of the error text
+
 ## 4.1.19
 - Added `errors` and `hideDetails` on some pickers
 

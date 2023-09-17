@@ -325,7 +325,13 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: widget.label ?? Text(widget.labelText ?? ''),
+                          child: widget.label ??
+                              Text(
+                                widget.labelText ?? '',
+                                style: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(
+                                      color: widget.disabled ? Theme.of(context).disabledColor : null,
+                                    ),
+                              ),
                         ),
                       ],
                     ),
@@ -337,6 +343,10 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                       ),
                     ],
                     Expanded(child: selectedWidget),
+                    ThemedFieldDisplayError(
+                      errors: widget.errors,
+                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    ),
                   ],
                 )
               : Column(
@@ -344,7 +354,13 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: widget.label ?? Text(widget.labelText ?? ''),
+                      child: widget.label ??
+                          Text(
+                            widget.labelText ?? '',
+                            style: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(
+                                  color: widget.disabled ? Theme.of(context).disabledColor : null,
+                                ),
+                          ),
                     ),
                     Expanded(
                       child: Row(
@@ -359,6 +375,10 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                           Expanded(child: selectedWidget),
                         ],
                       ),
+                    ),
+                    ThemedFieldDisplayError(
+                      errors: widget.errors,
+                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                     ),
                   ],
                 ),

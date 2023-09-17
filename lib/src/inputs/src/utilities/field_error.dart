@@ -7,11 +7,15 @@ class ThemedFieldDisplayError extends StatelessWidget {
   /// [hideDetails] is the state of hiding the details of the field.
   final bool hideDetails;
 
+  /// [padding] is the padding of the widget.
+  final EdgeInsets padding;
+
   /// [ThemedFieldDisplayError] is a widget that displays the errors of a field.
   const ThemedFieldDisplayError({
     super.key,
     this.errors = const [],
     this.hideDetails = false,
+    this.padding = const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
   });
 
   @override
@@ -19,7 +23,7 @@ class ThemedFieldDisplayError extends StatelessWidget {
     return hideDetails
         ? const SizedBox()
         : Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+            padding: padding,
             child: SizedBox(
               width: double.infinity,
               child: errors.isEmpty
