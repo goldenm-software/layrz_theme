@@ -156,5 +156,34 @@ Future<List<ThemedFile>?> pickFile({
     return null;
   }
 
+  if (Platform.isLinux) {
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform.pickFiles(
+        dialogTitle: dialogTitle,
+        allowMultiple: allowMultiple,
+        type: type,
+        allowedExtensions: type == FileType.custom ? allowedExtensions : [],
+      );
+    } catch (e) {
+      debugPrint("[layrz_theme] Error while picking file: $e");
+      result = null;
+    }
+
+    if (result != null) {
+      return result.files.where((file) {
+        return file.path != null;
+      }).map((file) {
+        return ThemedFile(
+          name: file.name,
+          path: file.path,
+          bytes: File(file.path!).readAsBytesSync(),
+        );
+      }).toList();
+    }
+
+    return null;
+  }
+
   return null;
 }
