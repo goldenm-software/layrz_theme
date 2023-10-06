@@ -153,5 +153,25 @@ Future<ThemedFile?> saveFile({
     return null;
   }
 
+  if (Platform.isLinux) {
+    final parentDirectory = await getApplicationDocumentsDirectory();
+    final directory = await FilePicker.platform.getDirectoryPath(
+      dialogTitle: dialogTitle,
+      initialDirectory: parentDirectory.path,
+    );
+
+    if (directory != null) {
+      final file = File("$directory/$filename");
+      await file.writeAsBytes(bytes);
+      return ThemedFile(
+        name: filename,
+        bytes: bytes,
+        path: file.path,
+      );
+    }
+
+    return null;
+  }
+
   return null;
 }

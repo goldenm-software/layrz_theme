@@ -1,7 +1,10 @@
 # Changelog
 
-## 4.1.21
+## 4.1.22
 - Fix [ThemedCalendar] days
+
+## 4.1.21
+- Added Linux support for [saveFile] and [pickFile]
 
 ## 4.1.20
 - Updated [ThemedDualListInput] to handle `errors`
