@@ -514,7 +514,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                 child: Row(
                   children: List.generate(7, (i) {
                     String weekdayString = "";
-                    switch (i) {
+                    switch (i + 1) {
                       case DateTime.monday:
                         weekdayString = i18n?.t('theme.helpers.datetime.monday') ?? "Monday";
                         break;

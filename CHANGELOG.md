@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.21
+- Fix [ThemedCalendar] days
+
 ## 4.1.20
 - Updated [ThemedDualListInput] to handle `errors`
 - Updated [ThemedTab] to handle `color`
