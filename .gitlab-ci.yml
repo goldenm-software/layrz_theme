@@ -1,4 +1,4 @@
-image: registry.gitlab.com/goldenm-software/layrz/docker-containers/flutter-web-builder:flutter-3.10.5
+image: registry.gitlab.com/goldenm-software/layrz/docker-containers/flutter-web-builder:flutter-3.13.5
 
 stages:
   - deploy
@@ -21,7 +21,7 @@ deploy:
     - saas-linux-small-amd64
 
   rules:
-    - if: $CI_COMMIT_MESSAGE =~ /NOPUB/ 
+    - if: $CI_COMMIT_MESSAGE =~ /NOPUB/
       when: never
     - if: $CI_COMMIT_BRANCH == "main"
       when: always
