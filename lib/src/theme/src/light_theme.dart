@@ -43,8 +43,6 @@ ThemeData generateLightTheme({
     isDark: false,
   );
 
-  Color dividerColor = Colors.grey.shade300;
-
   // isDark ? const Color(0x1FFFFFFF) : const Color(0x1F000000);
   return ThemeData.from(
     textTheme: fonts.textTheme,

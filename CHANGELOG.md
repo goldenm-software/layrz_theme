@@ -1,4 +1,24 @@
 # Changelog
+
+## 4.2.0
+
+- Added suport for Flutter 3.13.5
+- Fixed background color on Flutter styled Checkbox for changes in Flutter 3.13.5
+
+## 4.1.22
+- Fix [ThemedCalendar] days
+
+## 4.1.21
+- Added Linux support for [saveFile] and [pickFile]
+
+## 4.1.20
+- Updated [ThemedDualListInput] to handle `errors`
+- Updated [ThemedTab] to handle `color`
+- Updated [ThemedFieldDisplayError] to change the padding of the error text
+
+## 4.1.19
+- Added `errors` and `hideDetails` on some pickers
+
 ## 4.1.18
 - Fixed a bug where the 12 hour date format in AM PM will display as 0
 

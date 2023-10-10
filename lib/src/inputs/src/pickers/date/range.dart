@@ -72,6 +72,12 @@ class ThemedDateRangePicker extends StatefulWidget {
   /// By default, it will use `BorderRadius.circular(10)`.
   final BorderRadius borderRadius;
 
+  /// [errors] is the list of errors of the input.
+  final List<String> errors;
+
+  /// [hideDetails] is the state of hiding the details of the input.
+  final bool hideDetails;
+
   /// [ThemedDateRangePicker] is a date picker input. It is a wrapper of [ThemedTextInput] with a date picker.
   const ThemedDateRangePicker({
     super.key,
@@ -100,6 +106,8 @@ class ThemedDateRangePicker extends StatefulWidget {
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.errors = const [],
+    this.hideDetails = false,
   })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
         assert(value.length == 0 || value.length == 2);
 
@@ -146,6 +154,8 @@ class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
       disabled: widget.disabled,
       readonly: true,
       onTap: widget.disabled ? null : _showPicker,
+      errors: widget.errors,
+      hideDetails: widget.hideDetails,
     );
   }
 

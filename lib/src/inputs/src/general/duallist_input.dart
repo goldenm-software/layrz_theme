@@ -58,6 +58,9 @@ class ThemedDualListInput<T> extends StatefulWidget {
   /// [mobileScaleFactor] is the scale factor of the height in mobile mode.
   final double mobileScaleFactor;
 
+  /// [compare] optional function to compare elements if the default compare is not working.
+  final bool Function(T?, T?)? compareFunction;
+
   /// [ThemedDualListInput] is a dual list input.
   const ThemedDualListInput({
     super.key,
@@ -83,6 +86,7 @@ class ThemedDualListInput<T> extends StatefulWidget {
     this.availableListName = "Available",
     this.selectedListName = "Selected",
     this.mobileScaleFactor = 2,
+    this.compareFunction,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -118,11 +122,17 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
     Function eq = const ListEquality().equals;
     available = List<ThemedSelectItem<T>>.from(widget.items);
     selected = [];
-
+    debugPrint("are lists the same? ${eq(selected, widget.value)}");
     if (!eq(selected, widget.value)) {
       for (T item in widget.value ?? []) {
-        final index = available.indexWhere((element) => element.value == item);
+        final index = available.indexWhere((element) {
+          if (widget.compareFunction != null) {
+            return widget.compareFunction!(element.value, item);
+          }
+          return element.value == item;
+        });
         if (index != -1) {
+          debugPrint("found item $item");
           selected.add(available.removeAt(index));
         }
       }
@@ -325,7 +335,13 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: widget.label ?? Text(widget.labelText ?? ''),
+                          child: widget.label ??
+                              Text(
+                                widget.labelText ?? '',
+                                style: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(
+                                      color: widget.disabled ? Theme.of(context).disabledColor : null,
+                                    ),
+                              ),
                         ),
                       ],
                     ),
@@ -337,6 +353,10 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                       ),
                     ],
                     Expanded(child: selectedWidget),
+                    ThemedFieldDisplayError(
+                      errors: widget.errors,
+                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    ),
                   ],
                 )
               : Column(
@@ -344,7 +364,13 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: widget.label ?? Text(widget.labelText ?? ''),
+                      child: widget.label ??
+                          Text(
+                            widget.labelText ?? '',
+                            style: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(
+                                  color: widget.disabled ? Theme.of(context).disabledColor : null,
+                                ),
+                          ),
                     ),
                     Expanded(
                       child: Row(
@@ -359,6 +385,10 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                           Expanded(child: selectedWidget),
                         ],
                       ),
+                    ),
+                    ThemedFieldDisplayError(
+                      errors: widget.errors,
+                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                     ),
                   ],
                 ),

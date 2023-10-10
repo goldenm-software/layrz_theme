@@ -77,6 +77,12 @@ class ThemedTimeRangePicker extends StatefulWidget {
   /// By default, it will use `BorderRadius.circular(10)`.
   final BorderRadius borderRadius;
 
+  /// [errors] is the list of errors of the input.
+  final List<String> errors;
+
+  /// [hideDetails] is the state of hiding the details of the input.
+  final bool hideDetails;
+
   /// [ThemedTimeRangePicker] is a time range picker input. It is a wrapper of [ThemedTextInput]
   /// with a time range picker.
   const ThemedTimeRangePicker({
@@ -108,6 +114,8 @@ class ThemedTimeRangePicker extends StatefulWidget {
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.errors = const [],
+    this.hideDetails = false,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -155,6 +163,8 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
       disabled: widget.disabled,
       readonly: true,
       onTap: widget.disabled ? null : _showPicker,
+      errors: widget.errors,
+      hideDetails: widget.hideDetails,
     );
   }
 
