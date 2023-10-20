@@ -123,6 +123,13 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
               value: _selectedMonthRange,
               onChanged: (val) => setState(() => _selectedMonthRange = val),
             ),
+            const Text("Also, you can use the property `consecutive` to force the selection of consecutive months"),
+            ThemedMonthRangePicker(
+              labelText: "Example label",
+              value: _selectedMonthRange,
+              consecutive: true,
+              onChanged: (val) => setState(() => _selectedMonthRange = val),
+            ),
           ],
         ),
       ),

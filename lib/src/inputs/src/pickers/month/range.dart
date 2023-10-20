@@ -142,9 +142,19 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
 
     final sortedValues = List<ThemedMonth>.from(widget.value)..sort(_sortMonths);
 
-    return sortedValues.map((e) {
-      return "${DateTime(2023, e.month.index + 1, 1).format(pattern: '%B', i18n: i18n)} ${e.year}";
-    }).join(', ');
+    List<ThemedMonth> taken = [];
+
+    return sortedValues
+        .map((e) {
+          if (taken.contains(e)) {
+            return null;
+          } else {
+            taken.add(e);
+          }
+          return "${DateTime(2023, e.month.index + 1, 1).format(pattern: '%B', i18n: i18n)} ${e.year}";
+        })
+        .whereNotNull()
+        .join(', ');
   }
 
   @override
@@ -385,6 +395,10 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                           color: Colors.green,
                           labelText: t('actions.save'),
                           onTap: () {
+                            if (tempPicks.isNotEmpty) {
+                              selections = [tempPicks.first, tempPicks.last];
+                            }
+
                             Navigator.of(context).pop(selections);
                           },
                         ),

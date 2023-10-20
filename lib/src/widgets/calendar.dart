@@ -98,6 +98,10 @@ class ThemedCalendar extends StatefulWidget {
   /// [ThemedCalendar] is a widget that displays a calendar.
   /// To do:
   /// - Add support for other modes. Right now we only support `month` mode.
+
+  /// [aditionalButtons] is a list of buttons that will be displayed in the calendar.
+  final List<ThemedButton> aditionalButtons;
+
   const ThemedCalendar({
     super.key,
     this.focusDay,
@@ -133,8 +137,7 @@ class ThemedCalendar extends StatefulWidget {
     this.disabledDays = const [],
     this.todayIndicator = true,
     this.todayButton = true,
-    // this.mode = ThemedCalendarMode.month,
-    // this.onModeChanged,
+    this.aditionalButtons = const [],
   });
 
   @override
@@ -302,6 +305,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                 icon: MdiIcons.chevronRight,
                 onTap: _forward,
               ),
+              ...widget.aditionalButtons.map((button) => button),
             ],
           ),
           if (mode == ThemedCalendarMode.year) ...[
