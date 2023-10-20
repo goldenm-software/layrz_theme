@@ -1,4 +1,6 @@
 # Changelog
+## 4.2.2
+- Add on [ThemedCalendar] additionalButtons of [ThemedButton].
 
 ## 4.2.1
 - Fixed [ThemedMonthRangePicker] to handle one-click action to pick only one month in `consecutive` mode.
