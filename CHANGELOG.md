@@ -1,7 +1,9 @@
 # Changelog
 
-## 4.2.0
+## 4.2.1
+- Fixed [ThemedMonthRangePicker] to handle one-click action to pick only one month in `consecutive` mode.
 
+## 4.2.0
 - Added suport for Flutter 3.13.5
 - Fixed background color on Flutter styled Checkbox for changes in Flutter 3.13.5
 
