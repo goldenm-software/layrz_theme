@@ -65,38 +65,41 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
         onTap: _handleTap,
       );
     }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: widget.actions.map<Widget>((ThemedActionButton action) {
-        if (action.onlyIcon) {
-          return ThemedButton(
-            style: ThemedButtonStyle.fab,
-            icon: action.icon,
-            labelText: action.labelText,
-            onTap: action.onTap ?? action.onTap ?? action.onPressed,
-            tooltipPosition: action.tooltipPosition,
-            isLoading: action.isLoading,
-            color: action.color,
-          );
-        }
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: widget.actions.map<Widget>((ThemedActionButton action) {
+          if (action.onlyIcon) {
+            return ThemedButton(
+              style: ThemedButtonStyle.fab,
+              icon: action.icon,
+              labelText: action.labelText,
+              onTap: action.onTap ?? action.onTap ?? action.onPressed,
+              tooltipPosition: action.tooltipPosition,
+              isLoading: action.isLoading,
+              color: action.color,
+            );
+          }
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: ThemedButton(
-            style: ThemedButtonStyle.filledTonal,
-            icon: action.icon,
-            label: action.label,
-            labelText: action.labelText,
-            color: action.color,
-            onTap: action.onTap ?? action.onTap ?? action.onPressed,
-            tooltipPosition: action.tooltipPosition,
-            isLoading: action.isLoading,
-            cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
-            isCooldown: action.isCooldown,
-            onCooldownFinish: action.onCooldownFinish,
-          ),
-        );
-      }).toList(),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: ThemedButton(
+              style: ThemedButtonStyle.filledTonal,
+              icon: action.icon,
+              label: action.label,
+              labelText: action.labelText,
+              color: action.color,
+              onTap: action.onTap ?? action.onTap ?? action.onPressed,
+              tooltipPosition: action.tooltipPosition,
+              isLoading: action.isLoading,
+              cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
+              isCooldown: action.isCooldown,
+              onCooldownFinish: action.onCooldownFinish,
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 

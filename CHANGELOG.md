@@ -1,4 +1,8 @@
 # Changelog
+
+## 4.2.3
+- Major change in [ThemedTable<T>] to handle dynamic columns and rows. Also, changes to horizontal scrolling inside of the table.
+
 ## 4.2.2
 - Add on [ThemedCalendar] additionalButtons of [ThemedButton].
 

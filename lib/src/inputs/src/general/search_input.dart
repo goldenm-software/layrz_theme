@@ -50,12 +50,29 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
   final GlobalKey _key = GlobalKey();
   bool isHovering = false;
 
+  final TextEditingController _controller = TextEditingController();
+
   double get height => 40;
 
   @override
   void initState() {
     super.initState();
     animation = AnimationController(vsync: this, duration: kHoverDuration);
+
+    _controller.text = widget.value;
+    _controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.value.length));
+  }
+
+  @override
+  void didUpdateWidget(ThemedSearchInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.value != widget.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _controller.text = widget.value;
+        _controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.value.length));
+      });
+    }
   }
 
   @override
@@ -192,6 +209,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                               },
                               child: TextField(
                                 onChanged: widget.onSearch,
+                                controller: _controller,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),

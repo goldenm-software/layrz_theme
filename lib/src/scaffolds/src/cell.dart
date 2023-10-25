@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of scaffolds;
 
 class ThemedScaffoldCell extends StatelessWidget {
   /// [title] is the title of the cell.

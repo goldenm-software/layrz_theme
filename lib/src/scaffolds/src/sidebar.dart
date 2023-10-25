@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of scaffolds;
 
 class ThemedScaffoldView<T> extends StatefulWidget {
   /// Represents the module name of the table. This is used to generate the titleText.

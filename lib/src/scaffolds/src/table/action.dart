@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of scaffolds;
 
 class ThemedTableAction<T> {
   /// The label of the action.

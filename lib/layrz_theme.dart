@@ -32,6 +32,7 @@ export 'src/helpers/helpers.dart';
 export 'src/file.dart';
 export 'src/layo.dart';
 export 'src/theme/theme.dart';
+export 'src/scaffolds/scaffolds.dart';
 
 /// Parts
 // Buittons and actions
@@ -71,14 +72,6 @@ part 'src/languages/layrz_compute_language.dart';
 part 'src/languages/layrz_markup_language.dart';
 part 'src/languages/mjml_language.dart';
 part 'src/languages/dart_language.dart';
-
-// Scaffolds
-part 'src/scaffolds/sidebar.dart';
-part 'src/scaffolds/table/table.dart';
-part 'src/scaffolds/table/column.dart';
-part 'src/scaffolds/table/action.dart';
-part 'src/scaffolds/table/avatar.dart';
-part 'src/scaffolds/cell.dart';
 
 // Delegates
 part 'src/delegates/grid_fixed_height.dart';
