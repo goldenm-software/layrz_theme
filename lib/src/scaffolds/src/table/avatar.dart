@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of scaffolds;
 
 class ThemedTableAvatar {
   /// Represents the name, label or identifier of the avatar.

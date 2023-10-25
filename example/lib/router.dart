@@ -7,6 +7,7 @@ import 'package:layrz_theme_example/views/home.dart';
 import 'package:layrz_theme_example/views/inputs/inputs.dart';
 import 'package:layrz_theme_example/views/landing.dart';
 import 'package:layrz_theme_example/views/layo.dart';
+import 'package:layrz_theme_example/views/table/table.dart';
 import 'package:layrz_theme_example/views/theme_generation.dart';
 
 Page<void> customTransitionBuilder(BuildContext context, GoRouterState state, Widget child) {
@@ -92,9 +93,17 @@ final goRoutes = [
     path: '/inputs/calendar',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const CalendarView()),
   ),
+  GoRoute(
+    path: '/table',
+    redirect: (context, state) => '/table/basic',
+  ),
+  GoRoute(
+    path: '/table/basic',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const BasicTableView()),
+  ),
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/home' : '/',
+  initialLocation: kDebugMode ? '/table/basic' : '/',
   routes: goRoutes,
 );
