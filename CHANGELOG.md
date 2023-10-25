@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.4
+- Removed paginator from [ThemedTable<T>] in mobile mode.
+
 ## 4.2.3
 - Major change in [ThemedTable<T>] to handle dynamic columns and rows. Also, changes to horizontal scrolling inside of the table.
 

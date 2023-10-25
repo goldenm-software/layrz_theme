@@ -33,7 +33,7 @@ class _BasicTableViewState extends State<BasicTableView> {
               enableMultiSelectDialog: false,
               multiSelectionEnabled: false,
               // shouldExpand: false,
-              itemsPerPage: 5,
+              // itemsPerPage: 5,
               forceResync: true,
               idEnabled: false,
               onIdTap: (item) {
