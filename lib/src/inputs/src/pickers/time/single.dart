@@ -83,6 +83,8 @@ class ThemedTimePicker extends StatefulWidget {
   /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
 
+  final bool disableBlink;
+
   /// [ThemedTimePicker] is a time picker input. It is a wrapper of [ThemedTextInput] with a time picker.
   const ThemedTimePicker({
     super.key,
@@ -113,6 +115,7 @@ class ThemedTimePicker extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
+    this.disableBlink = false,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -175,6 +178,7 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
         saveText: t('actions.save'),
         cancelText: t('actions.cancel'),
         inDialog: true,
+        disableBlink: widget.disableBlink,
       ),
     );
 
