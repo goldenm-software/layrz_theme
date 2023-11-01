@@ -39,6 +39,7 @@ class _CalendarViewState extends State<CalendarView> {
               showEntries: showEntries,
               entries: [
                 ThemedCalendarEntry(
+                  textAlign: TextAlign.center,
                   at: DateTime(2023, 8, 1),
                   title: "Evento 1",
                   caption: "Evento 1 caption",
@@ -49,6 +50,7 @@ class _CalendarViewState extends State<CalendarView> {
                   },
                 ),
                 ThemedCalendarEntry(
+                  textAlign: TextAlign.left,
                   at: DateTime(2023, 8, 1, 8, 0, 0),
                   title: "Evento 2",
                   caption: "Evento 2 caption",
@@ -56,6 +58,7 @@ class _CalendarViewState extends State<CalendarView> {
                   icon: MdiIcons.calendar,
                 ),
                 ThemedCalendarEntry(
+                  textAlign: TextAlign.right,
                   at: DateTime(2023, 8, 1, 12, 0, 0),
                   title: "Evento 3",
                   caption: "Evento 3 caption",
@@ -78,6 +81,7 @@ class _CalendarViewState extends State<CalendarView> {
               ],
               rangeEntries: [
                 ThemedCalendarRangeEntry(
+                  textAlign: TextAlign.right,
                   startAt: DateTime(2023, 8, 1, 8, 0, 0),
                   endAt: DateTime(2023, 8, 5, 8, 0, 0),
                   title: "Evento 1 de rango",

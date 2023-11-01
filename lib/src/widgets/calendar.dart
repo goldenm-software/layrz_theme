@@ -570,6 +570,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                     List<ThemedCalendarEntry> joinedEntries = [
                       ...dayRangeEntries.map((entry) {
                         return ThemedCalendarEntry(
+                          textAlign: entry.textAlign,
                           at: day,
                           color: entry.color,
                           icon: entry.icon,
@@ -727,6 +728,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                                         Expanded(
                                                           child: Text(
                                                             item.title,
+                                                            textAlign: item.textAlign,
                                                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                                   color: validateColor(color: cardColor),
                                                                   fontSize: 10,
@@ -885,40 +887,44 @@ enum ThemedCalendarMode {
 }
 
 class ThemedCalendarEntry {
+  /// [at] is the date and time of the entry.
   final DateTime at;
+
+  /// [color] is the color of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the color will be ignored.
   final Color? color;
+
+  /// [icon] is the icon of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the icon will be ignored.
   final IconData? icon;
+
+  /// [title] is the title of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the title will be ignored.
   final String title;
+
+  /// [caption] is the caption of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the caption will be ignored.
   final String? caption;
+
+  /// [onTap] is the callback that will be called when the user taps the entry.
+  /// Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the onTap will be ignored.
   final VoidCallback? onTap;
+
+  /// [textAlign] is the alignment of the text of the entry.
+  final TextAlign textAlign;
 
   /// [ThemedCalendarEntry] is a class that represents an entry in the calendar.
   /// When the [ThemedCalendar] is in `day` or `week`, we'll use the time-part of the [at] to display the entry.
   /// When the [ThemedCalendar] is in `month` or `year`, we'll use the date-part of the [at] to display the entry.
   const ThemedCalendarEntry({
-    /// [at] is the date and time of the entry.
     required this.at,
-
-    /// [color] is the color of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the color will be ignored.
     this.color,
-
-    /// [icon] is the icon of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the icon will be ignored.
     this.icon,
-
-    /// [title] is the title of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the title will be ignored.
     required this.title,
-
-    /// [caption] is the caption of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the caption will be ignored.
     this.caption,
-
-    /// [onTap] is the callback that will be called when the user taps the entry.
-    /// Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the onTap will be ignored.
     this.onTap,
+    this.textAlign = TextAlign.justify,
   });
 
   @override
@@ -928,13 +934,35 @@ class ThemedCalendarEntry {
 }
 
 class ThemedCalendarRangeEntry {
+  /// [startAt] is the start date and time of the entry.
   final DateTime startAt;
+
+  /// [endAt] is the end date and time of the entry.
   final DateTime endAt;
+
+  /// [color] is the color of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the color will be ignored.
   final Color? color;
+
+  /// [icon] is the icon of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the icon will be ignored.
   final IconData? icon;
+
+  /// [title] is the title of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the title will be ignored.
   final String title;
+
+  /// [caption] is the caption of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the caption will be ignored.
   final String? caption;
+
+  /// [onTap] is the callback that will be called when the user taps the entry.
+  /// Only will apply when the [ThemedCalendar] is in `day` or `week`.
+  /// In `month` or `year`, the onTap will be ignored.
   final VoidCallback? onTap;
+
+  /// [textAlign] is the alignment of the text of the entry.
+  final TextAlign textAlign;
 
   /// [ThemedCalendarEntry] is a class that represents an entry in the calendar.
   /// When the [ThemedCalendar] is in `day` or `week`, we'll use the time-part of the [startAt] and [endAt]
@@ -942,31 +970,13 @@ class ThemedCalendarRangeEntry {
   /// When the [ThemedCalendar] is in `month` or `year`, we'll use the date-part of the [startAt] and [endAt]
   /// to display the entry.
   const ThemedCalendarRangeEntry({
-    /// [startAt] is the start date and time of the entry.
     required this.startAt,
-
-    /// [endAt] is the end date and time of the entry.
     required this.endAt,
-
-    /// [color] is the color of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the color will be ignored.
     this.color,
-
-    /// [icon] is the icon of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the icon will be ignored.
     this.icon,
-
-    /// [title] is the title of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the title will be ignored.
     required this.title,
-
-    /// [caption] is the caption of the entry. Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the caption will be ignored.
     this.caption,
-
-    /// [onTap] is the callback that will be called when the user taps the entry.
-    /// Only will apply when the [ThemedCalendar] is in `day` or `week`.
-    /// In `month` or `year`, the onTap will be ignored.
     this.onTap,
+    this.textAlign = TextAlign.justify,
   });
 }
