@@ -83,6 +83,8 @@ class ThemedTimeRangePicker extends StatefulWidget {
   /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
 
+  final bool disableBlink;
+
   /// [ThemedTimeRangePicker] is a time range picker input. It is a wrapper of [ThemedTextInput]
   /// with a time range picker.
   const ThemedTimeRangePicker({
@@ -116,6 +118,7 @@ class ThemedTimeRangePicker extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
+    this.disableBlink = false,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -217,6 +220,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                             cancelText: t('actions.cancel'),
                             inDialog: false,
                             onChanged: (time) => setState(() => start = time),
+                            disableBlink: widget.disableBlink,
                           ),
                           const SizedBox(height: 10),
                           Text(
@@ -235,6 +239,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                             cancelText: t('actions.cancel'),
                             inDialog: false,
                             onChanged: (time) => setState(() => end = time),
+                            disableBlink: widget.disableBlink,
                           ),
                         ],
                       );
