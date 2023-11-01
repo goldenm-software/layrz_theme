@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.6
+  - Added new parameter `texAlign` to [ThemedCalendarEntry] and [ThemedCalendarRangeEntry] to change alignment in the `title` 
+  
 ## 4.2.5
   - Added optional parameter `disableBlink` to [ThemedTimePicker] and [ThemedTimeRangePicker] to disable blinking of the inputs in the dialog
   - Fixed a bug on the [ThemedTimePicker] and [ThemedTimeRangePicker] dialog in which the increase and decrease buttons were not updating the state of the widget
