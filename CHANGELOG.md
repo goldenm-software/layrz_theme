@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.2.5
+  - Added optional parameter `disableBlink` to [ThemedTimePicker] and [ThemedTimeRangePicker] to disable blinking of the inputs in the dialog
+  - Fixed a bug on the [ThemedTimePicker] and [ThemedTimeRangePicker] dialog in which the increase and decrease buttons were not updating the state of the widget
+
 ## 4.2.4
 - Removed paginator from [ThemedTable<T>] in mobile mode.
 

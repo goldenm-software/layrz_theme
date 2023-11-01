@@ -83,6 +83,7 @@ class ThemedTimePicker extends StatefulWidget {
   /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
 
+  /// disables blinking animation of the time selectors
   final bool disableBlink;
 
   /// [ThemedTimePicker] is a time picker input. It is a wrapper of [ThemedTextInput] with a time picker.
