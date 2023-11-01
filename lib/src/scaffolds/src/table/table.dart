@@ -1461,6 +1461,12 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   }
 
   void _paginate() {
+    double width = MediaQuery.sizeOf(context).width;
+
+    if (width < widget.mobileBreakpoint) {
+      return;
+    }
+
     double height = 0;
     if (_key.currentContext == null) {
       height = rowHeight * 10;

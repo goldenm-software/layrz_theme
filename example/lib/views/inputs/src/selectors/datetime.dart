@@ -67,6 +67,7 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
               labelText: "Example label",
               value: _selectedTime,
               onChanged: (val) => setState(() => _selectedTime = val),
+              disableBlink: true,
             ),
             const Text("And the range variant"),
             ThemedTimeRangePicker(

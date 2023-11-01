@@ -28,6 +28,8 @@ class _ThemedTimeUtility extends StatefulWidget {
   /// [inDialog] is the flag to display the input in a dialog.
   final bool inDialog;
 
+  final bool disableBlink;
+
   /// [_ThemedTimeUtility] is a time utility input.
   const _ThemedTimeUtility({
     // ignore: unused_element
@@ -41,6 +43,7 @@ class _ThemedTimeUtility extends StatefulWidget {
     this.saveText = 'Save',
     this.cancelText = 'Cancel',
     this.inDialog = true,
+    this.disableBlink = false,
   });
 
   @override
@@ -64,7 +67,11 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
     _hoursController = TextEditingController();
     _minutesController = TextEditingController();
     _updateControllers();
-    _setTimer();
+    if (widget.disableBlink) {
+      _blinkState = false;
+    } else {
+      _setTimer();
+    }
   }
 
   @override
@@ -74,8 +81,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
       _value = widget.value ?? TimeOfDay.now();
       _updateControllers();
     }
-
-    _setTimer();
+    if (!widget.disableBlink && widget.disableBlink != oldWidget.disableBlink) {
+      _setTimer();
+    }
   }
 
   void _setTimer() {
@@ -97,6 +105,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
     // Set cursor position
     _hoursController.selection = TextSelection.fromPosition(TextPosition(offset: _hoursController.text.length));
     _minutesController.selection = TextSelection.fromPosition(TextPosition(offset: _minutesController.text.length));
+    setState(() {});
   }
 
   @override
