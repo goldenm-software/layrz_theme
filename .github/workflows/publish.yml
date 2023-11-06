@@ -7,14 +7,29 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/goldenm-software/flutter-web-builder:3.13.5
+      options: --user root
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Authenticate
+        run: |
+          echo "${{ secrets.PUB_TOKEN }}" > $HOME/.credentials.json
+          gcloud auth activate-service-account --key-file=$HOME/.credentials.json
+          gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
+      
       - name: Publish
-        uses: sakebook/actions-flutter-pub-publisher@v1.4.1
-        with:
-          credential: ${{ secrets.PUB_TOKEN }}
-          flutter_package: true
-          skip_test: true
-          dry_run: true
+        run: |
+          flutter pub publish --force
+      
+      - name: Cleanup
+        run: |
+          rm $HOME/.credentials.json
+          dart pub token remove https://pub.dev
+
