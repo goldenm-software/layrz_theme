@@ -1,0 +1,28 @@
+name: "Deploy package"
+
+on:
+  push:
+    # Deploy only when the commit ends with NEXT
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/goldenm-software/flutter-web-builder:3.13.5
+      options: --user root
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload to Dart Package Index
+        run: |
+          gcloud auth activate-service-account --key-file=$PUB_TOKEN
+          gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
+          dart pub publish -f
+          dart pub token remove https://pub.dev
