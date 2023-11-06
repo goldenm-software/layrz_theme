@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.8
+- GitHub Actions Tests (Nothing relevant for the end-user)
+
 ## 4.2.7
 - Migrated repository from GitLab to GitHub
 
