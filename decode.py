@@ -2,7 +2,7 @@
 import os
 import json
 
-data = json.loads('{"test": 1}')
+data = json.loads(os.environ['PUB_JSON'])
 
 # Get the current directory
 current_dir = os.getcwd()
