@@ -20,8 +20,8 @@ jobs:
 
       - name: Authenticate
         run: |
-          echo ${{ secrets.LAYRZ_PUB_TOKEN }} > $HOME/.credentials.json
-          gcloud auth activate-service-account --key-file=$HOME/.credentials.json
+          echo '${{ secrets.LAYRZ_PUB_TOKEN }}' > secrets.json
+          gcloud auth activate-service-account --key-file=$HOME/secrets.json
           gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
       
       - name: Publish
@@ -30,6 +30,6 @@ jobs:
       
       - name: Cleanup
         run: |
-          rm $HOME/.credentials.json
+          rm secrets.json
           dart pub token remove https://pub.dev
 
