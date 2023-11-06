@@ -33,3 +33,5 @@ example/.fvm/flutter_sdk
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+credentials.json

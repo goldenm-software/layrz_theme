@@ -14,14 +14,15 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    env:
+      PUB_JSON: ${{ secrets.LAYRZ_PUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Authenticate
         run: |
-          echo "${{ secrets.LAYRZ_PUB_TOKEN }}" > secrets.json
-          gcloud auth activate-service-account --key-file=secrets.json
+          gcloud auth activate-service-account --key-file=$(python3 decode.py)
           gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
       
       - name: Publish
