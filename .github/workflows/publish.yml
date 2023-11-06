@@ -22,8 +22,7 @@ jobs:
 
       - name: Authenticate
         run: |
-          gcloud auth activate-service-account --key-file=$(python3 decode.py)
-          gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
+          python3 authenticate.py
       
       - name: Publish
         run: |
@@ -31,6 +30,5 @@ jobs:
       
       - name: Cleanup
         run: |
-          rm secrets.json
           dart pub token remove https://pub.dev
 
