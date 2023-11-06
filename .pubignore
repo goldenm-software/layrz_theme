@@ -7,3 +7,4 @@
 /build
 .gitlab-ci.yml
 disabled.gitlab-ci.yml
+credentials.json
