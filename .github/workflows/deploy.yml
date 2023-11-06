@@ -1,0 +1,26 @@
+name: "Deploy package"
+
+on:
+  push:
+    # Deploy only when the commit ends with NEXT
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/goldenm-software/flutter-web-builder:3.13.5
+      options: --user root
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload to Dart Package Index
+        run: |
+          export LOCAL_TOKEN=123123123
+          dart pub token add https://api.layrz.com/pub --env-var LOCAL_TOKEN
+          flutter pub publish --force
