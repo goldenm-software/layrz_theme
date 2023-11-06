@@ -8,6 +8,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Publish
         uses: sakebook/actions-flutter-pub-publisher@v1.4.1
         with:
