@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.7
+- Migrated repository from GitLab to GitHub
+
 ## 4.2.6
   - Added new parameter `texAlign` to [ThemedCalendarEntry] and [ThemedCalendarRangeEntry] to change alignment in the `title` 
   

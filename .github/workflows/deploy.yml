@@ -21,6 +21,7 @@ jobs:
 
       - name: Upload to Dart Package Index
         run: |
-          export LOCAL_TOKEN=123123123
-          dart pub token add https://api.layrz.com/pub --env-var LOCAL_TOKEN
+          gcloud auth activate-service-account --key-file=$PUB_TOKEN
+          gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
           flutter pub publish --force
+          dart pub token remove https://pub.dev
