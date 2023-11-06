@@ -20,7 +20,7 @@ jobs:
 
       - name: Authenticate
         run: |
-          echo "${{ secrets.PUB_TOKEN }}" > $HOME/.credentials.json
+          echo ${{ secrets.LAYRZ_PUB_TOKEN }} > $HOME/.credentials.json
           gcloud auth activate-service-account --key-file=$HOME/.credentials.json
           gcloud auth print-identity-token --audiences=https://pub.dev | dart pub token add https://pub.dev
       
