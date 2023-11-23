@@ -1511,9 +1511,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   String _getStrItemsPerPage() {
     if (widget.items.isEmpty) return "";
-
     int firstIndex = max(1, _currentPage * _items.length);
     int secondIndex = min(widget.items.length, (_currentPage + 1) * _items.length);
+    if (_currentPage == 0) firstIndex = 1;
+    if (_currentPage == _totalPages - 1) {
+      firstIndex = (_currentPage) * _itemsPerPage;
+      secondIndex = widget.items.length;
+    }
+    debugPrint("Vizualizacion: $firstIndex - $secondIndex de ${widget.items.length} items");
 
     String strItemsPerPage = t(
       'layrz.table.paginator.items',
