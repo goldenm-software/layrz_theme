@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.9
+- Added new widget to represent the first index and the last index of the items in [ThemedTable<T>]
+
 ## 4.2.8
 - GitHub Actions Tests (Nothing relevant for the end-user)
 

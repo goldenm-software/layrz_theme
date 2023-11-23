@@ -572,14 +572,20 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                   },
                 ),
                 const Spacer(),
-                Text(
-                  t(
-                    'layrz.table.paginator.page',
-                    {'page': _currentPage + 1, 'total': _totalPages},
-                  ),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                Column(
+                  children: [
+                    Text(
+                      t(
+                        'layrz.table.paginator.page',
+                        {'page': _currentPage + 1, 'total': _totalPages},
                       ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      _getStrItemsPerPage(),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
                 ),
                 const Spacer(),
                 ThemedButton(
@@ -590,6 +596,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                   isDisabled: _currentPage == _totalPages - 1,
                   onTap: () {
                     setState(() => _currentPage++);
+                    debugPrint("Items per page: ${_items.length}");
+                    debugPrint("Current Page: $_currentPage ");
                     widget.onPageChanged?.call(_currentPage);
                     _resyncItems(predictSizes: false, paginate: true);
                   },
@@ -1499,5 +1507,23 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     _items = _items.sublist(_currentPage * _itemsPerPage, lastItem);
+  }
+
+  String _getStrItemsPerPage() {
+    if (widget.items.isEmpty) return "";
+
+    int firstIndex = max(1, _currentPage * _items.length);
+    int secondIndex = min(widget.items.length, (_currentPage + 1) * _items.length);
+
+    String strItemsPerPage = t(
+      'layrz.table.paginator.items',
+      {
+        'firstIndex': firstIndex,
+        'secondIndex': secondIndex,
+        'totalItems': widget.items.length,
+      },
+    );
+
+    return strItemsPerPage;
   }
 }
