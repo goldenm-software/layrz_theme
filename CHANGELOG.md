@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.10
+- Fix a logic to show index of [ThemedTablet<T>]
+
 ## 4.2.9
 - Added new widget to represent the first index and the last index of the items in [ThemedTable<T>]
 
