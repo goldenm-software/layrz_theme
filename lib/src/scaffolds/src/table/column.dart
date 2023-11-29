@@ -6,8 +6,10 @@ typedef ValueBuilder<T> = String Function(BuildContext context, T item);
 /// [WidgetBuilder<T>] defines the widget to display in a column.
 typedef WidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
+/// [CellTap<T>] defines the action when the cell is tapped.
 typedef CellTap<T> = void Function(T item);
 
+/// [CellColor<T>] defines the color of the cell.
 typedef CellColor<T> = Color? Function(T item);
 
 class ThemedColumn<T> {
@@ -84,6 +86,8 @@ class ThemedColumn<T> {
   /// [sortIconSize] is the size of the sort icon.
   static double get sortIconSize => 15;
 
+  /// [predictedContentSize] returns the predicted size of the content of the column.
+  /// This is used to calculate the width of the column.
   Size predictedContentSize(BuildContext context, T item, TextStyle? style) {
     if (widgetBuilder != null) {
       return Size(
@@ -106,6 +110,8 @@ class ThemedColumn<T> {
     );
   }
 
+  /// [predictedHeaderSize] returns the predicted size of the header of the column.
+  /// This is used to calculate the width of the column.
   Size predictedHeaderSize(BuildContext context, TextStyle? style) {
     if (label != null) {
       return Size(

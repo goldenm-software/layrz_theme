@@ -2,6 +2,10 @@
 
 ## 4.3.0
 - Refactorized buttons to reduce the number of `setState`s and improve the performance of the widgets.
+- Refactorized table to reduce the number of `setState`s and improve the performance of the widgets.
+- Removed "mobile" mode from the table, now, the table will always use the "desktop" mode, aka, the table will always use the horizontal scroll.
+- Deprecated [rowAvatarBuilder], [rowTitleBuilder], [rowSubtitleBuilder], [mobileRowHeight], [initialPage], [enablePaginator], [itemsPerPage], [paginatorLeading], [paginatorTrailing], [onPageChanged] and [shouldExpand] from the [ThemedTable<T>] widget.
+- Added [rowsPerPage] and [availableRowsPerPage] to the [ThemedTable<T>] widget to control the number of rows per page.
 
 ## 4.2.10
 - Fix a logic to show index of [ThemedTablet<T>]

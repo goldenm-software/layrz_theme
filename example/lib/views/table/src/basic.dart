@@ -18,7 +18,7 @@ class _BasicTableViewState extends State<BasicTableView> {
   @override
   void initState() {
     super.initState();
-    _items = List.generate(5000, (i) {
+    _items = List.generate(100, (i) {
       return Asset(
         id: (i + 1).toString(),
         name: "Asset ${Random().nextInt(20)}",
@@ -39,13 +39,9 @@ class _BasicTableViewState extends State<BasicTableView> {
             child: ThemedTable<Asset>(
               module: 'assets',
               idLabel: "#ID",
-              rowAvatarBuilder: (context, columns, item) => ThemedTableAvatar(label: item.name),
-              rowTitleBuilder: (context, columns, item) => Text(item.name),
-              rowSubtitleBuilder: (context, columns, item) => Text(item.id),
               idBuilder: (context, item) => item.id,
               enableMultiSelectDialog: true,
               multiSelectionEnabled: true,
-              // itemsPerPage: 10,
               idEnabled: false,
               onIdTap: (item) {
                 debugPrint("Tapped on ${item.name}");
@@ -96,12 +92,12 @@ class _BasicTableViewState extends State<BasicTableView> {
                   labelText: 'VIN',
                   valueBuilder: (context, item) => item.vin ?? 'N/A',
                 ),
-                // ...List.generate(25, (i) {
-                //   return ThemedColumn(
-                //     labelText: 'VIN $i',
-                //     valueBuilder: (context, item) => item.vin ?? 'N/A',
-                //   );
-                // }),
+                ...List.generate(25, (i) {
+                  return ThemedColumn(
+                    labelText: 'VIN $i',
+                    valueBuilder: (context, item) => item.vin ?? 'N/A',
+                  );
+                }),
               ],
             ),
           ),
