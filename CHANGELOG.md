@@ -4,14 +4,14 @@
 - Refactorized buttons to reduce the number of `setState`s and improve the performance of the widgets.
 - Refactorized table to reduce the number of `setState`s and improve the performance of the widgets.
 - Removed "mobile" mode from the table, now, the table will always use the "desktop" mode, aka, the table will always use the horizontal scroll.
-- Deprecated [rowAvatarBuilder], [rowTitleBuilder], [rowSubtitleBuilder], [mobileRowHeight], [initialPage], [enablePaginator], [itemsPerPage], [paginatorLeading], [paginatorTrailing], [onPageChanged] and [shouldExpand] from the [ThemedTable<T>] widget.
-- Added [rowsPerPage] and [availableRowsPerPage] to the [ThemedTable<T>] widget to control the number of rows per page.
+- Deprecated `rowAvatarBuilder`, `rowTitleBuilder`, `rowSubtitleBuilder`, `mobileRowHeight`, `initialPage`, `enablePaginator`, `itemsPerPage`, `paginatorLeading`, `paginatorTrailing`, `onPageChanged` and `shouldExpand` from the `ThemedTable<T>` widget.
+- Added `rowsPerPage` and `availableRowsPerPage` to the `ThemedTable<T>` widget to control the number of rows per page.
 
 ## 4.2.10
-- Fix a logic to show index of [ThemedTablet<T>]
+- Fix a logic to show index of `ThemedTablet<T>`
 
 ## 4.2.9
-- Added new widget to represent the first index and the last index of the items in [ThemedTable<T>]
+- Added new widget to represent the first index and the last index of the items in `ThemedTable<T>`
 
 ## 4.2.8
 - GitHub Actions Tests (Nothing relevant for the end-user)
@@ -20,38 +20,38 @@
 - Migrated repository from GitLab to GitHub
 
 ## 4.2.6
-  - Added new parameter `texAlign` to [ThemedCalendarEntry] and [ThemedCalendarRangeEntry] to change alignment in the `title` 
+  - Added new parameter `texAlign` to `ThemedCalendarEntry` and `ThemedCalendarRangeEntry` to change alignment in the `title` 
   
 ## 4.2.5
-  - Added optional parameter `disableBlink` to [ThemedTimePicker] and [ThemedTimeRangePicker] to disable blinking of the inputs in the dialog
-  - Fixed a bug on the [ThemedTimePicker] and [ThemedTimeRangePicker] dialog in which the increase and decrease buttons were not updating the state of the widget
+  - Added optional parameter `disableBlink` to `ThemedTimePicker` and `ThemedTimeRangePicker` to disable blinking of the inputs in the dialog
+  - Fixed a bug on the `ThemedTimePicker` and `ThemedTimeRangePicker` dialog in which the increase and decrease buttons were not updating the state of the widget
 
 ## 4.2.4
-- Removed paginator from [ThemedTable<T>] in mobile mode.
+- Removed paginator from `ThemedTable<T>` in mobile mode.
 
 ## 4.2.3
-- Major change in [ThemedTable<T>] to handle dynamic columns and rows. Also, changes to horizontal scrolling inside of the table.
+- Major change in `ThemedTable<T>` to handle dynamic columns and rows. Also, changes to horizontal scrolling inside of the table.
 
 ## 4.2.2
-- Add on [ThemedCalendar] additionalButtons of [ThemedButton].
+- Add on `ThemedCalendar` additionalButtons of `ThemedButton`.
 
 ## 4.2.1
-- Fixed [ThemedMonthRangePicker] to handle one-click action to pick only one month in `consecutive` mode.
+- Fixed `ThemedMonthRangePicker` to handle one-click action to pick only one month in `consecutive` mode.
 
 ## 4.2.0
 - Added suport for Flutter 3.13.5
 - Fixed background color on Flutter styled Checkbox for changes in Flutter 3.13.5
 
 ## 4.1.22
-- Fix [ThemedCalendar] days
+- Fix `ThemedCalendar` days
 
 ## 4.1.21
-- Added Linux support for [saveFile] and [pickFile]
+- Added Linux support for `saveFile` and `pickFile`
 
 ## 4.1.20
-- Updated [ThemedDualListInput] to handle `errors`
-- Updated [ThemedTab] to handle `color`
-- Updated [ThemedFieldDisplayError] to change the padding of the error text
+- Updated `ThemedDualListInput` to handle `errors`
+- Updated `ThemedTab` to handle `color`
+- Updated `ThemedFieldDisplayError` to change the padding of the error text
 
 ## 4.1.19
 - Added `errors` and `hideDetails` on some pickers
@@ -60,16 +60,16 @@
 - Fixed a bug where the 12 hour date format in AM PM will display as 0
 
 ## 4.1.17
-- New widget [ThemedTab]
+- New widget `ThemedTab`
 
 ## 4.1.16
-- Fixes on [ThemedActionsButtons], now will use `onTap ?? onPressed` instead of only `onPressed` to handle the tap gesture.
+- Fixes on `ThemedActionsButtons`, now will use `onTap ?? onPressed` instead of only `onPressed` to handle the tap gesture.
 
 ## 4.1.15
 - Fixed `ScrollbarThemeData` on `generateLightTheme()` and `generateDarkTheme()` to use a specific color.
 
 ## 4.1.14
-- Fixed [ThemedCalendar] whene generate a [ThemedCalendarEntry]
+- Fixed `ThemedCalendar` whene generate a `ThemedCalendarEntry`
 
 ## 4.1.13
 - Fixed `ThemedTooltip` to destroy inmediatly when the widget is disposed.
