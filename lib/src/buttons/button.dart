@@ -2,17 +2,31 @@ part of layrz_theme;
 
 class ThemedButton extends StatefulWidget {
   /// [label] and [labelText] is the label of the button. Cannot provide both.
+  ///
   /// [label] is for send a custom widget and control the colors and related things.
+  ///
   /// Avoid using [label] and [labelText] at the same time. We will prefer [label] over [labelText].
   final Widget? label;
 
   /// [labelText] is for send only the String and assume the component will adapt the colors and related
   /// things automatically.
+  ///
+  /// Of the style of the label, we use the [ThemeData.textTheme.bodySmall] as base and changes
+  /// the [fontSize] to `13`.
+  ///
   /// Avoid using [label] and [labelText] at the same time. We will prefer [label] over [labelText].
   final String? labelText;
 
-  /// [icon] is the icon of the button, when [style] is ThemedButtonStyle.fab, will only shows the icon and use
-  /// the [labelText] as tooltip.
+  /// [icon] is the icon of the button, when [style] is any FAB style, will only shows the icon and use
+  /// the [labelText] as tooltip. In case that you use [label] instead of [labelText], the tooltip will
+  /// be the content of the [label].
+  ///
+  /// FAB styles are:
+  /// - [ThemedButtonStyle.fab]
+  /// - [ThemedButtonStyle.outlinedFab]
+  /// - [ThemedButtonStyle.filledFab]
+  /// - [ThemedButtonStyle.filledTonalFab]
+  /// - [ThemedButtonStyle.elevatedFab]
   final IconData? icon;
 
   /// [onTap] is called when the button is tapped.
@@ -36,9 +50,13 @@ class ThemedButton extends StatefulWidget {
   final bool isCooldown;
 
   /// [hintText] is the hint text of the button, will display as tooltip.
+  /// This property only will appear when the button is style as any non-FAB style
+  /// ([ThemedButtonStyle.text], [ThemedButtonStyle.outlined], [ThemedButtonStyle.filled],
+  /// [ThemedButtonStyle.filledTonal] or [ThemedButtonStyle.elevated]).
   final String? hintText;
 
-  /// [width] is the width of the button.
+  /// [width] is the width of the button. If this property is null, the width will be calculated
+  /// based on the content of the button.
   final double? width;
 
   /// [isDisabled] is used to disable the button.
@@ -57,6 +75,10 @@ class ThemedButton extends StatefulWidget {
   /// By default, will use `ThemedTooltipPosition.bottom`.
   final ThemedTooltipPosition tooltipPosition;
 
+  /// [fontSize] is used to set the font size of the label.
+  /// By default, will use `13`.
+  final double fontSize;
+
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -74,6 +96,7 @@ class ThemedButton extends StatefulWidget {
     this.width,
     this.isDisabled = false,
     this.tooltipPosition = ThemedTooltipPosition.bottom,
+    this.fontSize = 13,
   }) : assert(label != null || labelText != null);
 
   @override
@@ -81,564 +104,782 @@ class ThemedButton extends StatefulWidget {
 }
 
 class _ThemedButtonState extends State<ThemedButton> {
-  final GlobalKey _key = GlobalKey();
-
+  /// [icon] is the icon of the button, when [style] is ThemedButtonStyle.fab, will only shows the icon and use
+  /// the [labelText] as tooltip.
+  /// Otherwise, the icon will be displayed at the left of the label.
+  /// It's a shortcut to [widget.icon].
   IconData? get icon => widget.icon;
-  Widget? get label => widget.label;
-  String? get labelText => widget.labelText;
-  bool get isLoading => widget.isLoading;
-  Color? get color => widget.color;
-  ThemedButtonStyle get style => widget.style;
-  String? get hintText => widget.hintText;
-  VoidCallback? get onPressed => widget.onTap;
-  bool get isDisabled => widget.isDisabled || isLoading || isCooldown;
-  double? get width => widget.width;
 
-  // Cooldown control
+  /// [label] of the button.
+  /// It's a shortcut to [widget.label].
+  Widget? get label => widget.label;
+
+  /// [labelText] of the button.
+  /// It's a shortcut to [widget.labelText].
+  String? get labelText => widget.labelText;
+
+  /// [isLoading] is used to show a loading indicator.
+  /// It's a shortcut to [widget.isLoading].
+  bool get isLoading => widget.isLoading;
+
+  /// [hintText] is the hint text of the button, will display as tooltip.
+  String? get hintText => widget.hintText;
+
+  /// [isDisabled] is used to disable the button.
+  /// It's an or condition between [widget.isDisabled], [isLoading] and [isCooldown].
+  bool get isDisabled => widget.isDisabled || isLoading || isCooldown;
+
+  /// [isCooldown] is used to know if the button is on cooldown.
+  /// It's a shortcut to [widget.isCooldown].
   bool get isCooldown => widget.isCooldown;
+
+  /// [cooldownDuration] is used to set the duration of the cooldown.
+  /// It's a shortcut to [widget.cooldownDuration].
   Duration get cooldownDuration => widget.cooldownDuration;
+
+  /// [onCooldownFinish] will be called when the cooldown is finished.
+  /// It's a shortcut to [widget.onCooldownFinish].
   VoidCallback? get onCooldownFinish => widget.onCooldownFinish;
 
+  /// [isDark] is used to know if the theme is dark.
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+
+  /// [isFabButton] is used to know if the button is a FAB/icon button.
   bool get isFabButton => [
         ThemedButtonStyle.outlinedFab,
         ThemedButtonStyle.fab,
         ThemedButtonStyle.filledFab,
+        ThemedButtonStyle.filledTonalFab,
+        ThemedButtonStyle.elevatedFab,
       ].contains(style);
-  double get buttonSize => isFabButton ? 40 : 30;
-  EdgeInsets get padding => const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
-  bool isHovered = false;
 
-  double get hoverOpacity => isHovered ? 0.3 : 0.2;
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  /// [onTap] is called when the button is tapped.
+  /// It's a shortcut to [widget.onTap].
+  VoidCallback? get onTap => widget.onTap;
+
+  /// [style] defines the style of the button.
+  /// It's a shortcut to [widget.style].
+  ThemedButtonStyle get style => widget.style;
+
+  /// [defaultPadding] defines the raw padding of the button.
+  EdgeInsets get defaultPadding {
+    if (isFabButton) {
+      return const EdgeInsets.all(5);
+    }
+
+    return const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
+  }
+
+  /// [padding] defines the padding of the button.
+  ///
+  /// This padding is conditional, because when the button is in loading or cooldown state, the padding
+  /// will be reduced to avoid the overflow of the loading indicator.
+  EdgeInsets get padding => isLoading || isCooldown ? EdgeInsets.zero : defaultPadding;
+
+  /// [kHoverOpacity] defines the opacity of the button when is hovered.
+  double get kHoverOpacity => 0.2;
+
+  /// [defaultColor] defines the default color of the button.
   Color get defaultColor => isDark ? Colors.white : Theme.of(context).primaryColor;
+
+  /// [textStyle] defines the default text style of the button.
+  /// This style only applies when the button uses [labelText] instead of [label].
+  /// Also, the font color will change depending of the [style] of the button.
+  TextStyle? get textStyle => Theme.of(context).textTheme.bodySmall?.copyWith(
+        fontSize: widget.fontSize,
+      );
+
+  /// [disabledColor] is used to know the color of the disabled button.
+  Color get disabledColor => isDark ? Colors.grey.shade800 : Colors.grey.shade300;
+
+  /// [contentColor] is used to know the color of the content of the button.
+  Color get contentColor => isDisabled ? disabledColor : (widget.color ?? defaultColor);
+
+  /// [loadingColor] defines the color of the loading indicator.
+  Color get loadingColor => isDark ? Colors.grey.shade500 : Colors.grey.shade400;
+
+  /// [colorOverride] allows to set a new color when the button is loading, on cooldown or disabled.
+  /// Otherwise, will return `null`.
+  Color? get colorOverride => isLoading || isCooldown ? disabledColor : null;
+
+  /// [iconSize] is used to know the size of the icon.
+  /// It's always `16`.
+  double get iconSize => 16;
+
+  /// [message] is used to know the message of the button.
+  /// This message is only used when the button uses [label] instead of [labelText] and
+  /// the [style] is [ThemedButtonStyle.fab], [ThemedButtonStyle.outlinedFab], [ThemedButtonStyle.filledFab],
+  /// [ThemedButtonStyle.filledTonalFab] or [ThemedButtonStyle.elevatedFab].
+  String get message {
+    String msg = "";
+    if (labelText != null) {
+      msg = labelText ?? "";
+    } else if (label != null) {
+      if (label is Text) {
+        msg = (label! as Text).data ?? "";
+      } else {
+        msg = label.toString();
+      }
+    }
+
+    if (msg.isEmpty) {
+      if (hintText != null) {
+        msg = hintText ?? "";
+      }
+    } else {
+      if (hintText != null) {
+        msg = "$msg - $hintText";
+      }
+    }
+
+    return msg;
+  }
+
+  /// [width] is used to predict the width of the button.
+  /// It's important to know, when the button uses [label] instead of [labelText], the width of the button
+  /// will be the [widget.width] property or `50` as a fallback.
+  double get width {
+    if (labelText == null) {
+      return widget.width ?? 50;
+    }
+
+    if (isFabButton) {
+      return height;
+    }
+
+    TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: labelText,
+        style: textStyle,
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    double predicted = textPainter.width + defaultPadding.horizontal;
+
+    if (icon != null) {
+      // 5 is the space between the icon and the text
+      predicted += 5;
+
+      // 14 is the size of the icon
+      predicted += iconSize;
+    }
+
+    return predicted;
+  }
+
+  /// [height] is used to set the height of the button.
+  /// Always will be `30`.
+  double get height => 30;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      borderRadius: BorderRadius.circular(buttonSize),
-      onTap: isDisabled ? null : onPressed,
-      onHover: (value) {
-        setState(() => isHovered = value);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        switch (style) {
+          case ThemedButtonStyle.filledTonal:
+            return _handleHint(
+              constraints: constraints,
+              child: _buildFilledTonal(constraints: constraints),
+            );
+          case ThemedButtonStyle.filledTonalFab:
+            return _builFilledTonalFab(constraints: constraints);
+          case ThemedButtonStyle.text:
+            return _handleHint(
+              constraints: constraints,
+              child: _buildText(constraints: constraints),
+            );
+          case ThemedButtonStyle.fab:
+            return _buildFab(constraints: constraints);
+          case ThemedButtonStyle.outlined:
+            return _handleHint(
+              constraints: constraints,
+              child: _buildOutlined(constraints: constraints),
+            );
+          case ThemedButtonStyle.outlinedFab:
+            return _buildOutlinedFab(constraints: constraints);
+          case ThemedButtonStyle.filled:
+            return _handleHint(
+              constraints: constraints,
+              child: _buildFilled(constraints: constraints),
+            );
+          case ThemedButtonStyle.filledFab:
+            return _builFilledFab(constraints: constraints);
+          case ThemedButtonStyle.elevated:
+            return _handleHint(
+              constraints: constraints,
+              child: _buildElevated(constraints: constraints),
+            );
+          case ThemedButtonStyle.elevatedFab:
+            return _builElevatedFab(constraints: constraints);
+          default:
+            return Text("Unsupported $style");
+        }
       },
-      child: _buildButton(),
     );
   }
 
-  Widget _buildButton() {
-    switch (style) {
-      case ThemedButtonStyle.filledTonal:
-        return _buildFilledTonalButton();
-      case ThemedButtonStyle.filled:
-        return _buildFilledButton();
-      case ThemedButtonStyle.elevated:
-        return _buildElevatedButton();
-      case ThemedButtonStyle.outlined:
-        return _buildOutlinedButton();
-      case ThemedButtonStyle.outlinedFab:
-        return _builOutlinedFabButton();
-      case ThemedButtonStyle.filledFab:
-        return _builFilledFabButton();
-      case ThemedButtonStyle.fab:
-        return _buildFabButton();
-      case ThemedButtonStyle.text:
-        return _buildTextButton();
-      default:
-        return Text("Unsupported $style");
-    }
-  }
-
-  Widget _buildFabButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-
-    String message = "";
-
-    if (labelText != null) {
-      message = labelText ?? "";
-    } else if (label != null) {
-      if (label is Text) {
-        message = (label! as Text).data ?? "";
-      } else {
-        message = label.toString();
-      }
+  /// [_handleHint] is used to handle the hint of the button.
+  /// This hint is only used when the button is style as any non-FAB style
+  Widget _handleHint({required BoxConstraints constraints, required Widget child}) {
+    if (hintText == null) {
+      return child;
     }
 
-    Color contentColor = isDisabled ? disabledColor : color;
     return ThemedTooltip(
       position: widget.tooltipPosition,
-      message: message,
+      message: hintText!,
       color: contentColor,
-      child: AnimatedContainer(
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-        key: _key,
-        duration: kHoverDuration,
-        height: buttonSize,
-        width: buttonSize,
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: isHovered ? contentColor.withOpacity(hoverOpacity) : Colors.transparent,
-          borderRadius: BorderRadius.circular(buttonSize),
-        ),
-        child: buildLoadingOrChild(
-          child: Center(
-            child: Icon(
-              icon ?? MdiIcons.help,
-              color: contentColor,
-              size: 20,
-            ),
-          ),
-        ),
-      ),
+      child: child,
     );
   }
 
-  Widget _builOutlinedFabButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-
-    String message = "";
-
-    if (labelText != null) {
-      message = labelText ?? "";
-    } else if (label != null) {
-      if (label is Text) {
-        message = (label! as Text).data ?? "";
-      } else {
-        message = label.toString();
-      }
-    }
-
-    Color contentColor = isDisabled ? disabledColor : color;
-    return ThemedTooltip(
-      position: widget.tooltipPosition,
-      message: message,
-      color: contentColor,
-      child: AnimatedContainer(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width,
-        ),
-        key: _key,
-        duration: kHoverDuration,
-        height: buttonSize,
-        width: buttonSize,
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: isHovered ? contentColor.withOpacity(hoverOpacity) : Colors.transparent,
-          border: Border.all(
-            color: isDisabled ? disabledColor : contentColor,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(buttonSize),
-        ),
-        child: buildLoadingOrChild(
-          child: Center(
-            child: Icon(
-              icon ?? MdiIcons.help,
-              color: contentColor,
-              size: 20,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _builFilledFabButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-
-    String message = "";
-
-    if (labelText != null) {
-      message = labelText ?? "";
-    } else if (label != null) {
-      if (label is Text) {
-        message = (label! as Text).data ?? "";
-      } else {
-        message = label.toString();
-      }
-    }
-
-    Color contentColor = isDisabled ? disabledColor : color;
-    return ThemedTooltip(
-      position: widget.tooltipPosition,
-      message: message,
-      color: contentColor,
-      child: AnimatedContainer(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width,
-        ),
-        key: _key,
-        duration: kHoverDuration,
-        height: buttonSize,
-        width: buttonSize,
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: contentColor.withOpacity(hoverOpacity),
-          borderRadius: BorderRadius.circular(buttonSize),
-        ),
-        child: buildLoadingOrChild(
-          child: Center(
-            child: Icon(
-              icon ?? MdiIcons.help,
-              color: contentColor,
-              size: 20,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-    TextStyle? textButtonStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          fontSize: 14,
-        );
-
-    Color contentColor = isDisabled ? disabledColor : color;
-    return AnimatedContainer(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width,
-      ),
-      key: _key,
-      duration: kHoverDuration,
-      height: buttonSize,
-      width: width,
-      padding: padding.subtract(const EdgeInsets.symmetric(vertical: 2)),
+  /// [_buildFilledTonal] is used to build a filled tonal button.
+  /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
+  Widget _buildFilledTonal({required BoxConstraints constraints}) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: isHovered ? contentColor.withOpacity(hoverOpacity) : Colors.transparent,
-        borderRadius: BorderRadius.circular(buttonSize),
+        color: colorOverride ?? contentColor.withOpacity(kHoverOpacity),
+        borderRadius: BorderRadius.circular(height),
       ),
-      child: buildLoadingOrChild(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                color: contentColor,
-                size: 14,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : onTap,
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: Padding(
+              padding: padding,
+              child: _buildLoadingOrChild(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        color: contentColor,
+                        size: iconSize,
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                    label ??
+                        Text(
+                          labelText ?? "",
+                          style: textStyle?.copyWith(color: contentColor),
+                        ),
+                  ],
+                ),
               ),
-              const SizedBox(width: 5),
-            ],
-            label ??
-                Text(
-                  labelText ?? "",
-                  style: textButtonStyle?.copyWith(
-                    color: contentColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [_buildFilledTonalFab] is used to build a filled tonal FAB button.
+  /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
+  Widget _builFilledTonalFab({required BoxConstraints constraints}) {
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
+      message: message,
+      color: contentColor,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: colorOverride ?? contentColor.withOpacity(kHoverOpacity),
+          borderRadius: BorderRadius.circular(height),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isDisabled ? null : onTap,
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: Padding(
+                padding: padding,
+                child: _buildLoadingOrChild(
+                  child: Center(
+                    child: Icon(
+                      icon ?? MdiIcons.help,
+                      color: contentColor,
+                      size: iconSize,
+                    ),
                   ),
                 ),
-          ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildOutlinedButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-    TextStyle? textButtonStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          fontSize: 14,
-        );
-
-    Color contentColor = isDisabled ? disabledColor : color;
-    return AnimatedContainer(
-      key: _key,
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-      duration: kHoverDuration,
-      height: buttonSize,
-      width: width,
-      padding: padding.subtract(const EdgeInsets.symmetric(vertical: 2)),
+  /// [_buildText] is used to build a text button.
+  /// This button is used when the [style] is [ThemedButtonStyle.text].
+  Widget _buildText({required BoxConstraints constraints}) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: isHovered ? contentColor.withOpacity(0.3) : Colors.transparent,
+        color: colorOverride ?? Colors.transparent,
+        borderRadius: BorderRadius.circular(height),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : onTap,
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: Padding(
+              padding: padding,
+              child: _buildLoadingOrChild(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        color: contentColor,
+                        size: iconSize,
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                    label ??
+                        Text(
+                          labelText ?? "",
+                          style: textStyle?.copyWith(color: contentColor),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [_buildFab] is used to build a FAB button.
+  /// This button is used when the [style] is [ThemedButtonStyle.fab].
+  Widget _buildFab({required BoxConstraints constraints}) {
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
+      message: message,
+      color: contentColor,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: colorOverride ?? Colors.transparent,
+          borderRadius: BorderRadius.circular(height),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isDisabled ? null : onTap,
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: Padding(
+                padding: padding,
+                child: _buildLoadingOrChild(
+                  child: Center(
+                    child: Icon(
+                      icon ?? MdiIcons.help,
+                      color: contentColor,
+                      size: iconSize,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [_buildOutlined] is used to build a outlined button.
+  /// This button is used when the [style] is [ThemedButtonStyle.outlined].
+  Widget _buildOutlined({required BoxConstraints constraints}) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: colorOverride ?? Colors.transparent,
+        borderRadius: BorderRadius.circular(height),
         border: Border.all(
-          color: isDisabled ? disabledColor : contentColor,
+          color: contentColor,
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(buttonSize),
       ),
-      child: buildLoadingOrChild(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                color: contentColor,
-                size: 14,
-              ),
-              const SizedBox(width: 5),
-            ],
-            label ??
-                Text(
-                  labelText ?? "",
-                  style: textButtonStyle?.copyWith(
-                    color: contentColor,
-                  ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : onTap,
+          hoverColor: contentColor.withOpacity(kHoverOpacity),
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: Padding(
+              padding: padding,
+              child: _buildLoadingOrChild(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        color: contentColor,
+                        size: iconSize,
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                    label ??
+                        Text(
+                          labelText ?? "",
+                          style: textStyle?.copyWith(color: contentColor),
+                        ),
+                  ],
                 ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildElevatedButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-    TextStyle? textButtonStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          fontSize: 14,
-        );
-
-    Color contentColor = isDisabled ? disabledColor : color;
-    return AnimatedContainer(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width,
-      ),
-      key: _key,
-      duration: kHoverDuration,
-      height: buttonSize,
-      width: width,
-      padding: padding,
-      decoration: BoxDecoration(
-        color: isDisabled ? disabledColor : contentColor,
-        borderRadius: BorderRadius.circular(buttonSize),
-        boxShadow: [
-          BoxShadow(
-            color: (isDisabled ? disabledColor : contentColor).withOpacity(0.2),
-            blurRadius: 5,
-            spreadRadius: 2,
-            offset: const Offset(0, 2),
+              ),
+            ),
           ),
-        ],
-      ),
-      child: buildLoadingOrChild(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                color: validateColor(color: contentColor),
-                size: 14,
-              ),
-              const SizedBox(width: 5),
-            ],
-            label ??
-                Text(
-                  labelText ?? "",
-                  style: textButtonStyle?.copyWith(
-                    color: validateColor(color: contentColor),
-                  ),
-                ),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildFilledButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-    TextStyle? textButtonStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          fontSize: 14,
-        );
-
-    Color contentColor = isDisabled ? disabledColor : color;
-    return AnimatedContainer(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width,
+  /// [_buildOutlinedFab] is used to build a outlined FAB button.
+  /// This button is used when the [style] is [ThemedButtonStyle.outlinedFab].
+  Widget _buildOutlinedFab({required BoxConstraints constraints}) {
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
+      message: message,
+      color: contentColor,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: contentColor,
+            width: 1,
+          ),
+          color: colorOverride ?? Colors.transparent,
+          borderRadius: BorderRadius.circular(height),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isDisabled ? null : onTap,
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: Padding(
+                padding: padding,
+                child: _buildLoadingOrChild(
+                  child: Center(
+                    child: Icon(
+                      icon ?? MdiIcons.help,
+                      color: contentColor,
+                      size: iconSize,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
-      key: _key,
-      duration: kHoverDuration,
-      height: buttonSize,
-      width: width,
-      padding: padding,
+    );
+  }
+
+  /// [_buildFilled] is used to build a filled button.
+  /// This button is used when the [style] is [ThemedButtonStyle.filled].
+  Widget _buildFilled({required BoxConstraints constraints}) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: isDisabled ? disabledColor : contentColor,
-        borderRadius: BorderRadius.circular(buttonSize),
+        color: colorOverride ?? contentColor,
+        borderRadius: BorderRadius.circular(height),
       ),
-      child: buildLoadingOrChild(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                color: validateColor(color: contentColor),
-                size: 14,
-              ),
-              const SizedBox(width: 5),
-            ],
-            label ??
-                Text(
-                  labelText ?? "",
-                  style: textButtonStyle?.copyWith(
-                    color: validateColor(color: contentColor),
-                  ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : onTap,
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: Padding(
+              padding: padding,
+              child: _buildLoadingOrChild(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        color: validateColor(color: contentColor),
+                        size: iconSize,
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                    label ??
+                        Text(
+                          labelText ?? "",
+                          style: textStyle?.copyWith(
+                            color: validateColor(color: contentColor),
+                          ),
+                        ),
+                  ],
                 ),
-          ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildFilledTonalButton() {
-    Color color = this.color ?? defaultColor;
-
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color disabledColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
-    TextStyle? textButtonStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          fontSize: 14,
-        );
-
-    Color contentColor = isDisabled ? disabledColor : color;
-    return AnimatedContainer(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width,
-      ),
-      key: _key,
-      duration: kHoverDuration,
-      height: buttonSize,
-      width: width,
-      padding: padding,
-      decoration: BoxDecoration(
-        color: isDisabled ? disabledColor.withOpacity(hoverOpacity) : contentColor.withOpacity(hoverOpacity),
-        borderRadius: BorderRadius.circular(buttonSize),
-      ),
-      child: buildLoadingOrChild(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                color: contentColor,
-                size: 14,
-              ),
-              const SizedBox(width: 5),
-            ],
-            label ??
-                Text(
-                  labelText ?? "",
-                  style: textButtonStyle?.copyWith(
-                    color: contentColor,
+  /// [_buildFilledFab] is used to build a filled FAB button.
+  /// This button is used when the [style] is [ThemedButtonStyle.filledFab].
+  Widget _builFilledFab({required BoxConstraints constraints}) {
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
+      message: message,
+      color: contentColor,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: colorOverride ?? contentColor,
+          borderRadius: BorderRadius.circular(height),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isDisabled ? null : onTap,
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: Padding(
+                padding: padding,
+                child: _buildLoadingOrChild(
+                  child: Center(
+                    child: Icon(
+                      icon ?? MdiIcons.help,
+                      color: validateColor(color: contentColor),
+                      size: 20,
+                    ),
                   ),
                 ),
-          ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget buildLoadingOrChild({required Widget child}) {
+  /// [_buildElevated] is used to build a elevated button.
+  /// This button is used when the [style] is [ThemedButtonStyle.elevated].
+  Widget _buildElevated({required BoxConstraints constraints}) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: generateContainerElevation(
+        context: context,
+        color: colorOverride ?? contentColor,
+        radius: height,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : onTap,
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: Padding(
+              padding: padding,
+              child: _buildLoadingOrChild(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        color: validateColor(color: contentColor),
+                        size: iconSize,
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                    label ??
+                        Text(
+                          labelText ?? "",
+                          style: textStyle?.copyWith(
+                            color: validateColor(color: contentColor),
+                          ),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [_buildElevatedFab] is used to build a elevated FAB button.
+  /// This button is used when the [style] is [ThemedButtonStyle.elevatedFab].
+  Widget _builElevatedFab({required BoxConstraints constraints}) {
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
+      message: message,
+      color: contentColor,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: generateContainerElevation(
+          context: context,
+          color: colorOverride ?? contentColor,
+          radius: height,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isDisabled ? null : onTap,
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: Padding(
+                padding: padding,
+                child: _buildLoadingOrChild(
+                  child: Center(
+                    child: Icon(
+                      icon ?? MdiIcons.help,
+                      color: validateColor(color: contentColor),
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [_buildLoadingOrChild] is used to build the loading indicator or the child.
+  /// This basically is a helper function to avoid the boilerplate of the conditional.
+  Widget _buildLoadingOrChild({required Widget child}) {
     if (isLoading || isCooldown) {
       return _buildLoadingIndicator();
     }
     return child;
   }
 
+  /// [_buildLoadingIndicator] is used to build the loading indicator.
+  /// This indicator is used when the button is in loading or cooldown state.
+  ///
+  /// When the button is in cooldown state, the indicator will show the remaining time and the
+  /// linear progress indicator will be animated.
+  ///
+  /// Otherwise, when the button is in loading state, the indicator will show a linear progress indicator
+  /// in indeterminate mode.
   Widget _buildLoadingIndicator() {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color buttonColor = isDark ? Colors.grey.shade700 : Colors.grey.shade300;
-
-    RenderBox? renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
-    Size? size = renderBox?.size;
-
-    double width = (size?.width == null || size?.width == double.infinity ? buttonSize : size!.width) - 20;
-    double height = (size?.height ?? buttonSize) - 10;
-
-    if (style == ThemedButtonStyle.outlined) {
-      width -= 3;
-      height -= 3;
-    } else if ([ThemedButtonStyle.fab, ThemedButtonStyle.outlinedFab, ThemedButtonStyle.filledFab].contains(style)) {
-      width -= 8;
-      height -= 8;
-    }
-
     return SizedBox(
       width: width,
       height: height,
-      child: Center(
-        child: isCooldown
-            ? TweenAnimationBuilder(
-                duration: cooldownDuration,
-                onEnd: onCooldownFinish,
-                tween: Tween<double>(begin: 0, end: 1),
-                builder: (context, value, _) {
-                  int remaining = (cooldownDuration.inSeconds * (1 - value)).round() + 1;
-                  return Stack(
-                    children: [
-                      Center(
-                        child: SizedBox(
-                          width: height,
-                          height: height,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            value: value,
-                            color: validateColor(color: buttonColor),
-                            // backgroundColor: validateColor(color: buttonColor).withOpacity(0.2),
-                          ),
-                        ),
-                      ),
-                      Center(
+      child: isCooldown
+          ? TweenAnimationBuilder(
+              duration: cooldownDuration,
+              onEnd: onCooldownFinish,
+              tween: Tween<double>(begin: 0, end: 1),
+              builder: (context, value, _) {
+                int remaining = (cooldownDuration.inSeconds * (1 - value)).round() + 1;
+
+                Widget progress = LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+                  value: value,
+                );
+
+                return Stack(
+                  children: [
+                    Positioned.fill(child: progress),
+                    Positioned.fill(
+                      child: Center(
                         child: Text(
                           remaining.toString(),
-                          style: TextStyle(
-                            color: validateColor(color: buttonColor),
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textStyle,
                         ),
                       ),
-                    ],
-                  );
-                },
-              )
-            : SizedBox(
-                width: height,
-                height: height,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: validateColor(color: buttonColor),
-                  // backgroundColor: validateColor(color: buttonColor).withOpacity(0.2),
+                    ),
+                  ],
+                );
+              },
+            )
+          : Stack(
+              children: [
+                Positioned.fill(
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+                  ),
                 ),
-              ),
-      ),
+              ],
+            ),
     );
   }
 }
 
+/// [ThemedButtonStyle] is used to define the style of the button.
+///
+/// The styles are based on Material 3 rules. For more info go to
+/// https://m3.material.io/components/all-buttons.
 enum ThemedButtonStyle {
+  /// [ThemedButtonStyle.elevated] refers to a button with a filled background and a shadow.
+  /// The shadow is generated using the helper function `generateContainerElevation` with
+  /// an elevation of `1`.
   elevated,
+
+  /// [ThemedButtonStyle.elevatedFab] refers to a button with a filled background and a shadow.
+  /// The shadow is generated using the helper function `generateContainerElevation` with
+  /// an elevation of `1`.
+  elevatedFab,
+
+  /// [ThemedButtonStyle.filled] refers to a button with a filled background.
+  /// Works similar as a [ThemedButtonStyle.elevated] but without the shadow.
   filled,
-  filledTonal,
-  outlined,
-  text,
-  fab,
-  outlinedFab,
+
+  /// [ThemedButtonStyle.filledFab] refers to a button with a filled background.
+  /// Works similar as a [ThemedButtonStyle.elevatedFab] but without the shadow.
   filledFab,
+
+  /// [ThemedButtonStyle.filledTonal] refers to a button with a filled background with an constant
+  /// opacity of `0.2`.
+  filledTonal,
+
+  /// [ThemedButtonStyle.filledTonalFab] refers to a button with a filled background with an constant
+  /// opacity of `0.2`.
+  filledTonalFab,
+
+  /// [ThemedButtonStyle.outlined] refers to a button with a outlined border.
+  /// The border color is the same as the text color.
+  outlined,
+
+  /// [ThemedButtonStyle.outlinedFab] refers to a button with a outlined border.
+  /// The border color is the same as the text color.
+  outlinedFab,
+
+  /// [ThemedButtonStyle.text] refers to a button with a transparent background.
+  text,
+
+  /// [ThemedButtonStyle.fab] refers to a button with a transparent background.
+  fab,
 }

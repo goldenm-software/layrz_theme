@@ -52,7 +52,6 @@ ThemeData generateDarkTheme({
     ),
     useMaterial3: true,
   ).copyWith(
-    useMaterial3: true,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: kDarkBackgroundColor,
     dialogBackgroundColor: kDarkBackgroundColor,
