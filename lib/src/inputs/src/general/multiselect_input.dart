@@ -280,10 +280,8 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
         // Predict scroll position based on `_ThemedSelectItem.height` and the position in the list of the
         // selected element
 
-        return WillPopScope(
-          onWillPop: () async {
-            return false;
-          },
+        return PopScope(
+          canPop: false,
           child: Dialog(
             child: StatefulBuilder(
               builder: (context, setState) {

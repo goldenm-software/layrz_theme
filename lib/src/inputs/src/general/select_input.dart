@@ -283,10 +283,8 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
           }
         }
 
-        return WillPopScope(
-          onWillPop: () async {
-            return widget.hideButtons || temp != null;
-          },
+        return PopScope(
+          canPop: widget.hideButtons || temp != null,
           child: Dialog(
             child: StatefulBuilder(
               builder: (context, setState) {
