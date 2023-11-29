@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.0
+- Refactorized buttons to reduce the number of `setState`s and improve the performance of the widgets.
+
 ## 4.2.10
 - Fix a logic to show index of [ThemedTablet<T>]
 

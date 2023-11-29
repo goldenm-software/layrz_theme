@@ -54,17 +54,17 @@ class ThemedTable<T> extends StatefulWidget {
 
   /// Represents the builders of row avatar when the table is in mobile size.
   /// This will appear at the left of the row, before the title and subtitle.
-  final ThemedTableAvatar Function(BuildContext, List<ThemedColumn<T>>, T) rowAvatarBuilder;
+  final ThemedTableAvatar Function(BuildContext, List<ThemedColumn<T>>, T)? rowAvatarBuilder;
 
   /// Represents the builders of row title when the table is in mobile size.
   /// This will appear at the center of the row, after the avatar and above the subtitle.
   /// This widget returned will be inside in a [Expanded][Column] widget.
-  final Widget Function(BuildContext, List<ThemedColumn<T>>, T) rowTitleBuilder;
+  final Widget Function(BuildContext, List<ThemedColumn<T>>, T)? rowTitleBuilder;
 
   /// Represents the builders of row subtitle when the table is in mobile size.
   /// This will appear at the center of the row, after the title and below the avatar.
   /// This widget returned will be inside in a [Expanded][Column] widget.
-  final Widget Function(BuildContext, List<ThemedColumn<T>>, T) rowSubtitleBuilder;
+  final Widget Function(BuildContext, List<ThemedColumn<T>>, T)? rowSubtitleBuilder;
 
   /// Represents the builder of the id of the item.
   /// This will be used to sort the items by id, and will appear as the first column of the table.
@@ -79,7 +79,7 @@ class ThemedTable<T> extends StatefulWidget {
   /// Represents the minimum selected items before show the dialog
   final int minSelectionsBeforeDialog;
 
-  /// Represents the breakpoint to switch to mobile size. By default is [kSmallGrid]
+  /// Represents the breakpoint to switch to mobile size. By default is [kExtraSmallGrid]
   final double mobileBreakpoint;
 
   /// Represents the indicator of the buttons
@@ -175,10 +175,13 @@ class ThemedTable<T> extends StatefulWidget {
   /// By default, this value is true
   final bool idEnabled;
 
-  /// [forceResync] represents the indicator to force the resync of the items.
-  /// By default, this value is false
-  /// Be careful, this operation can be expensive, because it will recalculate the sizes of the columns.
-  final bool forceResync;
+  /// [rowsPerPage] represents the number of rows per page.
+  /// By default this value is calculated using the [rowHeight] and the available height of the table
+  final int? rowsPerPage;
+
+  /// [availableRowsPerPage] represents the list of rows per page to display in the dropdown.
+  /// By default, this value is [10, 25, 50, 100]
+  final List<int> availableRowsPerPage;
 
   /// A standard table with a list of items, designed to be used in the scaffold.
   /// Helps to display a list of items in desktop and mobile mode without a lot of code. (I hope so)
@@ -197,14 +200,14 @@ class ThemedTable<T> extends StatefulWidget {
     this.title,
     this.onAdd,
     this.additionalButtons = const [],
-    required this.rowAvatarBuilder,
-    required this.rowTitleBuilder,
-    required this.rowSubtitleBuilder,
+    @Deprecated('This property was removed, submitting it does not work') this.rowAvatarBuilder,
+    @Deprecated('This property was removed, submitting it does not work') this.rowTitleBuilder,
+    @Deprecated('This property was removed, submitting it does not work') this.rowSubtitleBuilder,
     required this.idBuilder,
     this.multiSelectionEnabled = true,
     this.multiSelectionActions = const [],
     this.minSelectionsBeforeDialog = 2,
-    this.mobileBreakpoint = kSmallGrid,
+    this.mobileBreakpoint = kExtraSmallGrid,
     this.isLoading = false,
     this.isCooldown = false,
     this.onCooldown,
@@ -212,9 +215,11 @@ class ThemedTable<T> extends StatefulWidget {
     this.customTranslations = const {
       'layrz.table.paginator.start': 'First page',
       'layrz.table.paginator.previous': 'Previous page',
-      'layrz.table.paginator.page': 'Page {page} of {total}',
+      'layrz.table.paginator.showing': 'Showing {count} of {total}',
       'layrz.table.paginator.next': 'Next page',
       'layrz.table.paginator.end': 'Last page',
+      'layrz.table.paginator.auto': 'Fit screen',
+      'layrz.table.paginator.rowsPerPage': 'Rows per page',
       'helpers.buttons.show': 'Show item',
       'helpers.buttons.edit': 'Edit item',
       'helpers.buttons.delete': 'Delete item',
@@ -228,25 +233,35 @@ class ThemedTable<T> extends StatefulWidget {
     this.mobileRowHeight = 72.0,
     this.idLabel = 'ID',
     this.customTitleText,
-    this.rowHeight = 40.0,
+    @Deprecated('This property was removed, submitting it does not work') this.rowHeight = 40.0,
     this.initialPage = 0,
     this.onPageChanged,
-    this.enablePaginator = true,
+    @Deprecated('This property was removed, submitting it does not work') this.enablePaginator = true,
     this.itemsPerPage,
-    this.paginatorLeading,
-    this.paginatorTrailing,
+    @Deprecated('This property was removed, submitting it does not work') this.paginatorLeading,
+    @Deprecated('This property was removed, submitting it does not work') this.paginatorTrailing,
     this.onIdTap,
-    this.shouldExpand = true,
+    @Deprecated('This property was removed, submitting it does not work') this.shouldExpand = true,
     this.idEnabled = true,
-    this.forceResync = false,
+    this.rowsPerPage,
+    this.availableRowsPerPage = const [10, 25, 50, 100],
   })  : assert(columns.length > 0),
-        assert(columns.length < 99);
+        assert(columns.length < 99),
+        assert(rowHeight > 0);
 
   @override
   State<ThemedTable<T>> createState() => _ThemedTableState<T>();
 }
 
-class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStateMixin {
+class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStateMixin, WidgetsBindingObserver {
+  /// [_overlayEntry] represents the overlay entry of the dialog.
+  /// This is used to display the dialog when the user selects multiple items.
+  OverlayEntry? _overlayEntry;
+
+  /// [_animation] represents the animation controller of the dialog.
+  /// This is used to animate the dialog when the user selects multiple items.
+  late AnimationController _animation;
+
   /// [isDark] predicts if the device is in dark mode.
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
@@ -267,13 +282,123 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     return color;
   }
 
+  /// [actionsEnabled] predicts if the actions should be displayed.
+  bool get actionsEnabled {
+    return widget.onShow != null || widget.onEdit != null || widget.onDelete != null;
+  }
+
+  /// [module] represents the module name of the table.
+  /// This is used to generate the titleText and the add button label.
+  ///
+  /// It's a shortcut to [widget.module]
   String get module => widget.module;
+
+  /// [searchText] represents the default search value of the table.
   String searchText = '';
+
+  /// [_items] represents the list of items to display.
+  /// This is not the same as [widget.items], because this list can be filtered or sorted.
+  List<T> _items = [];
+
+  /// [_itemsPerPage] represents the number of rows per page.
+  int _itemsPerPage = 10;
+
+  /// [_calculatedItemsPerPage] represents the number of rows per page.
+  /// This is used to calculate the [_itemsPerPage] property.
+  int _calculatedItemsPerPage = 10;
+
+  /// [_currentPage] represents the current page of the table.
+  int _currentPage = 0;
+
+  /// [_tableKey] represents the key of the table.
+  /// This is used to get the available height of the table.
+  final GlobalKey _tableKey = GlobalKey();
+
+  /// [paginatorColor] represents the color of the paginator.
+  /// This color is used to generate the color of the paginator buttons.
+  Color get paginatorColor => isDark ? Colors.white : Colors.black;
+
+  /// [_headerStyle] represents the style of the header.
+  TextStyle? get _headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(
+        fontWeight: FontWeight.bold,
+      );
+
+  /// [_rowStyle] represents the style of the header.
+  TextStyle? get _rowStyle => Theme.of(context).textTheme.bodyMedium;
+
+  /// [_sortBy] represents the index of the column to sort.
+  /// If this value is -1, the sort is by id.
+  int _sortBy = -2;
+
+  /// [_sortAsc] represents the direction of the sort.
+  /// If this value is true, the sort is ascending.
+  bool _sortAsc = true;
+
+  /// [_actionSize] represents the size of the actions individual buttons.
+  double get _actionSize => 40;
+
+  /// [_idWidth] represents the width of the id column.
+  /// This is used to calculate the width of the table.
+  double get _idWidth {
+    if (!widget.idEnabled) {
+      return 0;
+    }
+
+    return 80;
+  }
+
+  /// [_idIndex] is the index of the id column.
+  int get _idIndex => -2;
+
+  /// [_checkboxWidth] represents the width of the checkbox column.
+  /// This is used to calculate the width of the table.
+  double get _checkboxWidth {
+    if (!widget.multiSelectionEnabled) {
+      return 0;
+    }
+
+    return 60;
+  }
+
+  /// [border] refers to the style of the border of the cells.
+  BorderSide get border => BorderSide(
+        color: Colors.grey.shade300,
+        width: 1.5,
+      );
+
+  /// [_selectedItems] represents the list of selected items.
+  List<T> _selectedItems = [];
+
+  /// [_isAllSelected] represents if all the items are selected.
+  bool get _isAllSelected => _selectedItems.length == _items.length;
 
   @override
   void initState() {
     super.initState();
+    _animation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
     searchText = widget.searchText;
+
+    if (!widget.idEnabled) {
+      _sortBy = 0;
+    }
+
+    _items = widget.items;
+    _sort();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _calculateRowsPerPage();
+    });
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _animation.dispose();
+    super.dispose();
   }
 
   @override
@@ -283,6 +408,153 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     if (oldWidget.searchText != widget.searchText) {
       searchText = widget.searchText;
     }
+
+    const eq = ListEquality();
+    if (!eq.equals(oldWidget.items, widget.items)) {
+      _items = widget.items;
+      _sort();
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _calculateRowsPerPage();
+    });
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  didChangeMetrics() {
+    _calculateRowsPerPage();
+  }
+
+  /// [_predictSizes] predicts the sizes of the columns.
+  Map<int, double> _predictSizes({
+    required BoxConstraints constraints,
+    required List<T> items,
+    required bool multiSelectionEnabled,
+  }) {
+    Map<int, double> sizes = {
+      -3: _checkboxWidth,
+      _idIndex: _idWidth,
+      -1: 0,
+    };
+
+    if (!multiSelectionEnabled) {
+      sizes[-3] = 0;
+    }
+
+    if (actionsEnabled) {
+      if (constraints.maxWidth < widget.mobileBreakpoint) {
+        sizes[-1] = 60;
+      } else {
+        double width = 0;
+        if (widget.onShow != null) {
+          width += _actionSize;
+        }
+
+        if (widget.onEdit != null) {
+          width += _actionSize;
+        }
+
+        if (widget.onDelete != null) {
+          width += _actionSize;
+        }
+
+        for (T item in widget.items) {
+          width += (widget.additionalActions?.call(context, item).length ?? 0) * _actionSize;
+        }
+
+        sizes[-1] = max(width, 100);
+      }
+    }
+
+    List<double> usedSizes = [];
+
+    for (final entry in widget.columns.asMap().entries) {
+      int index = entry.key;
+      ThemedColumn<T> column = entry.value;
+
+      sizes[index] = column.predictedHeaderSize(context, _headerStyle).width;
+      usedSizes.add(sizes[index] ?? 0);
+    }
+
+    for (T item in items) {
+      for (final entry in widget.columns.asMap().entries) {
+        int index = entry.key;
+        ThemedColumn<T> column = entry.value;
+
+        sizes[index] = max(
+          sizes[index] ?? 0,
+          column.predictedContentSize(context, item, _rowStyle).width,
+        );
+
+        usedSizes[index] = sizes[index] ?? 0;
+      }
+    }
+
+    double usedSize = sizes.values.reduce((value, element) => value + element);
+    double emptySize = constraints.maxWidth - usedSize;
+
+    if (emptySize > 0) {
+      // Distruibute the empty space between the columns
+      double size = emptySize / widget.columns.length;
+      for (int index = 0; index < widget.columns.length; index++) {
+        double prevSize = sizes[index] ?? 0;
+        sizes[index] = prevSize + size;
+      }
+    }
+
+    return sizes;
+  }
+
+  /// [_calculateRowsPerPage] calculates the number of rows per page.
+  void _calculateRowsPerPage() {
+    RenderBox? box = _tableKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null) {
+      _itemsPerPage = widget.itemsPerPage ?? (widget.rowHeight * 10).round();
+    } else {
+      _itemsPerPage = widget.itemsPerPage ?? (box.size.height / widget.rowHeight).floor();
+    }
+    _calculatedItemsPerPage = _itemsPerPage;
+  }
+
+  /// [_sort] sorts the items.
+  void _sort() {
+    _items.sort((a, b) {
+      dynamic aValue;
+      dynamic bValue;
+
+      if (_sortBy == _idIndex) {
+        // deafult sort when there are no columns selected
+        aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
+        bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
+      } else {
+        ThemedColumn<T> column = widget.columns[_sortBy];
+
+        if (column.customSortingFunction != null) {
+          // debugPrint("Sorting using custom function");
+          // only if the column has a custom sorting function
+          if (_sortAsc) {
+            // if the sort is ascending
+            return column.customSortingFunction!.call(a, b);
+          } else {
+            // if the sort is descending
+            return column.customSortingFunction!.call(b, a);
+          }
+        }
+        aValue = column.valueBuilder(context, a);
+        bValue = column.valueBuilder(context, b);
+      }
+      // default sort using the abstract class Comparable
+      if (_sortAsc) {
+        // if the sort is ascending
+        return Comparable.compare(aValue, bValue);
+      } else {
+        // if the sort is descending
+        return Comparable.compare(bValue, aValue);
+      }
+    });
+
+    setState(() {});
   }
 
   @override
@@ -290,6 +562,18 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isMobile = constraints.maxWidth < widget.mobileBreakpoint;
+        bool multiSelectionEnabled = widget.multiSelectionEnabled;
+
+        if (isMobile) {
+          multiSelectionEnabled = false;
+        }
+
+        final items = _getRows(_currentPage * _itemsPerPage, _itemsPerPage);
+        final sizes = _predictSizes(
+          constraints: constraints,
+          items: items,
+          multiSelectionEnabled: multiSelectionEnabled,
+        );
 
         return Column(
           children: [
@@ -307,7 +591,25 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                 ThemedSearchInput(
                   value: searchText,
                   labelText: t('helpers.search'),
-                  onSearch: (value) => setState(() => searchText = value),
+                  onSearch: (value) {
+                    setState(() => searchText = value);
+                    if (searchText.isEmpty) {
+                      _items = widget.items;
+                    } else {
+                      _items = _items.where((T item) {
+                        bool c1 = "#${widget.idBuilder(context, item)}".contains(searchText);
+                        bool c2 = false;
+
+                        for (ThemedColumn<T> column in widget.columns) {
+                          String value = column.valueBuilder(context, item);
+                          c2 = c2 || value.toLowerCase().contains(searchText.toLowerCase());
+                        }
+                        return c1 || c2;
+                      }).toList();
+                    }
+
+                    _sort();
+                  },
                 ),
 
                 // Actions
@@ -330,7 +632,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                   ThemedButton(
                     labelText: t('helpers.refersh'),
                     icon: MdiIcons.refresh,
-                    style: ThemedButtonStyle.filledFab,
+                    style: ThemedButtonStyle.filledTonalFab,
                     color: primaryColor,
                     onTap: widget.onRefresh,
                     isLoading: widget.isLoading,
@@ -340,10 +642,475 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                 ],
               ],
             ),
+            const SizedBox(height: 5),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        if (multiSelectionEnabled) ...[
+                          _drawColumn(
+                            index: -3,
+                            column: ThemedColumn(
+                              labelText: '',
+                              valueBuilder: (context, item) => '',
+                              isSortable: false,
+                            ),
+                            content: ThemedAnimatedCheckbox(
+                              value: _isAllSelected,
+                              onChanged: (value) {
+                                if (value) {
+                                  _selectedItems = List.from(_items);
+                                } else {
+                                  _selectedItems = [];
+                                }
+
+                                _validateSelection();
+                              },
+                            ),
+                            sizes: sizes,
+                          ),
+                        ],
+                        if (widget.idEnabled) ...[
+                          _drawColumn(
+                            index: _idIndex,
+                            column: ThemedColumn(
+                              labelText: widget.idLabel,
+                              valueBuilder: (context, item) => '',
+                            ),
+                            sizes: sizes,
+                          ),
+                        ],
+                        ...widget.columns.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          ThemedColumn<T> column = entry.value;
+                          return _drawColumn(
+                            index: index,
+                            column: column,
+                            sizes: sizes,
+                          );
+                        }),
+                        if (actionsEnabled) ...[
+                          _drawColumn(
+                            index: -1,
+                            content: Icon(MdiIcons.toolbox, size: 20),
+                            column: ThemedColumn(
+                              labelText: 'Actions',
+                              alignment: Alignment.centerRight,
+                              valueBuilder: (context, item) => '',
+                              isSortable: false,
+                            ),
+                            sizes: sizes,
+                          ),
+                        ],
+                      ],
+                    ),
+                    Expanded(
+                      child: Container(
+                        key: _tableKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ...items.map((item) {
+                                bool isSelected = _selectedItems.contains(item);
+
+                                return SizedBox(
+                                  height: widget.rowHeight,
+                                  child: Row(
+                                    children: [
+                                      if (multiSelectionEnabled) ...[
+                                        _drawCell(
+                                          index: -3,
+                                          child: ThemedAnimatedCheckbox(
+                                            value: isSelected,
+                                            onChanged: (value) {
+                                              if (value) {
+                                                _selectedItems.add(item);
+                                              } else {
+                                                _selectedItems.remove(item);
+                                              }
+
+                                              _validateSelection();
+                                            },
+                                          ),
+                                          sizes: sizes,
+                                        ),
+                                      ],
+                                      if (widget.idEnabled) ...[
+                                        _drawCell(
+                                          index: _idIndex,
+                                          value: "#${widget.idBuilder(context, item)}",
+                                          sizes: sizes,
+                                          onTap: widget.onIdTap == null ? null : () => widget.onIdTap?.call(item),
+                                        ),
+                                      ],
+                                      ...widget.columns.asMap().entries.map((entry) {
+                                        int index = entry.key;
+                                        ThemedColumn<T> column = entry.value;
+                                        return _drawCell(
+                                          index: index,
+                                          child: column.widgetBuilder?.call(context, item),
+                                          value: column.valueBuilder(context, item),
+                                          sizes: sizes,
+                                          cellColor: column.cellColor?.call(item),
+                                          cellTextColor: column.cellTextColor?.call(item),
+                                        );
+                                      }).toList(),
+                                      if (actionsEnabled) ...[
+                                        _drawCell(
+                                          index: -1,
+                                          alignment: Alignment.centerRight,
+                                          child: ThemedActionsButtons(
+                                            actionsLabel: t('helpers.actions'),
+                                            actions: [
+                                              ...widget.additionalActions?.call(context, item) ?? [],
+                                              if (widget.onShow != null)
+                                                ThemedActionButton(
+                                                  onlyIcon: true,
+                                                  tooltipPosition: ThemedTooltipPosition.left,
+                                                  labelText: t('helpers.buttons.show'),
+                                                  icon: MdiIcons.magnifyScan,
+                                                  color: Colors.blue,
+                                                  isLoading: widget.isLoading,
+                                                  isCooldown: widget.isCooldown,
+                                                  onCooldownFinish: widget.onCooldown,
+                                                  onTap: () => widget.onShow?.call(context, item),
+                                                ),
+                                              if (widget.onEdit != null && widget.canEdit.call(context, item))
+                                                ThemedActionButton(
+                                                  onlyIcon: true,
+                                                  tooltipPosition: ThemedTooltipPosition.left,
+                                                  labelText: t('helpers.buttons.edit'),
+                                                  icon: MdiIcons.squareEditOutline,
+                                                  color: Colors.orange,
+                                                  isLoading: widget.isLoading,
+                                                  isCooldown: widget.isCooldown,
+                                                  onCooldownFinish: widget.onCooldown,
+                                                  onTap: () => widget.onEdit?.call(context, item),
+                                                ),
+                                              if (widget.onDelete != null && widget.canDelete.call(context, item))
+                                                ThemedActionButton(
+                                                  onlyIcon: true,
+                                                  tooltipPosition: ThemedTooltipPosition.left,
+                                                  labelText: t('helpers.buttons.delete'),
+                                                  icon: MdiIcons.trashCan,
+                                                  color: Colors.red,
+                                                  isLoading: widget.isLoading,
+                                                  isCooldown: widget.isCooldown,
+                                                  onCooldownFinish: widget.onCooldown,
+                                                  onTap: () async {
+                                                    bool confirmation = await deleteConfirmationDialog(
+                                                      context: context,
+                                                      isCooldown: widget.isCooldown,
+                                                      isLoading: widget.isLoading,
+                                                      onCooldown: widget.onCooldown,
+                                                    );
+                                                    if (confirmation) {
+                                                      if (context.mounted) widget.onDelete?.call(context, item);
+                                                    }
+                                                  },
+                                                ),
+                                            ],
+                                          ),
+                                          sizes: sizes,
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 5),
+            _buildPaginator(constraints: constraints),
           ],
         );
       },
     );
+  }
+
+  Widget _buildPaginator({required BoxConstraints constraints}) {
+    String pageInfoStr = t('layrz.table.paginator.showing', {
+      'count': _itemsPerPage,
+      'total': _items.length,
+    });
+    String currentPageStr = "${_currentPage + 1}";
+
+    TextStyle? pageInfoStyle = Theme.of(context).textTheme.bodySmall;
+    List<Widget> pageInfo = [
+      Text(pageInfoStr, style: pageInfoStyle),
+    ];
+
+    final painter = TextPainter(
+      text: TextSpan(
+        text: currentPageStr,
+        style: pageInfoStyle,
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    double currentPageWidth = painter.width;
+
+    double buttonWidth = 30;
+    double availableWidth = constraints.maxWidth - (buttonWidth * 4) - (currentPageWidth + 10) - 5;
+
+    if (constraints.maxWidth >= widget.mobileBreakpoint) {
+      final painter2 = TextPainter(
+        text: TextSpan(
+          text: pageInfoStr,
+          style: pageInfoStyle,
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      availableWidth -= painter2.width;
+    }
+
+    availableWidth = min(availableWidth, 300);
+
+    List<Widget> navigator = [
+      SizedBox(
+        width: availableWidth,
+        child: ThemedSelectInput<int?>(
+          labelText: t('layrz.table.paginator.rowsPerPage'),
+          dense: true,
+          items: [
+            ThemedSelectItem(
+              label: t('layrz.table.paginator.auto'),
+              value: null,
+            ),
+            ...widget.availableRowsPerPage.map((page) {
+              return ThemedSelectItem(
+                value: page,
+                label: page.toString(),
+              );
+            }).toList(),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _itemsPerPage = value?.value ?? _calculatedItemsPerPage;
+            });
+          },
+        ),
+      ),
+      const SizedBox(width: 5),
+      ThemedButton(
+        labelText: t('layrz.table.paginator.start'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronDoubleLeft,
+        onTap: () => setState(() => _currentPage = 0),
+      ),
+      ThemedButton(
+        labelText: t('layrz.table.paginator.previous'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronLeft,
+        isDisabled: _currentPage == 0,
+        onTap: () {
+          if (_currentPage > 0) {
+            setState(() => _currentPage -= 1);
+          }
+        },
+      ),
+      const SizedBox(width: 5),
+      Text(currentPageStr, style: pageInfoStyle),
+      const SizedBox(width: 5),
+      ThemedButton(
+        labelText: t('layrz.table.paginator.next'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronRight,
+        isDisabled: _currentPage == (_items.length ~/ _itemsPerPage),
+        onTap: () {
+          if (_currentPage < (_items.length ~/ _itemsPerPage)) {
+            setState(() => _currentPage += 1);
+          }
+        },
+      ),
+      ThemedButton(
+        labelText: t('layrz.table.paginator.end'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronDoubleRight,
+        onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
+      ),
+    ];
+
+    if (constraints.maxWidth < widget.mobileBreakpoint) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: pageInfo,
+          ),
+          const SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: navigator,
+          ),
+        ],
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        ...pageInfo,
+        const SizedBox(width: 5),
+        ...navigator,
+      ],
+    );
+  }
+
+  /// [_drawCell] draws a cell of the table.
+  Widget _drawCell({
+    required int index,
+    Widget? child,
+    required Map<int, double> sizes,
+    String? value,
+    Alignment alignment = Alignment.centerLeft,
+    VoidCallback? onTap,
+    Color? cellColor,
+    Color? cellTextColor,
+  }) {
+    double width = sizes[index] ?? 50;
+
+    BorderSide borderLeft = border;
+
+    if (index == -3) {
+      borderLeft = BorderSide.none;
+    }
+
+    if (sizes[-3] == 0 && index == _idIndex) {
+      borderLeft = BorderSide.none;
+    } else if (sizes[-3] == 0 && index == 0 && !widget.idEnabled) {
+      borderLeft = BorderSide.none;
+    }
+
+    cellColor = cellColor ?? Theme.of(context).scaffoldBackgroundColor;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          width: width,
+          height: widget.rowHeight,
+          alignment: alignment,
+          padding: ThemedColumn.padding,
+          decoration: BoxDecoration(
+            color: cellColor,
+            border: Border(bottom: border, left: borderLeft),
+          ),
+          child: child ??
+              Text(
+                value ?? '',
+                style: _rowStyle?.copyWith(
+                  color: cellTextColor ?? validateColor(color: cellColor),
+                ),
+              ),
+        ),
+      ),
+    );
+  }
+
+  /// [_drawColumn] draws a column of the table.
+  /// If the index is -3, will not draw the border left
+  Widget _drawColumn({
+    required int index,
+    required ThemedColumn<T> column,
+    required Map<int, double> sizes,
+    Widget? content,
+    String? label,
+  }) {
+    Widget header = content ??
+        Text(
+          label ?? column.labelText ?? '',
+          style: _headerStyle,
+        );
+
+    double width = sizes[index] ?? 50;
+
+    BorderSide borderLeft = border;
+
+    if (index == -3) {
+      borderLeft = BorderSide.none;
+    }
+
+    if (sizes[-3] == 0 && index == _idIndex) {
+      borderLeft = BorderSide.none;
+    } else if (sizes[-3] == 0 && index == 0 && !widget.idEnabled) {
+      borderLeft = BorderSide.none;
+    }
+
+    Widget itm = Container(
+      width: width,
+      height: widget.rowHeight,
+      alignment: column.alignment,
+      padding: ThemedColumn.padding,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: border.color,
+            width: 3,
+          ),
+          left: borderLeft,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: index == -1 ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          if (_sortBy == index) ...[
+            Icon(
+              _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
+              size: ThemedColumn.sortIconSize,
+            ),
+            const SizedBox(width: 5),
+          ],
+          header,
+        ],
+      ),
+    );
+
+    if (column.isSortable) {
+      return InkWell(
+        onTap: () {
+          if (_sortBy == index) {
+            _sortAsc = !_sortAsc;
+          } else {
+            _sortBy = index;
+            _sortAsc = true;
+          }
+          _sort();
+        },
+        child: itm,
+      );
+    }
+
+    return itm;
+  }
+
+  List<T> _getRows(int firstRowIndex, int rowsPerPage) {
+    final List<T> result = [];
+
+    for (int index = firstRowIndex; index < firstRowIndex + rowsPerPage; index++) {
+      if (index >= _items.length) {
+        break;
+      }
+      result.add(_items[index]);
+    }
+    return result;
   }
 
   /// Translation helper
@@ -387,5 +1154,187 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     return 'Missing translation for key $key : $count : $args';
+  }
+
+  /// Validates the multi selection dialog, depends of the number of selected items and
+  /// the property [minSelectionsBeforeDialog]
+  /// If the number of selected items is greater than [minSelectionsBeforeDialog] the dialog will be shown
+  /// otherwise the dialog will be destroyed
+  void _validateSelection() {
+    widget.onSelectedItemsChanged?.call(context, _selectedItems);
+    if (!widget.enableMultiSelectDialog) {
+      return;
+    }
+
+    setState(() {});
+
+    if (_selectedItems.length >= widget.minSelectionsBeforeDialog) {
+      _buildOverlay();
+    } else {
+      _destroyOverlay();
+    }
+  }
+
+  /// Builds the overlay using the [overlayEntry] property
+  /// If the [overlayEntry] is not null, the method will return without doing anything
+  /// Otherwise, the overlay will be built
+  void _buildOverlay() {
+    if (_overlayEntry != null) {
+      return;
+    }
+
+    double width = MediaQuery.of(context).size.width * 0.8;
+    if (width > 500) {
+      width = 500;
+    }
+
+    ScrollController actionsController = ScrollController();
+
+    _overlayEntry = OverlayEntry(
+      builder: (context1) {
+        return Stack(
+          children: [
+            Positioned(
+              top: 10,
+              left: (MediaQuery.of(context).size.width - width) / 2,
+              width: width,
+              child: Material(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    ScaleTransition(
+                      scale: Tween<double>(begin: 0.3, end: 1).animate(
+                        CurvedAnimation(
+                          parent: _animation,
+                          curve: Curves.easeInOut,
+                        ),
+                      ),
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        width: width,
+                        decoration: generateContainerElevation(context: context),
+                        child: StatefulBuilder(
+                          builder: (BuildContext context2, setLocalState) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  t('helpers.multipleSelection.title'),
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
+                                Text(
+                                  t('helpers.multipleSelection.caption'),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width: width,
+                                  child: SingleChildScrollView(
+                                    controller: actionsController,
+                                    reverse: true,
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        ThemedButton(
+                                          color: primaryColor,
+                                          labelText: t('helpers.multipleSelection.actions.cancel'),
+                                          isLoading: widget.isLoading,
+                                          isCooldown: widget.isCooldown,
+                                          onCooldownFinish: widget.onCooldown,
+                                          onTap: () {
+                                            _destroyOverlay(callback: () {
+                                              setState(() => _selectedItems = []);
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(width: 5),
+                                        for (final action in widget.multiSelectionActions) ...[
+                                          ThemedButton(
+                                            color: action.color,
+                                            label: action.label,
+                                            labelText: action.labelText,
+                                            isLoading: widget.isLoading,
+                                            isCooldown: widget.isCooldown,
+                                            onCooldownFinish: widget.onCooldown,
+                                            onTap: () {
+                                              _destroyOverlay(callback: () {
+                                                bool result = action.onTap.call(_selectedItems);
+                                                if (result) {
+                                                  setState(() => _selectedItems = []);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(width: 5),
+                                        ],
+                                        if (widget.onMultiDelete != null)
+                                          ThemedButton(
+                                            color: Colors.red,
+                                            labelText: t('helpers.multipleSelection.actions.delete'),
+                                            isLoading: widget.isLoading,
+                                            isCooldown: widget.isCooldown,
+                                            onCooldownFinish: widget.onCooldown,
+                                            onTap: () {
+                                              _destroyOverlay(
+                                                callback: () async {
+                                                  bool confirmation = await deleteConfirmationDialog(
+                                                    context: context,
+                                                    isMultiple: true,
+                                                    isCooldown: widget.isCooldown,
+                                                    isLoading: widget.isLoading,
+                                                    onCooldown: widget.onCooldown,
+                                                  );
+
+                                                  if (confirmation && context.mounted) {
+                                                    // debugPrint('context.mounted ${context.mounted}');
+                                                    // debugPrint('context1.mounted ${context1.mounted}');
+                                                    // debugPrint('context2.mounted ${context2.mounted}');
+                                                    bool result = await widget.onMultiDelete?.call(
+                                                          context,
+                                                          _selectedItems,
+                                                        ) ??
+                                                        false;
+                                                    if (result) {
+                                                      setState(() => _selectedItems = []);
+                                                    }
+                                                  } else {
+                                                    setState(() => _selectedItems = []);
+                                                  }
+                                                },
+                                              );
+                                            },
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+    _animation.forward();
+  }
+
+  /// Destroys the overlay using the [_overlayEntry] property
+  void _destroyOverlay({VoidCallback? callback}) async {
+    await _animation.reverse();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    callback?.call();
   }
 }
