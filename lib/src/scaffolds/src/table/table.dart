@@ -5,7 +5,8 @@ bool kThemedTableCanTrue(BuildContext context, item) => true;
 class ThemedTable<T> extends StatefulWidget {
   /// Represents the columns or headers of the table. This columns only will be displayed in desktop size.
   /// For mobile mode, refer to the [rowTitleBuilder], [rowSubtitleBuilder] and [rowAvatarBuilder] properties.
-  /// You can display up to 99 columns, but I don't recommend it.
+  /// You can display many columns as you want, but I don't recommend it.
+  /// Our performance tests show that the table can display 30 columns without any problem.
   final List<ThemedColumn<T>> columns;
 
   /// Is the list of items to display
@@ -248,7 +249,6 @@ class ThemedTable<T> extends StatefulWidget {
     this.rowsPerPage,
     this.availableRowsPerPage = const [10, 25, 50, 100],
   })  : assert(columns.length > 0),
-        assert(columns.length < 99),
         assert(rowHeight > 0);
 
   @override
