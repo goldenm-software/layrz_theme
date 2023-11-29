@@ -13,6 +13,21 @@ class BasicTableView extends StatefulWidget {
 }
 
 class _BasicTableViewState extends State<BasicTableView> {
+  List<Asset> _items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _items = List.generate(100, (i) {
+      return Asset(
+        id: (i + 1).toString(),
+        name: "Asset ${Random().nextInt(20)}",
+        plate: 'PLATE${i + 1}',
+        vin: 'VIN${i + 1}',
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Layout(
@@ -24,57 +39,49 @@ class _BasicTableViewState extends State<BasicTableView> {
             child: ThemedTable<Asset>(
               module: 'assets',
               idLabel: "#ID",
-              customTitleText: "Assets",
-              rowAvatarBuilder: (context, columns, item) => ThemedTableAvatar(label: item.name),
-              rowTitleBuilder: (context, columns, item) => Text(item.name),
-              rowSubtitleBuilder: (context, columns, item) => Text(item.id),
               idBuilder: (context, item) => item.id,
-              // enablePaginator: false,
-              enableMultiSelectDialog: false,
-              multiSelectionEnabled: false,
-              // shouldExpand: false,
-              // itemsPerPage: 5,
-              forceResync: true,
+              enableMultiSelectDialog: true,
+              multiSelectionEnabled: true,
               idEnabled: false,
               onIdTap: (item) {
                 debugPrint("Tapped on ${item.name}");
               },
-              items: List.generate(60, (i) {
-                return Asset(
-                  id: (i + 1).toString(),
-                  name: "Asset ${i + 1}",
-                  plate: 'PLATE${i + 1}',
-                  vin: 'VIN${i + 1}',
-                );
-              }),
-              onShow: (ctx, asset) async {
-                return;
+              items: _items,
+              onShow: (context, item) async {
+                debugPrint("onShow tapped: $item");
               },
-              // onEdit: (cxt, asset) async {
-              //   return;
-              // },
-              // onDelete: (cxt, asset) async {
-              //   return;
-              // },
+              onAdd: () async {
+                debugPrint("onAdd tapped");
+              },
+              onRefresh: () async {
+                for (var i = 0; i < _items.length; i++) {
+                  await Future.delayed(const Duration(seconds: 1));
+                  debugPrint("Refreshing $i");
+                  _items[i] = _items[i].copyWith(
+                    telemetry: AssetTelemetry(
+                      receivedAt: DateTime.now(),
+                      id: '1',
+                    ),
+                  );
+                  setState(() {});
+                }
+              },
+              onEdit: (context, item) async {
+                debugPrint("onEdit tapped: $item");
+              },
+              onDelete: (context, item) async {
+                debugPrint("onDelete tapped: $item");
+              },
               columns: [
                 ThemedColumn(
                   labelText: 'Name',
                   // color: Colors.green,
                   textColor: Colors.blue,
                   valueBuilder: (context, item) => item.name,
-                  // cellColor: (item) => Colors.red.shade100,
-                  cellTextColor: (item) => Colors.red.shade900,
+                  // cellColor: (item) => Colors.yellow,
+                  cellTextColor: (item) => Colors.red,
                   onTap: (item) {
                     debugPrint("Tapped on ${item.name}");
-                  },
-                ),
-                ThemedColumn(
-                  labelText: 'Connection',
-                  valueBuilder: (context, item) => item.plate ?? 'N/A',
-                  width: 200,
-                  widgetBuilder: (context, item) {
-                    // return const TelemetryIndicator();
-                    return const Text("Hola mundo!");
                   },
                 ),
                 ThemedColumn(
@@ -85,130 +92,17 @@ class _BasicTableViewState extends State<BasicTableView> {
                   labelText: 'VIN',
                   valueBuilder: (context, item) => item.vin ?? 'N/A',
                 ),
-                // ...List.generate(15, (i) {
-                //   return ThemedColumn(
-                //     labelText: 'VIN $i',
-                //     valueBuilder: (context, item) => item.vin ?? 'N/A',
-                //   );
-                // }),
+                ...List.generate(25, (i) {
+                  return ThemedColumn(
+                    labelText: 'VIN $i',
+                    valueBuilder: (context, item) => item.vin ?? 'N/A',
+                  );
+                }),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class TelemetryIndicator extends StatefulWidget {
-  final DateTime? receivedAt;
-  final Connection? connection;
-
-  const TelemetryIndicator({
-    super.key,
-    this.receivedAt,
-    this.connection,
-  });
-
-  @override
-  State<TelemetryIndicator> createState() => _TelemetryIndicatorState();
-}
-
-class _TelemetryIndicatorState extends State<TelemetryIndicator> {
-  late Timer timer;
-  DateTime now = DateTime.now();
-
-  Widget humanizedTime(LayrzAppLocalizations? i18n) {
-    if (widget.receivedAt == null) {
-      return const SizedBox();
-    }
-
-    final difference = now.difference(widget.receivedAt!).inSeconds;
-
-    if (difference < 59) {
-      return Text(i18n?.t('helpers.telemetry.lessThan.minute') ?? 'Now');
-    } else if (difference < 3600) {
-      int minutes = difference ~/ 60;
-      return Text(i18n?.tc('helpers.telemetry.about.minute', minutes, {'count': minutes}) ?? '$minutes minutes');
-    } else if (difference < 86400) {
-      int hours = difference ~/ 3600;
-      return Text(i18n?.tc('helpers.telemetry.about.hour', hours, {'count': hours}) ?? '$hours hours');
-    } else {
-      int days = difference ~/ 86400;
-      return Text(i18n?.tc('helpers.telemetry.about.day', days, {'count': days}) ?? '$days days');
-    }
-  }
-
-  String get label {
-    if (widget.receivedAt == null) {
-      return 'helpers.telemetry.disconnected';
-    }
-
-    final difference = now.difference(widget.receivedAt!).inSeconds;
-
-    if (difference < (widget.connection?.online?.inSeconds ?? 300)) {
-      return 'helpers.telemetry.connected';
-    } else if (difference < (widget.connection?.hibernation?.inSeconds ?? 3600)) {
-      return 'helpers.telemetry.hibernate';
-    } else {
-      return 'helpers.telemetry.disconnected';
-    }
-  }
-
-  Color get color {
-    if (widget.receivedAt == null) {
-      return Colors.grey.shade600;
-    }
-
-    final difference = now.difference(widget.receivedAt!).inSeconds;
-
-    if (difference < 5 * 60) {
-      return Colors.green.shade600;
-    } else if (difference < 60 * 60) {
-      return Colors.orange.shade600;
-    } else {
-      return Colors.red.shade600;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        now = DateTime.now();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(2).add(const EdgeInsets.symmetric(horizontal: 4)),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            i18n?.t(label) ?? label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: validateColor(color: color)),
-          ),
-        ),
-        if (widget.receivedAt != null) ...[
-          const Text(" - "),
-          humanizedTime(i18n),
-        ],
-      ],
     );
   }
 }

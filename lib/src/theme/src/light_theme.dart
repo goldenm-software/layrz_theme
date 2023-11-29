@@ -52,7 +52,6 @@ ThemeData generateLightTheme({
     ),
     useMaterial3: true,
   ).copyWith(
-    useMaterial3: true,
     brightness: Brightness.light,
     scaffoldBackgroundColor: kLightBackgroundColor,
     dialogBackgroundColor: kLightBackgroundColor,
@@ -168,9 +167,12 @@ ThemeData generateLightTheme({
       endIndent: 0,
     ),
     scrollbarTheme: ScrollbarThemeData(
+      trackVisibility: MaterialStateProperty.all(true),
+      thumbVisibility: MaterialStateProperty.all(true),
       thumbColor: MaterialStateColor.resolveWith((states) {
         return Colors.black.withOpacity(0.4);
       }),
+      thickness: MaterialStateProperty.all(7),
     ),
 
     // Inputs

@@ -168,11 +168,8 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
 
     overlay = OverlayEntry(
       builder: (context) {
-        return WillPopScope(
-          onWillPop: () async {
-            _destroyOverlay();
-            return false;
-          },
+        return PopScope(
+          canPop: false,
           child: Material(
             color: Colors.transparent,
             child: Stack(

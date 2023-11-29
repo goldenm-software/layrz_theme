@@ -6,8 +6,10 @@ typedef ValueBuilder<T> = String Function(BuildContext context, T item);
 /// [WidgetBuilder<T>] defines the widget to display in a column.
 typedef WidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
+/// [CellTap<T>] defines the action when the cell is tapped.
 typedef CellTap<T> = void Function(T item);
 
+/// [CellColor<T>] defines the color of the cell.
 typedef CellColor<T> = Color? Function(T item);
 
 class ThemedColumn<T> {
@@ -82,8 +84,10 @@ class ThemedColumn<T> {
   static EdgeInsets get padding => const EdgeInsets.symmetric(horizontal: 10);
 
   /// [sortIconSize] is the size of the sort icon.
-  static double get sortIconSize => 25;
+  static double get sortIconSize => 15;
 
+  /// [predictedContentSize] returns the predicted size of the content of the column.
+  /// This is used to calculate the width of the column.
   Size predictedContentSize(BuildContext context, T item, TextStyle? style) {
     if (widgetBuilder != null) {
       return Size(
@@ -106,6 +110,8 @@ class ThemedColumn<T> {
     );
   }
 
+  /// [predictedHeaderSize] returns the predicted size of the header of the column.
+  /// This is used to calculate the width of the column.
   Size predictedHeaderSize(BuildContext context, TextStyle? style) {
     if (label != null) {
       return Size(
@@ -117,21 +123,6 @@ class ThemedColumn<T> {
     TextPainter painter = TextPainter(
       text: TextSpan(
         text: labelText,
-        style: style,
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    return Size(
-      painter.size.width + ThemedColumn.padding.horizontal + ThemedColumn.sortIconSize,
-      painter.size.height,
-    );
-  }
-
-  static Size predictedSize(BuildContext context, String text, TextStyle? style) {
-    TextPainter painter = TextPainter(
-      text: TextSpan(
-        text: text,
         style: style,
       ),
       textDirection: TextDirection.ltr,
