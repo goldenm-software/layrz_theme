@@ -30,12 +30,12 @@ class _BasicTableViewState extends State<BasicTableView> {
               rowSubtitleBuilder: (context, columns, item) => Text(item.id),
               idBuilder: (context, item) => item.id,
               // enablePaginator: false,
-              enableMultiSelectDialog: false,
-              multiSelectionEnabled: false,
+              enableMultiSelectDialog: true,
+              multiSelectionEnabled: true,
               // shouldExpand: false,
               // itemsPerPage: 5,
               forceResync: true,
-              idEnabled: false,
+              idEnabled: true,
               onIdTap: (item) {
                 debugPrint("Tapped on ${item.name}");
               },
@@ -47,15 +47,21 @@ class _BasicTableViewState extends State<BasicTableView> {
                   vin: 'VIN${i + 1}',
                 );
               }),
-              onShow: (ctx, asset) async {
-                return;
+              onShow: (context, item) async {
+                debugPrint("onShow tapped: $item");
               },
-              // onEdit: (cxt, asset) async {
-              //   return;
-              // },
-              // onDelete: (cxt, asset) async {
-              //   return;
-              // },
+              onAdd: () async {
+                debugPrint("onAdd tapped");
+              },
+              onRefresh: () async {
+                debugPrint("onRefresh tapped");
+              },
+              onEdit: (context, item) async {
+                debugPrint("onEdit tapped: $item");
+              },
+              onDelete: (context, item) async {
+                debugPrint("onDelete tapped: $item");
+              },
               columns: [
                 ThemedColumn(
                   labelText: 'Name',
