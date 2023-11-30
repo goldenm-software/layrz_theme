@@ -172,6 +172,8 @@ ThemeData generateLightTheme({
       thumbColor: MaterialStateColor.resolveWith((states) {
         return Colors.black.withOpacity(0.4);
       }),
+      trackColor: MaterialStateProperty.all(Colors.transparent),
+      trackBorderColor: MaterialStateProperty.all(Colors.transparent),
       thickness: MaterialStateProperty.all(7),
     ),
 

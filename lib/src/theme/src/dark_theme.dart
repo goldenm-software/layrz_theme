@@ -157,9 +157,14 @@ ThemeData generateDarkTheme({
       endIndent: 0,
     ),
     scrollbarTheme: ScrollbarThemeData(
+      trackVisibility: MaterialStateProperty.all(true),
+      thumbVisibility: MaterialStateProperty.all(true),
       thumbColor: MaterialStateColor.resolveWith((states) {
-        return Colors.grey.shade700.withOpacity(0.4);
+        return Colors.grey.shade500.withOpacity(0.4);
       }),
+      trackColor: MaterialStateProperty.all(Colors.transparent),
+      trackBorderColor: MaterialStateProperty.all(Colors.transparent),
+      thickness: MaterialStateProperty.all(7),
     ),
 
     // Inputs

@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.3.3
+- Changed `ThemedTable<T>` border colors, now use `Theme.of(context).dividerColor` instead of `Colors.grey.shade300`
+- Some fixes related to `drawAvatar`.
+
+## 4.3.2
+- Added `context` in `ThemedSnackbar` to backward compatibility with `@Deprecated` warning.
+
 ## 4.3.1
 - New `ThemedSnackbar` to show a snackbar with a custom messenger called `ThemedSnackbarMessenger`. Now you can show a snackbar from anywhere in the app only calling `ThemedSnackbarMessenger.of(context).showSnackbar(...)`.
 - Deprecated void functions `showThemedSnackbar` and `setThemedSnackbarScaffoldKey` in favor of the new `ThemedSnackbarMessenger` and `ThemedSnackbar` widgets.

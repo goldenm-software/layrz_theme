@@ -114,6 +114,8 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
           radius: widget.asTaskBar ? 5 : 30,
           name: widget.userName,
           dynamicAvatar: widget.userDynamicAvatar,
+          elevation: 3,
+          color: Theme.of(context).scaffoldBackgroundColor,
         ),
       ),
     );

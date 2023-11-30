@@ -73,7 +73,7 @@ Widget drawAvatar({
   if (dynamicAvatar != null) {
     switch (dynamicAvatar.type) {
       case AvatarType.emoji:
-        containerColor = Colors.grey.shade900;
+        containerColor = color ?? Colors.white;
         content = Center(
           child: Text(
             dynamicAvatar.emoji ?? 'NA',
@@ -84,6 +84,7 @@ Widget drawAvatar({
         );
         break;
       case AvatarType.icon:
+        containerColor = color ?? Colors.white;
         content = Icon(
           dynamicAvatar.icon ?? Icons.person,
           color: validateColor(color: containerColor),
@@ -133,7 +134,7 @@ Widget drawAvatar({
         break;
     }
   } else if (avatar != null && avatar.isNotEmpty) {
-    containerColor = Colors.white;
+    containerColor = color ?? Colors.white;
     if (avatar.startsWith('data:')) {
       content = Image.memory(
         base64Decode(avatar.split(',').last),
@@ -194,14 +195,14 @@ Widget drawAvatar({
       borderRadius: BorderRadius.circular(radius),
       border: elevation == 0
           ? Border.all(
-              color: shadowColor ?? Theme.of(context).dividerColor,
+              color: shadowColor ?? containerColor,
               width: 1,
             )
           : null,
       boxShadow: elevation > 0
           ? [
               BoxShadow(
-                color: shadowColor ?? Theme.of(context).dividerColor,
+                color: shadowColor ?? containerColor,
                 blurRadius: 2 * elevation.toDouble(),
                 offset: Offset(0, elevation.toDouble() * (reverse ? -1 : 1)), // changes position of shadow
               ),
