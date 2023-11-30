@@ -1,7 +1,7 @@
 part of '../snackbar.dart';
 
 class ThemedSnackbar extends StatefulWidget {
-  @Deprecated('Removed in 4.3.0 is no longer used')
+  /// [context] helps to build the snackbar. If null, the snackbar will not be displayed
   final BuildContext? context;
 
   /// [title] helps to build the title widget. If null, the title will not be displayed
@@ -34,7 +34,7 @@ class ThemedSnackbar extends StatefulWidget {
   ThemedSnackbar({
     Key? key,
     this.title,
-    this.context,
+    @Deprecated('Removed in 4.3.0 is no longer used') this.context,
     required this.message,
     this.icon,
     this.color,

@@ -364,7 +364,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [border] refers to the style of the border of the cells.
   BorderSide get border => BorderSide(
-        color: Colors.grey.shade300,
+        // color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+        color: Theme.of(context).dividerColor,
         width: 1.5,
       );
 
