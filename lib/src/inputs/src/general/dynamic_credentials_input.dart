@@ -110,27 +110,22 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
               break;
             case CredentialFieldType.integer:
             case CredentialFieldType.float:
-              content = ThemedTextInput(
+              content = ThemedNumberInput(
                 disabled: !isEditing,
-                keyboardType: TextInputType.numberWithOptions(decimal: field.type == CredentialFieldType.float),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(field.type == CredentialFieldType.integer
-                      ? RegExp(r'^\d+$')
-                      : field.type == CredentialFieldType.float
-                          ? RegExp(r'^\d+\.?\d{0,2}$')
-                          : RegExp(r'^\d+$')),
-                ],
                 labelText: t('$translatePrefix.${field.field}.title'),
-                value: credentials[field.field] == null ? "0" : "${credentials[field.field]}",
+                value: credentials[field.field],
                 errors: ThemedOrm.getErrors(
                     key: widget.nested != null
                         ? 'credentials.${widget.nested}.${field.field}'
                         : 'credentials.${field.field}'),
                 onChanged: (value) {
-                  if (field.type == CredentialFieldType.integer) {
-                    credentials[field.field] = int.tryParse(value) ?? 0;
+                  if (value == null) {
+                    credentials[field.field] = null;
+                    return;
+                  } else if (field.type == CredentialFieldType.integer) {
+                    credentials[field.field] = value.toInt();
                   } else if (field.type == CredentialFieldType.float) {
-                    credentials[field.field] = double.tryParse(value) ?? 0;
+                    credentials[field.field] = value.toDouble();
                   } else {
                     credentials[field.field] = value;
                   }
@@ -174,9 +169,8 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                 onSuffixTap: widget.layrzGeneratedToken != null
                     ? () {
                         Clipboard.setData(ClipboardData(text: widget.layrzGeneratedToken!));
-                        showThemedSnackbar(ThemedSnackbar(
+                        ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(ThemedSnackbar(
                           message: t('builder.authorization.tokenCopied'),
-                          context: context,
                           icon: MdiIcons.clipboardCheckOutline,
                         ));
                       }

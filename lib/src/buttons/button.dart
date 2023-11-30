@@ -79,6 +79,10 @@ class ThemedButton extends StatefulWidget {
   /// By default, will use `13`.
   final double fontSize;
 
+  /// [tooltipEnabled] is used to enable/disable the tooltip.
+  /// By default, will use `true`.
+  final bool tooltipEnabled;
+
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -97,10 +101,14 @@ class ThemedButton extends StatefulWidget {
     this.isDisabled = false,
     this.tooltipPosition = ThemedTooltipPosition.bottom,
     this.fontSize = 13,
+    this.tooltipEnabled = true,
   }) : assert(label != null || labelText != null);
 
   @override
   State<ThemedButton> createState() => _ThemedButtonState();
+
+  /// [height] is used to know the height of the button.
+  static double get height => 30;
 }
 
 class _ThemedButtonState extends State<ThemedButton> {
@@ -270,7 +278,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [height] is used to set the height of the button.
   /// Always will be `30`.
-  double get height => 30;
+  double get height => ThemedButton.height;
 
   @override
   Widget build(BuildContext context) {
@@ -334,6 +342,21 @@ class _ThemedButtonState extends State<ThemedButton> {
     );
   }
 
+  /// [_handleTooltip] is used to handle the tooltip of the button when the button is a FAB.
+  /// This tooltip is only used when the button is style as any FAB style
+  Widget _handleTooltip({required BoxConstraints constraints, required Widget child}) {
+    if (!widget.tooltipEnabled) {
+      return child;
+    }
+
+    return ThemedTooltip(
+      position: widget.tooltipPosition,
+      message: message,
+      color: contentColor,
+      child: child,
+    );
+  }
+
   /// [_buildFilledTonal] is used to build a filled tonal button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
   Widget _buildFilledTonal({required BoxConstraints constraints}) {
@@ -383,10 +406,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildFilledTonalFab] is used to build a filled tonal FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
   Widget _builFilledTonalFab({required BoxConstraints constraints}) {
-    return ThemedTooltip(
-      position: widget.tooltipPosition,
-      message: message,
-      color: contentColor,
+    return _handleTooltip(
+      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -468,10 +489,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildFab] is used to build a FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.fab].
   Widget _buildFab({required BoxConstraints constraints}) {
-    return ThemedTooltip(
-      position: widget.tooltipPosition,
-      message: message,
-      color: contentColor,
+    return _handleTooltip(
+      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -558,10 +577,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildOutlinedFab] is used to build a outlined FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.outlinedFab].
   Widget _buildOutlinedFab({required BoxConstraints constraints}) {
-    return ThemedTooltip(
-      position: widget.tooltipPosition,
-      message: message,
-      color: contentColor,
+    return _handleTooltip(
+      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -649,10 +666,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildFilledFab] is used to build a filled FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledFab].
   Widget _builFilledFab({required BoxConstraints constraints}) {
-    return ThemedTooltip(
-      position: widget.tooltipPosition,
-      message: message,
-      color: contentColor,
+    return _handleTooltip(
+      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -737,10 +752,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildElevatedFab] is used to build a elevated FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.elevatedFab].
   Widget _builElevatedFab({required BoxConstraints constraints}) {
-    return ThemedTooltip(
-      position: widget.tooltipPosition,
-      message: message,
-      color: contentColor,
+    return _handleTooltip(
+      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: generateContainerElevation(

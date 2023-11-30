@@ -27,7 +27,6 @@ dependencies:
   pointer_interceptor: ">=0.9.3+4 <1.0.0"
   collection: ">=1.17.1 <2.0.0"
   emojis: ">=0.9.9 <1.0.0"
-  get_it: ">=7.6.0 <8.0.0"
   humanize_duration: ">=0.0.1+1 <1.0.0"
   flutter_highlight: ">=0.7.0 <1.0.0"
   highlight: ">=0.7.0 <1.0.0"

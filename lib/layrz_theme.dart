@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:highlight/highlight.dart';
@@ -17,6 +16,7 @@ import 'src/helpers/helpers.dart';
 import 'src/inputs/inputs.dart';
 import 'src/tooltips/tooltips.dart';
 import 'src/theme/theme.dart';
+import 'src/snackbar/snackbar.dart';
 
 // Library exports
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
@@ -33,6 +33,7 @@ export 'src/file.dart';
 export 'src/layo.dart';
 export 'src/theme/theme.dart';
 export 'src/scaffolds/scaffolds.dart';
+export 'src/snackbar/snackbar.dart';
 
 /// Parts
 // Buittons and actions
@@ -60,11 +61,6 @@ part 'src/orm/orm.dart';
 part 'src/extensions/datetime.dart';
 part 'src/extensions/color.dart';
 part 'src/extensions/page_builder.dart';
-
-// Snackbar
-part 'src/snackbar/snackbar.dart';
-part 'src/snackbar/function.dart';
-part 'src/snackbar/controller.dart';
 
 // Language theme
 part 'src/languages/common.dart';

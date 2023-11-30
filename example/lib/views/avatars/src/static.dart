@@ -104,12 +104,12 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                         text: "drawAvatar(context: context, size: 50, avatar: "
                             "'https://cdn.layrz.com/resources/layo/layo2.png')",
                       ));
-                      showThemedSnackbar(ThemedSnackbar(
-                        context: context,
-                        message: "Copied to clipboard",
-                        icon: MdiIcons.clipboardCheckOutline,
-                        color: Colors.green,
-                      ));
+                      // showThemedSnackbar(ThemedSnackbar(
+                      //   context: context,
+                      //   message: "Copied to clipboard",
+                      //   icon: MdiIcons.clipboardCheckOutline,
+                      //   color: Colors.green,
+                      // ));
                     },
                   ),
                 ),
@@ -131,12 +131,12 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                       Clipboard.setData(const ClipboardData(
                         text: "drawAvatar(context: context, size: 50, icon: MdiIcons.account, color: Colors.green)",
                       ));
-                      showThemedSnackbar(ThemedSnackbar(
-                        context: context,
-                        message: "Copied to clipboard",
-                        icon: MdiIcons.clipboardCheckOutline,
-                        color: Colors.green,
-                      ));
+                      // showThemedSnackbar(ThemedSnackbar(
+                      //   context: context,
+                      //   message: "Copied to clipboard",
+                      //   icon: MdiIcons.clipboardCheckOutline,
+                      //   color: Colors.green,
+                      // ));
                     },
                   ),
                 ),
@@ -160,12 +160,12 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                         text: "drawAvatar(context: context, size: 50, avatar: "
                             "'https://cdn.layrz.com/resources/layo/layo2.png', radius: 10, elevation: 3)",
                       ));
-                      showThemedSnackbar(ThemedSnackbar(
-                        context: context,
-                        message: "Copied to clipboard",
-                        icon: MdiIcons.clipboardCheckOutline,
-                        color: Colors.green,
-                      ));
+                      // showThemedSnackbar(ThemedSnackbar(
+                      //   context: context,
+                      //   message: "Copied to clipboard",
+                      //   icon: MdiIcons.clipboardCheckOutline,
+                      //   color: Colors.green,
+                      // ));
                     },
                   ),
                 ),
