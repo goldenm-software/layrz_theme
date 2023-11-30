@@ -264,6 +264,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
             color: backgroundColor,
             shadowColor: backgroundColor,
           ),
+          clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               Expanded(
