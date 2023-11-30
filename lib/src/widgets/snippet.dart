@@ -50,8 +50,7 @@ class ThemedCodeSnippet extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: code));
-                showThemedSnackbar(ThemedSnackbar(
-                  context: context,
+                ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(ThemedSnackbar(
                   message: copyToClipboardText,
                   icon: MdiIcons.clipboardCheckOutline,
                   color: Colors.green,

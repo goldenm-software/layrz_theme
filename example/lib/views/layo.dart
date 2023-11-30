@@ -67,8 +67,7 @@ class _LayoViewState extends State<LayoView> {
                         labelText: "Copy this emotion as example",
                         onTap: () {
                           Clipboard.setData(ClipboardData(text: "Layo(size: 30, emotion: ${emotion.toString()})"));
-                          showThemedSnackbar(ThemedSnackbar(
-                            context: context,
+                          ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
                             message: "Copied to clipboard",
                             icon: MdiIcons.clipboardCheckOutline,
                             color: Colors.green,

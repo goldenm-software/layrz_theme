@@ -374,8 +374,13 @@ class _ButtonsViewState extends State<ButtonsView> {
       onCooldownFinish: () => setState(() => _isCooldown = false),
       tooltipPosition: ThemedTooltipPosition.right,
       onTap: () {
-        showThemedSnackbar(ThemedSnackbar(
-          message: "You tapped on a button with style ${style.name}!",
+        ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
+          icon: MdiIcons.accessPoint,
+          width: 700,
+          color: Colors.red,
+          title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut nulla sit amet "
+              "tellus dictum molestie in sit amet ligula. Nullam pulvinar risus eu sapien dictum blandit.",
         ));
       },
     );

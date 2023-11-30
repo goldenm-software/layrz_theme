@@ -180,6 +180,10 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
   @override
   Widget build(BuildContext context) {
+    return _buildLayout();
+  }
+
+  Widget _buildLayout() {
     double width = MediaQuery.of(context).size.width;
 
     Widget child = Container(

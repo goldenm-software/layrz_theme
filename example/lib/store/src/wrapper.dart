@@ -28,7 +28,7 @@ class _LayoutState extends State<Layout> {
   @override
   void initState() {
     super.initState();
-    setThemedSnackbarScaffoldKey(_scaffoldKey);
+    // setThemedSnackbarScaffoldKey(_scaffoldKey);
   }
 
   @override

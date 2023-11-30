@@ -93,12 +93,12 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                         text: "drawAvatar(context: context, size: 30, name: 'Example', "
                             "dynamicAvatar: const Avatar(type: AvatarType.none))",
                       ));
-                      showThemedSnackbar(ThemedSnackbar(
-                        context: context,
-                        message: "Copied to clipboard",
-                        icon: MdiIcons.clipboardCheckOutline,
-                        color: Colors.green,
-                      ));
+                      // showThemedSnackbar(ThemedSnackbar(
+                      //   context: context,
+                      //   message: "Copied to clipboard",
+                      //   icon: MdiIcons.clipboardCheckOutline,
+                      //   color: Colors.green,
+                      // ));
                     },
                   ),
                 ),
@@ -125,12 +125,12 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                             "const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/"
                             "layo2.png'))",
                       ));
-                      showThemedSnackbar(ThemedSnackbar(
-                        context: context,
-                        message: "Copied to clipboard",
-                        icon: MdiIcons.clipboardCheckOutline,
-                        color: Colors.green,
-                      ));
+                      // showThemedSnackbar(ThemedSnackbar(
+                      //   context: context,
+                      //   message: "Copied to clipboard",
+                      //   icon: MdiIcons.clipboardCheckOutline,
+                      //   color: Colors.green,
+                      // ));
                     },
                   ),
                 ),
@@ -156,12 +156,12 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                         text: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
                             "Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard))",
                       ));
-                      showThemedSnackbar(ThemedSnackbar(
-                        context: context,
-                        message: "Copied to clipboard",
-                        icon: MdiIcons.clipboardCheckOutline,
-                        color: Colors.green,
-                      ));
+                      // showThemedSnackbar(ThemedSnackbar(
+                      //   context: context,
+                      //   message: "Copied to clipboard",
+                      //   icon: MdiIcons.clipboardCheckOutline,
+                      //   color: Colors.green,
+                      // ));
                     },
                   ),
                 ),
@@ -187,12 +187,12 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                         text: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
                             "const Avatar(type: AvatarType.emoji, emoji: '👍'))",
                       ));
-                      showThemedSnackbar(ThemedSnackbar(
-                        context: context,
-                        message: "Copied to clipboard",
-                        icon: MdiIcons.clipboardCheckOutline,
-                        color: Colors.green,
-                      ));
+                      // showThemedSnackbar(ThemedSnackbar(
+                      //   context: context,
+                      //   message: "Copied to clipboard",
+                      //   icon: MdiIcons.clipboardCheckOutline,
+                      //   color: Colors.green,
+                      // ));
                     },
                   ),
                 ),

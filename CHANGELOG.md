@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.1
+- New `ThemedSnackbar` to show a snackbar with a custom messenger called `ThemedSnackbarMessenger`. Now you can show a snackbar from anywhere in the app only calling `ThemedSnackbarMessenger.of(context).showSnackbar(...)`.
+- Deprecated void functions `showThemedSnackbar` and `setThemedSnackbarScaffoldKey` in favor of the new `ThemedSnackbarMessenger` and `ThemedSnackbar` widgets.
+- Updated `ThemedDynamicCredentialsInput` to support `ThemedNumberInput` instead of `ThemedTextInput`.
+
 ## 4.3.0
 - Refactorized buttons to reduce the number of `setState`s and improve the performance of the widgets.
 - Refactorized table to reduce the number of `setState`s and improve the performance of the widgets.

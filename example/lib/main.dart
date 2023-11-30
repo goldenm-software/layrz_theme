@@ -33,6 +33,11 @@ class _MyAppState extends State<MyApp> {
           darkTheme: generateDarkTheme(),
           debugShowCheckedModeBanner: false,
           routerConfig: router,
+          builder: (context, child) {
+            return ThemedSnackbarMessenger(
+              child: child ?? const SizedBox(),
+            );
+          },
         );
       },
     );
