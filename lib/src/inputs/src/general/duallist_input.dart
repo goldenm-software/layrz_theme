@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedDualListInput<T> extends StatefulWidget {
   /// [labelText] is the label text of the dual list input. Avoid submit [label] and [labelText] at the same time.
