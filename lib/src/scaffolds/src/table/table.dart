@@ -469,10 +469,15 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         if (widget.onDelete != null) {
           width += _actionSize;
         }
+        double additionalWidth = 0;
 
-        for (T item in widget.items) {
-          width += (widget.additionalActions?.call(context, item).length ?? 0) * _actionSize;
+        for (T item in items) {
+          additionalWidth = max(
+            additionalWidth,
+            (widget.additionalActions?.call(context, item).length ?? 0) * _actionSize,
+          );
         }
+        width += additionalWidth;
 
         sizes[-1] = max(width, 100);
       }

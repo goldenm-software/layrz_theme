@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.4
+ - Fixed `ThemedTable<T>` width calculation when `additionalActions` is being used.
+
 ## 4.3.3
 - Changed `ThemedTable<T>` border colors, now use `Theme.of(context).dividerColor` instead of `Colors.grey.shade300`
 - Some fixes related to `drawAvatar`.

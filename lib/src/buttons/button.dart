@@ -198,7 +198,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       );
 
   /// [disabledColor] is used to know the color of the disabled button.
-  Color get disabledColor => isDark ? Colors.grey.shade800 : Colors.grey.shade300;
+  Color get disabledColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
 
   /// [contentColor] is used to know the color of the content of the button.
   Color get contentColor => isDisabled ? disabledColor : (widget.color ?? defaultColor);
@@ -822,9 +822,30 @@ class _ThemedButtonState extends State<ThemedButton> {
                   value: value,
                 );
 
+                // double converted = value * 0.8;
+                // Widget progress = Container(
+                //   decoration: BoxDecoration(
+                //     gradient: LinearGradient(
+                //       colors: [
+                //         loadingColor,
+                //         disabledColor,
+                //       ],
+                //       stops: [converted, 1],
+                //       begin: Alignment.centerLeft,
+                //       end: Alignment.centerRight,
+                //     ),
+                //   ),
+                // );
+
                 return Stack(
                   children: [
-                    Positioned.fill(child: progress),
+                    Positioned(
+                      top: 0,
+                      bottom: 0,
+                      left: 0,
+                      width: width * value,
+                      child: progress,
+                    ),
                     Positioned.fill(
                       child: Center(
                         child: Text(

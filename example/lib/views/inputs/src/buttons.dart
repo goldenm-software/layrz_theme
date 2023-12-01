@@ -371,6 +371,7 @@ class _ButtonsViewState extends State<ButtonsView> {
       isLoading: _isLoading,
       isCooldown: _isCooldown,
       isDisabled: _isDisabled,
+      // cooldownDuration: const Duration(seconds: 10),
       onCooldownFinish: () => setState(() => _isCooldown = false),
       tooltipPosition: ThemedTooltipPosition.right,
       onTap: () {
