@@ -16,30 +16,34 @@ Future<bool> deleteConfirmationDialog({
   VoidCallback? onCooldown,
 }) async {
   LayrzAppLocalizations i18n = LayrzAppLocalizations.of(context)!;
+
   bool? result = await showDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
-        title: Text(i18n.t('actions.${isMultiple ? 'confirmationMultiple' : 'confirmation'}.title')),
-        content: Text(i18n.t('actions.${isMultiple ? 'confirmationMultiple' : 'confirmation'}.content')),
+      return ThemedDialog(
+        titleText: i18n.t('actions.${isMultiple ? 'confirmationMultiple' : 'confirmation'}.title'),
+        body: Text(
+          i18n.t('actions.${isMultiple ? 'confirmationMultiple' : 'confirmation'}.content'),
+          textAlign: TextAlign.center,
+        ),
+        dismiss: ThemedDialogAction(
+          color: Colors.red,
+          labelText: i18n.t('actions.confirmation.dismiss'),
+          isLoading: isLoading,
+          isCooldown: isCooldown,
+          onCooldown: onCooldown,
+          style: ThemedButtonStyle.text,
+          onTap: () => Navigator.of(context).pop(false),
+        ),
         actions: [
-          ThemedButton(
+          ThemedDialogAction(
             style: ThemedButtonStyle.filledTonal,
-            color: Colors.red.shade700,
-            labelText: i18n.t('actions.confirmation.dismiss'),
-            isLoading: isLoading,
-            isCooldown: isCooldown,
-            onCooldownFinish: onCooldown,
-            onTap: () => Navigator.pop(context, false),
-          ),
-          ThemedButton(
-            style: ThemedButtonStyle.filledTonal,
-            color: Colors.green.shade700,
+            color: Colors.green,
             labelText: i18n.t('actions.confirmation.confirm'),
             isLoading: isLoading,
             isCooldown: isCooldown,
-            onCooldownFinish: onCooldown,
-            onTap: () => Navigator.pop(context, true),
+            onCooldown: onCooldown,
+            onTap: () => Navigator.of(context).pop(true),
           ),
         ],
       );
