@@ -35,3 +35,11 @@ example/.fvm/flutter_sdk
 .flutter-plugins-dependencies
 
 credentials.json
+
+**/*/flutter/generated_plugins.cmake
+**/*/flutter/generated_plugin_registrant.h
+**/*/flutter/generated_plugin_registrant.cc
+**/*/flutter/ephemeral/*
+**/*/Flutter/ephemeral/*
+**/*/Flutter/GeneratedPluginRegistrant.*
+

@@ -282,54 +282,35 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        switch (style) {
-          case ThemedButtonStyle.filledTonal:
-            return _handleHint(
-              constraints: constraints,
-              child: _buildFilledTonal(constraints: constraints),
-            );
-          case ThemedButtonStyle.filledTonalFab:
-            return _builFilledTonalFab(constraints: constraints);
-          case ThemedButtonStyle.text:
-            return _handleHint(
-              constraints: constraints,
-              child: _buildText(constraints: constraints),
-            );
-          case ThemedButtonStyle.fab:
-            return _buildFab(constraints: constraints);
-          case ThemedButtonStyle.outlined:
-            return _handleHint(
-              constraints: constraints,
-              child: _buildOutlined(constraints: constraints),
-            );
-          case ThemedButtonStyle.outlinedFab:
-            return _buildOutlinedFab(constraints: constraints);
-          case ThemedButtonStyle.filled:
-            return _handleHint(
-              constraints: constraints,
-              child: _buildFilled(constraints: constraints),
-            );
-          case ThemedButtonStyle.filledFab:
-            return _builFilledFab(constraints: constraints);
-          case ThemedButtonStyle.elevated:
-            return _handleHint(
-              constraints: constraints,
-              child: _buildElevated(constraints: constraints),
-            );
-          case ThemedButtonStyle.elevatedFab:
-            return _builElevatedFab(constraints: constraints);
-          default:
-            return Text("Unsupported $style");
-        }
-      },
-    );
+    switch (style) {
+      case ThemedButtonStyle.filledTonal:
+        return _handleHint(child: _buildFilledTonal());
+      case ThemedButtonStyle.filledTonalFab:
+        return _builFilledTonalFab();
+      case ThemedButtonStyle.text:
+        return _handleHint(child: _buildText());
+      case ThemedButtonStyle.fab:
+        return _buildFab();
+      case ThemedButtonStyle.outlined:
+        return _handleHint(child: _buildOutlined());
+      case ThemedButtonStyle.outlinedFab:
+        return _buildOutlinedFab();
+      case ThemedButtonStyle.filled:
+        return _handleHint(child: _buildFilled());
+      case ThemedButtonStyle.filledFab:
+        return _builFilledFab();
+      case ThemedButtonStyle.elevated:
+        return _handleHint(child: _buildElevated());
+      case ThemedButtonStyle.elevatedFab:
+        return _builElevatedFab();
+      default:
+        return Text("Unsupported $style");
+    }
   }
 
   /// [_handleHint] is used to handle the hint of the button.
   /// This hint is only used when the button is style as any non-FAB style
-  Widget _handleHint({required BoxConstraints constraints, required Widget child}) {
+  Widget _handleHint({required Widget child}) {
     if (hintText == null) {
       return child;
     }
@@ -344,7 +325,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_handleTooltip] is used to handle the tooltip of the button when the button is a FAB.
   /// This tooltip is only used when the button is style as any FAB style
-  Widget _handleTooltip({required BoxConstraints constraints, required Widget child}) {
+  Widget _handleTooltip({required Widget child}) {
     if (!widget.tooltipEnabled) {
       return child;
     }
@@ -359,7 +340,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildFilledTonal] is used to build a filled tonal button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
-  Widget _buildFilledTonal({required BoxConstraints constraints}) {
+  Widget _buildFilledTonal() {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -405,9 +386,8 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildFilledTonalFab] is used to build a filled tonal FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
-  Widget _builFilledTonalFab({required BoxConstraints constraints}) {
+  Widget _builFilledTonalFab() {
     return _handleTooltip(
-      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -442,7 +422,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildText] is used to build a text button.
   /// This button is used when the [style] is [ThemedButtonStyle.text].
-  Widget _buildText({required BoxConstraints constraints}) {
+  Widget _buildText() {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -488,9 +468,8 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildFab] is used to build a FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.fab].
-  Widget _buildFab({required BoxConstraints constraints}) {
+  Widget _buildFab() {
     return _handleTooltip(
-      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -525,7 +504,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildOutlined] is used to build a outlined button.
   /// This button is used when the [style] is [ThemedButtonStyle.outlined].
-  Widget _buildOutlined({required BoxConstraints constraints}) {
+  Widget _buildOutlined() {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -576,9 +555,8 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildOutlinedFab] is used to build a outlined FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.outlinedFab].
-  Widget _buildOutlinedFab({required BoxConstraints constraints}) {
+  Widget _buildOutlinedFab() {
     return _handleTooltip(
-      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -617,7 +595,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildFilled] is used to build a filled button.
   /// This button is used when the [style] is [ThemedButtonStyle.filled].
-  Widget _buildFilled({required BoxConstraints constraints}) {
+  Widget _buildFilled() {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -665,9 +643,8 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildFilledFab] is used to build a filled FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledFab].
-  Widget _builFilledFab({required BoxConstraints constraints}) {
+  Widget _builFilledFab() {
     return _handleTooltip(
-      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -702,7 +679,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildElevated] is used to build a elevated button.
   /// This button is used when the [style] is [ThemedButtonStyle.elevated].
-  Widget _buildElevated({required BoxConstraints constraints}) {
+  Widget _buildElevated() {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: generateContainerElevation(
@@ -751,9 +728,8 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildElevatedFab] is used to build a elevated FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.elevatedFab].
-  Widget _builElevatedFab({required BoxConstraints constraints}) {
+  Widget _builElevatedFab() {
     return _handleTooltip(
-      constraints: constraints,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: generateContainerElevation(

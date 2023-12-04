@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.5
+- Removed `LayoutBuilder` in `ThemedButton`
+- New widget `ThemedDialog` to handle/standarize the dialogs in the app.
+
 ## 4.3.4
  - Fixed `ThemedTable<T>` width calculation when `additionalActions` is being used.
 

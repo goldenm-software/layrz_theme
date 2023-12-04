@@ -17,6 +17,7 @@ import 'src/inputs/inputs.dart';
 import 'src/tooltips/tooltips.dart';
 import 'src/theme/theme.dart';
 import 'src/snackbar/snackbar.dart';
+import 'src/dialogs/dialogs.dart';
 
 // Library exports
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
@@ -34,6 +35,7 @@ export 'src/layo.dart';
 export 'src/theme/theme.dart';
 export 'src/scaffolds/scaffolds.dart';
 export 'src/snackbar/snackbar.dart';
+export 'src/dialogs/dialogs.dart';
 
 /// Parts
 // Buittons and actions
