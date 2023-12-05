@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../languages.dart';
 
 final List<String> kLayrzMarkupLanguageVariables = [
   'assetName',

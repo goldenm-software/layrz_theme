@@ -1,4 +1,4 @@
-part of helpers;
+part of '../helpers.dart';
 
 /// [useBlack] is a helper function to detect if the color should have the content
 /// with [Colors.White] or [Colors.black] color.

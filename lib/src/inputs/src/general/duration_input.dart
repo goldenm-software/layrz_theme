@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 /// [ThemedDurationInputVisibleValues] is the list of values to display in the input.
 ///

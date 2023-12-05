@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../languages.dart';
 
 const List<String> mjmlTags = [
   "mjml",

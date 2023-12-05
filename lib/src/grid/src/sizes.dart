@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../grid.dart';
 
 ///
 /// Sizes is enum

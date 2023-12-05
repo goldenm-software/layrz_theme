@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../extensions.dart';
 
 class ThemedPageTransition extends PageRouteBuilder {
   /// [page] is the widget to be shown.

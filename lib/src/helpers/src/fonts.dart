@@ -1,4 +1,4 @@
-part of helpers;
+part of '../helpers.dart';
 
 class FoundFont {
   /// [titleFont] is the font family of the title text.

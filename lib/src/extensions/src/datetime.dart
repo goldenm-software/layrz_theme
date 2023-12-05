@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../extensions.dart';
 
 /// [DateTimeExtension] is an extension to extend the [DateTime] class.
 extension DateTimeExtension on DateTime {

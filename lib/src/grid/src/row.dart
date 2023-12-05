@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../grid.dart';
 
 class ResponsiveRow extends StatelessWidget {
   static ResponsiveRow builder({

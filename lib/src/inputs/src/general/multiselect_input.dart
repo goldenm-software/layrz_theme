@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedMultiSelectInput<T> extends StatefulWidget {
   /// [items] is a list of [ThemedSelectItem] that will be displayed in the dropdown.

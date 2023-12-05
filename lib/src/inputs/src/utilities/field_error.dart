@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedFieldDisplayError extends StatelessWidget {
   /// [errors] is the list of errors of the field.

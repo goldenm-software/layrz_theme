@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../../inputs.dart';
 
 class ThemedEmojiPicker extends StatefulWidget {
   /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.

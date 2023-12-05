@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../extensions.dart';
 
 /// [ThemedOrm] is a helper component to handle Layrz Translations errors.
 class ThemedOrm {

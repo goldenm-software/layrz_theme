@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../views.dart';
 
 class ThemedLicensesView extends StatefulWidget {
   /// [companyName] is the name of the company.

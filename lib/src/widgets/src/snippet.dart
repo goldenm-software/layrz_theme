@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../widgets.dart';
 
 class ThemedCodeSnippet extends StatelessWidget {
   /// The code to display

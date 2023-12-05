@@ -1,4 +1,4 @@
-part of layout;
+part of '../layout.dart';
 
 abstract class ThemedNavigatorItem {
   final Widget? label;

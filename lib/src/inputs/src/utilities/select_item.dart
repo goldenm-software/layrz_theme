@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedSelectItem<T> {
   /// [content] is the content of the item.

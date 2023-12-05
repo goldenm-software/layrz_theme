@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../buttons.dart';
 
 class ThemedActionsButtons extends StatefulWidget {
   /// [actions] is the list of actions to be displayed.

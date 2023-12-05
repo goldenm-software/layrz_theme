@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../extensions.dart';
 
 /// [ColorToJson] is an extension to convert a [Color] to a JSON string.
 extension ColorToJson on Color {

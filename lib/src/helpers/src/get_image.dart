@@ -1,4 +1,4 @@
-part of helpers;
+part of '../helpers.dart';
 
 /// [getImage] is a helper function to get an image from a local file path, a network url or a base64 string.
 ///

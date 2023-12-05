@@ -1,4 +1,4 @@
-part of tabs;
+part of '../tabs.dart';
 
 class ThemedTab extends StatelessWidget {
   /// [labelText] is the label text of the input.

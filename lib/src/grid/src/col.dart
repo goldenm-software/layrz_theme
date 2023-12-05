@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../grid.dart';
 
 class ResponsiveCol extends StatelessWidget {
   /// Component to wrap a child between an especific breakpoints. Read the

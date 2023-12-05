@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 typedef OnSearch = void Function(String value);
 

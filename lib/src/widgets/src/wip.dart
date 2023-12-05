@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../widgets.dart';
 
 class WorkInProgressView extends StatelessWidget {
   /// [WorkInProgressView] is a helper view to display "Work in progress"
@@ -7,7 +7,7 @@ class WorkInProgressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(MdiIcons.accountHardHat, size: 60),

@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../buttons.dart';
 
 class ThemedAnimatedCheckbox extends StatefulWidget {
   final Color? activeColor;

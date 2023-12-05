@@ -1,4 +1,4 @@
-part of theme;
+part of '../theme.dart';
 
 /// [ThemedPlatform] is the platform of the app.
 ///

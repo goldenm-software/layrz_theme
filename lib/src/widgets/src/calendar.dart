@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../widgets.dart';
 
 class ThemedCalendar extends StatefulWidget {
   /// [focusDay] is the day that will be focused when the calendar is first displayed.

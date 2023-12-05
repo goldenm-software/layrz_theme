@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
-part of layrz_theme;
+part of '../languages.dart';
 
 final BACKSLASH_ESCAPE = Mode(begin: "\\\\[\\s\\S]", relevance: 0);
 final APOS_STRING_MODE = Mode(

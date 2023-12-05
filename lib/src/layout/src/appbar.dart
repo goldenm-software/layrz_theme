@@ -1,4 +1,4 @@
-part of layout;
+part of '../layout.dart';
 
 class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// [scaffoldKey] is the key of the scaffold.

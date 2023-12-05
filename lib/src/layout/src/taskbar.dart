@@ -1,4 +1,4 @@
-part of layout;
+part of '../layout.dart';
 
 class ThemedTaskbar extends StatefulWidget {
   /// [items] is the list of buttons to be displayed in the taskbar.

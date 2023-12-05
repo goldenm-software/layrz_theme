@@ -1,4 +1,4 @@
-part of layout;
+part of '../layout.dart';
 
 class ThemedSidebar extends StatefulWidget {
   /// [items] is the list of buttons to be displayed in the drawer.

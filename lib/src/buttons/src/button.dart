@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../buttons.dart';
 
 class ThemedButton extends StatefulWidget {
   /// [label] and [labelText] is the label of the button. Cannot provide both.

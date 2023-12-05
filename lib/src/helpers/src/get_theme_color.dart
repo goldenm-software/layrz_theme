@@ -1,4 +1,4 @@
-part of helpers;
+part of '../helpers.dart';
 
 /// [getThemeColor] is a helper function to get the theme color of the app.
 ///

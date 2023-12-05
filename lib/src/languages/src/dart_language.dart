@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../languages.dart';
 
 final dartLang = Mode(refs: {
   '~contains~0~variants~4~contains~2': Mode(

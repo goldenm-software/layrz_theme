@@ -1,4 +1,4 @@
-part of layrz_theme;
+part of '../extensions.dart';
 
 class ThemedGridDelegateWithFixedHeight extends SliverGridDelegate {
   /// Creates a delegate that makes grid layouts with a fixed number of tiles in

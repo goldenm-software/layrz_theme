@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 /// [ThemedCheckboxInputStyle] is the style of the checkbox.
 ///

@@ -1,4 +1,4 @@
-part of helpers;
+part of '../helpers.dart';
 
 /// [openInfoDialog] is a helper function to open an info dialog using the structure of Layrz.
 ///

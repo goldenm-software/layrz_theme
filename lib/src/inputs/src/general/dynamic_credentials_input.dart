@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 typedef CredentialOnChanged = void Function(Map<String, dynamic>);
 
