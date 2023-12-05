@@ -32,6 +32,9 @@ import 'package:highlight/highlight.dart';
 import 'package:highlight/languages/python.dart' as python_lang;
 import 'package:highlight/languages/javascript.dart' as javascript_lang;
 
+export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
+export 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;
+
 // General inputs
 part 'src/general/checkbox_input.dart';
 part 'src/general/duallist_input.dart';

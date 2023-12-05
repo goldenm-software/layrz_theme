@@ -1,9 +1,7 @@
 library layrz_theme;
 
 // Library exports
-export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
 export 'package:file_picker/file_picker.dart' show FileType;
-export 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;
 
 // Direct exports
 export 'src/file.dart';
