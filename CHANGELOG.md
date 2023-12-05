@@ -3,7 +3,6 @@
 ## 4.3.6
 - Changed all part's to use uri instead
 - Updated `google_fonts` and `file_picker` to newer versions
-- New submodule `map` to handle custom layers of `flutter_map`
 
 ## 4.3.5
 - Removed `LayoutBuilder` in `ThemedButton`
