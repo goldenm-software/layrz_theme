@@ -1,4 +1,4 @@
-part of scaffolds;
+part of '../table.dart';
 
 /// [ValueBuilder<T>] defines the value to display in a column.
 typedef ValueBuilder<T> = String Function(BuildContext context, T item);

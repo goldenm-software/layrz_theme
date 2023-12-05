@@ -1,4 +1,4 @@
-part of scaffolds;
+part of '../table.dart';
 
 bool kThemedTableCanTrue(BuildContext context, item) => true;
 
@@ -184,6 +184,82 @@ class ThemedTable<T> extends StatefulWidget {
   /// By default, this value is [10, 25, 50, 100]
   final List<int> availableRowsPerPage;
 
+  /// [paginatorStartText] replaces the text of the first page button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String paginatorStartText;
+
+  /// [paginatorPreviousText] replaces the text of the previous page button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String paginatorPreviousText;
+
+  /// [paginatorShowingText] replaces the text of the showing items label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String paginatorShowingText;
+
+  /// [paginatorNextText] replaces the text of the next page button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String paginatorNextText;
+
+  /// [paginatorEndText] replaces the text of the last page button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String paginatorEndText;
+
+  /// [paginatorAutoText] replaces the text of the fit screen button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String paginatorAutoText;
+
+  /// [paginatorRowsPerPageText] replaces the text of the rows per page label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String paginatorRowsPerPageText;
+
+  /// [showButtonLabelText] replaces the text of the show button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String showButtonLabelText;
+
+  /// [editButtonLabelText] replaces the text of the edit button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String editButtonLabelText;
+
+  /// [deleteButtonLabelText] replaces the text of the delete button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String deleteButtonLabelText;
+
+  /// [actionsLabelText] replaces the text of the actions label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String actionsLabelText;
+
+  /// [searchLabelText] replaces the text of the search label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String searchLabelText;
+
+  /// [multiSelectionTitleText] replaces the text of the multi selection title.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionTitleText;
+
+  /// [multiSelectionContentText] replaces the text of the multi selection content.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionContentText;
+
+  /// [multiSelectionCancelLabelText] replaces the text of the multi selection cancel button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionCancelLabelText;
+
+  /// [multiSelectionDeleteLabelText] replaces the text of the multi selection delete button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionDeleteLabelText;
+
+  /// [tableTitleText] replaces the text of the table title.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String tableTitleText;
+
+  /// [addButtonLabelText] replaces the text of the table add button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String addButtonLabelText;
+
+  /// [refreshButtonLabelText] replaces the text of the refresh button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String refreshButtonLabelText;
+
   /// A standard table with a list of items, designed to be used in the scaffold.
   /// Helps to display a list of items in desktop and mobile mode without a lot of code. (I hope so)
   /// Please read the documentation of each property to understand how to use it.
@@ -213,6 +289,22 @@ class ThemedTable<T> extends StatefulWidget {
     this.isCooldown = false,
     this.onCooldown,
     this.onRefresh,
+    @Deprecated(
+      'You can remove it safely. '
+      'To support this feature, you must use the following new properties: '
+      ' - `paginatorStartText` to customize the text of the first page button '
+      ' - `paginatorPreviousText` to customize the text of the previous page button '
+      ' - `paginatorShowingText` to customize the text of the showing items label '
+      ' - `paginatorNextText` to customize the text of the next page button '
+      ' - `paginatorEndText` to customize the text of the last page button '
+      ' - `paginatorAutoText` to customize the text of the fit screen button '
+      ' - `paginatorRowsPerPageText` to customize the text of the rows per page label '
+      ' - `showButtonLabelText` to customize the text of the show button '
+      ' - `editButtonLabelText` to customize the text of the edit button '
+      ' - `deleteButtonLabelText` to customize the text of the delete button '
+      ' - `actionsLabelText` to customize the text of the actions label '
+      ' - `searchLabelText` to customize the text of the search label ',
+    )
     this.customTranslations = const {
       'layrz.table.paginator.start': 'First page',
       'layrz.table.paginator.previous': 'Previous page',
@@ -248,6 +340,25 @@ class ThemedTable<T> extends StatefulWidget {
     this.idEnabled = true,
     this.rowsPerPage,
     this.availableRowsPerPage = const [10, 25, 50, 100],
+    this.paginatorStartText = 'First page',
+    this.paginatorPreviousText = 'Previous page',
+    this.paginatorShowingText = 'Showing {count} of {total}',
+    this.paginatorNextText = 'Next page',
+    this.paginatorEndText = 'Last page',
+    this.paginatorAutoText = 'Fit screen',
+    this.paginatorRowsPerPageText = 'Rows per page',
+    this.showButtonLabelText = 'Show item',
+    this.editButtonLabelText = 'Edit item',
+    this.deleteButtonLabelText = 'Delete item',
+    this.actionsLabelText = 'Actions',
+    this.searchLabelText = 'Search item',
+    this.multiSelectionTitleText = 'Multiselection mode',
+    this.multiSelectionContentText = 'What do you want to do with the selected items?',
+    this.multiSelectionCancelLabelText = 'Cancel',
+    this.multiSelectionDeleteLabelText = 'Delete',
+    this.tableTitleText = 'My items ({count})',
+    this.addButtonLabelText = 'Add new item',
+    this.refreshButtonLabelText = 'Reload list',
   })  : assert(columns.length > 0),
         assert(rowHeight > 0);
 
@@ -296,7 +407,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   String get module => widget.module;
 
   /// [searchText] represents the default search value of the table.
-  String searchText = '';
+  String _searchText = '';
 
   /// [_items] represents the list of items to display.
   /// This is not the same as [widget.items], because this list can be filtered or sorted.
@@ -388,7 +499,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
-    searchText = widget.searchText;
+    _searchText = widget.searchText;
 
     if (!widget.idEnabled) {
       _sortBy = 0;
@@ -415,16 +526,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   @override
   void didUpdateWidget(ThemedTable<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.searchText != widget.searchText) {
-      searchText = widget.searchText;
-    }
-
-    const eq = ListEquality();
-    if (!eq.equals(oldWidget.items, widget.items)) {
-      _items = widget.items;
-      _sort();
-    }
+    debugPrint("Items: ${widget.items.length} - $_searchText");
+    _items = widget.items;
+    _sort();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculateRowsPerPage();
@@ -538,6 +642,18 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_sort] sorts the items.
   void _sort() {
+    _items = widget.items.where((T item) {
+      if (_searchText.isEmpty) return true;
+      bool c1 = "#${widget.idBuilder(context, item)}".contains(_searchText);
+      bool c2 = false;
+
+      for (ThemedColumn<T> column in widget.columns) {
+        String value = column.valueBuilder(context, item);
+        c2 = c2 || value.toLowerCase().contains(_searchText.toLowerCase());
+      }
+      return c1 || c2;
+    }).toList();
+
     _items.sort((a, b) {
       dynamic aValue;
       dynamic bValue;
@@ -611,25 +727,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                 ),
                 // Search text
                 ThemedSearchInput(
-                  value: searchText,
+                  value: _searchText,
                   labelText: t('helpers.search'),
                   onSearch: (value) {
-                    setState(() => searchText = value);
-                    if (searchText.isEmpty) {
-                      _items = widget.items;
-                    } else {
-                      _items = _items.where((T item) {
-                        bool c1 = "#${widget.idBuilder(context, item)}".contains(searchText);
-                        bool c2 = false;
-
-                        for (ThemedColumn<T> column in widget.columns) {
-                          String value = column.valueBuilder(context, item);
-                          c2 = c2 || value.toLowerCase().contains(searchText.toLowerCase());
-                        }
-                        return c1 || c2;
-                      }).toList();
-                    }
-
+                    setState(() => _searchText = value);
                     _sort();
                   },
                 ),
@@ -652,7 +753,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                 if (widget.onRefresh != null) ...[
                   const SizedBox(width: 5),
                   ThemedButton(
-                    labelText: t('helpers.refersh'),
+                    labelText: t('helpers.refresh'),
                     icon: MdiIcons.refresh,
                     style: ThemedButtonStyle.filledTonalFab,
                     color: primaryColor,
@@ -1149,7 +1250,11 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     return result;
   }
 
-  /// Translation helper
+  /// [t] is a wrapper to handle the translations using first the [LayrzAppLocalizations]
+  /// and then the custom labels
+  ///
+  /// You can replace variables in the translation using the following format: `{variableName}`
+  /// The variables changes depending of the implementation in this component.
   String t(String key, [Map<String, dynamic> args = const {}]) {
     LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
 
@@ -1157,19 +1262,30 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       return i18n.t(key, args);
     }
 
-    if (widget.customTranslations.containsKey(key)) {
-      String result = widget.customTranslations[key]!;
-      args.forEach((key, value) => result = result.replaceAll('{$key}', value.toString()));
-      return result;
+    String? result;
+    if (_getEquivalence(key) != key) {
+      result = _getEquivalence(key);
     }
 
-    return 'Missing translation for key $key : $args';
+    if (result == null && widget.customTranslations.containsKey(key)) {
+      result = widget.customTranslations[key]!;
+    }
+
+    result ??= 'Missing translation for key $key : $args';
+
+    args.forEach((key, value) => result = result!.replaceAll('{$key}', value.toString()));
+    return result!;
   }
 
-  /// Translation helper for singular / plural detection
-  /// Note: To a correct use of this method, your translation should be
+  /// [tc] is a translation helper for singular / plural detection
+  /// Works similar to [t] but with the difference that this method
+  /// will detect if the translation should be singular or plural
+  ///
+  /// To a correct use of this method, your translation should be
   /// in the following format: `singular | plural`
   /// Is important to have the ` | ` character with the spaces before and after to work correctly
+  ///
+  /// For example: `You have {count} item | You have {count} items`
   String tc(String key, int count, {Map<String, dynamic> args = const {}}) {
     LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
 
@@ -1177,19 +1293,25 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       return i18n.tc(key, count, args);
     }
 
-    if (widget.customTranslations.containsKey(key)) {
-      String result = widget.customTranslations[key]!;
-      args.forEach((key, value) => result = result.replaceAll('{$key}', value.toString()));
-
-      List<String> parts = result.split(' | ');
-      if (parts.length == 2) {
-        return count == 1 ? parts[0] : parts[1];
-      }
-
-      return result;
+    String? result;
+    if (_getEquivalence(key) != key) {
+      result = _getEquivalence(key);
     }
 
-    return 'Missing translation for key $key : $count : $args';
+    if (result == null && widget.customTranslations.containsKey(key)) {
+      result = widget.customTranslations[key]!;
+    }
+
+    result ??= 'Missing translation for key $key : $args';
+
+    args.forEach((key, value) => result = result!.replaceAll('{$key}', value.toString()));
+
+    List<String> parts = result!.split(' | ');
+    if (parts.length == 2) {
+      return count == 1 ? parts[0] : parts[1];
+    }
+
+    return result!;
   }
 
   /// Validates the multi selection dialog, depends of the number of selected items and
@@ -1257,9 +1379,32 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  t('helpers.multipleSelection.title'),
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        t('helpers.multipleSelection.title'),
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    ThemedButton(
+                                      style: ThemedButtonStyle.filledTonalFab,
+                                      icon: MdiIcons.close,
+                                      color: isDark ? Colors.white : Colors.black,
+                                      labelText: t('helpers.multipleSelection.actions.cancel'),
+                                      isLoading: widget.isLoading,
+                                      isCooldown: widget.isCooldown,
+                                      onCooldownFinish: widget.onCooldown,
+                                      onTap: () {
+                                        _destroyOverlay(callback: () {
+                                          setState(() => _selectedItems = []);
+                                        });
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 Text(
                                   t('helpers.multipleSelection.caption'),
@@ -1274,18 +1419,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
                                       children: [
-                                        ThemedButton(
-                                          color: primaryColor,
-                                          labelText: t('helpers.multipleSelection.actions.cancel'),
-                                          isLoading: widget.isLoading,
-                                          isCooldown: widget.isCooldown,
-                                          onCooldownFinish: widget.onCooldown,
-                                          onTap: () {
-                                            _destroyOverlay(callback: () {
-                                              setState(() => _selectedItems = []);
-                                            });
-                                          },
-                                        ),
                                         const SizedBox(width: 5),
                                         for (final action in widget.multiSelectionActions) ...[
                                           ThemedButton(
@@ -1308,7 +1441,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                         ],
                                         if (widget.onMultiDelete != null)
                                           ThemedButton(
+                                            style: ThemedButtonStyle.filled,
                                             color: Colors.red,
+                                            icon: MdiIcons.trashCan,
                                             labelText: t('helpers.multipleSelection.actions.delete'),
                                             isLoading: widget.isLoading,
                                             isCooldown: widget.isCooldown,
@@ -1324,10 +1459,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                     onCooldown: widget.onCooldown,
                                                   );
 
-                                                  if (confirmation && context.mounted) {
-                                                    // debugPrint('context.mounted ${context.mounted}');
-                                                    // debugPrint('context1.mounted ${context1.mounted}');
-                                                    // debugPrint('context2.mounted ${context2.mounted}');
+                                                  if (confirmation && mounted) {
                                                     bool result = await widget.onMultiDelete?.call(
                                                           context,
                                                           _selectedItems,
@@ -1372,5 +1504,31 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     _overlayEntry?.remove();
     _overlayEntry = null;
     callback?.call();
+  }
+
+  /// [_getEquivalence] gets the equivalence value of a translation key using the different
+  /// new properties
+  String _getEquivalence(String key) {
+    if (key == 'layrz.table.paginator.start') return widget.paginatorStartText;
+    if (key == 'layrz.table.paginator.previous') return widget.paginatorPreviousText;
+    if (key == 'layrz.table.paginator.showing') return widget.paginatorShowingText;
+    if (key == 'layrz.table.paginator.next') return widget.paginatorNextText;
+    if (key == 'layrz.table.paginator.end') return widget.paginatorEndText;
+    if (key == 'layrz.table.paginator.auto') return widget.paginatorAutoText;
+    if (key == 'layrz.table.paginator.rowsPerPage') return widget.paginatorRowsPerPageText;
+    if (key == 'helpers.buttons.show') return widget.showButtonLabelText;
+    if (key == 'helpers.buttons.edit') return widget.editButtonLabelText;
+    if (key == 'helpers.buttons.delete') return widget.deleteButtonLabelText;
+    if (key == 'helpers.actions') return widget.actionsLabelText;
+    if (key == 'helpers.search') return widget.searchLabelText;
+    if (key == 'helpers.multipleSelection.title') return widget.multiSelectionTitleText;
+    if (key == 'helpers.multipleSelection.caption') return widget.multiSelectionContentText;
+    if (key == 'helpers.multipleSelection.actions.cancel') return widget.multiSelectionCancelLabelText;
+    if (key == 'helpers.multipleSelection.actions.delete') return widget.multiSelectionDeleteLabelText;
+    if (key == '${widget.module}.title.list') return widget.tableTitleText;
+    if (key == '${widget.module}.title.new') return widget.addButtonLabelText;
+    if (key == 'helpers.refresh') return widget.refreshButtonLabelText;
+
+    return key;
   }
 }

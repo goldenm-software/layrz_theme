@@ -1,4 +1,4 @@
-part of scaffolds;
+part of '../table.dart';
 
 class ThemedTableAction<T> {
   /// The label of the action.

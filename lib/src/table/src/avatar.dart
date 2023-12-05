@@ -1,4 +1,4 @@
-part of scaffolds;
+part of '../table.dart';
 
 class ThemedTableAvatar {
   /// Represents the name, label or identifier of the avatar.

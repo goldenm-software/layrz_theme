@@ -23,3 +23,4 @@ export 'src/languages/languages.dart';
 export 'src/widgets/widgets.dart';
 export 'src/views/views.dart';
 export 'src/grid/grid.dart';
+export 'src/table/table.dart';

@@ -3,6 +3,8 @@
 ## 4.3.6
 - Changed all part's to use uri instead
 - Updated `google_fonts` and `file_picker` to newer versions
+- Some improvements in `ThemedTable<T>` management to simplify the way that the translated messages are handled
+- Applied the same translation logic to `ThemedCalendar`.
 
 ## 4.3.5
 - Removed `LayoutBuilder` in `ThemedButton`

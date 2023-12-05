@@ -102,9 +102,131 @@ class ThemedCalendar extends StatefulWidget {
   /// [aditionalButtons] is a list of buttons that will be displayed in the calendar.
   final List<ThemedButton> aditionalButtons;
 
+  /// [backYearLabelText] replaces the back year button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.year.back`
+  final String backYearLabelText;
+
+  /// [nextYearLabelText] replaces the next year button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.year.next`
+  final String nextYearLabelText;
+
+  /// [backMonthLabelText] replaces the back month button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.month.back`
+  final String backMonthLabelText;
+
+  /// [nextMonthLabelText] replaces the next month button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.month.next`
+  final String nextMonthLabelText;
+
+  /// [backWeekLabelText] replaces the back week button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.week.back`
+  final String backWeekLabelText;
+
+  /// [nextWeekLabelText] replaces the next week button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.week.next`
+  final String nextWeekLabelText;
+
+  /// [backDayLabelText] replaces the back day button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.day.back`
+  final String backDayLabelText;
+
+  /// [nextDayLabelText] replaces the next day button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.day.next`
+  final String nextDayLabelText;
+
+  /// [todayLabelText] replaces the today button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.today`
+  final String todayLabelText;
+
+  /// [yearLabelText] replaces the year button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.year`
+  final String yearLabelText;
+
+  /// [monthLabelText] replaces the month button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.month`
+  final String monthLabelText;
+
+  /// [weekLabelText] replaces the week button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.week`
+  final String weekLabelText;
+
+  /// [dayLabelText] replaces the day button label.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.day`
+  final String dayLabelText;
+
+  /// [viewAsLabelText] replaces the view as label text.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.view_as`
+  final String viewAsLabelText;
+
+  /// [pickMonthLabelText] replaces the pick month label text.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  ///
+  /// If your are using `LayrzAppLocalizations`, this is the key that will be
+  /// displayed: `layrz.calendar.pickMonth`
+  final String pickMonthLabelText;
+
   const ThemedCalendar({
     super.key,
     this.focusDay,
+    @Deprecated('You can safely remove this property. '
+        'If you want to change the messages, you should use these properties: '
+        '- `backYearLabelText`: Previous year '
+        '- `nextYearLabelText`: Next year '
+        '- `backMonthLabelText`: Previous month '
+        '- `nextMonthLabelText`: Next month '
+        '- `backWeekLabelText`: Previous week '
+        '- `nextWeekLabelText`: Next week '
+        '- `backDayLabelText`: Previous day '
+        '- `nextDayLabelText`: Next day '
+        '- `todayLabelText`: Today '
+        '- `yearLabelText`: View as year '
+        '- `monthLabelText`: View as month '
+        '- `weekLabelText`: View as week '
+        '- `dayLabelText`: View as day '
+        '- `viewAsLabelText`: View as '
+        '- `pickMonthLabelText`: Pick a month ')
     this.translations = const {
       'layrz.calendar.year.back': 'Previous year',
       'layrz.calendar.year.next': 'Next year',
@@ -138,6 +260,21 @@ class ThemedCalendar extends StatefulWidget {
     this.todayIndicator = true,
     this.todayButton = true,
     this.aditionalButtons = const [],
+    this.backYearLabelText = 'Previous year',
+    this.nextYearLabelText = 'Next year',
+    this.backMonthLabelText = 'Previous month',
+    this.nextMonthLabelText = 'Next month',
+    this.backWeekLabelText = 'Previous week',
+    this.nextWeekLabelText = 'Next week',
+    this.backDayLabelText = 'Previous day',
+    this.nextDayLabelText = 'Next day',
+    this.todayLabelText = 'Today',
+    this.yearLabelText = 'View as year',
+    this.monthLabelText = 'View as month',
+    this.weekLabelText = 'View as week',
+    this.dayLabelText = 'View as day',
+    this.viewAsLabelText = 'View as',
+    this.pickMonthLabelText = 'Pick a month',
   });
 
   @override
@@ -322,6 +459,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     );
   }
 
+  /// [_forward] goes forward in the calendar.
   void _forward() {
     late DateTime next;
     switch (mode) {
@@ -413,6 +551,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     setState(() {});
   }
 
+  /// [_back] goes back in the calendar.
   void _back() {
     late DateTime next;
     switch (mode) {
@@ -503,6 +642,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     setState(() {});
   }
 
+  /// [_buildMonthCalendar] builds the month calendar.
   Widget _buildMonthCalendar() {
     List<DateTime> fullMonth = _generateThisMonth();
     return Expanded(
@@ -659,7 +799,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                             )
                                           : (isToday || hightlight) && isCurrentMonth
                                               ? BoxDecoration(
-                                                  color: isToday ? primaryColor : Theme.of(context).dividerColor,
+                                                  color: isToday ? primaryColor : primaryColor.withOpacity(0.5),
                                                   borderRadius: BorderRadius.circular(100),
                                                 )
                                               : null,
@@ -675,7 +815,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                                       : isToday
                                                           ? primaryColor
                                                           : hightlight
-                                                              ? Theme.of(context).dividerColor
+                                                              ? primaryColor.withOpacity(0.5)
                                                               : Theme.of(context).cardColor,
                                                 ),
                                               ),
@@ -763,6 +903,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     );
   }
 
+  /// [_getEntriesOfDay] gets the entries of a day.
   List<ThemedCalendarEntry> _getEntriesOfDay(DateTime day) {
     List<ThemedCalendarEntry> entries = widget.entries.where((entry) {
       switch (mode) {
@@ -775,6 +916,8 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     return entries;
   }
 
+  /// [_getRangeEntriesOfDay] gets the range entries of a day.
+  /// A range entry is an entry that has a start date and an end date.
   List<ThemedCalendarRangeEntry> _getRangeEntriesOfDay(DateTime day) {
     List<ThemedCalendarRangeEntry> entries = widget.rangeEntries.where((entry) {
       switch (mode) {
@@ -788,6 +931,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     return entries;
   }
 
+  /// [_validateIfIsToday] validates if the day is today.
   bool _validateIfIsToday(DateTime day) {
     switch (mode) {
       case ThemedCalendarMode.year:
@@ -840,20 +984,53 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     return days;
   }
 
+  /// [t] is a wrapper to handle the translations using first the [LayrzAppLocalizations]
+  /// and then the custom labels
+  ///
+  /// You can replace variables in the translation using the following format: `{variableName}`
+  /// The variables changes depending of the implementation in this component.
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    String result = i18n?.t(key, args) ?? widget.translations[key] ?? key;
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
 
-    if (widget.overridesLayrzTranslations) {
-      result = widget.translations[key] ?? key;
+    if (i18n != null) {
+      return i18n.t(key, args);
     }
 
-    if (args.isNotEmpty) {
-      args.forEach((key, value) {
-        result = result.replaceAll('{$key}', value.toString());
-      });
+    String? result;
+    if (_getEquivalence(key) != key) {
+      result = _getEquivalence(key);
     }
 
-    return result;
+    if (result == null && widget.translations.containsKey(key)) {
+      result = widget.translations[key]!;
+    }
+
+    result ??= 'Missing translation for key $key : $args';
+
+    args.forEach((key, value) => result = result!.replaceAll('{$key}', value.toString()));
+    return result!;
+  }
+
+  /// [_getEquivalence] gets the equivalence value of a translation key using the different
+  /// new properties
+  String _getEquivalence(String key) {
+    if (key == 'layrz.calendar.year.back') return widget.backYearLabelText;
+    if (key == 'layrz.calendar.year.next') return widget.nextYearLabelText;
+    if (key == 'layrz.calendar.month.back') return widget.backMonthLabelText;
+    if (key == 'layrz.calendar.month.next') return widget.nextMonthLabelText;
+    if (key == 'layrz.calendar.week.back') return widget.backWeekLabelText;
+    if (key == 'layrz.calendar.week.next') return widget.nextWeekLabelText;
+    if (key == 'layrz.calendar.day.back') return widget.backDayLabelText;
+    if (key == 'layrz.calendar.day.next') return widget.nextDayLabelText;
+    if (key == 'layrz.calendar.today') return widget.todayLabelText;
+    if (key == 'layrz.calendar.year') return widget.yearLabelText;
+    if (key == 'layrz.calendar.month') return widget.monthLabelText;
+    if (key == 'layrz.calendar.week') return widget.weekLabelText;
+    if (key == 'layrz.calendar.day') return widget.dayLabelText;
+    if (key == 'layrz.calendar.view_as') return widget.viewAsLabelText;
+    if (key == 'layrz.calendar.pickMonth') return widget.pickMonthLabelText;
+
+    return key;
   }
 }
 
