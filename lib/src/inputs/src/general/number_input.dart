@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedNumberInput extends StatefulWidget {
   /// [labelText] is the text of the label of the input.

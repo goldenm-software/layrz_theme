@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedInputLikeContainer extends StatelessWidget {
   /// [errors] is a list of errors to display

@@ -1,4 +1,4 @@
-part of layout;
+part of '../../layout.dart';
 
 class ThemedNotificationIcon extends StatefulWidget {
   /// [notifications] is the list of notifications to be displayed in the

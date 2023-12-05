@@ -1,4 +1,4 @@
-part of helpers;
+part of '../helpers.dart';
 
 /// [generateSwatch] is a helper function to generate a swatch from a color.
 ///

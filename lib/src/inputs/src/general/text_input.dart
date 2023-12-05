@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedTextInput extends StatefulWidget {
   /// [keyboardType] is the type of the keyboard.

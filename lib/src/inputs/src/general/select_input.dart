@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedSelectInput<T> extends StatefulWidget {
   /// [labelText] is the label of the input. Avoid using this if you are using [label] instead.

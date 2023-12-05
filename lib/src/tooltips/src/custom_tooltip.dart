@@ -1,4 +1,4 @@
-part of tooltips;
+part of '../tooltips.dart';
 
 class ThemedTooltip extends StatefulWidget {
   /// [child] is the widget that will be wrapped by the tooltip.

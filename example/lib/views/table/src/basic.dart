@@ -15,17 +15,21 @@ class BasicTableView extends StatefulWidget {
 class _BasicTableViewState extends State<BasicTableView> {
   List<Asset> _items = [];
 
+  int get _it => 10;
+
   @override
   void initState() {
     super.initState();
-    _items = List.generate(100, (i) {
-      return Asset(
-        id: (i + 1).toString(),
-        name: "Asset ${Random().nextInt(20)}",
-        plate: 'PLATE${i + 1}',
-        vin: 'VIN${i + 1}',
-      );
-    });
+    _items = List.generate(_it, (i) => _generateAsset(i));
+  }
+
+  Asset _generateAsset(int index) {
+    return Asset(
+      id: (index + 1).toString(),
+      name: "Asset ${index + 1}",
+      plate: 'PLATE${index + 1}',
+      vin: 'VIN${index + 1}',
+    );
   }
 
   @override
@@ -51,26 +55,25 @@ class _BasicTableViewState extends State<BasicTableView> {
                 debugPrint("onShow tapped: $item");
               },
               onAdd: () async {
-                debugPrint("onAdd tapped");
+                _items.add(_generateAsset(_items.length));
+                setState(() {});
               },
               onRefresh: () async {
-                for (var i = 0; i < _items.length; i++) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  debugPrint("Refreshing $i");
-                  _items[i] = _items[i].copyWith(
-                    telemetry: AssetTelemetry(
-                      receivedAt: DateTime.now(),
-                      id: '1',
-                    ),
-                  );
-                  setState(() {});
-                }
+                _items = List.generate(_it, (i) => _generateAsset(i));
+                setState(() {});
               },
               onEdit: (context, item) async {
                 debugPrint("onEdit tapped: $item");
               },
               onDelete: (context, item) async {
-                debugPrint("onDelete tapped: $item");
+                _items.removeWhere((element) => element.id == item.id);
+                setState(() {});
+              },
+              onMultiDelete: (context, items) async {
+                List<String> pks = items.map((e) => e.id).toList();
+                _items.removeWhere((element) => pks.contains(element.id));
+                setState(() {});
+                return true;
               },
               columns: [
                 ThemedColumn(
@@ -92,12 +95,12 @@ class _BasicTableViewState extends State<BasicTableView> {
                   labelText: 'VIN',
                   valueBuilder: (context, item) => item.vin ?? 'N/A',
                 ),
-                ...List.generate(25, (i) {
-                  return ThemedColumn(
-                    labelText: 'VIN $i',
-                    valueBuilder: (context, item) => item.vin ?? 'N/A',
-                  );
-                }),
+                // ...List.generate(25, (i) {
+                //   return ThemedColumn(
+                //     labelText: 'VIN $i',
+                //     valueBuilder: (context, item) => item.vin ?? 'N/A',
+                //   );
+                // }),
               ],
             ),
           ),

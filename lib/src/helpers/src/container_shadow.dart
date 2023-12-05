@@ -1,4 +1,4 @@
-part of helpers;
+part of '../helpers.dart';
 
 /// [generateContainerElevation] is a helper generator for the [BoxDecoration] of the [Container] widget.
 ///

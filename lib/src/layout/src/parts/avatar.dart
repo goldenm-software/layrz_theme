@@ -1,4 +1,4 @@
-part of layout;
+part of '../../layout.dart';
 
 class ThemedAppBarAvatar extends StatefulWidget {
   /// [appTitle] is the title of the app.

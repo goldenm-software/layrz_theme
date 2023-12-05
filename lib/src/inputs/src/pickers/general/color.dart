@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../../inputs.dart';
 
 class ThemedColorPicker extends StatefulWidget {
   /// [labelText] is the text that will be displayed on the label.

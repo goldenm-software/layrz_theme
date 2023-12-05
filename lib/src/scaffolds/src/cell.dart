@@ -1,4 +1,4 @@
-part of scaffolds;
+part of '../scaffolds.dart';
 
 class ThemedScaffoldCell extends StatelessWidget {
   /// [title] is the title of the cell.

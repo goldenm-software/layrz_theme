@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedRadioInput<T> extends StatefulWidget {
   /// [labelText] is the label text of the radio input. Avoid submit [label] and [labelText] at the same time.

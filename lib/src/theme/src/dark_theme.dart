@@ -1,4 +1,4 @@
-part of theme;
+part of '../theme.dart';
 
 /// [generateDarkTheme] is a helper function to generate a [ThemeData] with the
 /// [Brightness.dark] theme.

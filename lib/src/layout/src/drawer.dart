@@ -1,4 +1,4 @@
-part of layout;
+part of '../layout.dart';
 
 class ThemedDrawer extends StatefulWidget {
   /// [scaffoldKey] is the key of the scaffold.

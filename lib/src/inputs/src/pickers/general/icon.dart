@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../../inputs.dart';
 
 class ThemedIconPicker extends StatefulWidget {
   /// [labelText] is the label text of the icon picker. Avoid submit [label] and [labelText] at the same time.

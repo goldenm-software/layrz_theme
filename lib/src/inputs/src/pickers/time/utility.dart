@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../../inputs.dart';
 
 class _ThemedTimeUtility extends StatefulWidget {
   /// [value] is the value of the input.

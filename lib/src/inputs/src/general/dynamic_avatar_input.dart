@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class ThemedDynamicAvatarInput extends StatefulWidget {
   final String? labelText;

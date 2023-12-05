@@ -1,4 +1,4 @@
-part of inputs;
+part of '../inputs.dart';
 
 class ThemedCodeEditor extends StatefulWidget {
   /// Is the label of the field, you should use or [label] or [labelText] but not both. Also, [labelText] helps you

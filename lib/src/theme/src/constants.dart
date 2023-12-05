@@ -1,4 +1,4 @@
-part of theme;
+part of '../theme.dart';
 
 /// [kExtraSmallGrid] is the extra small grid size.
 const double kExtraSmallGrid = 600;

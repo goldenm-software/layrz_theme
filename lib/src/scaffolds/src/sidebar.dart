@@ -1,4 +1,4 @@
-part of scaffolds;
+part of '../scaffolds.dart';
 
 class ThemedScaffoldView<T> extends StatefulWidget {
   /// Represents the module name of the table. This is used to generate the titleText.

@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../../inputs.dart';
 
 class ThemedFileInput extends StatelessWidget {
   final String? labelText;
