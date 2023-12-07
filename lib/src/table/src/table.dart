@@ -1195,10 +1195,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     Widget itm = Container(
-      width: width,
-      height: widget.rowHeight,
-      alignment: column.alignment,
-      padding: ThemedColumn.padding,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -1208,35 +1204,42 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           left: borderLeft,
         ),
       ),
-      child: Row(
-        mainAxisAlignment: index == -1 ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (_sortBy == index) ...[
-            Icon(
-              _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
-              size: ThemedColumn.sortIconSize,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: column.isSortable
+              ? () {
+                  if (_sortBy == index) {
+                    _sortAsc = !_sortAsc;
+                  } else {
+                    _sortBy = index;
+                    _sortAsc = true;
+                  }
+                  _sort();
+                }
+              : null,
+          child: Container(
+            width: width,
+            height: widget.rowHeight,
+            alignment: column.alignment,
+            padding: ThemedColumn.padding,
+            child: Row(
+              mainAxisAlignment: index == -1 ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                if (_sortBy == index) ...[
+                  Icon(
+                    _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
+                    size: ThemedColumn.sortIconSize,
+                  ),
+                  const SizedBox(width: 5),
+                ],
+                header,
+              ],
             ),
-            const SizedBox(width: 5),
-          ],
-          header,
-        ],
+          ),
+        ),
       ),
     );
-
-    if (column.isSortable) {
-      return InkWell(
-        onTap: () {
-          if (_sortBy == index) {
-            _sortAsc = !_sortAsc;
-          } else {
-            _sortBy = index;
-            _sortAsc = true;
-          }
-          _sort();
-        },
-        child: itm,
-      );
-    }
 
     return itm;
   }

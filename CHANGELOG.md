@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.8
+- Adjusted visual drawing of `_drawHeader` in `ThemedTable<T>`.
+
 ## 4.3.7
 - Re-enabled `onTap` from `ThemedColumn<T>` in `ThemedTable<T>`.
 
