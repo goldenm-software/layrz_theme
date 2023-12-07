@@ -889,6 +889,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 child: column.widgetBuilder?.call(context, item),
                                                 value: column.valueBuilder(context, item),
                                                 sizes: sizes,
+                                                onTap: column.onTap == null ? null : () => column.onTap?.call(item),
                                                 cellColor: column.cellColor?.call(item),
                                                 cellTextColor: column.cellTextColor?.call(item),
                                               );
@@ -1137,26 +1138,28 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
     cellColor = cellColor ?? Theme.of(context).scaffoldBackgroundColor;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: width,
-          height: widget.rowHeight,
-          alignment: alignment,
-          padding: ThemedColumn.padding,
-          decoration: BoxDecoration(
-            color: cellColor,
-            border: Border(bottom: border, left: borderLeft),
-          ),
-          child: child ??
-              Text(
-                value ?? '',
-                style: _rowStyle?.copyWith(
-                  color: cellTextColor ?? validateColor(color: cellColor),
+    return Container(
+      decoration: BoxDecoration(
+        color: cellColor,
+        border: Border(bottom: border, left: borderLeft),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            width: width,
+            height: widget.rowHeight,
+            padding: ThemedColumn.padding,
+            alignment: alignment,
+            child: child ??
+                Text(
+                  value ?? '',
+                  style: _rowStyle?.copyWith(
+                    color: cellTextColor ?? validateColor(color: cellColor),
+                  ),
                 ),
-              ),
+          ),
         ),
       ),
     );
