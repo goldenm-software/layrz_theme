@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.9
+- Some corrections in `ThemedTooltip` to prevent the tooltip to be displayed when the widget is disposed.
+
 ## 4.3.8
 - Adjusted visual drawing of `_drawHeader` in `ThemedTable<T>`.
 
