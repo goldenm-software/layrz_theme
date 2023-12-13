@@ -375,6 +375,7 @@ class _ButtonsViewState extends State<ButtonsView> {
       onCooldownFinish: () => setState(() => _isCooldown = false),
       tooltipPosition: ThemedTooltipPosition.right,
       onTap: () {
+        // context.go('/inputs/text');
         ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
           icon: MdiIcons.accessPoint,
           width: 700,
