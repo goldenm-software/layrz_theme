@@ -198,10 +198,10 @@ class _LayoutState extends State<Layout> {
       ],
       persistentItems: [
         ThemedNavigatorAction(
-          labelText: "GitLab repository",
-          icon: MdiIcons.gitlab,
+          labelText: "GitHub repository",
+          icon: MdiIcons.github,
           onTap: () => launchUrlString(
-            'https://gitlab.com/goldenm-software/layrz/flutter-components/layrz_theme',
+            'https://github.com/goldenm-software/layrz_theme',
             mode: LaunchMode.externalApplication,
           ),
         ),

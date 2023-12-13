@@ -889,6 +889,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 child: column.widgetBuilder?.call(context, item),
                                                 value: column.valueBuilder(context, item),
                                                 sizes: sizes,
+                                                onTap: column.onTap == null ? null : () => column.onTap?.call(item),
                                                 cellColor: column.cellColor?.call(item),
                                                 cellTextColor: column.cellTextColor?.call(item),
                                               );
@@ -1137,26 +1138,28 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
     cellColor = cellColor ?? Theme.of(context).scaffoldBackgroundColor;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: width,
-          height: widget.rowHeight,
-          alignment: alignment,
-          padding: ThemedColumn.padding,
-          decoration: BoxDecoration(
-            color: cellColor,
-            border: Border(bottom: border, left: borderLeft),
-          ),
-          child: child ??
-              Text(
-                value ?? '',
-                style: _rowStyle?.copyWith(
-                  color: cellTextColor ?? validateColor(color: cellColor),
+    return Container(
+      decoration: BoxDecoration(
+        color: cellColor,
+        border: Border(bottom: border, left: borderLeft),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            width: width,
+            height: widget.rowHeight,
+            padding: ThemedColumn.padding,
+            alignment: alignment,
+            child: child ??
+                Text(
+                  value ?? '',
+                  style: _rowStyle?.copyWith(
+                    color: cellTextColor ?? validateColor(color: cellColor),
+                  ),
                 ),
-              ),
+          ),
         ),
       ),
     );
@@ -1192,10 +1195,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     Widget itm = Container(
-      width: width,
-      height: widget.rowHeight,
-      alignment: column.alignment,
-      padding: ThemedColumn.padding,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -1205,35 +1204,42 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           left: borderLeft,
         ),
       ),
-      child: Row(
-        mainAxisAlignment: index == -1 ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (_sortBy == index) ...[
-            Icon(
-              _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
-              size: ThemedColumn.sortIconSize,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: column.isSortable
+              ? () {
+                  if (_sortBy == index) {
+                    _sortAsc = !_sortAsc;
+                  } else {
+                    _sortBy = index;
+                    _sortAsc = true;
+                  }
+                  _sort();
+                }
+              : null,
+          child: Container(
+            width: width,
+            height: widget.rowHeight,
+            alignment: column.alignment,
+            padding: ThemedColumn.padding,
+            child: Row(
+              mainAxisAlignment: index == -1 ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                if (_sortBy == index) ...[
+                  Icon(
+                    _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
+                    size: ThemedColumn.sortIconSize,
+                  ),
+                  const SizedBox(width: 5),
+                ],
+                header,
+              ],
             ),
-            const SizedBox(width: 5),
-          ],
-          header,
-        ],
+          ),
+        ),
       ),
     );
-
-    if (column.isSortable) {
-      return InkWell(
-        onTap: () {
-          if (_sortBy == index) {
-            _sortAsc = !_sortAsc;
-          } else {
-            _sortBy = index;
-            _sortAsc = true;
-          }
-          _sort();
-        },
-        child: itm,
-      );
-    }
 
     return itm;
   }

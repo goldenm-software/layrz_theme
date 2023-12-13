@@ -45,7 +45,7 @@ class ThemedColumn<T> {
 
   /// [onTap] function of the column. This is used to define the action when the cell is tapped.
   /// This only will work in desktop mode.
-  final CellTap? onTap;
+  final CellTap<T>? onTap;
 
   /// [width] is the width of the column. Only will be used if [widgetBuilder] is not null and/or [label] is not null.
   /// This property is used to calculate the width of the column.

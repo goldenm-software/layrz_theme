@@ -52,17 +52,36 @@ class _LayoViewState extends State<LayoView> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 10),
-            ListView(
+            ListView.separated(
               shrinkWrap: true,
-              padding: const EdgeInsets.only(left: 10),
-              children: [
-                ...LayoEmotions.values.map((emotion) {
-                  return [
-                    ListTile(
-                      leading: Layo(size: 35, emotion: emotion),
-                      title: Text("${emotion.name} emotion"),
-                      subtitle: Text("Enum value: ${emotion.toString()}"),
-                      trailing: ThemedButton(
+              itemCount: LayoEmotions.values.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                final emotion = LayoEmotions.values[index];
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      Layo(size: 35, emotion: emotion),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${emotion.name} emotion",
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            Text("Enum value: ${emotion.toString()}"),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ThemedButton(
+                        style: ThemedButtonStyle.filledTonalFab,
+                        tooltipPosition: ThemedTooltipPosition.left,
                         icon: MdiIcons.contentCopy,
                         labelText: "Copy this emotion as example",
                         onTap: () {
@@ -73,12 +92,11 @@ class _LayoViewState extends State<LayoView> {
                             color: Colors.green,
                           ));
                         },
-                      ),
-                    ),
-                    const Divider(),
-                  ];
-                }).expand((element) => element),
-              ],
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

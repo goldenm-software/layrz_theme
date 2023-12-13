@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.3.9
+- Some corrections in `ThemedTooltip` to prevent the tooltip to be displayed when the widget is disposed.
+
+## 4.3.8
+- Adjusted visual drawing of `_drawHeader` in `ThemedTable<T>`.
+
+## 4.3.7
+- Re-enabled `onTap` from `ThemedColumn<T>` in `ThemedTable<T>`.
+
 ## 4.3.6
 - Changed all part's to use uri instead
 - Updated `google_fonts` and `file_picker` to newer versions
