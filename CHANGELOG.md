@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.10
+- Added optional prop `showCooldownRemainingDuration` to `ThemedButton` to hide the cooldown remaining duration text.
+
 ## 4.3.9
 - Some corrections in `ThemedTooltip` to prevent the tooltip to be displayed when the widget is disposed.
 

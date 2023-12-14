@@ -83,6 +83,9 @@ class ThemedButton extends StatefulWidget {
   /// By default, will use `true`.
   final bool tooltipEnabled;
 
+  /// [showCooldownRemainingDuration] if false the text counting down the cooldown will not be shown.
+  final bool showCooldownRemainingDuration;
+
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -102,6 +105,7 @@ class ThemedButton extends StatefulWidget {
     this.tooltipPosition = ThemedTooltipPosition.bottom,
     this.fontSize = 13,
     this.tooltipEnabled = true,
+    this.showCooldownRemainingDuration = true,
   }) : assert(label != null || labelText != null);
 
   @override
@@ -279,6 +283,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [height] is used to set the height of the button.
   /// Always will be `30`.
   double get height => ThemedButton.height;
+
+  bool get showCooldownRemainingDuration => widget.showCooldownRemainingDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -822,14 +828,15 @@ class _ThemedButtonState extends State<ThemedButton> {
                       width: width * value,
                       child: progress,
                     ),
-                    Positioned.fill(
-                      child: Center(
-                        child: Text(
-                          remaining.toString(),
-                          style: textStyle,
+                    if (showCooldownRemainingDuration)
+                      Positioned.fill(
+                        child: Center(
+                          child: Text(
+                            remaining.toString(),
+                            style: textStyle,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 );
               },
