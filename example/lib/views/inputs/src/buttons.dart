@@ -366,10 +366,12 @@ class _ButtonsViewState extends State<ButtonsView> {
   Widget _factorButton(ThemedButtonStyle style) {
     return ThemedButton(
       icon: MdiIcons.accessPoint,
+      cooldownDuration: Duration(seconds: 4),
       labelText: "Button",
       style: style,
       isLoading: _isLoading,
       isCooldown: _isCooldown,
+      // showCooldownRemainingDuration: false,
       isDisabled: _isDisabled,
       // cooldownDuration: const Duration(seconds: 10),
       onCooldownFinish: () => setState(() => _isCooldown = false),
