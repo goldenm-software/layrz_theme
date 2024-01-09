@@ -66,11 +66,24 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
   @override
   void didUpdateWidget(ThemedSearchInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-
+    // check if the current value is different from the previous value
     if (oldWidget.value != widget.value) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _controller.text = widget.value;
-        _controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.value.length));
+        // save the current cursor offset
+        int previousCursorOffset = _controller.selection.extentOffset;
+        // update the current value in the value
+        String value = widget.value;
+        _controller.text = value;
+
+        // check that the cursor offset is not greater than the length of the value
+        if (value.length <= previousCursorOffset) {
+          previousCursorOffset = value.length;
+        }
+        _controller.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: previousCursorOffset,
+          ),
+        );
       });
     }
   }
