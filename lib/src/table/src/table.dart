@@ -640,7 +640,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     _calculatedItemsPerPage = _itemsPerPage;
   }
 
+  ///
   /// [_sort] sorts the items.
+  /// and searches all the items with the [_searchText].
   void _sort() {
     _items = widget.items.where((T item) {
       if (_searchText.isEmpty) return true;
@@ -725,12 +727,16 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                 ),
-                // Search text
+
+                /// Search bar
+                //
                 ThemedSearchInput(
                   value: _searchText,
                   labelText: t('helpers.search'),
                   onSearch: (value) {
-                    setState(() => _searchText = value);
+                    _searchText = value;
+                    _currentPage = 0;
+                    setState(() {});
                     _sort();
                   },
                 ),
@@ -893,7 +899,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 cellColor: column.cellColor?.call(item),
                                                 cellTextColor: column.cellTextColor?.call(item),
                                               );
-                                            }).toList(),
+                                            }),
                                             if (actionsEnabled) ...[
                                               _drawCell(
                                                 index: -1,
@@ -956,7 +962,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                           ],
                                         ),
                                       );
-                                    }).toList(),
+                                    }),
                                   ],
                                 ),
                               ),
@@ -1032,7 +1038,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                 value: page,
                 label: page.toString(),
               );
-            }).toList(),
+            }),
           ],
           onChanged: (value) {
             setState(() {
