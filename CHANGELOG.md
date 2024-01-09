@@ -1,7 +1,7 @@
 # Changelog
 
 ## 4.3.11
-- Fixed [ThemedSearchInput] not keeping cursor position when typing
+- Fixed [ThemedSearchInput] not keeping cursor position when typing, and set so themed table sets page to 0 when searching.
 
 ## 4.3.10
 - Added optional prop `showCooldownRemainingDuration` to `ThemedButton` to hide the cooldown remaining duration text.
