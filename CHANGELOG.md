@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.12
+- Added `customExtensions` as a prop on `ThemedFilePicker` to support custom extensions for the file picker.
+- Added `globalMimeResolver` to resolve custom mime types and extensions.
+
 ## 4.3.11
 - Fixed [ThemedSearchInput] not keeping cursor position when typing, and set so themed table sets page to 0 when searching.
 

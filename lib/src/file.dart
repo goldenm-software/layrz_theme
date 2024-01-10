@@ -24,5 +24,11 @@ class ThemedFile {
   }
 
   /// [mimeType] returns the mime type of the file.
-  String? get mimeType => lookupMimeType(path ?? name);
+  String? get mimeType => globalMimeResolver.lookup(path ?? name);
+}
+
+MimeTypeResolver get globalMimeResolver {
+  final resolver = MimeTypeResolver();
+  resolver.addExtension('lc', 'text/layrz-cycle');
+  return resolver;
 }
