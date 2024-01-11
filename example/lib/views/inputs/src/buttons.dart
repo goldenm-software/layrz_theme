@@ -299,6 +299,24 @@ class _ButtonsViewState extends State<ButtonsView> {
                               ],
                             ),
                           ),
+
+                          /// [test] OffSet prop
+                          // ThemedActionsButtons(
+                          //   forceMobileMode: true,
+                          //   actionsOffset: const Offset(-10, -20),
+                          //   actions: [
+                          //     ThemedActionButton(
+                          //       labelText: 'test',
+                          //       icon: MdiIcons.accessPoint,
+                          //       onTap: () => {},
+                          //     ),
+                          //     ThemedActionButton(
+                          //       labelText: 'test2',
+                          //       icon: MdiIcons.accessPoint,
+                          //       onTap: () => {},
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ],

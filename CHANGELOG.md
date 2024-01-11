@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.13
+
+- Added `actionsOffset` on `ThemedActionButtons` to choose a custom overlay position
+
 ## 4.3.12
 - Added `customExtensions` as a prop on `ThemedFilePicker` to support custom extensions for the file picker.
 - Added `globalMimeResolver` to resolve custom mime types and extensions.

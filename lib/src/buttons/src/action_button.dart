@@ -13,6 +13,8 @@ class ThemedActionsButtons extends StatefulWidget {
   /// [mobileBreakpoint] is the breakpoint to be used to determine if it's mobile or not.
   final double mobileBreakpoint;
 
+  final Offset actionsOffset;
+
   /// Creates a [ThemedActionsButtons] widget. This utility is to create a list of actions to be displayed.
   /// When it's in desktop mode (Before [mobileBreakpoint] width), it will display a row of buttons.
   /// Otherwise, it will display a button with a dropdown menu.
@@ -22,6 +24,7 @@ class ThemedActionsButtons extends StatefulWidget {
     this.actionsLabel = "Actions",
     this.forceMobileMode = false,
     this.mobileBreakpoint = kSmallGrid,
+    this.actionsOffset = Offset.zero,
   });
 
   @override
@@ -35,6 +38,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
   final GlobalKey _key = GlobalKey();
   double get width => MediaQuery.of(context).size.width;
   bool get isMobile => width <= widget.mobileBreakpoint;
+  Offset get actionsOffset => widget.actionsOffset;
 
   @override
   void initState() {
@@ -119,12 +123,12 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
 
     double width = 150;
 
-    double? right = screenSize.width - offset.dx - boxSize.width;
+    double? right = screenSize.width - offset.dx - boxSize.width + actionsOffset.dx;
     double? left;
 
     if (right >= screenSize.width) {
       right = null;
-      left = offset.dx;
+      left = offset.dx + actionsOffset.dx;
     }
 
     _overlayEntry = OverlayEntry(
@@ -137,7 +141,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                 child: GestureDetector(onTap: _removeOverlay),
               ),
               Positioned(
-                top: offset.dy,
+                top: offset.dy + actionsOffset.dy,
                 right: right,
                 left: left,
                 child: SizedBox(
