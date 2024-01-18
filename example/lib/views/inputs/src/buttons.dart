@@ -299,11 +299,9 @@ class _ButtonsViewState extends State<ButtonsView> {
                               ],
                             ),
                           ),
-
-                          /// [test] OffSet prop
                           // ThemedActionsButtons(
                           //   forceMobileMode: true,
-                          //   actionsOffset: const Offset(-10, -20),
+                          //   // actionsOffset: const Offset(20, 20),
                           //   actions: [
                           //     ThemedActionButton(
                           //       labelText: 'test',
@@ -384,7 +382,7 @@ class _ButtonsViewState extends State<ButtonsView> {
   Widget _factorButton(ThemedButtonStyle style) {
     return ThemedButton(
       icon: MdiIcons.accessPoint,
-      cooldownDuration: Duration(seconds: 4),
+      cooldownDuration: const Duration(seconds: 4),
       labelText: "Button",
       style: style,
       isLoading: _isLoading,

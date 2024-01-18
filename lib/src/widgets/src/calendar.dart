@@ -102,131 +102,9 @@ class ThemedCalendar extends StatefulWidget {
   /// [aditionalButtons] is a list of buttons that will be displayed in the calendar.
   final List<ThemedButton> aditionalButtons;
 
-  /// [backYearLabelText] replaces the back year button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.year.back`
-  final String backYearLabelText;
-
-  /// [nextYearLabelText] replaces the next year button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.year.next`
-  final String nextYearLabelText;
-
-  /// [backMonthLabelText] replaces the back month button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.month.back`
-  final String backMonthLabelText;
-
-  /// [nextMonthLabelText] replaces the next month button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.month.next`
-  final String nextMonthLabelText;
-
-  /// [backWeekLabelText] replaces the back week button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.week.back`
-  final String backWeekLabelText;
-
-  /// [nextWeekLabelText] replaces the next week button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.week.next`
-  final String nextWeekLabelText;
-
-  /// [backDayLabelText] replaces the back day button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.day.back`
-  final String backDayLabelText;
-
-  /// [nextDayLabelText] replaces the next day button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.day.next`
-  final String nextDayLabelText;
-
-  /// [todayLabelText] replaces the today button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.today`
-  final String todayLabelText;
-
-  /// [yearLabelText] replaces the year button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.year`
-  final String yearLabelText;
-
-  /// [monthLabelText] replaces the month button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.month`
-  final String monthLabelText;
-
-  /// [weekLabelText] replaces the week button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.week`
-  final String weekLabelText;
-
-  /// [dayLabelText] replaces the day button label.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.day`
-  final String dayLabelText;
-
-  /// [viewAsLabelText] replaces the view as label text.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.view_as`
-  final String viewAsLabelText;
-
-  /// [pickMonthLabelText] replaces the pick month label text.
-  /// This property only will work when `LayrzAppLocalizations` is null.
-  ///
-  /// If your are using `LayrzAppLocalizations`, this is the key that will be
-  /// displayed: `layrz.calendar.pickMonth`
-  final String pickMonthLabelText;
-
   const ThemedCalendar({
     super.key,
     this.focusDay,
-    @Deprecated('You can safely remove this property. '
-        'If you want to change the messages, you should use these properties: '
-        '- `backYearLabelText`: Previous year '
-        '- `nextYearLabelText`: Next year '
-        '- `backMonthLabelText`: Previous month '
-        '- `nextMonthLabelText`: Next month '
-        '- `backWeekLabelText`: Previous week '
-        '- `nextWeekLabelText`: Next week '
-        '- `backDayLabelText`: Previous day '
-        '- `nextDayLabelText`: Next day '
-        '- `todayLabelText`: Today '
-        '- `yearLabelText`: View as year '
-        '- `monthLabelText`: View as month '
-        '- `weekLabelText`: View as week '
-        '- `dayLabelText`: View as day '
-        '- `viewAsLabelText`: View as '
-        '- `pickMonthLabelText`: Pick a month ')
     this.translations = const {
       'layrz.calendar.year.back': 'Previous year',
       'layrz.calendar.year.next': 'Next year',
@@ -260,21 +138,6 @@ class ThemedCalendar extends StatefulWidget {
     this.todayIndicator = true,
     this.todayButton = true,
     this.aditionalButtons = const [],
-    this.backYearLabelText = 'Previous year',
-    this.nextYearLabelText = 'Next year',
-    this.backMonthLabelText = 'Previous month',
-    this.nextMonthLabelText = 'Next month',
-    this.backWeekLabelText = 'Previous week',
-    this.nextWeekLabelText = 'Next week',
-    this.backDayLabelText = 'Previous day',
-    this.nextDayLabelText = 'Next day',
-    this.todayLabelText = 'Today',
-    this.yearLabelText = 'View as year',
-    this.monthLabelText = 'View as month',
-    this.weekLabelText = 'View as week',
-    this.dayLabelText = 'View as day',
-    this.viewAsLabelText = 'View as',
-    this.pickMonthLabelText = 'Pick a month',
   });
 
   @override
@@ -997,11 +860,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     }
 
     String? result;
-    if (_getEquivalence(key) != key) {
-      result = _getEquivalence(key);
-    }
-
-    if (result == null && widget.translations.containsKey(key)) {
+    if (widget.translations.containsKey(key)) {
       result = widget.translations[key]!;
     }
 
@@ -1009,28 +868,6 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
 
     args.forEach((key, value) => result = result!.replaceAll('{$key}', value.toString()));
     return result!;
-  }
-
-  /// [_getEquivalence] gets the equivalence value of a translation key using the different
-  /// new properties
-  String _getEquivalence(String key) {
-    if (key == 'layrz.calendar.year.back') return widget.backYearLabelText;
-    if (key == 'layrz.calendar.year.next') return widget.nextYearLabelText;
-    if (key == 'layrz.calendar.month.back') return widget.backMonthLabelText;
-    if (key == 'layrz.calendar.month.next') return widget.nextMonthLabelText;
-    if (key == 'layrz.calendar.week.back') return widget.backWeekLabelText;
-    if (key == 'layrz.calendar.week.next') return widget.nextWeekLabelText;
-    if (key == 'layrz.calendar.day.back') return widget.backDayLabelText;
-    if (key == 'layrz.calendar.day.next') return widget.nextDayLabelText;
-    if (key == 'layrz.calendar.today') return widget.todayLabelText;
-    if (key == 'layrz.calendar.year') return widget.yearLabelText;
-    if (key == 'layrz.calendar.month') return widget.monthLabelText;
-    if (key == 'layrz.calendar.week') return widget.weekLabelText;
-    if (key == 'layrz.calendar.day') return widget.dayLabelText;
-    if (key == 'layrz.calendar.view_as') return widget.viewAsLabelText;
-    if (key == 'layrz.calendar.pickMonth') return widget.pickMonthLabelText;
-
-    return key;
   }
 }
 

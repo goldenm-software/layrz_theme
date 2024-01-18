@@ -25,7 +25,6 @@ dependencies:
   flex_color_picker: ">=3.3.0 <4.0.0"
   collection: ">=1.17.1 <2.0.0"
   emojis: ">=0.9.9 <1.0.0"
-  humanize_duration: ">=0.0.1+1 <1.0.0"
   flutter_highlight: ">=0.7.0 <1.0.0"
   highlight: ">=0.7.0 <1.0.0"
   code_text_field: ">=1.1.0 <2.0.0"

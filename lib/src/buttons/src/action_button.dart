@@ -40,6 +40,9 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
   bool get isMobile => width <= widget.mobileBreakpoint;
   Offset get actionsOffset => widget.actionsOffset;
 
+  double get _itemHeight => 40;
+  double get _overlayHeight => widget.actions.length * _itemHeight;
+
   @override
   void initState() {
     super.initState();
@@ -126,9 +129,17 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
     double? right = screenSize.width - offset.dx - boxSize.width + actionsOffset.dx;
     double? left;
 
+    double? top = offset.dy + actionsOffset.dy;
+    double? bottom;
+
     if (right >= screenSize.width) {
       right = null;
       left = offset.dx + actionsOffset.dx;
+    }
+
+    if (top + _overlayHeight >= screenSize.height) {
+      top = null;
+      bottom = screenSize.height - offset.dy - boxSize.height + actionsOffset.dy;
     }
 
     _overlayEntry = OverlayEntry(
@@ -141,64 +152,59 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                 child: GestureDetector(onTap: _removeOverlay),
               ),
               Positioned(
-                top: offset.dy + actionsOffset.dy,
+                top: top,
+                bottom: bottom,
                 right: right,
                 left: left,
                 child: SizedBox(
                   width: width,
+                  height: _overlayHeight,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       FadeTransition(
                         opacity: Tween<double>(begin: 0, end: 1).animate(_animationController),
                         child: Container(
-                          constraints: BoxConstraints(
-                            minHeight: boxSize.height,
-                            maxHeight: 300,
-                          ),
                           decoration: generateContainerElevation(context: context, elevation: 2),
                           clipBehavior: Clip.antiAlias,
-                          child: ListView.separated(
+                          child: ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.zero,
                             itemCount: widget.actions.length,
-                            separatorBuilder: (context, index) => const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5),
-                              child: Divider(),
-                            ),
+                            itemExtent: _itemHeight,
                             itemBuilder: (context, index) {
                               ThemedActionButton action = widget.actions[index];
-                              return InkWell(
-                                borderRadius: BorderRadius.circular(5),
-                                onTap: () {
-                                  _removeOverlay(callback: action.onTap ?? action.onPressed);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        action.icon,
-                                        color: action.color,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxWidth: width - 44,
+                              return Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => _removeOverlay(callback: action.onTap ?? action.onPressed),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          action.icon,
+                                          color: action.color,
+                                          size: 16,
                                         ),
-                                        child: Text(
-                                          action.labelText ?? "",
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: action.color,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                          textAlign: TextAlign.end,
+                                        const SizedBox(width: 5),
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth: width - 44,
+                                          ),
+                                          child: Text(
+                                            action.labelText ?? "",
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                  color: action.color,
+                                                  overflow: TextOverflow.fade,
+                                                ),
+                                            textAlign: TextAlign.end,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
