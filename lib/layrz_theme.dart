@@ -24,3 +24,4 @@ export 'src/widgets/widgets.dart';
 export 'src/views/views.dart';
 export 'src/grid/grid.dart';
 export 'src/table/table.dart';
+export 'src/utilities/utilities.dart';

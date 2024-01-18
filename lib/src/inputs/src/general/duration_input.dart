@@ -1,37 +1,5 @@
 part of '../../inputs.dart';
 
-/// [ThemedDurationInputVisibleValues] is the list of values to display in the input.
-///
-/// It can be days, hours, minutes or seconds.
-///
-/// In the usage of this enum in the [ThemedDurationInput], you can combine the values.
-enum ThemedDurationInputVisibleValues {
-  /// [days] is the value of days.
-  days,
-
-  /// [hours] is the value of hours.
-  hours,
-
-  /// [minutes] is the value of minutes.
-  minutes,
-
-  /// [seconds] is the value of seconds.
-  seconds;
-
-  Units toUnit() {
-    switch (this) {
-      case ThemedDurationInputVisibleValues.days:
-        return Units.day;
-      case ThemedDurationInputVisibleValues.hours:
-        return Units.hour;
-      case ThemedDurationInputVisibleValues.minutes:
-        return Units.minute;
-      case ThemedDurationInputVisibleValues.seconds:
-        return Units.second;
-    }
-  }
-}
-
 class ThemedDurationInput extends StatefulWidget {
   /// [value] is the value of the input
   final Duration? value;
@@ -61,7 +29,7 @@ class ThemedDurationInput extends StatefulWidget {
   final EdgeInsets padding;
 
   /// [visibleValues] is the list of values to display in the input
-  final List<ThemedDurationInputVisibleValues> visibleValues;
+  final List<ThemedUnits> visibleValues;
 
   /// [ThemedDurationInput] is a duration input.
   const ThemedDurationInput({
@@ -76,10 +44,10 @@ class ThemedDurationInput extends StatefulWidget {
     this.padding = const EdgeInsets.all(10.0),
     this.disabled = false,
     this.visibleValues = const [
-      ThemedDurationInputVisibleValues.days,
-      ThemedDurationInputVisibleValues.hours,
-      ThemedDurationInputVisibleValues.minutes,
-      ThemedDurationInputVisibleValues.seconds,
+      ThemedUnits.day,
+      ThemedUnits.hour,
+      ThemedUnits.minute,
+      ThemedUnits.second,
     ],
   });
 
@@ -91,7 +59,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   Duration? get value => widget.value;
 
-  List<ThemedDurationInputVisibleValues> get visibleValues => widget.visibleValues;
+  List<ThemedUnits> get visibleValues => widget.visibleValues;
 
   OverlayEntry? overlayEntry;
   late OverlayState overlayState;
@@ -134,10 +102,10 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
 
         double height = 0;
 
-        if (visibleValues.contains(ThemedDurationInputVisibleValues.days)) height += 80 + 10;
-        if (visibleValues.contains(ThemedDurationInputVisibleValues.hours)) height += 80 + 10;
-        if (visibleValues.contains(ThemedDurationInputVisibleValues.minutes)) height += 80 + 10;
-        if (visibleValues.contains(ThemedDurationInputVisibleValues.seconds)) height += 80;
+        if (visibleValues.contains(ThemedUnits.day)) height += 80 + 10;
+        if (visibleValues.contains(ThemedUnits.hour)) height += 80 + 10;
+        if (visibleValues.contains(ThemedUnits.minute)) height += 80 + 10;
+        if (visibleValues.contains(ThemedUnits.second)) height += 80;
 
         height += 100;
 
@@ -169,7 +137,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (visibleValues.contains(ThemedDurationInputVisibleValues.days)) ...[
+                          if (visibleValues.contains(ThemedUnits.day)) ...[
                             ThemedNumberInput(
                               labelText: i18n?.t('helpers.days') ?? 'Days',
                               value: days,
@@ -182,7 +150,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             ),
                             const SizedBox(height: 10),
                           ],
-                          if (visibleValues.contains(ThemedDurationInputVisibleValues.hours)) ...[
+                          if (visibleValues.contains(ThemedUnits.hour)) ...[
                             ThemedNumberInput(
                               labelText: i18n?.t('helpers.hours') ?? 'Hours',
                               value: hours,
@@ -195,7 +163,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             ),
                             const SizedBox(height: 10),
                           ],
-                          if (visibleValues.contains(ThemedDurationInputVisibleValues.minutes)) ...[
+                          if (visibleValues.contains(ThemedUnits.minute)) ...[
                             ThemedNumberInput(
                               labelText: i18n?.t('helpers.minutes') ?? 'Minutes',
                               value: minutes,
@@ -208,7 +176,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             ),
                             const SizedBox(height: 10),
                           ],
-                          if (visibleValues.contains(ThemedDurationInputVisibleValues.seconds))
+                          if (visibleValues.contains(ThemedUnits.second))
                             ThemedNumberInput(
                               labelText: i18n?.t('helpers.seconds') ?? 'Seconds',
                               value: seconds,
@@ -284,18 +252,14 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
   String get _formatedDuration {
     if (value == null) return '';
 
-    try {
-      return humanizeDuration(
-        value!,
-        language: ThemedHumanizedDuration(i18n: i18n),
-        options: HumanizeOptions(
-          conjunction: i18n?.t('helpers.and') ?? ' and ',
-          units: visibleValues.map((e) => e.toUnit()).toList(),
-        ),
-      );
-    } catch (e) {
-      return '';
-    }
+    return value!.humanize(
+      options: ThemedHumanizeOptions(
+        units: visibleValues,
+        spacer: ' ',
+        conjunction: i18n?.t('helpers.and') ?? ' and ',
+      ),
+      language: ThemedHumanizedDurationLanguage(i18n: i18n),
+    );
   }
 
   /// Change inner value of duration from the input values
@@ -312,39 +276,4 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
       seconds: seconds,
     );
   }
-}
-
-class ThemedHumanizedDuration implements HumanizeLanguage {
-  final LayrzAppLocalizations? i18n;
-  const ThemedHumanizedDuration({
-    this.i18n,
-  });
-
-  @override
-  String name() => 'layrz';
-
-  @override
-  String day(int value) => i18n?.tc('helpers.dynamic.days', value) ?? (value == 1 ? 'day' : 'days');
-
-  @override
-  String hour(int value) => i18n?.tc('helpers.dynamic.hours', value) ?? (value == 1 ? 'hour' : 'hours');
-
-  @override
-  String millisecond(int value) =>
-      i18n?.tc('helpers.dynamic.milliseconds', value) ?? (value == 1 ? 'millisecond' : 'milliseconds');
-
-  @override
-  String minute(int value) => i18n?.tc('helpers.dynamic.minutes', value) ?? (value == 1 ? 'minute' : 'minutes');
-
-  @override
-  String month(int value) => i18n?.tc('helpers.dynamic.months', value) ?? (value == 1 ? 'month' : 'months');
-
-  @override
-  String second(int value) => i18n?.tc('helpers.dynamic.seconds', value) ?? (value == 1 ? 'second' : 'seconds');
-
-  @override
-  String week(int value) => i18n?.tc('helpers.dynamic.weeks', value) ?? (value == 1 ? 'week' : 'weeks');
-
-  @override
-  String year(int value) => i18n?.tc('helpers.dynamic.years', value) ?? (value == 1 ? 'year' : 'years');
 }

@@ -134,6 +134,9 @@ class ThemedFilePicker extends StatefulWidget {
   /// By default, it will use `BorderRadius.circular(10)`.
   final BorderRadius borderRadius;
 
+  /// [allowedExtensions] is the list of allowed extensions. Only will work when [acceptedTypes] is [FileType.custom].
+  final List<String>? allowedExtensions;
+
   /// [ThemedFilePicker] is the input for file selection.
   /// It uses [ThemedTextInput] as the base.
   const ThemedFilePicker({
@@ -154,6 +157,7 @@ class ThemedFilePicker extends StatefulWidget {
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.allowedExtensions,
   });
 
   @override
@@ -217,6 +221,7 @@ class _ThemedFilePickerState extends State<ThemedFilePicker> with SingleTickerPr
     final files = await pickFile(
       allowMultiple: false,
       type: widget.acceptedTypes,
+      allowedExtensions: widget.allowedExtensions,
     );
 
     if (files != null) {

@@ -9,6 +9,7 @@ class TextInputView extends StatefulWidget {
 
 class _TextInputViewState extends State<TextInputView> {
   num? _value = 0;
+  Duration? _dur = const Duration();
   @override
   Widget build(BuildContext context) {
     return Layout(
@@ -104,6 +105,20 @@ class _TextInputViewState extends State<TextInputView> {
               labelText: "Example label",
               value: _value,
               onChanged: (value) => setState(() => _value = value),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "Or handle durations, to do that, you can use ThemedDurationInput to handle easly, "
+              "like the following example:",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            ThemedDurationInput(
+              labelText: "Example label",
+              value: _dur,
+              onChanged: (value) => setState(() => _dur = value),
             ),
           ],
         ),

@@ -1,7 +1,18 @@
 # Changelog
 
+## 4.3.13
+
+- Added `actionsOffset` on `ThemedActionButtons` to choose a custom overlay position
+- Added extension `ThemedHumanizeDuration` to `Duration` to humanize the duration. This extension is based on the package `humanize_duration` but fixing some errors and adding some features.
+- Undeprecated `translations` on `ThemedCalendar`
+
+## 4.3.12
+
+- Added `customExtensions` as a prop on `ThemedFilePicker` to support custom extensions for the file picker.
+- Added `globalMimeResolver` to resolve custom mime types and extensions.
+
 ## 4.3.11
-- Fixed [ThemedSearchInput] not keeping cursor position when typing, and set so themed table sets page to 0 when searching.
+- Fixed `ThemedSearchInput` not keeping cursor position when typing, and set so themed table sets page to 0 when searching.
 
 ## 4.3.10
 - Added optional prop `showCooldownRemainingDuration` to `ThemedButton` to hide the cooldown remaining duration text.
