@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.14
+
+- Changed `containerColor` override of `drawAvatar` utility.
+- Changed `shadowColor` override of `drawAvatar` utility.
+
 ## 4.3.13
 
 - Added `actionsOffset` on `ThemedActionButtons` to choose a custom overlay position
