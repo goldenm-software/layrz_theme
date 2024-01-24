@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.3.15-preview3
+
+- Corrections about Attributions of Mapbox Maps in `ThemedTileLayer`.
+
+## 4.3.15-preview2
+
+- Optimized `ThemedTileLayer` to use `CancellableNetworkTileProvider` (from `flutter_map_cancellable_tile_provider`) to improve performance and reduce memory usage.
+- Setted `panBuffer` and `keepBuffer` to 0 due a performance testing results (Is the better option for now).
+
+## 4.3.15-preview1
+
+- Optmized `ThemedTooltip` to use `OverlayPortal` instead of a custom `Overlay` widget.
+- New widget `ThemedTileLayer`, designed to be used in `FlutterMap` widget (from `flutter_map`) to display a tile layer using the `MapLayer` model (from `layrz_models`).
+- New widget `ThemedMapToolbar`, designed to be used in `FlutterMap` widget (from `flutter_map`) to display a toolbar with some actions to control the map.
+
 ## 4.3.14
 
 - Changed `containerColor` override of `drawAvatar` utility.

@@ -28,10 +28,11 @@ class ThemedTooltip extends StatefulWidget {
 }
 
 class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateMixin {
-  late AnimationController _controller;
+  late OverlayPortalController _overlayControllerMouse;
+  late OverlayPortalController _overlayControllerTap;
+  late AnimationController _animationController;
   late bool _hasMouseDetected;
   final GlobalKey _key = GlobalKey();
-  OverlayEntry? _entry;
 
   TextStyle? get _defaultTextStyle {
     try {
@@ -46,12 +47,14 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
+    _overlayControllerMouse = OverlayPortalController();
+    _overlayControllerTap = OverlayPortalController();
     _hasMouseDetected = RendererBinding.instance.mouseTracker.mouseIsConnected;
 
     RendererBinding.instance.mouseTracker.addListener(_handleMouseTrackerChange);
     GestureBinding.instance.pointerRouter.addGlobalRoute(_handlePointerEvent);
 
-    _controller = AnimationController(duration: kHoverDuration, vsync: this);
+    _animationController = AnimationController(duration: kHoverDuration, vsync: this);
   }
 
   /// [_handleMouseTrackerChange] is called when the mouse is connected/disconnected.
@@ -66,9 +69,6 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
 
   /// [_handleMouseEnter] is called when the mouse enters the widget.
   void _handlePointerEvent(PointerEvent event) {
-    if (_entry == null) {
-      return;
-    }
     if (event is PointerUpEvent || event is PointerCancelEvent) {
       _handleMouseExit();
     } else if (event is PointerDownEvent) {
@@ -84,8 +84,15 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   }
 
   /// [_handleMouseEnter] is called when the mouse enters the widget.
-  void _handleMouseEnter() {
-    if (mounted) _buildEntry();
+  void _handleMouseEnter({bool fromMouse = false}) {
+    if (mounted) {
+      if (fromMouse) {
+        _overlayControllerMouse.show();
+      } else {
+        _overlayControllerTap.show();
+      }
+      _animationController.forward();
+    }
   }
 
   /// [_predictTextSize] predicts the size of the tooltip based on the text.
@@ -109,50 +116,52 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   void dispose() {
     GestureBinding.instance.pointerRouter.removeGlobalRoute(_handlePointerEvent);
     RendererBinding.instance.mouseTracker.removeListener(_handleMouseTrackerChange);
-
-    _entry?.remove();
-    _entry = null;
-
-    _controller.dispose();
+    _removeEntry(immediately: true);
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     Widget child = Semantics(
+      key: _key,
       child: widget.child,
       tooltip: widget.message,
     );
 
     if (_hasMouseDetected) {
       return MouseRegion(
-        key: _key,
-        onEnter: (_) => _handleMouseEnter(),
+        onEnter: (_) => _handleMouseEnter(fromMouse: true),
         onExit: (_) => _handleMouseExit(),
-        child: child,
+        child: OverlayPortal(
+          controller: _overlayControllerMouse,
+          overlayChildBuilder: _buildEntry,
+          child: child,
+        ),
       );
     }
 
     return GestureDetector(
-      key: _key,
       behavior: HitTestBehavior.opaque,
       onLongPress: () => _handleMouseEnter(),
       excludeFromSemantics: true,
-      child: child,
+      child: OverlayPortal(
+        controller: _overlayControllerTap,
+        overlayChildBuilder: _buildEntry,
+        child: child,
+      ),
     );
   }
 
   /// [_removeEntry] removes the tooltip from the overlay.
   void _removeEntry({bool immediately = false}) async {
-    if (!immediately) await _controller.reverse();
-    _entry?.remove();
-    _entry = null;
+    if (!immediately) await _animationController.reverse();
+    if (_overlayControllerMouse.isShowing) _overlayControllerMouse.hide();
+    if (_overlayControllerTap.isShowing) _overlayControllerTap.hide();
   }
 
   /// [_buildEntry] builds the tooltip and adds it to the overlay.
-  void _buildEntry() {
-    final OverlayState state = Overlay.of(context, rootOverlay: true);
-
+  Widget _buildEntry(BuildContext context) {
     final RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
     final Offset target = box.localToGlobal(Offset.zero);
 
@@ -243,45 +252,35 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
       decoration = decoration.copyWith(color: widget.color);
     }
 
-    _entry = OverlayEntry(
-      builder: (context) {
-        return Stack(
-          children: [
-            Positioned(
-              top: top,
-              left: left,
-              right: right,
-              bottom: bottom,
-              width: width,
-              height: height,
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _controller.value,
-                    child: child,
-                  );
-                },
-                child: Container(
-                  decoration: decoration,
-                  padding: _defaultPadding,
-                  child: Text(
-                    widget.message,
-                    style: _defaultTextStyle?.copyWith(
-                      color: validateColor(color: decoration.color ?? Theme.of(context).primaryColor),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
+    Widget child = AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _animationController.value,
+          child: child,
         );
       },
+      child: Container(
+        decoration: decoration,
+        padding: _defaultPadding,
+        child: Text(
+          widget.message,
+          style: _defaultTextStyle?.copyWith(
+            color: validateColor(color: decoration.color ?? Theme.of(context).primaryColor),
+          ),
+        ),
+      ),
     );
 
-    state.insert(_entry!);
-
-    _controller.forward();
+    return Positioned(
+      top: top,
+      left: left,
+      right: right,
+      bottom: bottom,
+      width: width,
+      height: height,
+      child: child,
+    );
   }
 }
 
