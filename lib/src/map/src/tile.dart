@@ -131,8 +131,10 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
       case MapboxStyle.monochrome:
         attribution = isDark ? (layer.attributionUrlDark ?? _layrzAttributionDark) : (layer.attributionUrl);
         break;
-      case MapboxStyle.satelliteHybrid:
       case MapboxStyle.satellite:
+      case MapboxStyle.satelliteHybrid:
+        attribution = layer.attributionUrlDark ?? layer.attributionUrl;
+        break;
       case MapboxStyle.custom:
       case MapboxStyle.streets:
       default:

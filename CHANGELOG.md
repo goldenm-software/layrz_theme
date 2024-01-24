@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.15-preview3
+
+- Corrections about Attributions of Mapbox Maps in `ThemedTileLayer`.
+
 ## 4.3.15-preview2
 
 - Optimized `ThemedTileLayer` to use `CancellableNetworkTileProvider` (from `flutter_map_cancellable_tile_provider`) to improve performance and reduce memory usage.

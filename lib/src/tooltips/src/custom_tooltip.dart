@@ -124,13 +124,13 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     Widget child = Semantics(
+      key: _key,
       child: widget.child,
       tooltip: widget.message,
     );
 
     if (_hasMouseDetected) {
       return MouseRegion(
-        key: _key,
         onEnter: (_) => _handleMouseEnter(fromMouse: true),
         onExit: (_) => _handleMouseExit(),
         child: OverlayPortal(
@@ -142,7 +142,6 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
     }
 
     return GestureDetector(
-      key: _key,
       behavior: HitTestBehavior.opaque,
       onLongPress: () => _handleMouseEnter(),
       excludeFromSemantics: true,
@@ -253,6 +252,26 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
       decoration = decoration.copyWith(color: widget.color);
     }
 
+    Widget child = AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _animationController.value,
+          child: child,
+        );
+      },
+      child: Container(
+        decoration: decoration,
+        padding: _defaultPadding,
+        child: Text(
+          widget.message,
+          style: _defaultTextStyle?.copyWith(
+            color: validateColor(color: decoration.color ?? Theme.of(context).primaryColor),
+          ),
+        ),
+      ),
+    );
+
     return Positioned(
       top: top,
       left: left,
@@ -260,25 +279,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
       bottom: bottom,
       width: width,
       height: height,
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _animationController.value,
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: decoration,
-          padding: _defaultPadding,
-          child: Text(
-            widget.message,
-            style: _defaultTextStyle?.copyWith(
-              color: validateColor(color: decoration.color ?? Theme.of(context).primaryColor),
-            ),
-          ),
-        ),
-      ),
+      child: child,
     );
   }
 }
