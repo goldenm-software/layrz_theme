@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.15-preview1
+
+- Optmized `ThemedTooltip` to use `OverlayPortal` instead of a custom `Overlay` widget.
+- New widget `ThemedTileLayer`, designed to be used in `FlutterMap` widget (from `flutter_map`) to display a tile layer using the `MapLayer` model (from `layrz_models`).
+- New widget `ThemedMapToolbar`, designed to be used in `FlutterMap` widget (from `flutter_map`) to display a toolbar with some actions to control the map.
+
 ## 4.3.14
 
 - Changed `containerColor` override of `drawAvatar` utility.

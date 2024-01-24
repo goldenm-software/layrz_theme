@@ -14,6 +14,50 @@ part 'src/wrapper.dart';
 class AppStore extends VxStore {
   ThemeMode themeMode = ThemeMode.light;
   ThemedLayoutStyle layoutStyle = ThemedLayoutStyle.modern;
+  String? mapboxToken;
+  String? googleToken;
+  String? hereToken;
+
+  AppStore({
+    this.mapboxToken,
+    this.googleToken,
+    this.hereToken,
+  });
+
+  List<MapLayer> get availableLayers => [
+        const MapLayer(
+          id: 'osm',
+          name: 'OpenStreetMaps',
+          source: MapSource.osm,
+        ),
+        if (mapboxToken != null) ...[
+          MapLayer(
+            id: 'mapbox-1',
+            name: 'Mapbox Maps',
+            source: MapSource.mapbox,
+            mapboxToken: mapboxToken!,
+            mapboxLayers: MapboxStyle.values,
+          ),
+        ],
+        if (hereToken != null) ...[
+          MapLayer(
+            id: 'here-1',
+            name: 'HERE Maps',
+            source: MapSource.here,
+            hereToken: hereToken!,
+            hereLayers: HereStyle.values,
+          ),
+        ],
+        if (googleToken != null) ...[
+          MapLayer(
+            id: 'google-1',
+            name: 'Google Maps',
+            source: MapSource.google,
+            googleToken: googleToken!,
+            googleLayers: GoogleMapLayer.values,
+          ),
+        ],
+      ];
 }
 
 class SetTheme extends VxMutation<AppStore> {
