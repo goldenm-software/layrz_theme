@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.4"
+  dio:
+    dependency: transitive
+    description:
+      name: dio
+      sha256: "797e1e341c3dd2f69f2dad42564a6feff3bfb87187d05abb93b9609e6f1645c3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.0"
   emojis:
     dependency: transitive
     description:
@@ -206,6 +214,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
+  flutter_map_animations:
+    dependency: "direct main"
+    description:
+      name: flutter_map_animations
+      sha256: b21fbfc0694b68470d7c986009d5ad883c8841aded74fbc7b0f61db10f48c33f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.3"
+  flutter_map_cancellable_tile_provider:
+    dependency: transitive
+    description:
+      name: flutter_map_cancellable_tile_provider
+      sha256: ae18dd59faf74f3eca1d28f83e59b47741bbff962e123bbebe9335c04d432f44
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -326,7 +350,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.3.14"
+    version: "4.3.15-preview1"
   linked_scroll_controller:
     dependency: transitive
     description:

@@ -20,6 +20,7 @@ dependencies:
   dart_snippet_view: ^0.0.1
   flutter_dotenv: ^5.1.0
   flutter_map: ^6.1.0
+  flutter_map_animations: any
   layrz_theme:
     path: ../
   

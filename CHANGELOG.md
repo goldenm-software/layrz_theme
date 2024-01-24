@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.15-preview2
+
+- Optimized `ThemedTileLayer` to use `CancellableNetworkTileProvider` (from `flutter_map_cancellable_tile_provider`) to improve performance and reduce memory usage.
+- Setted `panBuffer` and `keepBuffer` to 0 due a performance testing results (Is the better option for now).
+
 ## 4.3.15-preview1
 
 - Optmized `ThemedTooltip` to use `OverlayPortal` instead of a custom `Overlay` widget.

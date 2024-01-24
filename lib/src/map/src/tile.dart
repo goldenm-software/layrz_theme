@@ -6,13 +6,30 @@ const kDefaultLayer = MapLayer(
   source: MapSource.osm,
 );
 
+/// [kMinZoom] is the minimum zoom level for the map.
+const double kMinZoom = 3;
+
+/// [kMaxZoom] is the maximum zoom level for the map.
+const double kMaxZoom = 18;
+
 class ThemedTileLayer extends StatefulWidget {
   /// [layer] is the selected layer to use. If not provided, the default one will be used, aka, OpenStreetMap.
   final MapLayer? layer;
 
+  /// [minZoom] is the minimum zoom level for the map.
+  final double minZoom;
+
+  /// [maxZoom] is the maximum zoom level for the map.
+  final double maxZoom;
+
   /// [ThemedTileLayer] is a wrapper for [TileLayer] widget. It will automatically detect which layer to use based on
   /// the [layer] parameter. If not provided, the default one will be used, aka, OpenStreetMap.
-  const ThemedTileLayer({super.key, this.layer});
+  const ThemedTileLayer({
+    super.key,
+    this.layer,
+    this.minZoom = kMinZoom,
+    this.maxZoom = kMaxZoom,
+  });
 
   @override
   State<ThemedTileLayer> createState() => _ThemedTileLayerState();
@@ -25,6 +42,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
   String get _osmUrl => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+  // String get _osmUrl => 'http://127.0.0.1:5000/{z}/{x}/{y}.png';
 
   String get _mapboxUrl {
     if (layer.source != MapSource.mapbox) {
@@ -237,12 +255,57 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   String get _layrzAttributionLight => 'https://cdn.layrz.com/resources/layrz/logo/normal.png';
   String get _layrzAttributionDark => 'https://cdn.layrz.com/resources/layrz/logo/white.png';
 
+  String get _customUrl {
+    if (layer.source != MapSource.custom) {
+      return _osmUrl;
+    }
+
+    if (isDark) {
+      return layer.rasterServerDark ?? layer.rasterServerLight ?? _osmUrl;
+    }
+
+    return layer.rasterServerLight ?? _osmUrl;
+  }
+
+  String get _customAttribution {
+    if (layer.source != MapSource.custom) {
+      return _layrzAttributionLight;
+    }
+
+    if (isDark) {
+      return layer.attributionUrlDark ?? layer.attributionUrl;
+    }
+
+    return layer.attributionUrl;
+  }
+
+  int get buffer => 0;
+
+  TileLayer _buildTile({required String urlTemplate}) {
+    return TileLayer(
+      urlTemplate: urlTemplate,
+      minZoom: widget.minZoom,
+      maxZoom: widget.maxZoom,
+      minNativeZoom: widget.minZoom.toInt(),
+      maxNativeZoom: widget.maxZoom.toInt(),
+      tileProvider: CancellableNetworkTileProvider(
+        headers: {
+          // Set cache to 30 days
+          'Cache-Control': 'max-age=2592000',
+        },
+        silenceExceptions: false,
+      ),
+      keepBuffer: buffer,
+      panBuffer: buffer,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         if (layer.source == MapSource.osm) ...[
-          TileLayer(urlTemplate: _osmUrl),
+          _buildTile(urlTemplate: _osmUrl),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -257,7 +320,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             ),
           ),
         ] else if (layer.source == MapSource.mapbox) ...[
-          TileLayer(urlTemplate: _mapboxUrl),
+          _buildTile(urlTemplate: _mapboxUrl),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -272,7 +335,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             ),
           ),
         ] else if (layer.source == MapSource.here) ...[
-          TileLayer(urlTemplate: _hereUrl),
+          _buildTile(urlTemplate: _hereUrl),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -292,15 +355,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data != null) {
-                  return TileLayer(
-                    tileProvider: NetworkTileProvider(
-                      headers: {
-                        // Set cache to 30 days
-                        'Cache-Control': 'max-age=2592000',
-                      },
-                    ),
-                    urlTemplate: snapshot.data!,
-                  );
+                  return _buildTile(urlTemplate: snapshot.data!);
                 }
               }
 
@@ -315,6 +370,21 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
                 _googleAttribution,
                 width: _scaleWidth(layer),
                 height: _scaleHeight(layer),
+                filterQuality: FilterQuality.medium,
+                alignment: Alignment.centerLeft,
+              ),
+            ),
+          ),
+        ] else ...[
+          _buildTile(urlTemplate: _customUrl),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Image.network(
+                _customAttribution,
+                width: 80,
+                height: 20,
                 filterQuality: FilterQuality.medium,
                 alignment: Alignment.centerLeft,
               ),

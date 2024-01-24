@@ -9,10 +9,26 @@ class MapLayerView extends StatefulWidget {
   static double get reservedAttributionHeight => 100;
 }
 
-class _MapLayerViewState extends State<MapLayerView> {
+class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMixin {
+  late AnimatedMapController _mapController;
   AppStore get store => VxState.store as AppStore;
   List<MapLayer> get layers => store.availableLayers;
   MapLayer? selectedLayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _mapController = AnimatedMapController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +63,38 @@ class _MapLayerViewState extends State<MapLayerView> {
               textAlign: TextAlign.justify,
             ),
             const SizedBox(height: 10),
+            ThemedButton(
+              labelText: 'PERFORMANCE TESTING',
+              onTap: () async {
+                debugPrint('Zooming in');
+                await _mapController.animatedZoomTo(8);
+                debugPrint("Waiting");
+                await Future.delayed(const Duration(seconds: 1));
+                debugPrint('Zooming out');
+                await _mapController.animatedZoomTo(13);
+                debugPrint("Waiting");
+                await Future.delayed(const Duration(seconds: 1));
+                debugPrint('Zooming in');
+                await _mapController.animatedZoomTo(8);
+                debugPrint("Waiting");
+                await Future.delayed(const Duration(seconds: 1));
+                debugPrint('Zooming out');
+                await _mapController.animatedZoomTo(13);
+                debugPrint("Done");
+              },
+            ),
+            const SizedBox(height: 10),
             Container(
               decoration: generateContainerElevation(context: context),
               height: 600,
               clipBehavior: Clip.antiAlias,
               child: FlutterMap(
+                mapController: _mapController.mapController,
                 options: const MapOptions(
                   initialCenter: kGoldenMHeadquarters,
                   initialZoom: 13,
+                  maxZoom: kMaxZoom,
+                  minZoom: kMinZoom,
                 ),
                 children: [
                   ThemedTileLayer(layer: selectedLayer),
