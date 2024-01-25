@@ -22,6 +22,9 @@ class ThemedTileLayer extends StatefulWidget {
   /// [maxZoom] is the maximum zoom level for the map.
   final double maxZoom;
 
+  /// [isCancellable] is a flag to indicate whether the map can be cancelled or not.
+  final bool isCancellable;
+
   /// [ThemedTileLayer] is a wrapper for [TileLayer] widget. It will automatically detect which layer to use based on
   /// the [layer] parameter. If not provided, the default one will be used, aka, OpenStreetMap.
   const ThemedTileLayer({
@@ -29,6 +32,7 @@ class ThemedTileLayer extends StatefulWidget {
     this.layer,
     this.minZoom = kMinZoom,
     this.maxZoom = kMaxZoom,
+    this.isCancellable = true,
   });
 
   @override
@@ -283,6 +287,13 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
 
   int get buffer => 0;
 
+  Map<String, String> get headers => layer.source == MapSource.google
+      ? {
+          // Set cache to 30 days
+          'Cache-Control': 'max-age=2592000',
+        }
+      : {};
+
   TileLayer _buildTile({required String urlTemplate}) {
     return TileLayer(
       urlTemplate: urlTemplate,
@@ -290,13 +301,9 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
       maxZoom: widget.maxZoom,
       minNativeZoom: widget.minZoom.toInt(),
       maxNativeZoom: widget.maxZoom.toInt(),
-      tileProvider: CancellableNetworkTileProvider(
-        headers: {
-          // Set cache to 30 days
-          'Cache-Control': 'max-age=2592000',
-        },
-        silenceExceptions: false,
-      ),
+      tileProvider: widget.isCancellable
+          ? CancellableNetworkTileProvider(headers: headers)
+          : NetworkTileProvider(headers: headers),
       keepBuffer: buffer,
       panBuffer: buffer,
     );

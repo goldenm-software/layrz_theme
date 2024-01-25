@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.16
+
+- Removed `headers` on `ThemedTileLayer`, only will use when the layer is Google Maps.
+
 ## 4.3.15
 
 - Inclues changes defined in `4.3.15-preview1`
