@@ -158,19 +158,30 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   double get _dividerSize => 2;
   double get _dividerIndent => 5;
 
+  Widget get _divider {
+    if (fixedButtons.isEmpty) {
+      return const SizedBox();
+    }
+    if (widget.additionalButtons.isEmpty) {
+      return const SizedBox();
+    }
+
+    return widget.flow == ThemedMapToolbarFlow.horizontal
+        ? VerticalDivider(
+            width: _dividerSize,
+            indent: _dividerIndent,
+            endIndent: _dividerIndent,
+          )
+        : Divider(
+            height: _dividerSize,
+            indent: _dividerIndent,
+            endIndent: _dividerIndent,
+          );
+  }
+
   List<Widget> get items => [
         ...widget.additionalButtons,
-        widget.flow == ThemedMapToolbarFlow.horizontal
-            ? VerticalDivider(
-                width: _dividerSize,
-                indent: _dividerIndent,
-                endIndent: _dividerIndent,
-              )
-            : Divider(
-                height: _dividerSize,
-                indent: _dividerIndent,
-                endIndent: _dividerIndent,
-              ),
+        _divider,
         ...fixedButtons,
       ];
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.19
+
+- Fixed issue in `ThemedMapToolbar` to prevent drawing of `Divider` or `VerticalDivider` when the buttons and fixed buttons are empty.
+
 ## 4.3.18
 
 - Updated `ThemedTileLayer.reservedAttributionHeight` to consider the spacing required by the attributions.
