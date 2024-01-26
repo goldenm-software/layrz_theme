@@ -14,6 +14,8 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
   AppStore get store => VxState.store as AppStore;
   List<MapLayer> get layers => store.availableLayers;
   MapLayer? selectedLayer;
+  final ThemedMapController _controller = ThemedMapController();
+  final GlobalKey _mapKey = GlobalKey();
 
   @override
   void initState() {
@@ -22,12 +24,19 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
       vsync: this,
       duration: const Duration(seconds: 2),
     );
+
+    _controller.addListener(_listener);
   }
 
   @override
   void dispose() {
     _mapController.dispose();
+    _controller.removeListener(_listener);
     super.dispose();
+  }
+
+  void _listener(event) {
+    debugPrint('layrz_theme_example/ThemedMapController() event: $event');
   }
 
   @override
@@ -89,6 +98,7 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
               height: 600,
               clipBehavior: Clip.antiAlias,
               child: FlutterMap(
+                key: _mapKey,
                 mapController: _mapController.mapController,
                 options: const MapOptions(
                   initialCenter: kGoldenMHeadquarters,
@@ -97,12 +107,29 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
                   minZoom: kMinZoom,
                 ),
                 children: [
-                  ThemedTileLayer(layer: selectedLayer),
+                  ThemedTileLayer(
+                    layer: selectedLayer,
+                    controller: _controller,
+                  ),
+                  // MarkerLayer(
+                  //   markers: [
+                  //     Marker(
+                  //       point: t,
+                  //       width: 20,
+                  //       height: 20,
+                  //       child: Container(width: 20, height: 20, color: Colors.red),
+                  //     ),
+                  //   ],
+                  // ),
                   ThemedMapToolbar(
                     layers: layers,
                     selectedLayer: selectedLayer,
                     onLayerChanged: (layer) => setState(() => selectedLayer = layer),
-                    position: Alignment.bottomLeft,
+                    enableGoogleStreetView: true,
+                    controller: _controller,
+                    mapController: _mapController.mapController,
+                    mapKey: _mapKey,
+                    // position: Alignment.bottomLeft,
                     // flow: ThemedMapToolbarFlow.horizontal,
                     onZoomIn: () {
                       debugPrint('Zoom in');

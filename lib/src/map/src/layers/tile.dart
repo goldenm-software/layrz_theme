@@ -1,16 +1,4 @@
-part of '../map.dart';
-
-const kDefaultLayer = MapLayer(
-  id: 'osm',
-  name: 'OpenStreetMap',
-  source: MapSource.osm,
-);
-
-/// [kMinZoom] is the minimum zoom level for the map.
-const double kMinZoom = 3;
-
-/// [kMaxZoom] is the maximum zoom level for the map.
-const double kMaxZoom = 18;
+part of '../../map.dart';
 
 class ThemedTileLayer extends StatefulWidget {
   /// [layer] is the selected layer to use. If not provided, the default one will be used, aka, OpenStreetMap.
@@ -25,14 +13,51 @@ class ThemedTileLayer extends StatefulWidget {
   /// [isCancellable] is a flag to indicate whether the map can be cancelled or not.
   final bool isCancellable;
 
+  /// [controller] defines the `ThemedMapController` to listen some events from other widgets.
+  final ThemedMapController? controller;
+
   /// [ThemedTileLayer] is a wrapper for [TileLayer] widget. It will automatically detect which layer to use based on
   /// the [layer] parameter. If not provided, the default one will be used, aka, OpenStreetMap.
+  ///
+  /// To use google Street View, you must provide in [layer] a `MapLayer` with `MapSource.google` as source.
+  /// Also, you must provide [controller] to work. Also, this [controller] you also need to
+  /// provide it to [ThemedMapToolbar] to execute the start and end drag events.
+  /// If you don't provide these parameters, the street view button will not do anything.
+  ///
+  /// For example:
+  /// ```dart
+  /// final GlobalKey mapKey = GlobalKey();
+  /// final mapController = MapController();
+  /// final controller = ThemedMapController();
+  ///
+  /// /* ...your code */
+  ///
+  /// Widget build(BuildContext context) {
+  ///  return FlutterMap(
+  ///   mapController: mapController,
+  ///   key: mapKey,
+  ///   /* ...other parameters */
+  ///   children: [
+  ///    ThemedTileLayer(
+  ///      controller: controller,
+  ///      /* ...any other parameters */
+  ///    ),
+  ///    ThemedMapToolbar(
+  ///      controller: controller,
+  ///      mapController: mapController,
+  ///      mapKey: mapKey,
+  ///      /* ... any other parameters */
+  ///   ),
+  ///   /* ...other layers */
+  /// );
+  /// ```
   const ThemedTileLayer({
     super.key,
     this.layer,
     this.minZoom = kMinZoom,
     this.maxZoom = kMaxZoom,
     this.isCancellable = true,
+    this.controller,
   });
 
   @override
@@ -321,6 +346,40 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
     );
   }
 
+  bool get _canStreetView => layer.source == MapSource.google && widget.controller != null;
+
+  bool _googleStreetView = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller?.addListener(_eventListener);
+  }
+
+  @override
+  void didUpdateWidget(ThemedTileLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_eventListener);
+      widget.controller?.addListener(_eventListener);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_eventListener);
+    super.dispose();
+  }
+
+  void _eventListener(ThemedMapEvent event) {
+    if (event is StartGoogleStreetView && _canStreetView) {
+      setState(() => _googleStreetView = true);
+    } else if (event is StopGoogleStreetView && _canStreetView) {
+      setState(() => _googleStreetView = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -431,12 +490,14 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
 
     final prefs = await SharedPreferences.getInstance();
 
-    final googleSession = prefs.getString('google.maps.${layer.id}.token');
-    final googleExpiration = prefs.getInt('google.maps.${layer.id}.expiration');
+    if (!_googleStreetView) {
+      final googleSession = prefs.getString('google.maps.${layer.id}.token');
+      final googleExpiration = prefs.getInt('google.maps.${layer.id}.expiration');
 
-    if (googleSession != null && googleExpiration != null) {
-      if (googleExpiration > DateTime.now().secondsSinceEpoch) {
-        return 'https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session=$googleSession&key=$googleMapsKey';
+      if (googleSession != null && googleExpiration != null) {
+        if (googleExpiration > DateTime.now().secondsSinceEpoch) {
+          return 'https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session=$googleSession&key=$googleMapsKey';
+        }
       }
     }
 
@@ -454,7 +515,11 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         'layerTypes': _convertGoogleTypes(style),
       };
 
-      debugPrint('Google maps request: $params');
+      if (_canStreetView && _googleStreetView) {
+        (params['layerTypes'] as List<String>).add('layerStreetview');
+      }
+
+      debugPrint('layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): Request $params');
       final response = await http.post(
         Uri.parse('https://tile.googleapis.com/v1/createSession?key=$googleMapsKey'),
         body: jsonEncode(params),
@@ -466,8 +531,10 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
 
       final data = jsonDecode(response.body);
 
-      prefs.setString('google.maps.${layer.id}.token', data['session']);
-      prefs.setInt('google.maps.${layer.id}.expiration', int.parse(data['expiry']));
+      if (!_googleStreetView) {
+        prefs.setString('google.maps.${layer.id}.token', data['session']);
+        prefs.setInt('google.maps.${layer.id}.expiration', int.parse(data['expiry']));
+      }
 
       return 'https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session=${data['session']}&key=$googleMapsKey';
     } catch (e) {
@@ -497,7 +564,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
       case GoogleMapLayer.terrain:
       case GoogleMapLayer.hybrid:
         return ['layerRoadmap'];
-      // return ['roadmap'];
       case GoogleMapLayer.satellite:
       case GoogleMapLayer.roadmap:
       default:

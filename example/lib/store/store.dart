@@ -32,7 +32,7 @@ class AppStore extends VxStore {
         ),
         if (mapboxToken != null) ...[
           MapLayer(
-            id: 'mapbox-1',
+            id: 'mapbox',
             name: 'Mapbox Maps',
             source: MapSource.mapbox,
             mapboxToken: mapboxToken!,
@@ -41,7 +41,7 @@ class AppStore extends VxStore {
         ],
         if (hereToken != null) ...[
           MapLayer(
-            id: 'here-1',
+            id: 'here',
             name: 'HERE Maps',
             source: MapSource.here,
             hereToken: hereToken!,
@@ -50,7 +50,7 @@ class AppStore extends VxStore {
         ],
         if (googleToken != null) ...[
           MapLayer(
-            id: 'google-1',
+            id: 'google',
             name: 'Google Maps',
             source: MapSource.google,
             googleToken: googleToken!,

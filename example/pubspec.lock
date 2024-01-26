@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.1"
+  flame:
+    dependency: transitive
+    description:
+      name: flame
+      sha256: "61c42b966a6b1f44ee093194e6701d45b14fdda1859c14fe68a39489454bfbd4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.14.0"
   flex_color_picker:
     dependency: transitive
     description:
@@ -340,17 +348,17 @@ packages:
     dependency: "direct main"
     description:
       name: layrz_models
-      sha256: "8c691d57fbc38803f382e95108e8e69a65ef313fe023b69308b698220f85cc36"
+      sha256: c7fa89f16513f115c6f091a08dd1078ecb01c4a43475cf4a1df9906db03e60c9
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.56-preview1"
+    version: "2.0.59"
   layrz_theme:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "4.3.15"
+    version: "4.3.19"
   linked_scroll_controller:
     dependency: transitive
     description:
@@ -439,6 +447,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  ordered_set:
+    dependency: transitive
+    description:
+      name: ordered_set
+      sha256: "3858c7d84619edfab87c3e367584648020903187edb70b52697646f4b2a93022"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
   package_config:
     dependency: transitive
     description:

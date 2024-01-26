@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.20
+
+- New widget `ThemedStreetViewDialog` to display a Google Street View.
+- New props in `ThemedMapToolbar` and `ThemedTileLayer` to handle Google Street View.
+- New event controller called `ThemedMapController` to handle events from the map. (Does not use Streams or somethnig like that)
+
 ## 4.3.19
 
 - Fixed issue in `ThemedMapToolbar` to prevent drawing of `Divider` or `VerticalDivider` when the buttons and fixed buttons are empty.

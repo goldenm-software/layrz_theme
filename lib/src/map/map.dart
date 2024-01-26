@@ -1,127 +1,35 @@
 library map;
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:layrz_models/layrz_models.dart';
+import 'package:layrz_models/layrz_models.dart' hide Point;
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-// Main
-part 'src/tile.dart';
-part 'src/toolbar.dart';
+// Layers
+part 'src/layers/tile.dart';
+part 'src/layers/toolbar.dart';
+
+// General
 part 'src/button.dart';
+part 'src/helpers.dart';
+part 'src/constants.dart';
+part 'src/dialogs/street_view.dart';
+part 'src/projection.dart';
+
+// Events
+part 'src/events/controller.dart';
+part 'src/events/events.dart';
 
 // Dialogs
 part 'src/dialogs/change_layer.dart';
-
-const kGoldenMHeadquarters = LatLng(8.982740428124941, -79.5097236128305);
-
-List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
-  List<MapLayer> layers = [];
-
-  for (MapLayer layer in rawLayers) {
-    if (![MapSource.google, MapSource.mapbox, MapSource.here].contains(layer.source)) {
-      layers.add(layer);
-      continue;
-    }
-
-    if (layer.source == MapSource.google) {
-      if (layer.googleToken == null) {
-        continue;
-      }
-
-      if (layer.googleToken!.isEmpty) {
-        continue;
-      }
-
-      final googleLayers = layer.googleLayers ?? [];
-      if (googleLayers.isEmpty) {
-        continue;
-      }
-
-      for (int i = 0; i < googleLayers.length; i++) {
-        GoogleMapLayer googleLayer = googleLayers[i];
-        layers.add(
-          MapLayer(
-            id: '${layer.id}_$googleLayer',
-            name: '${googleLayer.description} (${layer.name})',
-            source: layer.source,
-            googleToken: layer.googleToken,
-            googleLayers: [googleLayer],
-          ),
-        );
-      }
-
-      continue;
-    }
-
-    if (layer.source == MapSource.mapbox) {
-      if (layer.mapboxToken == null) {
-        continue;
-      }
-
-      if (layer.mapboxToken!.isEmpty) {
-        continue;
-      }
-
-      final mapboxLayers = layer.mapboxLayers ?? [];
-      if (mapboxLayers.isEmpty) {
-        continue;
-      }
-
-      for (int i = 0; i < mapboxLayers.length; i++) {
-        MapboxStyle mapboxLayer = mapboxLayers[i];
-        layers.add(
-          MapLayer(
-            id: '${layer.id}_$mapboxLayer',
-            name: '${mapboxLayer.description} (${layer.name})',
-            source: layer.source,
-            mapboxToken: layer.mapboxToken,
-            mapboxLayers: [mapboxLayer],
-          ),
-        );
-      }
-
-      continue;
-    }
-
-    if (layer.source == MapSource.here) {
-      if (layer.hereToken == null) {
-        continue;
-      }
-
-      if (layer.hereToken!.isEmpty) {
-        continue;
-      }
-
-      final hereLayers = layer.hereLayers ?? [];
-      if (hereLayers.isEmpty) {
-        continue;
-      }
-
-      for (int i = 0; i < hereLayers.length; i++) {
-        HereStyle hereLayer = hereLayers[i];
-        layers.add(
-          MapLayer(
-            id: '${layer.id}_$hereLayer',
-            name: '${hereLayer.description} (${layer.name})',
-            source: layer.source,
-            hereToken: layer.hereToken,
-            hereLayers: [hereLayer],
-          ),
-        );
-      }
-
-      continue;
-    }
-  }
-
-  return layers;
-}
