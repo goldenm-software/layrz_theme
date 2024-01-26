@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.17
+
+- Forcing Google Maps, HERE Maps and Mapbox Maps attributions by static URLs.
+
 ## 4.3.16
 
 - Removed `headers` on `ThemedTileLayer`, only will use when the layer is Google Maps.

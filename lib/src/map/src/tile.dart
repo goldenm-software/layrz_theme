@@ -109,45 +109,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
     );
   }
 
-  String get _mapboxAttribution {
-    if (layer.source != MapSource.mapbox) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.mapboxToken == null) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.mapboxToken!.isEmpty) {
-      return _layrzAttributionLight;
-    }
-
-    final style = layer.mapboxLayers?.firstOrNull;
-
-    if (style == null) {
-      return _layrzAttributionLight;
-    }
-
-    String attribution;
-
-    switch (style) {
-      case MapboxStyle.navigation:
-      case MapboxStyle.monochrome:
-        attribution = isDark ? (layer.attributionUrlDark ?? _layrzAttributionDark) : (layer.attributionUrl);
-        break;
-      case MapboxStyle.satellite:
-      case MapboxStyle.satelliteHybrid:
-        attribution = layer.attributionUrlDark ?? layer.attributionUrl;
-        break;
-      case MapboxStyle.custom:
-      case MapboxStyle.streets:
-      default:
-        attribution = layer.attributionUrl;
-    }
-
-    return attribution;
-  }
-
   String _composeMapboxUrl({required String username, required String styleId, required String token}) {
     return 'https://api.mapbox.com/styles/v1/$username/$styleId/tiles/512/{z}/{x}/{y}?access_token=$token';
   }
@@ -198,6 +159,46 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
     return 'https://maps.hereapi.com/v3/base/mc/{z}/{x}/{y}/png8?style=$styleId&apiKey=${layer.hereToken}';
   }
 
+  // Attributions
+  String get _mapboxAttribution {
+    if (layer.source != MapSource.mapbox) {
+      return _layrzAttributionLight;
+    }
+
+    if (layer.mapboxToken == null) {
+      return _layrzAttributionLight;
+    }
+
+    if (layer.mapboxToken!.isEmpty) {
+      return _layrzAttributionLight;
+    }
+
+    final style = layer.mapboxLayers?.firstOrNull;
+
+    if (style == null) {
+      return _layrzAttributionLight;
+    }
+
+    String attribution;
+
+    switch (style) {
+      case MapboxStyle.navigation:
+      case MapboxStyle.monochrome:
+        attribution = isDark ? _mapboxAttributionDark : _mapboxAttributionLight;
+        break;
+      case MapboxStyle.satellite:
+      case MapboxStyle.satelliteHybrid:
+        attribution = _mapboxAttributionDark;
+        break;
+      case MapboxStyle.custom:
+      case MapboxStyle.streets:
+      default:
+        attribution = _mapboxAttributionLight;
+    }
+
+    return attribution;
+  }
+
   String get _hereAttribution {
     if (layer.source != MapSource.here) {
       return _layrzAttributionLight;
@@ -224,12 +225,12 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
       case HereStyle.satellite:
       case HereStyle.hybrid:
       case HereStyle.logistics:
-        attribution = layer.attributionUrl;
+        attribution = _hereAttributionLight;
         break;
       case HereStyle.explore:
       case HereStyle.lite:
       default:
-        attribution = isDark ? (layer.attributionUrlDark ?? _layrzAttributionDark) : (layer.attributionUrl);
+        attribution = isDark ? _hereAttributionDark : _hereAttributionLight;
         break;
     }
 
@@ -255,11 +256,20 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
       return _layrzAttributionLight;
     }
 
-    return layer.attributionUrl;
+    return _googleAttributionLight;
   }
 
   String get _layrzAttributionLight => 'https://cdn.layrz.com/resources/layrz/logo/normal.png';
-  String get _layrzAttributionDark => 'https://cdn.layrz.com/resources/layrz/logo/white.png';
+  // String get _layrzAttributionDark => 'https://cdn.layrz.com/resources/layrz/logo/white.png';
+
+  String get _mapboxAttributionLight => 'https://cdn.layrz.com/resources/map_attributions/mapbox_maps/normal.png';
+  String get _mapboxAttributionDark => 'https://cdn.layrz.com/resources/map_attributions/mapbox_maps/white.png';
+
+  String get _googleAttributionLight => 'https://cdn.layrz.com/resources/map_attributions/google_maps/normal.png';
+  // String get _googleAttributionDark => 'https://cdn.layrz.com/resources/map_attributions/google_maps/white.png';
+
+  String get _hereAttributionLight => 'https://cdn.layrz.com/resources/map_attributions/here_maps/normal.png';
+  String get _hereAttributionDark => 'https://cdn.layrz.com/resources/map_attributions/here_maps/white.png';
 
   String get _customUrl {
     if (layer.source != MapSource.custom) {
