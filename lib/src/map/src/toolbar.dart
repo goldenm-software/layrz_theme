@@ -226,7 +226,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     EdgeInsetsGeometry margin = const EdgeInsets.all(10);
 
     if (widget.position == Alignment.bottomLeft) {
-      margin = margin.add(EdgeInsets.only(bottom: ThemedTileLayer.reservedAttributionHeight + 15));
+      margin = margin.add(EdgeInsets.only(bottom: ThemedTileLayer.reservedAttributionHeight));
     }
     return Align(
       alignment: widget.position,

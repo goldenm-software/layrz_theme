@@ -55,10 +55,6 @@ List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
             source: layer.source,
             googleToken: layer.googleToken,
             googleLayers: [googleLayer],
-            attributionUrl: 'https://cdn.layrz.com/resources/map_attributions/google_maps/normal.png',
-            attributionUrlDark: 'https://cdn.layrz.com/resources/map_attributions/google_maps/white.png',
-            attributionWidth: 119,
-            attributionHeight: 36,
           ),
         );
       }
@@ -89,10 +85,6 @@ List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
             source: layer.source,
             mapboxToken: layer.mapboxToken,
             mapboxLayers: [mapboxLayer],
-            attributionUrl: 'https://cdn.layrz.com/resources/map_attributions/mapbox_maps/normal.png',
-            attributionUrlDark: 'https://cdn.layrz.com/resources/map_attributions/mapbox_maps/white.png',
-            attributionWidth: 134,
-            attributionHeight: 30,
           ),
         );
       }
@@ -123,10 +115,6 @@ List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
             source: layer.source,
             hereToken: layer.hereToken,
             hereLayers: [hereLayer],
-            attributionUrl: 'https://cdn.layrz.com/resources/map_attributions/here_maps/normal.png',
-            attributionUrlDark: 'https://cdn.layrz.com/resources/map_attributions/here_maps/white.png',
-            attributionWidth: 80,
-            attributionHeight: 80,
           ),
         );
       }

@@ -38,7 +38,7 @@ class ThemedTileLayer extends StatefulWidget {
   @override
   State<ThemedTileLayer> createState() => _ThemedTileLayerState();
 
-  static double get reservedAttributionHeight => 20;
+  static double get reservedAttributionHeight => 35;
 }
 
 class _ThemedTileLayerState extends State<ThemedTileLayer> {
@@ -295,6 +295,8 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
     return layer.attributionUrl;
   }
 
+  double get _attributionHeight => ThemedTileLayer.reservedAttributionHeight - 15;
+
   int get buffer => 0;
 
   Map<String, String> get headers => layer.source == MapSource.google
@@ -346,8 +348,8 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
               padding: const EdgeInsets.all(10),
               child: Image.network(
                 _mapboxAttribution,
-                width: _scaleWidth(layer),
-                height: _scaleHeight(layer),
+                width: _scaleWidth(134, 30),
+                height: _attributionHeight,
                 filterQuality: FilterQuality.medium,
                 alignment: Alignment.centerLeft,
               ),
@@ -361,8 +363,8 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
               padding: const EdgeInsets.all(10),
               child: Image.network(
                 _hereAttribution,
-                width: _scaleWidth(layer),
-                height: _scaleHeight(layer),
+                width: _scaleWidth(80, 80),
+                height: _attributionHeight,
                 filterQuality: FilterQuality.medium,
                 alignment: Alignment.centerLeft,
               ),
@@ -387,8 +389,8 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
               padding: const EdgeInsets.all(10),
               child: Image.network(
                 _googleAttribution,
-                width: _scaleWidth(layer),
-                height: _scaleHeight(layer),
+                width: _scaleWidth(119, 36),
+                height: _attributionHeight,
                 filterQuality: FilterQuality.medium,
                 alignment: Alignment.centerLeft,
               ),
@@ -414,15 +416,11 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
     );
   }
 
-  double _scaleWidth(MapLayer layer) {
-    double aspectRatio = layer.attributionWidth / layer.attributionHeight;
-    double height = ThemedTileLayer.reservedAttributionHeight;
+  double _scaleWidth(double width, double height) {
+    double aspectRatio = width / height;
+    double newHeight = _attributionHeight;
 
-    return height * aspectRatio;
-  }
-
-  double _scaleHeight(MapLayer layer) {
-    return ThemedTileLayer.reservedAttributionHeight;
+    return newHeight * aspectRatio;
   }
 
   Future<String?> _fetchGoogleAuth({required MapLayer layer}) async {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.18
+
+- Updated `ThemedTileLayer.reservedAttributionHeight` to consider the spacing required by the attributions.
+
 ## 4.3.17
 
 - Forcing Google Maps, HERE Maps and Mapbox Maps attributions by static URLs.
