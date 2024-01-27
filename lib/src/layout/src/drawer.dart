@@ -156,17 +156,12 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.about') ?? 'About',
           icon: MdiIcons.informationOutline,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ThemedLicensesView(
-                  companyName: companyName,
-                  logo: widget.logo,
-                  version: version,
-                ),
-              ),
-            );
-          },
+          onTap: () => showThemedAboutDialog(
+            context: context,
+            companyName: widget.companyName,
+            logo: widget.logo,
+            version: widget.version,
+          ),
         ),
       if (widget.onThemeSwitchTap != null)
         ThemedNavigatorAction(

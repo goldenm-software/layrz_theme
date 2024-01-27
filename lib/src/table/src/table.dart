@@ -668,7 +668,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         ThemedColumn<T> column = widget.columns[_sortBy];
 
         if (column.customSortingFunction != null) {
-          // debugPrint("Sorting using custom function");
           // only if the column has a custom sorting function
           if (_sortAsc) {
             // if the sort is ascending

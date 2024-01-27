@@ -9,6 +9,8 @@ part 'src/buttons.dart';
 part 'src/text.dart';
 part 'src/checkboxes.dart';
 part 'src/radio.dart';
+part 'src/calendar.dart';
+part 'src/code.dart';
+
 part 'src/selectors/datetime.dart';
 part 'src/selectors/general.dart';
-part 'src/calendar.dart';

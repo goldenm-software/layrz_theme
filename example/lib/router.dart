@@ -95,6 +95,10 @@ final goRoutes = [
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const CalendarView()),
   ),
   GoRoute(
+    path: '/inputs/code',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const CodeInputView()),
+  ),
+  GoRoute(
     path: '/table',
     redirect: (context, state) => '/table/basic',
   ),
@@ -115,6 +119,6 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/map/layer' : '/',
+  initialLocation: kDebugMode ? '/inputs/code' : '/',
   routes: goRoutes,
 );

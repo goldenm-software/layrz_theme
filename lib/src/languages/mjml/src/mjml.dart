@@ -1,4 +1,4 @@
-part of '../languages.dart';
+part of '../mjml.dart';
 
 const List<String> mjmlTags = [
   "mjml",
@@ -45,7 +45,7 @@ final phrasalWordsMode = Mode(
     begin:
         "\\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\\b");
 
-final mjmlLang = Mode(
+final mjml = Mode(
     refs: {
       '~contains~6~contains~0': Mode(endsWithParent: true, illegal: "<", relevance: 0, contains: [
         Mode(className: "attr", begin: "[A-Za-z0-9\\._:-]+", relevance: 0),

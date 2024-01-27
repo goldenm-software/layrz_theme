@@ -230,7 +230,6 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
     await _animationController.reverse();
     _overlayEntry?.remove();
     _overlayEntry = null;
-    debugPrint("Callback: $callback");
     callback?.call();
   }
 }

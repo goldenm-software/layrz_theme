@@ -1,4 +1,4 @@
-part of inputs;
+part of '../inputs.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({super.key});

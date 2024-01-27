@@ -1,17 +1,17 @@
 part of '../layout.dart';
 
 abstract class ThemedNavigatorItem {
+  /// [label] is the label of the view.
+  /// Prevent use [label] and [labelText] at the same time.
   final Widget? label;
+
+  /// [labelText] is the label of the view.
+  /// Prevent use [label] and [labelText] at the same time.
   final String? labelText;
 
   /// [ThemedNavigatorItem] is a helper class to handle the items of the view.
   ThemedNavigatorItem({
-    /// [label] is the label of the view.
-    /// Prevent use [label] and [labelText] at the same time.
     this.label,
-
-    /// [labelText] is the label of the view.
-    /// Prevent use [label] and [labelText] at the same time.
     this.labelText,
   });
 
@@ -89,27 +89,33 @@ abstract class ThemedNavigatorItem {
 }
 
 class ThemedNavigatorPage extends ThemedNavigatorItem {
+  /// [icon] is the icon of the view.
   final IconData? icon;
+
+  /// [path] is the path of the view.
   final String path;
+
+  /// [children] is the children of the view. by default will be empty.
   final List<ThemedNavigatorItem> children;
+
+  /// [useDefaultRedirect] indicates if the view should redirect to the first child when is tapped.
   final bool useDefaultRedirect;
+
+  /// [showHeaderInSidebarMode] indicates if the header should be displayed in sidebar mode.
+  /// By default is true.
+  ///
+  /// This bool does not apply when is in other Layout styles, or has children items.
+  final bool showHeaderInSidebarMode;
 
   /// [ThemedNavigatorPage] is a helper class to handle the view and their children.
   ThemedNavigatorPage({
     super.label,
     super.labelText,
-
-    /// [icon] is the icon of the view.
     this.icon,
-
-    /// [path] is the path of the view.
     required this.path,
-
-    /// [children] is the children of the view. by default will be empty.
     this.children = const [],
-
-    /// [useDefaultRedirect] indicates if the view should redirect to the first child when is tapped.
     this.useDefaultRedirect = true,
+    this.showHeaderInSidebarMode = true,
   }) : assert(label != null || labelText != null);
 
   /// [toAppBarItem] is the widget to be displayed in the appbar.
@@ -256,26 +262,25 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
 }
 
 class ThemedNavigatorAction extends ThemedNavigatorItem {
+  /// [icon] is the icon of the view.
   final IconData? icon;
+
+  /// [onTap] is the action to be executed when the item is tapped.
   final VoidCallback onTap;
+
+  /// [highlight] indicates if the action is highlighted.
   final bool highlight;
+
+  /// [forceOnTap] indicates if the action should be forced to be tapped.
   final bool forceOnTap;
 
   /// [ThemedNavigatorAction] is a helper class to handle the actions of the view.
   ThemedNavigatorAction({
     super.label,
     super.labelText,
-
-    /// [icon] is the icon of the view.
     this.icon,
-
-    /// [path] is the path of the view.
     required this.onTap,
-
-    /// [highlight] indicates if the action is highlighted.
     this.highlight = false,
-
-    /// [forceOnTap] indicates if the action should be forced to be tapped.
     this.forceOnTap = false,
   }) : assert(label != null || labelText != null);
 
@@ -453,11 +458,11 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
 }
 
 class ThemedNavigatorSeparator extends ThemedNavigatorItem {
+  /// [type] is the type of the separator.
   final ThemedSeparatorType type;
 
   /// [ThemedNavigatorSeparator] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedDrawer.items].
   ThemedNavigatorSeparator({
-    /// [type] is the type of the separator.
     this.type = ThemedSeparatorType.line,
   });
 
@@ -579,14 +584,13 @@ enum ThemedSeparatorType {
 }
 
 class ThemedNavigatorLabel extends ThemedNavigatorItem {
+  /// [labelStyle] is the style of the label. Only applies when [labelText] is not null.
   final TextStyle? labelStyle;
 
   /// [ThemedNavigatorLabel] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedDrawer.items].
   ThemedNavigatorLabel({
     super.label,
     super.labelText,
-
-    /// [labelStyle] is the style of the label. Only applies when [labelText] is not null.
     this.labelStyle,
   }) : assert(label != null || labelText != null);
 
@@ -644,27 +648,27 @@ class ThemedNavigatorLabel extends ThemedNavigatorItem {
 }
 
 class ThemedNotificationItem {
+  /// [title] is the title of the notification.
   final String title;
+
+  /// [content] is the content of the notification.
   final String content;
+
+  /// [icon] is the icon of the notification.
   final IconData? icon;
+
+  /// [onTap] is the action to be executed when the notification is tapped.
   final VoidCallback? onTap;
+
+  /// [color] is the color of the notification.
   final Color? color;
 
   /// [ThemedNotificationItem] is a helper class to handle the notifications of the view.
   const ThemedNotificationItem({
-    /// [title] is the title of the notification.
     required this.title,
-
-    /// [content] is the content of the notification.
     required this.content,
-
-    /// [icon] is the icon of the notification.
     this.icon,
-
-    /// [onTap] is the action to be executed when the notification is tapped.
     this.onTap,
-
-    /// [color] is the color of the notification.
     this.color,
   });
 }

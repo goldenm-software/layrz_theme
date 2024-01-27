@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class GeneralPickersView extends StatefulWidget {
   const GeneralPickersView({super.key});

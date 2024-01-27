@@ -3,7 +3,7 @@ library inputs;
 // Dependencies
 import 'dart:async';
 import 'dart:math';
-import 'package:code_text_field/code_text_field.dart';
+
 import 'package:collection/collection.dart';
 import 'package:emojis/emoji.dart';
 import 'package:file_picker/file_picker.dart';
@@ -11,13 +11,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_highlight/themes/dracula.dart';
+
 import 'package:layrz_theme/src/buttons/buttons.dart';
 import 'package:layrz_theme/src/extensions/extensions.dart';
 import 'package:layrz_theme/src/file.dart';
 import 'package:layrz_theme/src/grid/grid.dart';
 import 'package:layrz_theme/src/helpers/helpers.dart';
-import 'package:layrz_theme/src/languages/languages.dart';
 import 'package:layrz_theme/src/snackbar/snackbar.dart';
 import 'package:layrz_theme/src/theme/theme.dart';
 import 'package:layrz_theme/src/utilities/utilities.dart';
@@ -28,9 +27,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:layrz_models/layrz_models.dart';
 
 // Code editor
+import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:highlight/highlight.dart';
-import 'package:highlight/languages/python.dart' as python_lang;
-import 'package:highlight/languages/javascript.dart' as javascript_lang;
+import 'package:layrz_theme/src/languages/lcl/lcl.dart' as lcl;
+import 'package:layrz_theme/src/languages/lml/lml.dart' as lml;
+import 'package:layrz_theme/src/languages/python/python.dart' as python;
+import 'package:layrz_theme/src/languages/mjml/mjml.dart' as mjml;
 
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
 export 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;

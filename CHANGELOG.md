@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.21
+
+- New `ThemedCodeEditor` with standarized styling.
+
 ## 4.3.20
 
 - New widget `ThemedStreetViewDialog` to display a Google Street View.

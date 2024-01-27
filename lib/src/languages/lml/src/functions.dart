@@ -1,6 +1,6 @@
-part of '../languages.dart';
+part of '../lml.dart';
 
-final List<String> kLayrzMarkupLanguageVariables = [
+List<String> functions = [
   'assetName',
   'assetPositionLatitude',
   'assetPositionLongitude',
@@ -27,27 +27,10 @@ final List<String> kLayrzMarkupLanguageVariables = [
   'caseCommentAt',
 ];
 
-final lmlLang = Mode(
-  refs: {
-    '~lmlLanguage': Mode(
-      className: 'variable',
-      begin: '\\{{(${kLayrzMarkupLanguageVariables.join('|')})\\b',
-      end: '\\}}',
-      // excludeEnd: true,
-    ),
-  },
-  aliases: [
-    "lml",
-    "layrzMarkupLanguage",
-  ],
-  contains: [
-    Mode(ref: '~lmlLanguage'),
-    Mode(
-      className: 'literal',
-      begin: '\\<',
-      end: '\\>',
-      // excludeBegin: true,
-      // excludeEnd: true,
-    ),
-  ],
+// Example
+// Test phrase {{assetName}}
+
+final lclFunctions = Mode(
+  className: 'function',
+  begin: '{{\\b(${functions.join('|')})}}',
 );

@@ -122,7 +122,6 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
     Function eq = const ListEquality().equals;
     available = List<ThemedSelectItem<T>>.from(widget.items);
     selected = [];
-    debugPrint("are lists the same? ${eq(selected, widget.value)}");
     if (!eq(selected, widget.value)) {
       for (T item in widget.value ?? []) {
         final index = available.indexWhere((element) {
@@ -132,7 +131,6 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
           return element.value == item;
         });
         if (index != -1) {
-          debugPrint("found item $item");
           selected.add(available.removeAt(index));
         }
       }

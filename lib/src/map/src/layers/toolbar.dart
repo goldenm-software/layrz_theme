@@ -317,13 +317,6 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
       oldWidget.controller?.removeListener(_eventListener);
       widget.controller?.addListener(_eventListener);
     }
-
-    if (kDebugMode) {
-      // _searchStreetView(LatLng(8.979307, -79.509874)).then((panoId) {
-      //   debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): $panoId');
-      // });
-      // _openStreetView('8ZEsp6exQRx-4KxnyMdtFg');
-    }
   }
 
   @override
@@ -438,10 +431,6 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
       googleExpiration = resp.$2;
     }
 
-    debugPrint("Post check 1");
-    debugPrint("googleSession: $googleSession");
-    debugPrint("googleExpiration: $googleExpiration");
-
     if (googleExpiration < DateTime.now().secondsSinceEpoch) {
       final resp = await _startSession(prefs, googleMapsKey);
       if (resp == null) return null;
@@ -450,10 +439,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
       googleExpiration = resp.$2;
     }
 
-    debugPrint("Post check 2");
     debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): Searching street view');
-    debugPrint("googleSession: $googleSession");
-    debugPrint("googleExpiration: $googleExpiration");
 
     try {
       final search = await http.get(Uri.parse(
@@ -474,11 +460,8 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
       }
 
       num imageWidth = pano['imageWidth'] as num;
-      debugPrint("imageWidth: $imageWidth");
       num imageHeight = pano['imageHeight'] as num;
-      debugPrint("imageHeight: $imageHeight");
       num tileSize = pano['tileWidth'] as num;
-      debugPrint("tileSize: $tileSize");
 
       int xTiles = (imageWidth / tileSize).ceil();
       int yTiles = (imageHeight / tileSize).ceil();

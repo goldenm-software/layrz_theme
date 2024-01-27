@@ -74,39 +74,83 @@ class ThemedCodeEditor extends StatefulWidget {
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   late CodeController controller;
-  final ScrollController shortcutsController = ScrollController();
+  String _value = '';
 
-  Mode getInterpreter(LayrzSupportedLanguage language) {
-    switch (language) {
-      case LayrzSupportedLanguage.javascript:
-        return javascript_lang.javascript;
+  Mode get _language {
+    switch (widget.language) {
       case LayrzSupportedLanguage.lml:
-        return lmlLang;
+        return lml.lml;
       case LayrzSupportedLanguage.lcl:
-        return lclLang;
-      case LayrzSupportedLanguage.txt:
-        return Mode(refs: {}, disableAutodetect: true);
+        return lcl.lcl;
       case LayrzSupportedLanguage.mjml:
-        return mjmlLang;
-      case LayrzSupportedLanguage.dart:
-        return dartLang;
+        return mjml.mjml;
       case LayrzSupportedLanguage.python:
+        return python.python;
       default:
-        return python_lang.python;
+        return Mode();
     }
   }
 
-  Map<String, TextStyle> getTheme(LayrzSupportedLanguage language) {
-    return draculaTheme;
+  Map<String, TextStyle> get _theme {
+    switch (widget.language) {
+      case LayrzSupportedLanguage.lml:
+        return lml.theme;
+      case LayrzSupportedLanguage.lcl:
+        return lcl.theme;
+      case LayrzSupportedLanguage.mjml:
+        return mjml.theme;
+      case LayrzSupportedLanguage.python:
+        return python.theme;
+      default:
+        return const {
+          'root': TextStyle(backgroundColor: Color(0xff1a1a1a), color: Color(0xffecf0f1)),
+        };
+    }
   }
+
+  AbstractAnalyzer get _analyzer {
+    switch (widget.language) {
+      case LayrzSupportedLanguage.lml:
+        return lml.LmlAnalizer();
+      case LayrzSupportedLanguage.lcl:
+        return lcl.LclAnalizer();
+      case LayrzSupportedLanguage.mjml:
+        return mjml.MjmlAnalizer();
+      case LayrzSupportedLanguage.python:
+        return python.PythonAnalizer();
+      default:
+        return EmptyAnalyzer();
+    }
+  }
+
+  Color? get backgroundColor => _theme['root']!.backgroundColor;
 
   @override
   void initState() {
     super.initState();
+    _value = widget.value ?? '';
     controller = CodeController(
-      text: widget.value ?? '',
-      language: getInterpreter(widget.language),
+      text: _value,
+      language: _language,
+      analyzer: _analyzer,
     );
+  }
+
+  @override
+  void didUpdateWidget(ThemedCodeEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    controller.setLanguage(_language, analyzer: _analyzer);
+
+    if (widget.value != null && widget.value != oldWidget.value) {
+      _value = widget.value ?? '';
+      controller.text = _value;
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,13 +159,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
       padding: widget.padding,
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-            width: 1,
-          ),
-        ),
+        decoration: generateContainerElevation(context: context, color: backgroundColor, elevation: 2),
         child: ConstrainedBox(
           constraints: widget.constraints ?? const BoxConstraints(maxHeight: 400),
           child: Column(
@@ -130,95 +168,53 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: widget.label ??
                     Text(
                       widget.labelText ?? '',
-                      style: Theme.of(context).inputDecorationTheme.labelStyle,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: validateColor(color: backgroundColor ?? Colors.black),
+                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                          ),
                     ),
               ),
-              Expanded(
-                child: Theme(
-                  data: ThemeData.dark(useMaterial3: true).copyWith(
-                    textTheme: ThemeData.dark().textTheme.apply(fontFamily: GoogleFonts.firaCode().fontFamily),
-                  ),
-                  child: CodeTheme(
-                    data: const CodeThemeData(styles: draculaTheme),
+              Divider(
+                color: validateColor(color: backgroundColor ?? Colors.black).withOpacity(0.2),
+                indent: 10,
+                endIndent: 10,
+              ),
+              Theme(
+                data: ThemeData.dark().copyWith(
+                  textTheme: GoogleFonts.jetBrainsMonoTextTheme(),
+                ),
+                child: CodeTheme(
+                  data: CodeThemeData(styles: _theme),
+                  child: Expanded(
                     child: CodeField(
-                      wrap: true,
-                      enabled: !widget.disabled,
-                      controller: controller,
-                      onChanged: widget.onChanged,
-                      cursorColor: Colors.white,
-                      lineNumberBuilder: (line, textStyle) {
-                        final errors = widget.lintErrors.where((e) => e.line == line).toList();
-
-                        if (errors.isEmpty) {
-                          return TextSpan(
-                            text: "$line",
-                            style: textStyle,
-                          );
-                        }
-
-                        return TextSpan(
-                          text: "$line",
-                          style: textStyle?.copyWith(color: Colors.white, backgroundColor: Colors.red),
-                        );
-                      },
-                    ),
+                        controller: controller,
+                        onChanged: (value) {
+                          widget.onChanged?.call(value);
+                          setState(() => _value = value);
+                        }),
                   ),
                 ),
               ),
-              if (_hasInserts())
-                Row(children: [
-                  // button to scroll left
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        num position = shortcutsController.offset - 200 < 0 ? 0 : shortcutsController.offset - 200;
-                        shortcutsController.animateTo(
-                          position.toDouble(),
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      });
-                    },
-                    icon: Icon(MdiIcons.chevronLeft),
-                  ),
-                  Expanded(
-                    child: _buildInsertOptions(),
-                  ),
-                  // button to scroll right
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        num position = shortcutsController.offset + 200 > shortcutsController.position.maxScrollExtent
-                            ? shortcutsController.position.maxScrollExtent
-                            : shortcutsController.offset + 200;
-                        shortcutsController.animateTo(
-                          position.toDouble(),
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      });
-                    },
-                    icon: Icon(MdiIcons.chevronRight),
-                  ),
-                ]),
-              if (widget.errors.isNotEmpty) ThemedFieldDisplayError(errors: widget.errors),
-              if (widget.lintErrors.isNotEmpty)
-                ThemedFieldDisplayError(
-                    errors: widget.lintErrors.map<String>((error) {
-                  return "${error.line ?? 1}: ${t(
-                    'larzLanguage.errors.${error.code}',
-                    {
-                      'function': error.function,
-                      'element': error.element,
-                      'required': error.req,
-                      'given': error.given,
-                    },
-                  )}";
-                }).toList()),
+              ThemedFieldDisplayError(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                errors: widget.errors +
+                    widget.lintErrors.map<String>((error) {
+                      String err = t(
+                        'larzLanguage.errors.${error.code}',
+                        {
+                          'function': error.function,
+                          'element': error.element,
+                          'required': error.req,
+                          'given': error.given,
+                        },
+                      );
+                      return "${error.line ?? 1}: $err";
+                    }).toList(),
+              ),
             ],
           ),
         ),
@@ -229,234 +225,29 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   String t(String key, [Map<String, dynamic> args = const {}]) {
     return widget.i18n?.t(key, args) ?? "I18n missing $key";
   }
-
-  Widget _buildInsertOptions() {
-    if (widget.customInserts.isNotEmpty && !widget.disabled && widget.language == LayrzSupportedLanguage.txt) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: widget.customInserts.map<Widget>((insert) {
-            return InkWell(
-              onTap: () {
-                _insertTextAtCursor(controller, insert);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Text(
-                  insert,
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-    }
-    if (widget.language == LayrzSupportedLanguage.lcl && !widget.disabled) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: kLayrzComputeLanguageFormulas.map<Widget>((formula) {
-            return InkWell(
-              onTap: () {
-                String formulaStr = formula['formula'] +
-                    '(' +
-                    formula['arguments'].map((e) => t('lcl.functions.arguments.$e')).join(', ') +
-                    ')';
-                _insertTextAtCursor(controller, formulaStr);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Tooltip(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                  ),
-                  richMessage: WidgetSpan(
-                    child: Text(
-                      """${t('lcl.functions.function.${formula['formula']}.description')}
-                      <br>
-                      ${t('lcl.functions.function.${formula['formula']}.example')}""",
-                    ),
-                  ),
-                  child: Text(formula['formula']),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-    }
-    if (widget.language == LayrzSupportedLanguage.lml && !widget.disabled) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: kLayrzMarkupLanguageVariables.map<Widget>((formula) {
-            return Tooltip(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-              ),
-              richMessage: WidgetSpan(
-                child: Text(
-                  t('layrzLanguage.markup.editor.details.$formula'),
-                ),
-              ),
-              child: InkWell(
-                onTap: () {
-                  _insertTextAtCursor(controller, "{{$formula}}");
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(formula),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-    }
-    if (widget.language == LayrzSupportedLanguage.mjml && !widget.disabled) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            ...widget.customInserts.map<Widget>((insert) {
-              return InkWell(
-                onTap: () {
-                  _insertTextAtCursor(controller, insert);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    insert,
-                  ),
-                ),
-              );
-            }),
-            ...mjmlTags.map<Widget>((tag) {
-              return InkWell(
-                onTap: () {
-                  String htmlTag = """<$tag>\n\n</$tag>""";
-                  _insertTextAtCursor(controller, htmlTag);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(tag),
-                ),
-              );
-              // return Tooltip(
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey.shade200,
-              //   ),
-              //   richMessage: WidgetSpan(
-              //     child: HtmlWidget(
-              //       t('mjml.editor.details.$tag'),
-              //     ),
-              //   ),
-              //   child: InkWell(
-              //     onTap: () {
-              //       String htmlTag = """<$tag>\n</$tag>""";
-              //       _insertTextAtCursor(controller, htmlTag);
-              //     },
-              //     child: Container(
-              //       padding: const EdgeInsets.all(5),
-              //       decoration: BoxDecoration(
-              //         border: Border.all(
-              //           color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-              //           width: 1,
-              //         ),
-              //       ),
-              //       child: Text(tag),
-              //     ),
-              //   ),
-              // );
-            }),
-          ],
-        ),
-      );
-    } else {
-      return const SizedBox();
-    }
-  }
-
-  bool _hasInserts() {
-    return !widget.disabled &&
-        (widget.customInserts.isNotEmpty ||
-            widget.language == LayrzSupportedLanguage.lcl ||
-            widget.language == LayrzSupportedLanguage.lml ||
-            widget.language == LayrzSupportedLanguage.mjml);
-  }
-
-  void _insertTextAtCursor(TextEditingController controller, String insert) {
-    if (controller.selection.start == -1) {
-      controller.text = "${controller.text}$insert";
-      return;
-    }
-    final start = controller.selection.start;
-    final end = controller.selection.end;
-    final text = controller.text;
-    final newText = text.replaceRange(start, end, insert);
-    final newSelection = TextSelection.collapsed(offset: start + insert.length);
-    controller.value = controller.value.copyWith(
-      text: newText,
-      selection: newSelection,
-      composing: TextRange.empty,
-    );
-  }
 }
 
 enum LayrzSupportedLanguage {
-  /// Javascript support for sensors.
-  javascript,
-
-  /// Python support for charts and sensors.
+  /// Python v3.10 language support for Sensors, Triggers, Reports and Charts.
   python,
 
-  /// Layrz compute language!.
+  /// LCL or Layrz Compute Language support for Sensors and Triggers.
   lcl,
 
-  /// Layrz markup language!.
+  /// LML or Layrz Markup Language support for Operations.
   lml,
 
-  /// TXT
+  /// TXT or Plain text
   txt,
 
-  /// MJML
+  /// MJML or MailJet Markup Language support for Emails.
   mjml,
-
-  /// dart
-  dart,
   ;
+}
+
+class EmptyAnalyzer extends AbstractAnalyzer {
+  @override
+  Future<AnalysisResult> analyze(Code code) async {
+    return const AnalysisResult(issues: []);
+  }
 }

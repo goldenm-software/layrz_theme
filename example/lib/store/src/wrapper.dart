@@ -42,6 +42,7 @@ class _LayoutState extends State<Layout> {
     }
 
     return ThemedLayout(
+      // style: ThemedLayoutStyle.sidebar,
       isBackEnabled: false,
       style: layoutStyle,
       scaffoldKey: _scaffoldKey,
@@ -59,6 +60,7 @@ class _LayoutState extends State<Layout> {
           labelText: 'Theme generation',
           path: '/theme',
           icon: MdiIcons.themeLightDark,
+          showHeaderInSidebarMode: false,
         ),
         // ThemedNavigatorPage(
         //   labelText: 'Layout',
@@ -97,7 +99,6 @@ class _LayoutState extends State<Layout> {
           labelText: 'Inputs',
           path: '/inputs',
           icon: MdiIcons.text,
-          useDefaultRedirect: false,
           children: [
             ThemedNavigatorPage(
               labelText: 'Text fields',
