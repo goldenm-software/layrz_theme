@@ -1,6 +1,5 @@
 library lml;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 

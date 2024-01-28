@@ -38,13 +38,7 @@ class _CodeInputViewState extends State<CodeInputView> {
                       debugPrint("Code linted $code");
 
                       return [
-                        const LintError(
-                          line: 1,
-                          code: 'lcl.function.arguments.mismatch',
-                          function: 'GET_PARAM',
-                          given: 3,
-                          req: 2,
-                        ),
+                        const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
                       ];
                     },
                     onRunTap: (code) async {

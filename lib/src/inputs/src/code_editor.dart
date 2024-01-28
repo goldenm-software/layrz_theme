@@ -41,17 +41,18 @@ class ThemedCodeEditor extends StatefulWidget {
   /// [constraints] is the constraints of the editor
   final BoxConstraints? constraints;
 
-  /// [lintErrors] is the list of errors of the editor
-  final List<LintError> lintErrors;
-
   /// [i18n] is the i18n of the editor
   final LayrzAppLocalizations? i18n;
+
+  /// [lintErrors] is the list of errors to display in the editor
+  /// This is deprecated, now you should use [onLintTap] to perform the lint
+  final List<LintError> lintErrors;
 
   /// [customInsers] is a list of Strings to add a shurtcut to insert them in the editor
   final List<String> customInserts;
 
   /// [onLintTap] is the function that will be called when the user taps on a lint button
-  final Future<List<LintError>> Function(String)? onLintTap;
+  final Future<List<ThemedCodeError>> Function(String)? onLintTap;
 
   /// [onRunTap] is the function that will be called when the user taps on the run button
   final Future<String?> Function(String)? onRunTap;
@@ -160,10 +161,6 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
       _value = widget.value ?? '';
       controller.text = _value;
     }
-
-    if (widget.lintErrors != oldWidget.lintErrors) {
-      controller.analysisResult = AnalysisResult(issues: widget.lintErrors.map(_formatLintError).toList());
-    }
   }
 
   @override
@@ -172,18 +169,14 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
     super.dispose();
   }
 
-  Issue _formatLintError(LintError error) {
-    String message = t(
-      error.code,
-      {
-        'function': error.function,
-        'element': error.element,
-        'required': error.req,
-        'given': error.given,
-      },
-    );
+  Issue _formatLintError(ThemedCodeError error) {
+    String message = t(error.code, {
+      'name': error.name,
+      'expected': error.expected,
+      'received': error.received,
+    });
     return Issue(
-      line: (error.line ?? 1) - 1,
+      line: error.line - 1,
       message: message,
       type: IssueType.error,
     );
@@ -388,7 +381,9 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    if (i18n != null) return i18n!.t(key, args);
+    if (i18n != null) {
+      if (i18n!.hasTranslation(key)) return i18n!.t(key, args);
+    }
 
     if (_defaultErrors.containsKey(key)) {
       String message = _defaultErrors[key]!;
@@ -399,29 +394,37 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
       return message;
     }
 
-    return "Translation missing $key";
+    return key;
   }
 
   Map<String, String> get _defaultErrors => {
-        'linter.parse.syntax.error': 'Syntax error',
-
-        // LCL errors
-        'lcl.function.arguments.mismatch': 'Function {function} arguments mismatch, required {required} given {given}',
-        'lcl.function.not.found': 'Function {function} not found',
-
-        // Python errors
-        'python.main.function.not.found': 'Main function not found',
-        'python.main.function.arguments.mismatch': 'Main function arguments mismatch',
-        'python.return.not.allowed.outside.function': 'Return not allowed outside function',
-        'python.prohibited.element.used': 'Prohibited element {element} used',
-        'python.async.function.not.allowed': 'Asyncronus functions are not allowed',
-        'python.yield.not.allowed': 'Yield is not allowed',
-        'python.infinite.value.not.allowed': 'Infinite value is not allowed',
-        'python.print.not.allowed': 'Print statement is not allowed',
-        'python.plpy.not.allowed': 'Plpy module is not allowed',
-        'python.import.not.allowed': 'Import statement is not allowed',
-        'python.while.not.allowed': 'While statement is not allowed',
-        'python.raise.not.allowed': 'Raise statement is not allowed',
+        'lcl.multiroot.found': 'Multiple root functions found, Layrz Compute Language only supports one '
+            'root function',
+        'lcl.unknown.typedef': 'Datatype {name} not found',
+        'lcl.unsupported.typedef': 'Unsuported {name}',
+        'lcl.unknown.node': '{name} not found',
+        'lcl.arguments.mismatch': 'Function {name} has an arguments mismstch, required {expected} and '
+            '{received} received',
+        'lcl.function.not.found': 'Function {name} not found',
+        'python.empty.code': 'Empty code not supported',
+        'python.not.function': 'Only you can define functions in the root code',
+        'python.main.function.not.found': 'The main function {name} not found',
+        'python.function.arguments.mismatch': 'The function {name} doesn\'t have the right arguments, '
+            'we expect {expected} as an arguments, and {received} was found.\nThe arguments must be exactly '
+            'as the defined in our documentation',
+        'python.unsupported.type': 'Python datatype {name} unsupported',
+        'python.function.no.return': 'The function {name} doesn\'t have a return statement, '
+            'you must return a value',
+        'python.import.not.allowed': 'The statement import ... or from ... import ... cannot be used',
+        'python.range.too.big': 'The range only can run {expected} iterations, your code iterates {received} times',
+        'python.range.only.constant': 'The range function only can support constant values',
+        'python.too.deep': 'Your code exceeds the maximum depth. Consider reducing the number of nested loops',
+        'python.undefined.import': 'Module {name} not defined',
+        'python.async.not.allowed': 'Async operations not allowed',
+        'python.prohibed.element': 'The statement or function {name} is not allowed',
+        'python.match.not.allowed': 'match/case statement not allowed',
+        'python.global.not.allowed': 'The use of global variables is restricted',
+        'python.nonlocal.not.allowed': 'The use of nonlocal variables is restricted',
       };
 }
 
@@ -448,4 +451,31 @@ class EmptyAnalyzer extends AbstractAnalyzer {
   Future<AnalysisResult> analyze(Code code) async {
     return const AnalysisResult(issues: []);
   }
+}
+
+class ThemedCodeError {
+  /// [code] is the error code, this should be a translation key
+  /// If is not a translation key, the error will be displayed as it is
+  final String code;
+
+  /// [line] is the line of the error
+  final int line;
+
+  /// [name] is the name of the function or element
+  final String? name;
+
+  /// [expected] is a dynamic value to show in the error
+  final dynamic expected;
+
+  /// [received] is a dynamic value to show in the error
+  final dynamic received;
+
+  /// [ThemedCodeError] is the definition of each error that can be displayed in the editor
+  const ThemedCodeError({
+    required this.code,
+    required this.line,
+    this.name,
+    this.expected,
+    this.received,
+  });
 }

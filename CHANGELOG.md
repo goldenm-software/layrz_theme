@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.22
+
+- Redefined the error handling on `ThemedCodeEditor` to use a local class instead of `LintError` from `layrz_models`.
+
 ## 4.3.21
 
 - New `ThemedCodeEditor` with standarized styling.
