@@ -3,6 +3,8 @@
 ## 4.3.21
 
 - New `ThemedCodeEditor` with standarized styling.
+- Removed support for `LayrzSupportedLanguage.dart`.
+- Added `run` and `lint` buttons to `ThemedCodeEditor`.
 
 ## 4.3.20
 

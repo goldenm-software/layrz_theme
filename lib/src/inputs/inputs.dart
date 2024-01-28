@@ -19,6 +19,7 @@ import 'package:layrz_theme/src/grid/grid.dart';
 import 'package:layrz_theme/src/helpers/helpers.dart';
 import 'package:layrz_theme/src/snackbar/snackbar.dart';
 import 'package:layrz_theme/src/theme/theme.dart';
+import 'package:layrz_theme/src/tooltips/tooltips.dart';
 import 'package:layrz_theme/src/utilities/utilities.dart';
 import 'package:layrz_theme/src/widgets/widgets.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';

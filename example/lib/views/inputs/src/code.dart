@@ -34,6 +34,24 @@ class _CodeInputViewState extends State<CodeInputView> {
                     language: LayrzSupportedLanguage.python,
                     value: "10 + 10",
                     errors: _errors,
+                    onLintTap: (code) async {
+                      debugPrint("Code linted $code");
+
+                      return [
+                        const LintError(
+                          line: 1,
+                          code: 'lcl.function.arguments.mismatch',
+                          function: 'GET_PARAM',
+                          given: 3,
+                          req: 2,
+                        ),
+                      ];
+                    },
+                    onRunTap: (code) async {
+                      debugPrint("Code run $code");
+
+                      return "15";
+                    },
                     onChanged: (val) {
                       debugPrint("Code: $val");
                     },
