@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.23
+
+- Fixed an issue in `ThemedCodeEditor` to prevent the cursor re-position when the widget is updated.
+
 ## 4.3.22
 
 - Redefined the error handling on `ThemedCodeEditor` to use a local class instead of `LintError` from `layrz_models`.

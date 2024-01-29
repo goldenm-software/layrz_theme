@@ -9,6 +9,8 @@ class CodeInputView extends StatefulWidget {
 
 class _CodeInputViewState extends State<CodeInputView> {
   List<String> get _errors => ['Error 1', 'Error 2', 'Error 3'];
+  String _lclCode = "CONSTANT(True)";
+  String _pythonCode = "10 + 10";
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class _CodeInputViewState extends State<CodeInputView> {
                   child: ThemedCodeEditor(
                     labelText: "Python example",
                     language: LayrzSupportedLanguage.python,
-                    value: "10 + 10",
+                    value: _pythonCode,
                     errors: _errors,
                     onLintTap: (code) async {
                       debugPrint("Code linted $code");
@@ -46,9 +48,7 @@ class _CodeInputViewState extends State<CodeInputView> {
 
                       return "15";
                     },
-                    onChanged: (val) {
-                      debugPrint("Code: $val");
-                    },
+                    onChanged: (val) => setState(() => _pythonCode = val),
                   ),
                 ),
                 ResponsiveCol(
@@ -70,11 +70,9 @@ class _CodeInputViewState extends State<CodeInputView> {
                   child: ThemedCodeEditor(
                     labelText: "LCL example",
                     language: LayrzSupportedLanguage.lcl,
-                    value: "CONSTANT(True)",
+                    value: _lclCode,
                     errors: _errors,
-                    onChanged: (val) {
-                      debugPrint("Code: $val");
-                    },
+                    onChanged: (val) => setState(() => _lclCode = val),
                   ),
                 ),
                 ResponsiveCol(

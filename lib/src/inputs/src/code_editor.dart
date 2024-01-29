@@ -84,7 +84,7 @@ class ThemedCodeEditor extends StatefulWidget {
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
-  late CodeController controller;
+  late CodeController _controller;
   String _value = '';
   bool get _isLoading => _isLinting || _isRunning;
 
@@ -145,7 +145,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   void initState() {
     super.initState();
     _value = widget.value ?? '';
-    controller = CodeController(
+    _controller = CodeController(
       text: _value,
       language: _language,
       analyzer: _analyzer,
@@ -155,17 +155,32 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   @override
   void didUpdateWidget(ThemedCodeEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
-    controller.setLanguage(_language, analyzer: _analyzer);
+    _controller.setLanguage(_language, analyzer: _analyzer);
 
     if (widget.value != null && widget.value != oldWidget.value) {
-      _value = widget.value ?? '';
-      controller.text = _value;
+      int previousCursorOffset = _controller.selection.extentOffset;
+
+      // update the current value in the value
+      _value = widget.value ?? "";
+      // update the current value in the controller
+      _controller.text = _value;
+      // check that the cursor offset is not greater than the length of the value
+      if (_value.length <= previousCursorOffset) {
+        previousCursorOffset = _value.length;
+      }
+
+      // update the cursor offset
+      _controller.selection = TextSelection.fromPosition(
+        TextPosition(
+          offset: previousCursorOffset,
+        ),
+      );
     }
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -220,13 +235,13 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                               ? null
                               : () async {
                                   setState(() => _isLinting = true);
-                                  controller.analysisResult = const AnalysisResult(issues: []);
+                                  _controller.analysisResult = const AnalysisResult(issues: []);
                                   await Future.delayed(const Duration(milliseconds: 500));
                                   final result = await widget.onLintTap?.call(_value);
                                   setState(() => _isLinting = false);
 
                                   if (result != null) {
-                                    controller.analysisResult = AnalysisResult(
+                                    _controller.analysisResult = AnalysisResult(
                                       issues: result.map(_formatLintError).toList(),
                                     );
                                   }
@@ -361,7 +376,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                   data: CodeThemeData(styles: _theme),
                   child: Expanded(
                     child: CodeField(
-                        controller: controller,
+                        controller: _controller,
                         onChanged: (value) {
                           widget.onChanged?.call(value);
                           setState(() => _value = value);
