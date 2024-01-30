@@ -26,7 +26,7 @@ part of '../helpers.dart';
 /// For [AvatarType.base64] and [AvatarType.url], the default color is [Colors.transparent].
 /// For [AvatarType.none], the default color is [Theme.of(context).primaryColor].
 /// [elevation] is the elevation of the avatar. By default, it is 1.
-/// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
+/// The [shadowColor] is the color of the [BoxShadow], by default it is [Colors.black.withOpacity(0.2)].
 /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
 /// [context] is the context of the widget.
 
@@ -51,6 +51,8 @@ Widget drawAvatar({
   Widget content = const SizedBox();
   double contentSize = size * 0.4;
 
+  Color shadow = shadowColor ?? Colors.black.withOpacity(0.2);
+
   Widget loadingProgressIndicator(BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
     if (loadingProgress == null) return child;
     return Container(
@@ -73,18 +75,18 @@ Widget drawAvatar({
   if (dynamicAvatar != null) {
     switch (dynamicAvatar.type) {
       case AvatarType.emoji:
-        containerColor = color ?? Colors.white;
+        containerColor = Colors.white;
         content = Center(
           child: Text(
             dynamicAvatar.emoji ?? 'NA',
             style: TextStyle(
               fontSize: contentSize,
+              color: validateColor(color: containerColor),
             ),
           ),
         );
         break;
       case AvatarType.icon:
-        containerColor = color ?? Colors.white;
         content = Icon(
           dynamicAvatar.icon ?? Icons.person,
           color: validateColor(color: containerColor),
@@ -92,7 +94,6 @@ Widget drawAvatar({
         );
         break;
       case AvatarType.base64:
-        containerColor = color ?? Colors.white;
         if ((dynamicAvatar.base64 ?? '').isEmpty) {
           content = Image.network(
             'https://cdn.layrz.com/resources/layo/layo.png',
@@ -109,7 +110,6 @@ Widget drawAvatar({
         }
         break;
       case AvatarType.url:
-        containerColor = color ?? Colors.white;
         content = Image.network(
           dynamicAvatar.url ?? 'https://cdn.layrz.com/resources/layo/layo.png',
           fit: BoxFit.cover,
@@ -195,14 +195,14 @@ Widget drawAvatar({
       borderRadius: BorderRadius.circular(radius),
       border: elevation == 0
           ? Border.all(
-              color: shadowColor ?? containerColor,
+              color: shadow,
               width: 1,
             )
           : null,
       boxShadow: elevation > 0
           ? [
               BoxShadow(
-                color: shadowColor ?? containerColor,
+                color: shadow,
                 blurRadius: 2 * elevation.toDouble(),
                 offset: Offset(0, elevation.toDouble() * (reverse ? -1 : 1)), // changes position of shadow
               ),

@@ -7,6 +7,7 @@ import 'package:layrz_theme_example/views/home.dart';
 import 'package:layrz_theme_example/views/inputs/inputs.dart';
 import 'package:layrz_theme_example/views/landing.dart';
 import 'package:layrz_theme_example/views/layo.dart';
+import 'package:layrz_theme_example/views/map/map.dart';
 import 'package:layrz_theme_example/views/table/table.dart';
 import 'package:layrz_theme_example/views/theme_generation.dart';
 
@@ -94,6 +95,10 @@ final goRoutes = [
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const CalendarView()),
   ),
   GoRoute(
+    path: '/inputs/code',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const CodeInputView()),
+  ),
+  GoRoute(
     path: '/table',
     redirect: (context, state) => '/table/basic',
   ),
@@ -101,9 +106,19 @@ final goRoutes = [
     path: '/table/basic',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const BasicTableView()),
   ),
+
+  // Map
+  GoRoute(
+    path: '/map',
+    redirect: (context, state) => '/map/layer',
+  ),
+  GoRoute(
+    path: '/map/layer',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const MapLayerView()),
+  ),
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/inputs/text' : '/',
+  initialLocation: kDebugMode ? '/inputs/code' : '/',
   routes: goRoutes,
 );

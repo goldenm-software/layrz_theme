@@ -1,6 +1,24 @@
 part of '../views.dart';
 
-class ThemedLicensesView extends StatefulWidget {
+void showThemedAboutDialog({
+  required BuildContext context,
+  String companyName = 'Golden M, Inc,',
+  String? version,
+  AppThemedAsset? logo,
+}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return ThemedAboutDialog(
+        companyName: companyName,
+        version: version,
+        logo: logo,
+      );
+    },
+  );
+}
+
+class ThemedAboutDialog extends StatefulWidget {
   /// [companyName] is the name of the company.
   final String companyName;
 
@@ -10,31 +28,39 @@ class ThemedLicensesView extends StatefulWidget {
   /// [logo] is the logo of the app. Only supported from assets.
   final AppThemedAsset? logo;
 
-  /// [ThemedLicensesView] is a custom view to show the licenses of the app.
-  ///
-  /// It's a replacement of the default [AboutPage] of Flutter.
-  const ThemedLicensesView({
+  /// [ThemedAboutDialog] is the about dialog of the app.
+  const ThemedAboutDialog({
     super.key,
     this.companyName = 'Golden M, Inc,',
     this.version,
     this.logo,
   });
+
   @override
-  ThemedLicensesViewState createState() => ThemedLicensesViewState();
+  State<ThemedAboutDialog> createState() => _ThemedAboutDialogState();
 }
 
-class ThemedLicensesViewState extends State<ThemedLicensesView> {
+class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-  String get logoUri => isDark
+
+  Color get _spinnerColor => isDark ? Colors.white : Theme.of(context).primaryColor;
+
+  String get _logoUri => isDark
       ? (widget.logo?.white ?? 'https://cdn.layrz.com/resources/layrz/logo/white.png')
       : (widget.logo?.normal ?? 'https://cdn.layrz.com/resources/layrz/logo/normal.png');
 
-  List<ThemedLicense> parsedLicenses = [];
-  ThemedLicense? selectedLicense;
-  String paragraph = '';
+  List<ThemedLicense> _parsedLicenses = [];
+  String _searchText = '';
+  bool _isLoading = true;
 
-  List<String> get publicLayrzPackages => [
+  List<ThemedLicense> get _filteredLicenses => _parsedLicenses.where((license) {
+        if (_searchText.isEmpty) return true;
+
+        return license.package.toLowerCase().contains(_searchText.toLowerCase());
+      }).toList();
+
+  List<String> get _publicLayrzPackages => [
         'layrz_theme',
         'layrz_models',
       ];
@@ -42,7 +68,9 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
   @override
   void initState() {
     super.initState();
-    _getLicenses();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getLicenses();
+    });
   }
 
   Future<void> _getLicenses() async {
@@ -54,7 +82,7 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
       licenses.add(license);
     }
 
-    parsedLicenses = [];
+    _parsedLicenses = [];
 
     final sortedPackages = packages.toList()
       ..sort(
@@ -62,10 +90,11 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
       );
 
     for (final package in sortedPackages) {
-      if (package.startsWith('layrz') && !publicLayrzPackages.contains(package)) {
+      if (package.startsWith('layrz') && !_publicLayrzPackages.contains(package)) {
         continue;
       }
-      final excerpts = <String>[];
+
+      List<String> excerpts = [];
       for (final license in licenses) {
         if (license.packages.contains(package)) {
           final p = license.paragraphs.first.text.trim();
@@ -84,11 +113,12 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
         }
       }
 
+      if (!mounted) return;
       final String excerpt = excerpts.length > 1
           ? MaterialLocalizations.of(context).licensesPackageDetailText(excerpts.length)
           : excerpts.join('\n');
 
-      parsedLicenses.add(
+      _parsedLicenses.add(
         ThemedLicense(
           package: package,
           excerpt: excerpt,
@@ -96,10 +126,11 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
       );
     }
 
+    _isLoading = false;
     if (mounted) setState(() {});
   }
 
-  Future<void> _getParagraphs(ThemedLicense package) async {
+  Future<String> _getParagraphs(ThemedLicense package) async {
     String paragraphs = '';
 
     await for (LicenseEntry license in LicenseRegistry.licenses) {
@@ -111,223 +142,156 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
       }
     }
 
-    if (mounted) setState(() => paragraph = paragraphs);
+    return paragraphs;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            bool isMobile = constraints.maxWidth < kSmallGrid;
-
-            double width = constraints.maxWidth / 4;
-
-            Widget listOfLicenses = Column(
-              children: [
-                Text(
-                  i18n?.t('layrz.about.licenses') ?? "Open source licenses used",
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+    return Dialog(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        margin: const EdgeInsets.all(20),
+        decoration: generateContainerElevation(context: context, elevation: 3),
+        padding: const EdgeInsets.all(20),
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "© ${DateTime.now().year} ${widget.companyName}",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            ThemedImage(
+              path: _logoUri,
+              width: 200,
+              height: 40,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              i18n?.t('copyright.powered.by') ?? "Powered by Layrz",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            if (widget.version != null)
+              Text(
+                "v${widget.version}",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            const SizedBox(height: 10),
+            if (_isLoading) ...[
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: _spinnerColor,
+                  ),
                 ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: parsedLicenses.isNotEmpty
-                      ? ListView.builder(
-                          itemCount: parsedLicenses.length,
-                          itemBuilder: (context, index) {
-                            ThemedLicense license = parsedLicenses[index];
+              ),
+            ] else ...[
+              ThemedTextInput(
+                labelText: i18n?.t('about.search') ?? 'Search package',
+                dense: true,
+                padding: EdgeInsets.zero,
+                prefixIcon: MdiIcons.magnify,
+                onChanged: (value) => setState(() => _searchText = value),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: ListView.builder(
+                  // gridDelegate: ThemedGridDelegateWithFixedHeight(
+                  //   crossAxisCount: _axisCount,
+                  //   height: 40,
+                  // ),
+                  itemCount: _filteredLicenses.length,
+                  itemBuilder: (context, index) {
+                    final package = _filteredLicenses[index];
 
-                            return Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () async {
-                                  setState(() {
-                                    paragraph = '';
-                                    selectedLicense = license;
-                                  });
-                                  if (isMobile) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(license.package),
-                                          content: FutureBuilder(
-                                            future: _getParagraphs(license),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                                return const SizedBox(
-                                                  width: 100,
-                                                  height: 100,
-                                                  child: Center(
-                                                    child: CircularProgressIndicator(),
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              child: FutureBuilder<String>(
+                                future: _getParagraphs(package),
+                                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: generateContainerElevation(context: context, elevation: 3),
+                                      constraints: const BoxConstraints(maxWidth: 600),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              package.package,
+                                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                );
-                                              }
-
-                                              return SingleChildScrollView(
-                                                child: Text(
-                                                  paragraph,
-                                                  overflow: TextOverflow.visible,
-                                                  textAlign: TextAlign.justify,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.of(context).pop(),
-                                              child: Text(i18n?.t('actions.close') ?? "Close"),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              snapshot.data ?? 'N/A',
+                                              style: Theme.of(context).textTheme.bodyMedium,
+                                              maxLines: 100,
+                                              textAlign: TextAlign.justify,
                                             ),
                                           ],
-                                        );
-                                      },
+                                        ),
+                                      ),
                                     );
-                                  } else {
-                                    _getParagraphs(license);
                                   }
+
+                                  return Center(
+                                    child: Container(
+                                      width: 80,
+                                      height: 80,
+                                      decoration: generateContainerElevation(
+                                        context: context,
+                                        elevation: 3,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: validateColor(color: Theme.of(context).primaryColor),
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        license.package,
-                                        style: Theme.of(context).textTheme.bodyLarge,
-                                      ),
-                                      Text(
-                                        license.excerpt,
-                                        style: Theme.of(context).textTheme.bodySmall,
-                                      ),
-                                    ],
-                                  ),
-                                ),
                               ),
                             );
                           },
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator(),
                         ),
-                ),
-              ],
-            );
-
-            return Container(
-              width: constraints.maxWidth,
-              height: constraints.maxHeight,
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ThemedImage(
-                        path: logoUri,
-                        width: 200,
-                        height: 40,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "© ${DateTime.now().year} ${widget.companyName}",
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      const SizedBox(width: 10, height: 20, child: VerticalDivider()),
-                      Text(
-                        i18n?.t('copyright.powered.by') ?? "Powered by Layrz",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                  if (isMobile) ...[
-                    Expanded(
-                      child: listOfLicenses,
-                    ),
-                  ] else ...[
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Container(
-                            width: width,
-                            decoration: generateContainerElevation(context: context),
-                            padding: const EdgeInsets.all(10),
-                            child: listOfLicenses,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: Text(
+                            package.package,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            textAlign: TextAlign.justify,
                           ),
-                          const SizedBox(width: 30),
-                          if (selectedLicense != null) ...[
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    selectedLicense!.package,
-                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  const Divider(),
-                                  const SizedBox(height: 10),
-                                  Expanded(
-                                      child: paragraph.isNotEmpty
-                                          ? SingleChildScrollView(
-                                              child: Text(
-                                                paragraph,
-                                                overflow: TextOverflow.visible,
-                                                textAlign: TextAlign.justify,
-                                              ),
-                                            )
-                                          : const Center(
-                                              child: CircularProgressIndicator(),
-                                            )),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ThemedButton(
-                      icon: MdiIcons.chevronLeft,
-                      labelText: i18n?.t('actions.back') ?? "Back",
-                      color: Colors.red,
-                      onTap: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
-            );
-          },
+            ],
+          ],
         ),
       ),
     );
   }
-}
-
-class ThemedLicense {
-  final String package;
-  final String excerpt;
-
-  ThemedLicense({
-    required this.package,
-    required this.excerpt,
-  });
 }

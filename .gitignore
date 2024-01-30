@@ -43,3 +43,4 @@ credentials.json
 **/*/Flutter/ephemeral/*
 **/*/Flutter/GeneratedPluginRegistrant.*
 
+.env

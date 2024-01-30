@@ -287,6 +287,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       case ThemedLayoutStyle.sidebar:
         String? pageName;
         IconData? pageIcon;
+        bool displayHeader = true;
 
         String currentPath = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
 
@@ -297,6 +298,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         if (match != null) {
           pageName = match.labelText;
           pageIcon = match.icon;
+          displayHeader = match.showHeaderInSidebarMode;
 
           if (match.label is Text) {
             pageName = (match.label as Text).data;
@@ -310,6 +312,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             if (submatch != null) {
               String? subpageName = submatch.labelText;
               pageIcon = submatch.icon;
+              displayHeader = match.showHeaderInSidebarMode;
 
               if (submatch.label is Text) {
                 subpageName = (submatch.label as Text).data;
@@ -355,7 +358,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               Expanded(
                 child: Column(
                   children: [
-                    if (pageName != null) ...[
+                    if (pageName != null && displayHeader) ...[
                       Container(
                         height: ThemedAppBar.size.height,
                         padding: const EdgeInsets.all(10),

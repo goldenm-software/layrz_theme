@@ -1,14 +1,30 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
 import 'package:vxstate/vxstate.dart';
 
-void main() {
+Future<void> main() async {
+  String? mapboxToken;
+  String? googleToken;
+  String? hereToken;
+
+  if (kDebugMode) {
+    await dotenv.load(fileName: ".env");
+    mapboxToken = dotenv.env['MAPBOX_TOKEN'];
+    googleToken = dotenv.env['GOOGLE_TOKEN'];
+    hereToken = dotenv.env['HERE_TOKEN'];
+  }
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(VxState(
-    store: AppStore(),
+    store: AppStore(
+      mapboxToken: mapboxToken,
+      googleToken: googleToken,
+      hereToken: hereToken,
+    ),
     child: const MyApp(),
   ));
 }

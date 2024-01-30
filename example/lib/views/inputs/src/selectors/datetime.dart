@@ -1,4 +1,4 @@
-part of inputs;
+part of '../../inputs.dart';
 
 class DateTimePickersView extends StatefulWidget {
   const DateTimePickersView({super.key});

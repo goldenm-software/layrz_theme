@@ -4,17 +4,12 @@ class ThemedPageTransition extends PageRouteBuilder {
   /// [page] is the widget to be shown.
   final Widget page;
 
-  /// [settings] is the settings for the route.
-  @override
-  final RouteSettings settings;
-
   /// Creates a [PageRoute] that uses a fade transition.
   /// If you want to return something, use [ThemedPageBuilder] instead.
   ThemedPageTransition({
     required this.page,
-    required this.settings,
+    super.settings,
   }) : super(
-          settings: settings,
           pageBuilder: (
             BuildContext context,
             Animation<double> animation,

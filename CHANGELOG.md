@@ -1,5 +1,69 @@
 # Changelog
 
+## 4.3.24
+  - Added scroll to `ThemedCodeEditor`
+## 4.3.23
+
+- Fixed an issue in `ThemedCodeEditor` to prevent the cursor re-position when the widget is updated.
+
+## 4.3.22
+
+- Redefined the error handling on `ThemedCodeEditor` to use a local class instead of `LintError` from `layrz_models`.
+
+## 4.3.21
+
+- New `ThemedCodeEditor` with standarized styling.
+- Removed support for `LayrzSupportedLanguage.dart`.
+- Added `run` and `lint` buttons to `ThemedCodeEditor`.
+
+## 4.3.20
+
+- New widget `ThemedStreetViewDialog` to display a Google Street View.
+- New props in `ThemedMapToolbar` and `ThemedTileLayer` to handle Google Street View.
+- New event controller called `ThemedMapController` to handle events from the map. (Does not use Streams or somethnig like that)
+
+## 4.3.19
+
+- Fixed issue in `ThemedMapToolbar` to prevent drawing of `Divider` or `VerticalDivider` when the buttons and fixed buttons are empty.
+
+## 4.3.18
+
+- Updated `ThemedTileLayer.reservedAttributionHeight` to consider the spacing required by the attributions.
+
+## 4.3.17
+
+- Forcing Google Maps, HERE Maps and Mapbox Maps attributions by static URLs.
+
+## 4.3.16
+
+- Removed `headers` on `ThemedTileLayer`, only will use when the layer is Google Maps.
+
+## 4.3.15
+
+- Inclues changes defined in `4.3.15-preview1`
+- Inclues changes defined in `4.3.15-preview2`
+- Inclues changes defined in `4.3.15-preview3`
+
+## 4.3.15-preview3
+
+- Corrections about Attributions of Mapbox Maps in `ThemedTileLayer`.
+
+## 4.3.15-preview2
+
+- Optimized `ThemedTileLayer` to use `CancellableNetworkTileProvider` (from `flutter_map_cancellable_tile_provider`) to improve performance and reduce memory usage.
+- Setted `panBuffer` and `keepBuffer` to 0 due a performance testing results (Is the better option for now).
+
+## 4.3.15-preview1
+
+- Optmized `ThemedTooltip` to use `OverlayPortal` instead of a custom `Overlay` widget.
+- New widget `ThemedTileLayer`, designed to be used in `FlutterMap` widget (from `flutter_map`) to display a tile layer using the `MapLayer` model (from `layrz_models`).
+- New widget `ThemedMapToolbar`, designed to be used in `FlutterMap` widget (from `flutter_map`) to display a toolbar with some actions to control the map.
+
+## 4.3.14
+
+- Changed `containerColor` override of `drawAvatar` utility.
+- Changed `shadowColor` override of `drawAvatar` utility.
+
 ## 4.3.13
 
 - Added `actionsOffset` on `ThemedActionButtons` to choose a custom overlay position

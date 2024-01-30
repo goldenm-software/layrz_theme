@@ -132,17 +132,12 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.about') ?? 'About',
           icon: MdiIcons.informationOutline,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ThemedLicensesView(
-                  companyName: widget.companyName,
-                  logo: widget.logo,
-                  version: widget.version,
-                ),
-              ),
-            );
-          },
+          onTap: () => showThemedAboutDialog(
+            context: context,
+            companyName: widget.companyName,
+            logo: widget.logo,
+            version: widget.version,
+          ),
         ),
       if (widget.onThemeSwitchTap != null)
         ThemedNavigatorAction(

@@ -1,4 +1,4 @@
-part of inputs;
+part of '../inputs.dart';
 
 class RadioButtonsView extends StatefulWidget {
   const RadioButtonsView({super.key});

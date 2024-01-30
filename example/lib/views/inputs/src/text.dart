@@ -1,4 +1,4 @@
-part of inputs;
+part of '../inputs.dart';
 
 class TextInputView extends StatefulWidget {
   const TextInputView({super.key});

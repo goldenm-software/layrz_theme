@@ -1,4 +1,4 @@
-part of inputs;
+part of '../inputs.dart';
 
 class CheckboxesView extends StatefulWidget {
   const CheckboxesView({super.key});

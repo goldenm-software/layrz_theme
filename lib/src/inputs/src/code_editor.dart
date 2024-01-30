@@ -41,14 +41,21 @@ class ThemedCodeEditor extends StatefulWidget {
   /// [constraints] is the constraints of the editor
   final BoxConstraints? constraints;
 
-  /// [lintErrors] is the list of errors of the editor
-  final List<LintError> lintErrors;
-
   /// [i18n] is the i18n of the editor
   final LayrzAppLocalizations? i18n;
 
+  /// [lintErrors] is the list of errors to display in the editor
+  /// This is deprecated, now you should use [onLintTap] to perform the lint
+  final List<LintError> lintErrors;
+
   /// [customInsers] is a list of Strings to add a shurtcut to insert them in the editor
   final List<String> customInserts;
+
+  /// [onLintTap] is the function that will be called when the user taps on a lint button
+  final Future<List<ThemedCodeError>> Function(String)? onLintTap;
+
+  /// [onRunTap] is the function that will be called when the user taps on the run button
+  final Future<String?> Function(String)? onRunTap;
 
   const ThemedCodeEditor({
     super.key,
@@ -63,9 +70,12 @@ class ThemedCodeEditor extends StatefulWidget {
     this.onSubmitted,
     this.language = LayrzSupportedLanguage.lcl,
     this.constraints,
+    @Deprecated('Now, if you want to append lintErrors, you should use `onLintTap` to perform the lint')
     this.lintErrors = const [],
-    this.i18n,
+    @Deprecated('The i18n will be extracted automatically from the context') this.i18n,
     this.customInserts = const [],
+    this.onLintTap,
+    this.onRunTap,
   });
 
   @override
@@ -73,39 +83,117 @@ class ThemedCodeEditor extends StatefulWidget {
 }
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
-  late CodeController controller;
-  final ScrollController shortcutsController = ScrollController();
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  late CodeController _controller;
+  String _value = '';
+  bool get _isLoading => _isLinting || _isRunning;
 
-  Mode getInterpreter(LayrzSupportedLanguage language) {
-    switch (language) {
-      case LayrzSupportedLanguage.javascript:
-        return javascript_lang.javascript;
+  bool _isRunning = false;
+  bool _isLinting = false;
+
+  Mode get _language {
+    switch (widget.language) {
       case LayrzSupportedLanguage.lml:
-        return lmlLang;
+        return lml.lml;
       case LayrzSupportedLanguage.lcl:
-        return lclLang;
-      case LayrzSupportedLanguage.txt:
-        return Mode(refs: {}, disableAutodetect: true);
+        return lcl.lcl;
       case LayrzSupportedLanguage.mjml:
-        return mjmlLang;
-      case LayrzSupportedLanguage.dart:
-        return dartLang;
+        return mjml.mjml;
       case LayrzSupportedLanguage.python:
+        return python.python;
       default:
-        return python_lang.python;
+        return Mode(refs: {}, disableAutodetect: true);
     }
   }
 
-  Map<String, TextStyle> getTheme(LayrzSupportedLanguage language) {
-    return draculaTheme;
+  Map<String, TextStyle> get _theme {
+    switch (widget.language) {
+      case LayrzSupportedLanguage.lml:
+        return lml.theme;
+      case LayrzSupportedLanguage.lcl:
+        return lcl.theme;
+      case LayrzSupportedLanguage.mjml:
+        return mjml.theme;
+      case LayrzSupportedLanguage.python:
+        return python.theme;
+      default:
+        return const {
+          'root': TextStyle(backgroundColor: Color(0xff1a1a1a), color: Color(0xffecf0f1)),
+        };
+    }
   }
+
+  AbstractAnalyzer get _analyzer {
+    switch (widget.language) {
+      case LayrzSupportedLanguage.lml:
+        return lml.LmlAnalizer();
+      case LayrzSupportedLanguage.lcl:
+        return lcl.LclAnalizer();
+      case LayrzSupportedLanguage.mjml:
+        return mjml.MjmlAnalizer();
+      case LayrzSupportedLanguage.python:
+        return python.PythonAnalizer();
+      default:
+        return EmptyAnalyzer();
+    }
+  }
+
+  Color get backgroundColor => _theme['root']!.backgroundColor ?? Colors.black;
+  Color get textColor => validateColor(color: backgroundColor);
 
   @override
   void initState() {
     super.initState();
-    controller = CodeController(
-      text: widget.value ?? '',
-      language: getInterpreter(widget.language),
+    _value = widget.value ?? '';
+    _controller = CodeController(
+      text: _value,
+      language: _language,
+      analyzer: _analyzer,
+    );
+  }
+
+  @override
+  void didUpdateWidget(ThemedCodeEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.setLanguage(_language, analyzer: _analyzer);
+
+    if (widget.value != null && widget.value != oldWidget.value) {
+      int previousCursorOffset = _controller.selection.extentOffset;
+
+      // update the current value in the value
+      _value = widget.value ?? "";
+      // update the current value in the controller
+      _controller.text = _value;
+      // check that the cursor offset is not greater than the length of the value
+      if (_value.length <= previousCursorOffset) {
+        previousCursorOffset = _value.length;
+      }
+
+      // update the cursor offset
+      _controller.selection = TextSelection.fromPosition(
+        TextPosition(
+          offset: previousCursorOffset,
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Issue _formatLintError(ThemedCodeError error) {
+    String message = t(error.code, {
+      'name': error.name,
+      'expected': error.expected,
+      'received': error.received,
+    });
+    return Issue(
+      line: error.line - 1,
+      message: message,
+      type: IssueType.error,
     );
   }
 
@@ -115,13 +203,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
       padding: widget.padding,
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-            width: 1,
-          ),
-        ),
+        decoration: generateContainerElevation(context: context, color: backgroundColor, elevation: 2),
         child: ConstrainedBox(
           constraints: widget.constraints ?? const BoxConstraints(maxHeight: 400),
           child: Column(
@@ -130,95 +212,184 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(10),
-                child: widget.label ??
-                    Text(
-                      widget.labelText ?? '',
-                      style: Theme.of(context).inputDecorationTheme.labelStyle,
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: widget.label ??
+                          Text(
+                            widget.labelText ?? '',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: textColor,
+                                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                                ),
+                          ),
                     ),
+                    const SizedBox(width: 10),
+                    if (widget.onLintTap != null) ...[
+                      ThemedTooltip(
+                        message: i18n?.t('actions.lint') ?? 'Lint',
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: _isLoading
+                              ? null
+                              : () async {
+                                  setState(() => _isLinting = true);
+                                  _controller.analysisResult = const AnalysisResult(issues: []);
+                                  await Future.delayed(const Duration(milliseconds: 500));
+                                  final result = await widget.onLintTap?.call(_value);
+                                  setState(() => _isLinting = false);
+
+                                  if (result != null) {
+                                    _controller.analysisResult = AnalysisResult(
+                                      issues: result.map(_formatLintError).toList(),
+                                    );
+                                  }
+                                },
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isLinting ? 0.5 : 1,
+                                    duration: kHoverDuration,
+                                    child: Icon(
+                                      MdiIcons.bugOutline,
+                                      color: textColor,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isLinting ? 1 : 0,
+                                    duration: kHoverDuration,
+                                    child: CircularProgressIndicator(
+                                      color: textColor,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                    if (widget.onRunTap != null)
+                      ThemedTooltip(
+                        message: i18n?.t('actions.run') ?? 'Run',
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: _isLoading
+                              ? null
+                              : () async {
+                                  setState(() => _isRunning = true);
+                                  await Future.delayed(const Duration(milliseconds: 500));
+                                  final result = await widget.onRunTap?.call(_value);
+                                  setState(() => _isRunning = false);
+
+                                  if (result != null) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          elevation: 0,
+                                          backgroundColor: Colors.transparent,
+                                          child: Container(
+                                            decoration: generateContainerElevation(
+                                              context: context,
+                                              color: backgroundColor,
+                                              elevation: 3,
+                                            ),
+                                            constraints: const BoxConstraints(maxWidth: 400),
+                                            padding: const EdgeInsets.all(20),
+                                            child: Text(
+                                              result,
+                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                    color: textColor,
+                                                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                                                  ),
+                                              maxLines: 4,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isRunning ? 0.5 : 1,
+                                    duration: kHoverDuration,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 2, bottom: 2),
+                                      child: Icon(
+                                        MdiIcons.playOutline,
+                                        color: textColor,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isRunning ? 1 : 0,
+                                    duration: kHoverDuration,
+                                    child: CircularProgressIndicator(
+                                      color: textColor,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-              Expanded(
-                child: Theme(
-                  data: ThemeData.dark(useMaterial3: true).copyWith(
-                    textTheme: ThemeData.dark().textTheme.apply(fontFamily: GoogleFonts.firaCode().fontFamily),
-                  ),
-                  child: CodeTheme(
-                    data: const CodeThemeData(styles: draculaTheme),
-                    child: CodeField(
-                      wrap: true,
-                      enabled: !widget.disabled,
-                      controller: controller,
-                      onChanged: widget.onChanged,
-                      cursorColor: Colors.white,
-                      lineNumberBuilder: (line, textStyle) {
-                        final errors = widget.lintErrors.where((e) => e.line == line).toList();
-
-                        if (errors.isEmpty) {
-                          return TextSpan(
-                            text: "$line",
-                            style: textStyle,
-                          );
-                        }
-
-                        return TextSpan(
-                          text: "$line",
-                          style: textStyle?.copyWith(color: Colors.white, backgroundColor: Colors.red),
-                        );
-                      },
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: LinearProgressIndicator(
+                  value: _isLoading ? null : 0,
+                  minHeight: 1,
+                  backgroundColor: textColor.withOpacity(0.2),
+                  color: textColor,
+                ),
+              ),
+              Theme(
+                data: ThemeData.dark().copyWith(
+                  textTheme: GoogleFonts.jetBrainsMonoTextTheme(),
+                ),
+                child: CodeTheme(
+                  data: CodeThemeData(styles: _theme),
+                  child: Expanded(
+                    child: SingleChildScrollView(
+                      child: CodeField(
+                          controller: _controller,
+                          onChanged: (value) {
+                            widget.onChanged?.call(value);
+                            setState(() => _value = value);
+                          }),
                     ),
                   ),
                 ),
               ),
-              if (_hasInserts())
-                Row(children: [
-                  // button to scroll left
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        num position = shortcutsController.offset - 200 < 0 ? 0 : shortcutsController.offset - 200;
-                        shortcutsController.animateTo(
-                          position.toDouble(),
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      });
-                    },
-                    icon: Icon(MdiIcons.chevronLeft),
-                  ),
-                  Expanded(
-                    child: _buildInsertOptions(),
-                  ),
-                  // button to scroll right
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        num position = shortcutsController.offset + 200 > shortcutsController.position.maxScrollExtent
-                            ? shortcutsController.position.maxScrollExtent
-                            : shortcutsController.offset + 200;
-                        shortcutsController.animateTo(
-                          position.toDouble(),
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      });
-                    },
-                    icon: Icon(MdiIcons.chevronRight),
-                  ),
-                ]),
-              if (widget.errors.isNotEmpty) ThemedFieldDisplayError(errors: widget.errors),
-              if (widget.lintErrors.isNotEmpty)
-                ThemedFieldDisplayError(
-                    errors: widget.lintErrors.map<String>((error) {
-                  return "${error.line ?? 1}: ${t(
-                    'larzLanguage.errors.${error.code}',
-                    {
-                      'function': error.function,
-                      'element': error.element,
-                      'required': error.req,
-                      'given': error.given,
-                    },
-                  )}";
-                }).toList()),
+              ThemedFieldDisplayError(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                errors: widget.errors,
+              ),
             ],
           ),
         ),
@@ -227,236 +398,101 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    return widget.i18n?.t(key, args) ?? "I18n missing $key";
+    if (i18n != null) {
+      if (i18n!.hasTranslation(key)) return i18n!.t(key, args);
+    }
+
+    if (_defaultErrors.containsKey(key)) {
+      String message = _defaultErrors[key]!;
+      args.forEach((key, value) {
+        message = message.replaceAll('{$key}', value.toString());
+      });
+
+      return message;
+    }
+
+    return key;
   }
 
-  Widget _buildInsertOptions() {
-    if (widget.customInserts.isNotEmpty && !widget.disabled && widget.language == LayrzSupportedLanguage.txt) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: widget.customInserts.map<Widget>((insert) {
-            return InkWell(
-              onTap: () {
-                _insertTextAtCursor(controller, insert);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Text(
-                  insert,
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-    }
-    if (widget.language == LayrzSupportedLanguage.lcl && !widget.disabled) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: kLayrzComputeLanguageFormulas.map<Widget>((formula) {
-            return InkWell(
-              onTap: () {
-                String formulaStr = formula['formula'] +
-                    '(' +
-                    formula['arguments'].map((e) => t('lcl.functions.arguments.$e')).join(', ') +
-                    ')';
-                _insertTextAtCursor(controller, formulaStr);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Tooltip(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                  ),
-                  richMessage: WidgetSpan(
-                    child: Text(
-                      """${t('lcl.functions.function.${formula['formula']}.description')}
-                      <br>
-                      ${t('lcl.functions.function.${formula['formula']}.example')}""",
-                    ),
-                  ),
-                  child: Text(formula['formula']),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-    }
-    if (widget.language == LayrzSupportedLanguage.lml && !widget.disabled) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: kLayrzMarkupLanguageVariables.map<Widget>((formula) {
-            return Tooltip(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-              ),
-              richMessage: WidgetSpan(
-                child: Text(
-                  t('layrzLanguage.markup.editor.details.$formula'),
-                ),
-              ),
-              child: InkWell(
-                onTap: () {
-                  _insertTextAtCursor(controller, "{{$formula}}");
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(formula),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-    }
-    if (widget.language == LayrzSupportedLanguage.mjml && !widget.disabled) {
-      return SingleChildScrollView(
-        controller: shortcutsController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            ...widget.customInserts.map<Widget>((insert) {
-              return InkWell(
-                onTap: () {
-                  _insertTextAtCursor(controller, insert);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    insert,
-                  ),
-                ),
-              );
-            }),
-            ...mjmlTags.map<Widget>((tag) {
-              return InkWell(
-                onTap: () {
-                  String htmlTag = """<$tag>\n\n</$tag>""";
-                  _insertTextAtCursor(controller, htmlTag);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(tag),
-                ),
-              );
-              // return Tooltip(
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey.shade200,
-              //   ),
-              //   richMessage: WidgetSpan(
-              //     child: HtmlWidget(
-              //       t('mjml.editor.details.$tag'),
-              //     ),
-              //   ),
-              //   child: InkWell(
-              //     onTap: () {
-              //       String htmlTag = """<$tag>\n</$tag>""";
-              //       _insertTextAtCursor(controller, htmlTag);
-              //     },
-              //     child: Container(
-              //       padding: const EdgeInsets.all(5),
-              //       decoration: BoxDecoration(
-              //         border: Border.all(
-              //           color: const OutlineInputBorder().borderSide.color.withOpacity(0.2),
-              //           width: 1,
-              //         ),
-              //       ),
-              //       child: Text(tag),
-              //     ),
-              //   ),
-              // );
-            }),
-          ],
-        ),
-      );
-    } else {
-      return const SizedBox();
-    }
-  }
-
-  bool _hasInserts() {
-    return !widget.disabled &&
-        (widget.customInserts.isNotEmpty ||
-            widget.language == LayrzSupportedLanguage.lcl ||
-            widget.language == LayrzSupportedLanguage.lml ||
-            widget.language == LayrzSupportedLanguage.mjml);
-  }
-
-  void _insertTextAtCursor(TextEditingController controller, String insert) {
-    if (controller.selection.start == -1) {
-      controller.text = "${controller.text}$insert";
-      return;
-    }
-    final start = controller.selection.start;
-    final end = controller.selection.end;
-    final text = controller.text;
-    final newText = text.replaceRange(start, end, insert);
-    final newSelection = TextSelection.collapsed(offset: start + insert.length);
-    controller.value = controller.value.copyWith(
-      text: newText,
-      selection: newSelection,
-      composing: TextRange.empty,
-    );
-  }
+  Map<String, String> get _defaultErrors => {
+        'lcl.multiroot.found': 'Multiple root functions found, Layrz Compute Language only supports one '
+            'root function',
+        'lcl.unknown.typedef': 'Datatype {name} not found',
+        'lcl.unsupported.typedef': 'Unsuported {name}',
+        'lcl.unknown.node': '{name} not found',
+        'lcl.arguments.mismatch': 'Function {name} has an arguments mismstch, required {expected} and '
+            '{received} received',
+        'lcl.function.not.found': 'Function {name} not found',
+        'python.empty.code': 'Empty code not supported',
+        'python.not.function': 'Only you can define functions in the root code',
+        'python.main.function.not.found': 'The main function {name} not found',
+        'python.function.arguments.mismatch': 'The function {name} doesn\'t have the right arguments, '
+            'we expect {expected} as an arguments, and {received} was found.\nThe arguments must be exactly '
+            'as the defined in our documentation',
+        'python.unsupported.type': 'Python datatype {name} unsupported',
+        'python.function.no.return': 'The function {name} doesn\'t have a return statement, '
+            'you must return a value',
+        'python.import.not.allowed': 'The statement import ... or from ... import ... cannot be used',
+        'python.range.too.big': 'The range only can run {expected} iterations, your code iterates {received} times',
+        'python.range.only.constant': 'The range function only can support constant values',
+        'python.too.deep': 'Your code exceeds the maximum depth. Consider reducing the number of nested loops',
+        'python.undefined.import': 'Module {name} not defined',
+        'python.async.not.allowed': 'Async operations not allowed',
+        'python.prohibed.element': 'The statement or function {name} is not allowed',
+        'python.match.not.allowed': 'match/case statement not allowed',
+        'python.global.not.allowed': 'The use of global variables is restricted',
+        'python.nonlocal.not.allowed': 'The use of nonlocal variables is restricted',
+      };
 }
 
 enum LayrzSupportedLanguage {
-  /// Javascript support for sensors.
-  javascript,
-
-  /// Python support for charts and sensors.
+  /// Python v3.10 language support for Sensors, Triggers, Reports and Charts.
   python,
 
-  /// Layrz compute language!.
+  /// LCL or Layrz Compute Language support for Sensors and Triggers.
   lcl,
 
-  /// Layrz markup language!.
+  /// LML or Layrz Markup Language support for Operations.
   lml,
 
-  /// TXT
+  /// TXT or Plain text
   txt,
 
-  /// MJML
+  /// MJML or MailJet Markup Language support for Emails.
   mjml,
-
-  /// dart
-  dart,
   ;
+}
+
+class EmptyAnalyzer extends AbstractAnalyzer {
+  @override
+  Future<AnalysisResult> analyze(Code code) async {
+    return const AnalysisResult(issues: []);
+  }
+}
+
+class ThemedCodeError {
+  /// [code] is the error code, this should be a translation key
+  /// If is not a translation key, the error will be displayed as it is
+  final String code;
+
+  /// [line] is the line of the error
+  final int line;
+
+  /// [name] is the name of the function or element
+  final String? name;
+
+  /// [expected] is a dynamic value to show in the error
+  final dynamic expected;
+
+  /// [received] is a dynamic value to show in the error
+  final dynamic received;
+
+  /// [ThemedCodeError] is the definition of each error that can be displayed in the editor
+  const ThemedCodeError({
+    required this.code,
+    required this.line,
+    this.name,
+    this.expected,
+    this.received,
+  });
 }

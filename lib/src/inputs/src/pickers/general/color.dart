@@ -212,7 +212,6 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
                         ColorPickerType.wheel: widget.enabledTypes.contains(ColorPickerType.wheel),
                       },
                       onColorChanged: (value) {
-                        debugPrint(value.toString());
                         setState(() {
                           currentColor = value;
                         });

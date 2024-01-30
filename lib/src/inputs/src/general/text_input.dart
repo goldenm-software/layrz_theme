@@ -412,12 +412,9 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       bottom = (screenSize.height - offset.dy) - widget.padding.top;
       top = null;
     } else {
-      debugPrint('Below');
       top = offset.dy + renderBox.size.height - widget.padding.bottom;
       bottom = null;
     }
-
-    debugPrint('top: $top, bottom: $bottom, left: $left, right: $right');
 
     _entry = OverlayEntry(
       builder: (context) {
