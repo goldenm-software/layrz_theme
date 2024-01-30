@@ -1,6 +1,6 @@
 name: layrz_theme_example
 description: layrz_theme_example
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -23,7 +23,7 @@ dependencies:
   flutter_map_animations: any
   layrz_theme:
     path: ../
-  
+
   layrz_models: ">=2.0.56-preview1 <3.0.0"
 
 dependency_overrides:
@@ -38,5 +38,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - .env
     - assets/

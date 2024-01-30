@@ -375,12 +375,14 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                 child: CodeTheme(
                   data: CodeThemeData(styles: _theme),
                   child: Expanded(
-                    child: CodeField(
-                        controller: _controller,
-                        onChanged: (value) {
-                          widget.onChanged?.call(value);
-                          setState(() => _value = value);
-                        }),
+                    child: SingleChildScrollView(
+                      child: CodeField(
+                          controller: _controller,
+                          onChanged: (value) {
+                            widget.onChanged?.call(value);
+                            setState(() => _value = value);
+                          }),
+                    ),
                   ),
                 ),
               ),

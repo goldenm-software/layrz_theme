@@ -1,5 +1,7 @@
 # Changelog
 
+## 4.3.24
+  - Added scroll to `ThemedCodeEditor`
 ## 4.3.23
 
 - Fixed an issue in `ThemedCodeEditor` to prevent the cursor re-position when the widget is updated.
