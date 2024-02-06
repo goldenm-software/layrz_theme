@@ -93,7 +93,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
 
   @override
   Widget build(BuildContext context) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color containerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade200;
     Color iconColor = isDark ? Colors.grey.shade300 : Colors.grey.shade600;
@@ -150,7 +150,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
   }
 
   void _buildOverlay() {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
     RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
     Offset offset = box.localToGlobal(Offset.zero);
 
@@ -284,7 +284,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
   }
 
   Widget _buildContent({required bool isSmall, required double height, dynamic setState}) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
     Widget searchBar = ThemedTextInput(
       labelText: i18n?.t('helpers.search') ?? 'Search',

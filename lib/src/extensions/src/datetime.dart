@@ -80,7 +80,7 @@ extension DateTimeExtension on DateTime {
     /// - `theme.helpers.datetime.november`: `November`
     /// - `theme.helpers.datetime.december`: `December`
     ///
-    /// When `LayrzAppLocalizations.of(context)` is null or the translation was not found,
+    /// When `LayrzAppLocalizations.maybeOf(context)` is null or the translation was not found,
     /// the default [translationOverrides] will be used.
     Map<String, String> translationOverrides = const {
       'theme.helpers.datetime.monday': 'Monday',

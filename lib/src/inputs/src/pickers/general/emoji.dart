@@ -313,7 +313,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    String result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+    String result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
 
     if (widget.overridesLayrzTranslations) {
       result = widget.translations[key] ?? key;

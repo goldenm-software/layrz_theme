@@ -44,7 +44,7 @@ class ThemedStreetViewDialog extends StatefulWidget {
 
 class _ThemedStreetViewDialogState extends State<ThemedStreetViewDialog> {
   final mapController = MapController();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
 
   String get _streetViewUrl => 'https://tile.googleapis.com/v1/streetview/tiles/5/{x}/{y}'
       '?session=${widget.session}'

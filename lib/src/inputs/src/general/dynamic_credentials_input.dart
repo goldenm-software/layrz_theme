@@ -232,7 +232,7 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
   }
 
   String t(String key) {
-    return LayrzAppLocalizations.of(context)?.t(key) ?? 'Tranlation missing: $key';
+    return LayrzAppLocalizations.maybeOf(context)?.t(key) ?? 'Tranlation missing: $key';
   }
 
   bool showField(CredentialField field) {

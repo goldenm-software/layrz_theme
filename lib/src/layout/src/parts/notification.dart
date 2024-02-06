@@ -30,7 +30,7 @@ class ThemedNotificationIcon extends StatefulWidget {
 }
 
 class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with SingleTickerProviderStateMixin {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor => widget.backgroundColor;
   List<ThemedNotificationItem> get notifications => widget.notifications;

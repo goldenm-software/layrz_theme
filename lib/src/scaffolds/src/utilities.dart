@@ -15,7 +15,7 @@ Future<bool> deleteConfirmationDialog({
   bool isCooldown = false,
   VoidCallback? onCooldown,
 }) async {
-  LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
   String title = '';
   String content = '';

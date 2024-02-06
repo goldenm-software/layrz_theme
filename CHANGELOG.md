@@ -1,7 +1,16 @@
 # Changelog
 
+## 4.3.25
+
+- Added `ThemedOrm` access through `BuildContext` using an extension.
+- New way to load fonts over network, locally or from Google Fonts.
+- Deprecation warnings over `titleTextFontFamily`, `textFontFamily` and `isLocalFont` in favor of `titleFont` and `bodyFont` in `generateLightTheme()` and `generateDarkTheme()`
+- New `ThemedFontHandler` to handle `preloadFont` and `generateFont` to load fonts over network, locally or from Google Fonts.
+
 ## 4.3.24
+
   - Added scroll to `ThemedCodeEditor`
+
 ## 4.3.23
 
 - Fixed an issue in `ThemedCodeEditor` to prevent the cursor re-position when the widget is updated.

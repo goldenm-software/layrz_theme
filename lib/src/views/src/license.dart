@@ -24,7 +24,7 @@ class ThemedLicensesView extends StatefulWidget {
 }
 
 class ThemedLicensesViewState extends State<ThemedLicensesView> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   String get logoUri => isDark
       ? (widget.logo?.white ?? 'https://cdn.layrz.com/resources/layrz/logo/white.png')

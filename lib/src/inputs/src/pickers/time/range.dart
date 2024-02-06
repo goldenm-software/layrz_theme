@@ -127,7 +127,7 @@ class ThemedTimeRangePicker extends StatefulWidget {
 }
 
 class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   String get pattern => widget.pattern ?? (widget.use24HourFormat ? '%H:%M' : '%I:%M %p');
 
   String? get _parsedName {
@@ -286,7 +286,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    String result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+    String result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
 
     if (widget.overridesLayrzTranslations) {
       result = widget.translations[key] ?? key;

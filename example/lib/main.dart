@@ -1,23 +1,39 @@
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
 import 'package:vxstate/vxstate.dart';
 
+const titleFont = AppFont(
+  source: FontSource.uri,
+  name: 'ProtestRevolution-Regular',
+  uri: 'https://cdn.layrz.com/ProtestRevolution-Regular.ttf',
+);
+
+const bodyFont = AppFont(
+  source: FontSource.google,
+  name: 'Barlow',
+);
+
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await ThemedFontHandler.preloadFont(titleFont);
+  await ThemedFontHandler.preloadFont(bodyFont);
+
   String? mapboxToken;
   String? googleToken;
   String? hereToken;
 
-  if (kDebugMode) {
-    await dotenv.load(fileName: ".env");
-    mapboxToken = dotenv.env['MAPBOX_TOKEN'];
-    googleToken = dotenv.env['GOOGLE_TOKEN'];
-    hereToken = dotenv.env['HERE_TOKEN'];
-  }
-  WidgetsFlutterBinding.ensureInitialized();
+  // if (kDebugMode) {
+  //   await dotenv.load(fileName: ".env");
+  //   mapboxToken = dotenv.env['MAPBOX_TOKEN'];
+  //   googleToken = dotenv.env['GOOGLE_TOKEN'];
+  //   hereToken = dotenv.env['HERE_TOKEN'];
+  // }
 
   runApp(VxState(
     store: AppStore(
@@ -45,8 +61,8 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp.router(
           title: 'Layrz Theme Example',
           themeMode: store.themeMode,
-          theme: generateLightTheme(),
-          darkTheme: generateDarkTheme(),
+          theme: generateLightTheme(titleFont: titleFont, bodyFont: bodyFont),
+          darkTheme: generateDarkTheme(titleFont: titleFont, bodyFont: bodyFont),
           debugShowCheckedModeBanner: false,
           routerConfig: router,
           builder: (context, child) {

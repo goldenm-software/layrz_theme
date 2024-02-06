@@ -16,33 +16,52 @@ ThemeData generateDarkTheme({
   /// By default, it is Cabin. (Google Font)
   /// To use a local font (Any other different to any available in Google Fonts), you should change the
   /// argument [isLocalFont] to `true`.
-  String titleTextFontFamily = "Cabin",
+  @Deprecated('This property will not work, use `titleFont` instead') String titleTextFontFamily = "Cabin",
 
   /// [textFontFamily] is the font family of the text.
   /// By default, it is Fira Sans Condensed. (Google Font)
   /// To use a local font (Any other different to any available in Google Fonts), you should change the
   /// argument [isLocalFont] to `true`.
-  String textFontFamily = "Fira Sans Condensed",
+  @Deprecated('This property will not work, use `bodyFont` instead') String textFontFamily = "Fira Sans Condensed",
 
   /// [isLocalFont] is a boolean to indicate if the font family is a local font.
   /// By default, it is `false`.
-  bool isLocalFont = false,
+  @Deprecated('This property will not work, check out `titleFont` and `bodyFont`') bool isLocalFont = false,
+
+  /// [titleFont] is the font of the title text.
+  /// By default, uses `Cabin` from `Google Fonts`.
+  /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
+  /// For example: ```dart
+  /// void main() async {
+  ///   await preloadFont(AppFont()); // Repeat this line for both title and body fonts
+  /// }
+  /// ```
+  AppFont? titleFont,
+
+  /// [bodyFont] is the font of the text.
+  /// By default, uses `Fira Sans Condensed` from `Google Fonts`.
+  /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
+  /// For example: ```dart
+  /// void main() async {
+  ///   await preloadFont(AppFont()); // Repeat this line for both title and body fonts
+  /// }
+  /// ```
+  AppFont? bodyFont,
 }) {
   bool isIOS = !kIsWeb && Platform.isIOS;
   MaterialColor color = getThemeColor(
     theme: theme,
     color: mainColor,
   );
-  FoundFont fonts = getFonts(
-    titleFont: titleTextFontFamily,
-    textFont: textFontFamily,
-    isLocalFont: isLocalFont,
-    titleTextColor: Colors.white,
+  TextTheme textTheme = ThemedFontHandler.generateFont(
     isDark: true,
+    titleFont: titleFont,
+    bodyFont: bodyFont,
+    titleTextColor: Colors.white,
   );
 
   return ThemeData.from(
-    textTheme: fonts.textTheme,
+    // textTheme: fonts.textTheme,
     colorScheme: ColorScheme.fromSwatch(primarySwatch: color, brightness: Brightness.dark).copyWith(
       primary: Colors.white,
       onPrimary: kDarkBackgroundColor,
@@ -71,7 +90,7 @@ ThemeData generateDarkTheme({
           ),
         ],
       ),
-      textStyle: fonts.textTheme.bodySmall?.copyWith(
+      textStyle: textTheme.bodySmall?.copyWith(
         color: kLightBackgroundColor,
         fontSize: 12,
       ),

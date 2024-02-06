@@ -145,7 +145,7 @@ class ThemedCalendar extends StatefulWidget {
 }
 
 class _ThemedCalendarState extends State<ThemedCalendar> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   ThemedCalendarMode get mode => ThemedCalendarMode.month;
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get primaryColor => isDark ? Colors.white : Theme.of(context).primaryColor;
@@ -853,7 +853,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   /// You can replace variables in the translation using the following format: `{variableName}`
   /// The variables changes depending of the implementation in this component.
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
     if (i18n != null) {
       return i18n.t(key, args);

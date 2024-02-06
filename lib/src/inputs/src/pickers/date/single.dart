@@ -119,7 +119,7 @@ class ThemedDatePicker extends StatefulWidget {
 }
 
 class _ThemedDatePickerState extends State<ThemedDatePicker> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
   String? get _parsedName {
@@ -191,7 +191,7 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    String result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+    String result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
 
     if (widget.overridesLayrzTranslations) {
       result = widget.translations[key] ?? key;

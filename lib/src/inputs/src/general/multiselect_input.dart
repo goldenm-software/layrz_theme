@@ -426,7 +426,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
   String t(String key, [Map<String, dynamic> args = const {}]) {
     late String result;
     try {
-      result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+      result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
     } catch (_) {
       result = widget.translations[key] ?? key;
     }

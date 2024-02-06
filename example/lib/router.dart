@@ -119,6 +119,6 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/inputs/code' : '/',
+  initialLocation: kDebugMode ? '/home' : '/',
   routes: goRoutes,
 );

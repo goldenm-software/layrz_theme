@@ -22,7 +22,13 @@ class ThemedOrm {
   }
 
   /// [getError] returns a list of errors translated using [LayrzAppLocalizations].
-  static List<String> getErrors({required String key}) {
+  static List<String> getErrors({
+    /// [key] is the key of the error to be retrieved.
+    required String key,
+
+    /// [context] is the [BuildContext] to be used to translate the errors.
+    BuildContext? context,
+  }) {
     List<dynamic> raw = _errors[key] ?? [];
     List<String> errors = [];
 
@@ -35,9 +41,21 @@ class ThemedOrm {
           }
         });
 
-        errors.add(_i18n?.t("errors.${error['code']}", error) ?? fallback);
+        String msg = _i18n?.t("errors.${error['code']}", error) ?? fallback;
+
+        if (context != null) {
+          msg = LayrzAppLocalizations.maybeOf(context)?.t("errors.${error['code']}", error) ?? msg;
+        }
+
+        errors.add(msg);
       } else {
-        errors.add(_i18n?.t("errors.${error['code']}") ?? error['code']);
+        String msg = _i18n?.t("errors.${error['code']}", error) ?? error['code'];
+
+        if (context != null) {
+          msg = LayrzAppLocalizations.maybeOf(context)?.t("errors.${error['code']}") ?? msg;
+        }
+
+        errors.add(msg);
       }
     }
 
@@ -52,5 +70,27 @@ class ThemedOrm {
   /// [hasContainerErrors] works similar as [hasErrors] but it returns true any of the errors starts with [key]
   static bool hasContainerErrors({required String key}) {
     return _errors.keys.where((err) => err.startsWith(key)).isNotEmpty;
+  }
+}
+
+extension ThemedOrn on BuildContext {
+  /// [setErrors] sets the errors to be used by the [ThemedOrm].
+  void setErrors({required Map<String, dynamic> errors}) {
+    ThemedOrm.setErrors(errors: errors);
+  }
+
+  /// [getErrors] returns a list of errors translated using [LayrzAppLocalizations].
+  List<String> getErrors({required String key}) {
+    return ThemedOrm.getErrors(key: key, context: this);
+  }
+
+  /// [hasErrors] returns true if the [key] has errors.
+  bool hasErrors({required String key}) {
+    return ThemedOrm.hasErrors(key: key);
+  }
+
+  /// [hasContainerErrors] works similar as [hasErrors] but it returns true any of the errors starts with [key]
+  bool hasContainerErrors({required String key}) {
+    return ThemedOrm.hasContainerErrors(key: key);
   }
 }
