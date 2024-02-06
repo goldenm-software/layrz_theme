@@ -122,25 +122,25 @@ class ThemedFontHandler {
         overflow: TextOverflow.ellipsis,
       ),
       titleLarge: defaultTextTheme.titleLarge?.copyWith(
-        fontFamily: bodyFontName,
+        fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.cabin().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
       ),
       titleMedium: defaultTextTheme.titleMedium?.copyWith(
-        fontFamily: bodyFontName,
+        fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.cabin().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
       ),
       titleSmall: defaultTextTheme.titleSmall?.copyWith(
-        fontFamily: bodyFontName,
+        fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.cabin().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,

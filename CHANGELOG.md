@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.26
+
+- Changed typography of `titleLarge`, `titleMedium` and `titleSmall` from `bodyFont` to `titleFont`
+
 ## 4.3.25
 
 - Added `ThemedOrm` access through `BuildContext` using an extension.
