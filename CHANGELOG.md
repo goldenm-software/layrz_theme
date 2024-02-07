@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.27
+
+- Fixed bug of fonts in `generateDarkTheme()`, now will use the `titleFont` and `bodyFont` correctly.
+
 ## 4.3.26
 
 - Changed typography of `titleLarge`, `titleMedium` and `titleSmall` from `bodyFont` to `titleFont`

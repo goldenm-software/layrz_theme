@@ -61,7 +61,7 @@ ThemeData generateDarkTheme({
   );
 
   return ThemeData.from(
-    // textTheme: fonts.textTheme,
+    textTheme: textTheme,
     colorScheme: ColorScheme.fromSwatch(primarySwatch: color, brightness: Brightness.dark).copyWith(
       primary: Colors.white,
       onPrimary: kDarkBackgroundColor,
