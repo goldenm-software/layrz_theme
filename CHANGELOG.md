@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.28
+
+- Added PointerInterceptor Library
+
+-Added `PointerInterceptor` widget to improve the navigation through dialogs in `utility.dart`
+
 ## 4.3.27
 
 - Fixed bug of fonts in `generateDarkTheme()`, now will use the `titleFont` and `bodyFont` correctly.
