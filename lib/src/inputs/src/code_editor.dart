@@ -291,8 +291,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                   await Future.delayed(const Duration(milliseconds: 500));
                                   final result = await widget.onRunTap?.call(_value);
                                   setState(() => _isRunning = false);
-
-                                  if (result != null) {
+                                  if (result != null && mounted) {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
@@ -377,6 +376,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                   child: Expanded(
                     child: SingleChildScrollView(
                       child: CodeField(
+                          readOnly: widget.disabled,
                           controller: _controller,
                           onChanged: (value) {
                             widget.onChanged?.call(value);
