@@ -17,7 +17,6 @@ dependencies:
   vxstate: ^2.3.0
   shared_preferences: ^2.2.0
   url_launcher: ^6.1.12
-  dart_snippet_view: ^0.0.1
   flutter_dotenv: ^5.1.0
   flutter_map: ^6.1.0
   flutter_map_animations: any
