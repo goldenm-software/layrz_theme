@@ -1,6 +1,6 @@
 name: layrz_theme
 description: Layrz standard theme library for Flutter, based on Material You (Material 3).
-version: "4.3.24"
+version: "4.3.28"
 repository: https://github.com/goldenm-software/layrz_theme
 
 topics:
@@ -35,15 +35,20 @@ dependencies:
   shared_preferences: ">=2.0.13 <3.0.0"
   http: ">=1.0.0 <2.0.0"
   flutter_map_cancellable_tile_provider: ">=2.0.0 <3.0.0"
-  layrz_models: ">=2.0.56 <3.0.0"
+  layrz_models: ">=2.1.0 <3.0.0"
   flutter_highlight: ">=0.7.0 <1.0.0"
   highlight: ">=0.7.0 <1.0.0"
   flutter_code_editor: ">=0.3.1 <0.4.0"
+  pointer_interceptor: ^0.10.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ">=1.0.0"
+
+# dependency_overrides:
+#   layrz_models:
+#     path: ../layrz_models
 
 flutter:
   uses-material-design: true

@@ -24,10 +24,12 @@ dependencies:
   layrz_theme:
     path: ../
 
-  layrz_models: ">=2.0.56-preview1 <3.0.0"
+  layrz_models: ">=2.1.0 <3.0.0"
 
 dependency_overrides:
   http: ^1.0.0
+  # layrz_models:
+  #   path: ../../layrz_models
 
 dev_dependencies:
   flutter_test:

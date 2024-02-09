@@ -151,7 +151,7 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMixin {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
   String get logo => isDark ? widget.logo.white : widget.logo.normal;

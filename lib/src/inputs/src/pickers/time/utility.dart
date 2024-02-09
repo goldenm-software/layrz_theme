@@ -410,10 +410,10 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
 
     if (widget.inDialog) {
       return Dialog(
-        child: content,
+        child: PointerInterceptor(child: content),
       );
     }
 
-    return content;
+    return PointerInterceptor(child: content);
   }
 }

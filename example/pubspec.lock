@@ -372,17 +372,17 @@ packages:
     dependency: "direct main"
     description:
       name: layrz_models
-      sha256: c7fa89f16513f115c6f091a08dd1078ecb01c4a43475cf4a1df9906db03e60c9
+      sha256: "8e40bda5a021bf37b3e1f78907cd03c42abaea766423fc36db568380cb98bd06"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.59"
+    version: "2.1.0"
   layrz_theme:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "4.3.23"
+    version: "4.3.27"
   linked_scroll_controller:
     dependency: transitive
     description:

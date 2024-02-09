@@ -83,7 +83,7 @@ class ThemedCodeEditor extends StatefulWidget {
 }
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   late CodeController _controller;
   String _value = '';
   bool get _isLoading => _isLinting || _isRunning;

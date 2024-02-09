@@ -263,7 +263,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
 
   /// Translation helper
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
     if (i18n != null) {
       return i18n.t(key, args);
@@ -283,7 +283,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
   /// in the following format: `singular | plural`
   /// Is important to have the ` | ` character with the spaces before and after to work correctly
   String tc(String key, int count, {Map<String, dynamic> args = const {}}) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
     if (i18n != null) {
       return i18n.tc(key, count, args);

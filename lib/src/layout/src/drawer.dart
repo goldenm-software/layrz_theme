@@ -134,7 +134,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
   ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
 
   @override
   void initState() {

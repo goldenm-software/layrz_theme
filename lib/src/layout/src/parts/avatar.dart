@@ -88,7 +88,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
   late AnimationController _animationController;
   OverlayEntry? _overlayEntry;
   final GlobalKey _userMenuKey = GlobalKey();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   final FocusNode _focusNode = FocusNode();
 
   ThemedNavigatorPushFunction get onNavigatorPush =>

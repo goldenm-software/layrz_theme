@@ -151,7 +151,7 @@ class ThemedDateTimePicker extends StatefulWidget {
 
 class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
   String get timePattern => widget.timePattern ?? (widget.use24HourFormat ? '%H:%M' : '%I:%M %p');
@@ -403,7 +403,7 @@ class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with Single
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    String result = LayrzAppLocalizations.of(context)?.t(key, args) ?? widget.translations[key] ?? key;
+    String result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
 
     if (widget.overridesLayrzTranslations) {
       result = widget.translations[key] ?? key;

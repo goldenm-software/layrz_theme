@@ -56,7 +56,7 @@ class ThemedDurationInput extends StatefulWidget {
 }
 
 class _ThemedDurationInputState extends State<ThemedDurationInput> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   Duration? get value => widget.value;
 
   List<ThemedUnits> get visibleValues => widget.visibleValues;

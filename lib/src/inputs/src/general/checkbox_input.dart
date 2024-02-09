@@ -105,7 +105,7 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
   }
 
   Widget _buildAsField() {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
     return ThemedSelectInput<bool>(
       labelText: widget.labelText,

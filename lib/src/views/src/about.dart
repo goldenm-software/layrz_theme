@@ -41,7 +41,7 @@ class ThemedAboutDialog extends StatefulWidget {
 }
 
 class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
   Color get _spinnerColor => isDark ? Colors.white : Theme.of(context).primaryColor;

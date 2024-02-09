@@ -150,7 +150,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   Color get buttonColor => isDark ? Colors.white : Colors.black;
 
   MapLayer? _selected;
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
 
   List<MapLayer> get layers => subdivideLayersPerSource(rawLayers: widget.layers);
 

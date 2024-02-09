@@ -1267,7 +1267,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   /// You can replace variables in the translation using the following format: `{variableName}`
   /// The variables changes depending of the implementation in this component.
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
     if (i18n != null) {
       return i18n.t(key, args);
@@ -1298,7 +1298,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   ///
   /// For example: `You have {count} item | You have {count} items`
   String tc(String key, int count, {Map<String, dynamic> args = const {}}) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.of(context);
+    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
     if (i18n != null) {
       return i18n.tc(key, count, args);
