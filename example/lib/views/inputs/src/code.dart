@@ -35,6 +35,7 @@ class _CodeInputViewState extends State<CodeInputView> {
                     labelText: "Python example",
                     language: LayrzSupportedLanguage.python,
                     value: _pythonCode,
+                    disabled: true,
                     errors: _errors,
                     onLintTap: (code) async {
                       debugPrint("Code linted $code");

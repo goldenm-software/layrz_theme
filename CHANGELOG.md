@@ -1,10 +1,14 @@
 # Changelog
 
+## 4.3.29
+
+- Fixed `disabled` prop on `ThemedCodeEditor`
+
 ## 4.3.28
 
 - Added PointerInterceptor Library
 
--Added `PointerInterceptor` widget to improve the navigation through dialogs in `utility.dart`
+- Added `PointerInterceptor` widget to improve the navigation through dialogs in `utility.dart`
 
 ## 4.3.27
 
