@@ -8,14 +8,13 @@ import 'package:layrz_theme_example/store/store.dart';
 import 'package:vxstate/vxstate.dart';
 
 const titleFont = AppFont(
-  source: FontSource.uri,
-  name: 'ProtestRevolution-Regular',
-  uri: 'https://cdn.layrz.com/ProtestRevolution-Regular.ttf',
+  source: FontSource.google,
+  name: 'Cabin',
 );
 
 const bodyFont = AppFont(
   source: FontSource.google,
-  name: 'Barlow',
+  name: 'Fira Sans Condensed',
 );
 
 Future<void> main() async {

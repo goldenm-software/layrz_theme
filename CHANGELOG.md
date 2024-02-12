@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.30
+
+- Added additional padding based on depth in `ThemedNavigatorItem` and subclasses on `ThemedDrawer` to improve the visual hierarchy of the items.
+- Changed the paginator style from `#` to represent the page to `#/#` to represent the current page and the total pages in `ThemedTable<T>`.
+
 ## 4.3.29
 
 - Fixed `disabled` prop on `ThemedCodeEditor`

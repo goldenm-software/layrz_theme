@@ -526,7 +526,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   @override
   void didUpdateWidget(ThemedTable<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    debugPrint("Items: ${widget.items.length} - $_searchText");
     _items = widget.items;
     _sort();
 
@@ -988,6 +987,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       'total': _items.length,
     });
     String currentPageStr = "${_currentPage + 1}";
+    int maxPages = _items.length ~/ _itemsPerPage;
+    String maxPagesStr = "${maxPages + 1}";
 
     TextStyle? pageInfoStyle = Theme.of(context).textTheme.bodySmall;
     List<Widget> pageInfo = [
@@ -1067,16 +1068,16 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         },
       ),
       const SizedBox(width: 5),
-      Text(currentPageStr, style: pageInfoStyle),
+      Text("$currentPageStr/$maxPagesStr", style: pageInfoStyle),
       const SizedBox(width: 5),
       ThemedButton(
         labelText: t('layrz.table.paginator.next'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
         icon: MdiIcons.chevronRight,
-        isDisabled: _currentPage == (_items.length ~/ _itemsPerPage),
+        isDisabled: _currentPage == maxPages,
         onTap: () {
-          if (_currentPage < (_items.length ~/ _itemsPerPage)) {
+          if (_currentPage < maxPages) {
             setState(() => _currentPage += 1);
           }
         },
