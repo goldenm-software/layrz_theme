@@ -36,7 +36,7 @@ abstract class ThemedNavigatorItem {
     String? currentPath,
   }) {
     return Padding(
-      padding: topBarItemPadding,
+      padding: ThemedNavigatorItem.topBarItemPadding,
       child: label ?? Text(labelText ?? ''),
     );
   }
@@ -52,7 +52,7 @@ abstract class ThemedNavigatorItem {
     String? currentPath,
   }) {
     return Padding(
-      padding: sidebarItemPadding,
+      padding: ThemedNavigatorItem.sidebarItemPadding,
       child: label ?? Text(labelText ?? ''),
     );
   }
@@ -69,9 +69,10 @@ abstract class ThemedNavigatorItem {
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
     String? currentPath,
+    int depth = 0,
   }) {
     return Padding(
-      padding: sidebarItemPadding,
+      padding: ThemedNavigatorItem.drawerItemPadding,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -207,6 +208,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
     String? currentPath,
+    int depth = 0,
   }) {
     String localPath = currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
     bool highlight = localPath.startsWith(path);
@@ -221,8 +223,13 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
               labelText: labelText,
               label: label,
               icon: icon,
-              onTap:
-                  children.isEmpty ? () => onNavigatorPush.call(path) : () => setState(() => isExpanded = !isExpanded),
+              onTap: children.isEmpty
+                  ? () {
+                      onNavigatorPush.call(path);
+                    }
+                  : () {
+                      setState(() => isExpanded = !isExpanded);
+                    },
               highlight: highlight,
               forceOnTap: true,
             ).toDrawerItem(
@@ -234,6 +241,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
               callback: callback,
               onNavigatorPush: onNavigatorPush,
               onNavigatorPop: onNavigatorPop,
+              depth: depth,
               suffixIcon: children.isEmpty
                   ? null
                   : isExpanded
@@ -252,6 +260,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
                   onNavigatorPush: onNavigatorPush,
                   onNavigatorPop: onNavigatorPop,
                   currentPath: currentPath,
+                  depth: depth + 1,
                 ),
             ],
           ],
@@ -399,9 +408,10 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
     String? currentPath,
+    int depth = 0,
   }) {
     return Padding(
-      padding: ThemedNavigatorItem.drawerItemPadding,
+      padding: ThemedNavigatorItem.drawerItemPadding + EdgeInsets.only(left: depth * 10.0),
       child: Container(
         decoration: BoxDecoration(
           color: highlight ? validateColor(color: backgroundColor) : Colors.transparent,
@@ -551,6 +561,7 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
     String? currentPath,
+    int depth = 0,
   }) {
     if (type == ThemedSeparatorType.line) {
       return Padding(
@@ -607,9 +618,12 @@ class ThemedNavigatorLabel extends ThemedNavigatorItem {
     required ThemedNavigatorPushFunction onNavigatorPush,
     required VoidCallback onNavigatorPop,
     String? currentPath,
+    int depth = 0,
   }) {
     return Padding(
-      padding: ThemedNavigatorItem.drawerItemPadding.add(const EdgeInsets.all(10)),
+      padding: ThemedNavigatorItem.drawerItemPadding.add(const EdgeInsets.all(10)).add(EdgeInsets.only(
+            left: depth * 10.0,
+          )),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
