@@ -16,6 +16,14 @@ class ThemedNotificationIcon extends StatefulWidget {
   /// displayed in full size.
   final bool forceFullSize;
 
+  /// [expandToLeft] is a boolean that indicates whether the notification icon
+  /// should expand to the left or not.
+  final bool expandToLeft;
+
+  /// [dense] is a boolean that indicates whether the notification icon should
+  /// be displayed in a dense mode or not.
+  final bool dense;
+
   /// Creates a [ThemedNotificationIcon] widget.
   const ThemedNotificationIcon({
     super.key,
@@ -23,6 +31,8 @@ class ThemedNotificationIcon extends StatefulWidget {
     required this.backgroundColor,
     this.inAppBar = false,
     this.forceFullSize = false,
+    this.expandToLeft = false,
+    this.dense = false,
   });
 
   @override
@@ -35,9 +45,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
   Color get backgroundColor => widget.backgroundColor;
   List<ThemedNotificationItem> get notifications => widget.notifications;
 
-  Color get notificationIconColor => isDark
-      ? Colors.white.withOpacity(notifications.isEmpty ? 0.5 : 1)
-      : Colors.black.withOpacity(notifications.isEmpty ? 0.5 : 1);
+  Color get notificationIconColor => validateColor(color: backgroundColor).withOpacity(notifications.isEmpty ? 0.5 : 1);
 
   IconData get notificationIcon => notifications.isNotEmpty ? MdiIcons.bellBadge : MdiIcons.bell;
 
@@ -58,14 +66,15 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(30),
+        hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
         key: _key,
         onTap: _buildOverlay,
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(widget.dense ? 5 : 10),
           child: Icon(
             notificationIcon,
             color: notificationIconColor,
-            size: 18,
+            size: widget.dense ? 15 : 18,
           ),
         ),
       ),
@@ -82,13 +91,19 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
     Size screenSize = MediaQuery.of(context).size;
     EdgeInsets padding = MediaQuery.of(context).padding;
     double? bottom = screenSize.height - offset.dy + padding.bottom + 20;
-    double right = screenSize.width - offset.dx - renderBox.size.width + padding.right;
+    double? right = screenSize.width - offset.dx - renderBox.size.width + padding.right;
     double? top;
     double? left;
 
     if (widget.inAppBar) {
       top = offset.dy + renderBox.size.height + padding.top + 10;
       bottom = null;
+    }
+
+    if (widget.expandToLeft) {
+      left = offset.dx + renderBox.size.width + padding.left;
+      right = null;
+      top = offset.dy;
     }
 
     double? width = screenSize.width * 0.5;
@@ -120,7 +135,11 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                   },
                   child: ScaleTransition(
                     scale: _controller,
-                    alignment: widget.inAppBar ? Alignment.topRight : Alignment.bottomRight,
+                    alignment: widget.inAppBar
+                        ? widget.expandToLeft
+                            ? Alignment.topLeft
+                            : Alignment.topRight
+                        : Alignment.bottomRight,
                     child: Container(
                       width: width == null ? null : width - 50,
                       constraints: BoxConstraints(

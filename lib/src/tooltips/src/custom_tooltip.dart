@@ -27,7 +27,7 @@ class ThemedTooltip extends StatefulWidget {
   State<ThemedTooltip> createState() => _ThemedTooltipState();
 }
 
-class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateMixin {
+class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateMixin, WidgetsBindingObserver {
   late OverlayPortalController _overlayControllerMouse;
   late OverlayPortalController _overlayControllerTap;
   late AnimationController _animationController;
@@ -55,6 +55,8 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
     GestureBinding.instance.pointerRouter.addGlobalRoute(_handlePointerEvent);
 
     _animationController = AnimationController(duration: kHoverDuration, vsync: this);
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   /// [_handleMouseTrackerChange] is called when the mouse is connected/disconnected.
@@ -118,7 +120,16 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
     RendererBinding.instance.mouseTracker.removeListener(_handleMouseTrackerChange);
     _removeEntry(immediately: true);
     _animationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _removeEntry(immediately: true);
+    }
   }
 
   @override

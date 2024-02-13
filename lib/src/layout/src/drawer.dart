@@ -79,6 +79,12 @@ class ThemedDrawer extends StatefulWidget {
   /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
+  /// [enableNotifications] is a boolean that enables the notifications button and page.
+  final bool enableNotifications;
+
+  /// [notifications] is the list of notifications to be displayed in the drawer.
+  final List<ThemedNotificationItem> notifications;
+
   /// [ThemedDrawer] is the custom native [Drawer]
   const ThemedDrawer({
     super.key,
@@ -105,19 +111,19 @@ class ThemedDrawer extends StatefulWidget {
     this.onNavigatorPush,
     this.onNavigatorPop,
     this.currentPath,
+    this.enableNotifications = true,
+    this.notifications = const [],
   });
 
   @override
   State<ThemedDrawer> createState() => _ThemedDrawerState();
 }
 
-class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMixin {
+class _ThemedDrawerState extends State<ThemedDrawer> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor =>
       widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
-
-  final ScrollController _scrollController = ScrollController();
-  late AnimationController _userExpandController;
+  Color get activeColor => validateColor(color: backgroundColor);
   dynamic get appTitle => widget.appTitle;
   String get companyName => widget.companyName;
   String? get version => widget.version;
@@ -136,15 +142,15 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
   ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
 
+  String get currentPath => widget.currentPath ?? '';
+
   @override
   void initState() {
     super.initState();
-    _userExpandController = AnimationController(vsync: this, duration: kHoverDuration);
   }
 
   @override
   void dispose() {
-    _userExpandController.dispose();
     super.dispose();
   }
 
@@ -194,7 +200,6 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
     return Container(
       width: 270,
       height: double.infinity,
-      padding: const EdgeInsets.all(10),
       decoration: generateContainerElevation(
         context: context,
         radius: 0,
@@ -209,149 +214,320 @@ class _ThemedDrawerState extends State<ThemedDrawer> with TickerProviderStateMix
             if (isMacOS) ...[
               const SizedBox(height: 40),
             ],
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ThemedImage(
-                  path: useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white,
-                  width: 25,
-                  height: 25,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.appTitle,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: sidebarTextColor,
-                        ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15).add(const EdgeInsets.only(top: 10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ThemedImage(
+                    path: useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white,
+                    width: 25,
+                    height: 25,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Divider(color: sidebarTextColor.withOpacity(0.2)),
-            const SizedBox(height: 10),
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () async {
-                  if (isExpanded) {
-                    await _userExpandController.reverse();
-                  } else {
-                    await _userExpandController.forward();
-                  }
-                  setState(() => isExpanded = !isExpanded);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    drawAvatar(
-                      context: context,
-                      name: widget.userName,
-                      avatar: widget.userAvatar,
-                      dynamicAvatar: widget.userDynamicAvatar,
-                      color: validateColor(color: backgroundColor),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      widget.appTitle,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: sidebarTextColor,
+                          ),
                     ),
+                  ),
+                  if (widget.enableNotifications) ...[
                     const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        widget.userName,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: sidebarTextColor,
-                            ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    AnimatedBuilder(
-                      animation: _userExpandController,
-                      child: Icon(
-                        MdiIcons.chevronDown,
-                        color: sidebarTextColor,
-                        size: 20,
-                      ),
-                      builder: (BuildContext context, Widget? child) {
-                        return Transform.rotate(
-                          angle: _userExpandController.value * pi,
-                          child: child,
-                        );
-                      },
+                    ThemedNotificationIcon(
+                      dense: true,
+                      notifications: widget.notifications,
+                      backgroundColor: backgroundColor,
+                      inAppBar: true,
+                      expandToLeft: true,
                     ),
                   ],
-                ),
-              ),
-            ),
-            if (_userExpandController.value == 1)
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 10),
-                  ...actions
-                      .map((item) => item.toDrawerItem(
-                            context: context,
-                            backgroundColor: backgroundColor,
-                            fromScaffold: widget.fromScaffold,
-                            onNavigatorPush: onNavigatorPush,
-                            onNavigatorPop: onNavigatorPop,
-                            currentPath: widget.currentPath,
-                          ))
-                      .toList(),
                 ],
               ),
+            ),
             const SizedBox(height: 10),
-            Divider(color: sidebarTextColor.withOpacity(0.2)),
-            const SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  children: [
-                    ...widget.items
-                        .map((item) => item.toDrawerItem(
-                              context: context,
-                              backgroundColor: backgroundColor,
-                              fromScaffold: widget.fromScaffold,
-                              onNavigatorPush: onNavigatorPush,
-                              onNavigatorPop: onNavigatorPop,
-                              currentPath: widget.currentPath,
-                            ))
-                        .toList(),
-                  ],
+            _buildItem(ThemedNavigatorSeparator(), removePadding: true),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5),
+                decoration: BoxDecoration(
+                  color: isExpanded ? activeColor.withOpacity(0.2) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => setState(() => isExpanded = !isExpanded),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          drawAvatar(
+                            context: context,
+                            name: widget.userName,
+                            avatar: widget.userAvatar,
+                            dynamicAvatar: widget.userDynamicAvatar,
+                            color: backgroundColor,
+                            shadowColor: Colors.black.withOpacity(0.2),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              widget.userName,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: sidebarTextColor,
+                                  ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Icon(
+                            isExpanded ? MdiIcons.chevronUp : MdiIcons.chevronDown,
+                            color: sidebarTextColor,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
+            if (isExpanded) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: actions.length,
+                  itemBuilder: (context, index) {
+                    return _buildItem(
+                      actions[index],
+                      depth: 1,
+                    );
+                  },
+                ),
+              ),
+            ],
+            _buildItem(ThemedNavigatorSeparator(), removePadding: true),
             const SizedBox(height: 10),
+            Expanded(
+              child: ScrollConfiguration(
+                behavior: const ScrollBehavior(),
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  itemCount: widget.items.length,
+                  itemBuilder: (context, index) {
+                    return _buildItem(widget.items[index]);
+                  },
+                ),
+              ),
+            ),
             if (widget.version != null) ...[
-              Divider(color: sidebarTextColor.withOpacity(0.2)),
+              const SizedBox(height: 5),
+              _buildItem(ThemedNavigatorSeparator(), removePadding: true),
               InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => ThemedLicensesView(
-                        companyName: companyName,
-                        logo: widget.logo,
-                        version: version,
-                      ),
-                    ),
-                  );
-                },
+                onTap: () => showThemedAboutDialog(
+                  context: context,
+                  companyName: widget.companyName,
+                  logo: widget.logo,
+                  version: widget.version,
+                ),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 10).add(const EdgeInsets.only(top: 10)),
                   child: Center(
                     child: Text(
                       "v${widget.version!}",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: sidebarTextColor,
-                          ),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: sidebarTextColor),
                     ),
                   ),
                 ),
               ),
+              const SizedBox(height: 5),
             ],
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildItem(ThemedNavigatorItem item, {int depth = 0, bool removePadding = false}) {
+    if (item is ThemedNavigatorLabel) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(EdgeInsets.only(
+          left: 10 * depth.toDouble(),
+        )),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: item.label ??
+            Text(
+              item.labelText ?? '',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: validateColor(color: backgroundColor),
+                  ),
+            ),
+      );
+    }
+
+    if (item is ThemedNavigatorPage) {
+      bool highlight = currentPath.startsWith(item.path);
+      bool isExpanded = highlight;
+
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(EdgeInsets.only(
+                  left: 10 * depth.toDouble(),
+                )),
+                decoration: BoxDecoration(
+                  color: highlight ? activeColor.withOpacity(0.2) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: item.children.isEmpty
+                        ? () {
+                            onNavigatorPush.call(item.path);
+                          }
+                        : () {
+                            setState(() => isExpanded = !isExpanded);
+                          },
+                    hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (item.icon != null) ...[
+                            Icon(
+                              item.icon ?? MdiIcons.help,
+                              size: 18,
+                              color: highlight ? activeColor : validateColor(color: backgroundColor),
+                            ),
+                            const SizedBox(width: 10),
+                          ],
+                          Expanded(
+                            child: item.label ??
+                                Text(
+                                  item.labelText ?? '',
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: highlight ? activeColor : validateColor(color: backgroundColor),
+                                      ),
+                                ),
+                          ),
+                          if (item.children.isNotEmpty) ...[
+                            Icon(
+                              isExpanded ? MdiIcons.chevronUp : MdiIcons.chevronDown,
+                              size: 20,
+                              color: validateColor(color: backgroundColor),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              if (isExpanded) ...[
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: item.children.length,
+                  itemBuilder: (context, index) {
+                    return _buildItem(
+                      item.children[index],
+                      depth: depth + 1,
+                    );
+                  },
+                ),
+              ],
+            ],
+          );
+        },
+      );
+    }
+
+    if (item is ThemedNavigatorAction) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(EdgeInsets.only(
+          left: 10 * depth.toDouble(),
+        )),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: item.onTap,
+            hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (item.icon != null) ...[
+                    Icon(
+                      item.icon ?? MdiIcons.help,
+                      size: 18,
+                      color: validateColor(color: backgroundColor),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  item.label ??
+                      Text(
+                        item.labelText ?? '',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: validateColor(color: backgroundColor),
+                            ),
+                      ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (item is ThemedNavigatorSeparator) {
+      Color dividerColor = validateColor(color: backgroundColor).withOpacity(0.2);
+      if (item.type == ThemedSeparatorType.line) {
+        return Padding(
+          padding: removePadding ? EdgeInsets.zero : const EdgeInsets.symmetric(vertical: 5),
+          child: Divider(
+            indent: 5,
+            endIndent: 5,
+            color: dividerColor,
+          ),
+        );
+      }
+
+      return Padding(
+        padding: const EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(40, (_) {
+            return Container(
+              width: 3,
+              height: 3,
+              decoration: BoxDecoration(
+                color: dividerColor,
+                shape: BoxShape.circle,
+              ),
+            );
+          }),
+        ),
+      );
+    }
+
+    return const SizedBox();
   }
 }

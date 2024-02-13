@@ -71,6 +71,13 @@ class ThemedTaskbar extends StatefulWidget {
   /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
+  /// [enableNotifications] is a boolean that enables the notifications button and page.
+  final bool enableNotifications;
+
+  /// [onNavigatorPop] is the callback to be executed when a navigator item is popped.
+  /// By default is `Navigator.of(context).pop`
+  final ThemdNavigatorPopFunction? onNavigatorPop;
+
   /// [ThemedTaskbar] is the taskbar of the application.
   const ThemedTaskbar({
     super.key,
@@ -95,6 +102,8 @@ class ThemedTaskbar extends StatefulWidget {
     this.additionalActions = const [],
     this.onNavigatorPush,
     this.currentPath,
+    this.enableNotifications = true,
+    this.onNavigatorPop,
   });
 
   static double get height => 55;
@@ -108,12 +117,16 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
   late DateTime _now;
   Color get backgroundColor => widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get activeColor => isDark ? Colors.white : Theme.of(context).primaryColor;
   String get favicon => useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white;
   List<ThemedNavigatorItem> get items => widget.items;
   List<ThemedNavigatorItem> get persistentItems => widget.persistentItems;
   List<ThemedNotificationItem> get notifications => widget.notifications;
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
+  ThemdNavigatorPopFunction get onNavigatorPop => widget.onNavigatorPop ?? Navigator.of(context).pop;
+
+  String get currentPath => widget.currentPath ?? '';
 
   @override
   void initState() {
@@ -166,27 +179,17 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
               backgroundColor: widget.backgroundColor,
               asTaskBar: true,
               onThemeSwitchTap: widget.onThemeSwitchTap,
+              onNavigatorPush: onNavigatorPush,
+              onNavigatorPop: onNavigatorPop,
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: SingleChildScrollView(
+              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    if (persistentItems.isNotEmpty) ...[
-                      ...persistentItems,
-                      if (items.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
-                    ],
-                    ...items,
-                  ]
-                      .map((item) => item.toAppBarItem(
-                            context: context,
-                            backgroundColor: backgroundColor,
-                            onNavigatorPush: onNavigatorPush,
-                            currentPath: widget.currentPath,
-                          ))
-                      .toList(),
-                ),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return _buildItem(items[index]);
+                },
               ),
             ),
             const SizedBox(width: 10),
@@ -204,14 +207,132 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
                 ),
               ],
             ),
-            const SizedBox(width: 10),
-            ThemedNotificationIcon(
-              notifications: notifications,
-              backgroundColor: backgroundColor,
-            ),
+            if (widget.enableNotifications) ...[
+              const SizedBox(width: 10),
+              ThemedNotificationIcon(
+                notifications: notifications,
+                backgroundColor: backgroundColor,
+              ),
+            ],
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildItem(ThemedNavigatorItem item) {
+    if (item is ThemedNavigatorLabel) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: item.label ?? Text(item.labelText ?? ''),
+      );
+    }
+
+    if (item is ThemedNavigatorPage) {
+      if (item.children.isNotEmpty) {
+        return ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: item.children.length,
+          itemBuilder: (context, index) {
+            return _buildItem(item.children[index]);
+          },
+        );
+      }
+      bool highlight = currentPath.startsWith(item.path);
+
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 4),
+        decoration: BoxDecoration(
+          color: highlight ? activeColor.withOpacity(0.2) : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => item.onTap.call(onNavigatorPush),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (item.icon != null) ...[
+                    Icon(
+                      item.icon ?? MdiIcons.help,
+                      size: 16,
+                      color: highlight ? activeColor : validateColor(color: backgroundColor),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  item.label ?? Text(item.labelText ?? ''),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (item is ThemedNavigatorAction) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: item.onTap,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (item.icon != null) ...[
+                    Icon(
+                      item.icon ?? MdiIcons.help,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  item.label ?? Text(item.labelText ?? ''),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (item is ThemedNavigatorSeparator) {
+      if (item.type == ThemedSeparatorType.line) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 4),
+          child: const VerticalDivider(),
+        );
+      }
+
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 4),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(6, (_) {
+            return Container(
+              width: 3,
+              height: 3,
+              decoration: BoxDecoration(
+                color: Theme.of(context).dividerColor,
+                shape: BoxShape.circle,
+              ),
+            );
+          }),
+        ),
+      );
+    }
+
+    return const SizedBox();
   }
 }

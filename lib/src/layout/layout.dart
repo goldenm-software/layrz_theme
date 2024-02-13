@@ -130,6 +130,9 @@ class ThemedLayout extends StatefulWidget {
   /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
+  /// [enableNotifications] is a boolean that enables the notifications button.
+  final bool enableNotifications;
+
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
     super.key,
@@ -162,6 +165,7 @@ class ThemedLayout extends StatefulWidget {
     this.onNavigatorPop,
     this.isBackEnabled = true,
     this.currentPath,
+    this.enableNotifications = true,
   });
 
   @override
@@ -242,13 +246,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
               ThemedSidebar(
                 onNavigatorPush: widget.onNavigatorPush,
                 currentPath: widget.currentPath,
-                items: [
-                  ...childUrls,
-                  if (widget.persistentItems.isNotEmpty) ...[
-                    if (childUrls.isNotEmpty) ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
-                    ...widget.persistentItems,
-                  ],
-                ],
+                persistentItems: widget.persistentItems,
+                items: childUrls,
               ),
               Expanded(child: child),
             ],
@@ -280,6 +279,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                 onThemeSwitchTap: widget.onThemeSwitchTap,
                 onNavigatorPush: widget.onNavigatorPush,
                 currentPath: widget.currentPath,
+                enableNotifications: widget.enableNotifications,
+                onNavigatorPop: widget.onNavigatorPop,
               ),
             ],
           ),
@@ -354,6 +355,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                 onNavigatorPush: widget.onNavigatorPush,
                 currentPath: widget.currentPath,
                 onThemeSwitchTap: widget.onThemeSwitchTap,
+                enableNotifications: widget.enableNotifications,
+                notifications: widget.notifications,
               ),
               Expanded(
                 child: Column(
@@ -424,11 +427,12 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       backgroundColor: widget.backgroundColor,
       notifications: widget.notifications,
       mobileBreakpoint: widget.mobileBreakpoint,
-      forceNotificationIcon: widget.style == ThemedLayoutStyle.classic,
+      enableNotifications: widget.enableNotifications,
       onThemeSwitchTap: widget.onThemeSwitchTap,
       onNavigatorPush: widget.onNavigatorPush,
       isBackEnabled: widget.isBackEnabled,
       currentPath: widget.currentPath,
+      hideAvatar: widget.style == ThemedLayoutStyle.modern,
     );
   }
 

@@ -214,23 +214,105 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                       builder: (context, setState) {
                         return Container(
                           constraints: BoxConstraints(maxWidth: width, minWidth: 150),
-                          padding: const EdgeInsets.all(10),
-                          decoration: generateContainerElevation(
-                            context: context,
-                            elevation: 3,
-                          ),
-                          child: ListView.separated(
+                          decoration: generateContainerElevation(context: context),
+                          clipBehavior: Clip.antiAlias,
+                          child: ListView.builder(
                             shrinkWrap: true,
-                            separatorBuilder: (context, index) => const Divider(),
                             itemCount: actions.length,
                             itemBuilder: (context, index) {
-                              return actions[index].toDrawerItem(
-                                context: context,
-                                callback: _destroyOverlay,
-                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                                onNavigatorPop: onNavigatorPop,
-                                onNavigatorPush: onNavigatorPush,
-                              );
+                              final item = actions[index];
+
+                              if (item is ThemedNavigatorLabel) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: item.label ??
+                                      Text(
+                                        item.labelText ?? '',
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
+                                );
+                              }
+
+                              if (item is ThemedNavigatorPage) {
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => _destroyOverlay(onTap: () => item.onTap(onNavigatorPush)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          if (item.icon != null) ...[
+                                            Icon(
+                                              item.icon ?? MdiIcons.help,
+                                              size: 15,
+                                            ),
+                                            const SizedBox(width: 5),
+                                          ],
+                                          item.label ??
+                                              Text(
+                                                item.labelText ?? '',
+                                                style: Theme.of(context).textTheme.bodyMedium,
+                                              )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              if (item is ThemedNavigatorAction) {
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => _destroyOverlay(onTap: item.onTap),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          if (item.icon != null) ...[
+                                            Icon(
+                                              item.icon ?? MdiIcons.help,
+                                              size: 15,
+                                            ),
+                                            const SizedBox(width: 5),
+                                          ],
+                                          item.label ??
+                                              Text(
+                                                item.labelText ?? '',
+                                                style: Theme.of(context).textTheme.bodyMedium,
+                                              )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              if (item is ThemedNavigatorSeparator) {
+                                if (item.type == ThemedSeparatorType.line) {
+                                  return const Divider(indent: 5, endIndent: 5);
+                                }
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: List.generate(45, (_) {
+                                      return Container(
+                                        width: 3,
+                                        height: 3,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).dividerColor,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                );
+                              }
+
+                              return const SizedBox();
                             },
                           ),
                         );
@@ -251,11 +333,13 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
     _focusNode.requestFocus();
   }
 
-  Future<void> _destroyOverlay() async {
+  Future<void> _destroyOverlay({VoidCallback? onTap}) async {
     _focusNode.unfocus();
     await _animationController.reverse();
     _overlayEntry?.remove();
     _overlayEntry = null;
     setState(() {});
+
+    onTap?.call();
   }
 }

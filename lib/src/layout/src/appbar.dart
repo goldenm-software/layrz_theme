@@ -82,13 +82,9 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// By default is `kMediumGrid`.
   final double mobileBreakpoint;
 
-  /// [forceNotificationIcon] is the flag to force the notification icon to be displayed.
+  /// [enableNotifications] is the flag to force the notification icon to be displayed.
   /// By default is `false`.
-  final bool forceNotificationIcon;
-
-  /// [disableNotifications] is the flag to disable the notifications.
-  /// By default is `false`.
-  final bool disableNotifications;
+  final bool enableNotifications;
 
   /// [onNavigatorPush] is the callback to be executed when a navigator item is tapped.
   /// By default is `Navigator.of(context).pushNamed`
@@ -105,6 +101,10 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// [currentPath] is the current path of the navigator. Overrides the default path detection.
   /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
+
+  /// [hideAvatar] is the flag to hide the avatar.
+  /// By default is `false`.
+  final bool hideAvatar;
 
   /// [ThemedAppBar] is the app bar of the app.
   const ThemedAppBar({
@@ -131,12 +131,12 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.notifications = const [],
     this.mobileBreakpoint = kMediumGrid,
-    this.forceNotificationIcon = false,
-    this.disableNotifications = false,
+    this.enableNotifications = true,
     this.onNavigatorPush,
     this.onNavigatorPop,
     this.isBackEnabled = true,
     this.currentPath,
+    this.hideAvatar = false,
   });
 
   static bool get isMacOS => !kIsWeb && Platform.isMacOS;
@@ -153,6 +153,7 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMixin {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get activeColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   String get logo => isDark ? widget.logo.white : widget.logo.normal;
   Color get backgroundColor => widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
@@ -241,9 +242,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                   height: ThemedAppBar.size.height - 10,
                   child: AspectRatio(
                     aspectRatio: 1000 / 300, // 1000px X 300px - default dimensions of logos from Layrz
-                    child: ThemedImage(
-                      path: logo,
-                    ),
+                    child: ThemedImage(path: logo),
                   ),
                 ),
               ),
@@ -257,37 +256,123 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                       reverse: true,
                       child: Row(
                         children: widget.items.map((item) {
-                          return item.toAppBarItem(
-                            context: context,
-                            backgroundColor: backgroundColor,
-                            onNavigatorPush: onNavigatorPush,
-                            currentPath: currentPath,
-                          );
+                          if (item is ThemedNavigatorLabel) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: item.label ?? Text(item.labelText ?? ''),
+                            );
+                          }
+
+                          if (item is ThemedNavigatorPage) {
+                            bool highlight = currentPath.startsWith(item.path);
+
+                            return Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                              decoration: BoxDecoration(
+                                color: highlight ? activeColor.withOpacity(0.2) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => item.onTap.call(onNavigatorPush),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (item.icon != null) ...[
+                                          Icon(
+                                            item.icon ?? MdiIcons.help,
+                                            size: 16,
+                                            color: highlight ? activeColor : validateColor(color: backgroundColor),
+                                          ),
+                                          const SizedBox(width: 10),
+                                        ],
+                                        item.label ?? Text(item.labelText ?? ''),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          if (item is ThemedNavigatorAction) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: item.onTap,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (item.icon != null) ...[
+                                          Icon(
+                                            item.icon ?? MdiIcons.help,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 10),
+                                        ],
+                                        item.label ?? Text(item.labelText ?? ''),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          if (item is ThemedNavigatorSeparator) {
+                            if (item.type == ThemedSeparatorType.line) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                child: const VerticalDivider(),
+                              );
+                            }
+
+                            return Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: List.generate(6, (_) {
+                                  return Container(
+                                    width: 3,
+                                    height: 3,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).dividerColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  );
+                                }),
+                              ),
+                            );
+                          }
+
+                          return const SizedBox();
                         }).toList(),
                       ),
                     ),
                   ),
                 ),
-                if (widget.forceNotificationIcon) ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: ThemedNavigatorSeparator(
-                      type: ThemedSeparatorType.dots,
-                    ).toAppBarItem(
-                      context: context,
-                      backgroundColor: backgroundColor,
-                      onNavigatorPush: onNavigatorPush,
-                      currentPath: currentPath,
-                    ),
-                  ),
+                if (widget.enableNotifications) ...[
                   const SizedBox(width: 10),
-                  if (!widget.disableNotifications) ...[
-                    ThemedNotificationIcon(
-                      notifications: widget.notifications,
-                      backgroundColor: backgroundColor,
-                      inAppBar: true,
-                    ),
-                  ],
+                  ThemedNotificationIcon(
+                    notifications: widget.notifications,
+                    backgroundColor: backgroundColor,
+                    inAppBar: true,
+                  ),
+                ],
+                if (!widget.hideAvatar) ...[
                   const SizedBox(width: 10),
                   ThemedAppBarAvatar(
                     appTitle: widget.appTitle,
@@ -301,6 +386,8 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                     onSettingsTap: widget.onSettingsTap,
                     onProfileTap: widget.onProfileTap,
                     onLogoutTap: widget.onLogoutTap,
+                    onNavigatorPush: onNavigatorPush,
+                    onNavigatorPop: onNavigatorPop,
                     additionalActions: widget.additionalActions,
                     backgroundColor: widget.backgroundColor,
                     onThemeSwitchTap: widget.onThemeSwitchTap,
@@ -308,7 +395,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                 ],
               ] else ...[
                 const Spacer(),
-                if (!widget.disableNotifications) ...[
+                if (widget.enableNotifications) ...[
                   ThemedNotificationIcon(
                     notifications: widget.notifications,
                     backgroundColor: backgroundColor,

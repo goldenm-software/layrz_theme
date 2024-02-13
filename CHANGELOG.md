@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.31
+
+- Major improvement on `ThemedLayout` and sub-widgets.
+- Added a state listener on `ThemedTooltip` to prevent sticky tooltips when the widget is disposed or unfocused.
+
 ## 4.3.30
 
 - Added additional padding based on depth in `ThemedNavigatorItem` and subclasses on `ThemedDrawer` to improve the visual hierarchy of the items.
