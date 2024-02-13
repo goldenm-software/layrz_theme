@@ -42,14 +42,15 @@ class _LayoutState extends State<Layout> {
     }
 
     return ThemedLayout(
-      // style: ThemedLayoutStyle.sidebar,
+      style: ThemedLayoutStyle.classic,
       isBackEnabled: false,
-      style: layoutStyle,
+      // style: layoutStyle,
       scaffoldKey: _scaffoldKey,
       logo: logo,
       currentPath: path,
       favicon: favicon,
       appTitle: "Layrz Theme",
+      enableNotifications: false,
       items: [
         ThemedNavigatorPage(
           labelText: 'Home',
@@ -121,14 +122,21 @@ class _LayoutState extends State<Layout> {
               icon: MdiIcons.radioboxMarked,
             ),
             ThemedNavigatorPage(
-              labelText: 'General use selectors',
-              path: '/inputs/selectors/general',
+              labelText: 'Selectors',
+              path: '/inputs/selectors',
               icon: MdiIcons.listBox,
-            ),
-            ThemedNavigatorPage(
-              labelText: 'Date & Time selectors',
-              path: '/inputs/selectors/datetime',
-              icon: MdiIcons.calendarClock,
+              children: [
+                ThemedNavigatorPage(
+                  labelText: 'General selectors',
+                  path: '/inputs/selectors/general',
+                  icon: MdiIcons.calendarClock,
+                ),
+                ThemedNavigatorPage(
+                  labelText: 'Date & Time selectors',
+                  path: '/inputs/selectors/datetime',
+                  icon: MdiIcons.calendarClock,
+                ),
+              ],
             ),
             ThemedNavigatorPage(
               labelText: 'Calendar',
@@ -214,6 +222,17 @@ class _LayoutState extends State<Layout> {
             mode: LaunchMode.externalApplication,
           ),
         ),
+      ],
+      additionalActions: [
+        ThemedNavigatorPage(
+          labelText: 'Layo',
+          path: '/layo',
+          icon: MdiIcons.robotOutline,
+        ),
+        ThemedNavigatorLabel(labelText: 'Test'),
+        ThemedNavigatorSeparator(),
+        ThemedNavigatorLabel(labelText: 'Test'),
+        ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
       ],
       userDynamicAvatar: const Avatar(
         type: AvatarType.url,

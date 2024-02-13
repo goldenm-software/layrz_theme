@@ -16,6 +16,9 @@ class ThemedSidebar extends StatefulWidget {
   /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
+  /// [persistentItems] is the list of buttons to be displayed in the drawer.
+  final List<ThemedNavigatorItem> persistentItems;
+
   /// [ThemedSidebar] is the sidebar of the app in desktop mode, only will work in desktop.
   /// On mobile or tablet devices, this widget could not work as expected.
   const ThemedSidebar({
@@ -24,6 +27,7 @@ class ThemedSidebar extends StatefulWidget {
     this.backgroundColor,
     this.onNavigatorPush,
     this.currentPath,
+    this.persistentItems = const [],
   });
 
   @override
@@ -39,8 +43,6 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
 
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
-
-  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -68,31 +70,141 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
         ],
       ),
       child: SafeArea(
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.items
-                .where((item) {
-                  bool c1 = item is ThemedNavigatorPage;
-                  bool c2 = item is ThemedNavigatorAction;
-                  bool c3 = item is ThemedNavigatorSeparator;
-
-                  return c1 || c2 || c3;
-                })
-                .map((item) => item.toSidebarItem(
-                      context: context,
-                      backgroundColor: backgroundColor,
-                      width: ThemedNavigatorItem.sidebarSize,
-                      height: ThemedNavigatorItem.sidebarSize,
-                      onNavigatorPush: onNavigatorPush,
-                      currentPath: widget.currentPath,
-                    ))
-                .toList(),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: widget.items.length,
+                itemBuilder: (context, index) {
+                  return _buildItem(widget.items[index]);
+                },
+              ),
+            ),
+            if (widget.persistentItems.isNotEmpty) ...[
+              _buildItem(ThemedNavigatorSeparator()),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.persistentItems.length,
+                itemBuilder: (context, index) {
+                  return _buildItem(widget.persistentItems[index]);
+                },
+              ),
+            ],
+          ],
         ),
       ),
     );
+  }
+
+  Widget _buildItem(ThemedNavigatorItem item) {
+    if (item is ThemedNavigatorPage) {
+      if (item.children.isNotEmpty) {
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: item.children.length,
+          itemBuilder: (context, index) {
+            final child = item.children[index];
+            return _buildItem(child);
+          },
+        );
+      }
+
+      bool highlight = (widget.currentPath ?? '').startsWith(item.path);
+
+      Color backgroundColor = highlight ? validateColor(color: Theme.of(context).primaryColor) : Colors.transparent;
+
+      return ThemedTooltip(
+        position: ThemedTooltipPosition.right,
+        message: item.labelText ?? item.label?.toString() ?? '',
+        child: Container(
+          margin: const EdgeInsets.all(5),
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: backgroundColor,
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => item.onTap(onNavigatorPush),
+              hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  item.icon ?? MdiIcons.help,
+                  size: 15,
+                  color: validateColor(color: backgroundColor),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (item is ThemedNavigatorAction) {
+      return ThemedTooltip(
+        position: ThemedTooltipPosition.right,
+        message: item.labelText ?? item.label?.toString() ?? '',
+        child: Container(
+          margin: const EdgeInsets.all(5),
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: backgroundColor,
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: item.onTap,
+              hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  item.icon ?? MdiIcons.help,
+                  size: 15,
+                  color: validateColor(color: backgroundColor),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (item is ThemedNavigatorSeparator) {
+      Color dividerColor = validateColor(color: backgroundColor).withOpacity(0.2);
+      if (item.type == ThemedSeparatorType.line) {
+        return Divider(
+          indent: 5,
+          endIndent: 5,
+          color: dividerColor,
+        );
+      }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(6, (_) {
+            return Container(
+              width: 3,
+              height: 3,
+              decoration: BoxDecoration(
+                color: dividerColor,
+                shape: BoxShape.circle,
+              ),
+            );
+          }),
+        ),
+      );
+    }
+
+    return const SizedBox();
   }
 }
