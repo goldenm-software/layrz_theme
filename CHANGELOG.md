@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.32
+
+- Adjusted design of `ThemedCalendar`
+
 ## 4.3.31
 
 - Major improvement on `ThemedLayout` and sub-widgets.

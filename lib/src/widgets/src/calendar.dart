@@ -511,118 +511,108 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
     return Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          double height = (constraints.maxHeight - 30) / (fullMonth.length / 7);
-          double width = constraints.maxWidth / 7;
+          double height = (constraints.maxHeight - 30 - 20) / (fullMonth.length / 7);
+          double width = (constraints.maxWidth - 20) / 7;
 
-          return Column(
-            children: [
-              SizedBox(
-                height: 30,
-                child: Row(
-                  children: List.generate(7, (i) {
-                    String weekdayString = "";
-                    switch (i + 1) {
-                      case DateTime.monday:
-                        weekdayString = i18n?.t('theme.helpers.datetime.monday') ?? "Monday";
-                        break;
-                      case DateTime.tuesday:
-                        weekdayString = i18n?.t('theme.helpers.datetime.tuesday') ?? "Tuesday";
-                        break;
-                      case DateTime.wednesday:
-                        weekdayString = i18n?.t('theme.helpers.datetime.wednesday') ?? "Wednesday";
-                        break;
-                      case DateTime.thursday:
-                        weekdayString = i18n?.t('theme.helpers.datetime.thursday') ?? "Thursday";
-                        break;
-                      case DateTime.friday:
-                        weekdayString = i18n?.t('theme.helpers.datetime.friday') ?? "Friday";
-                        break;
-                      case DateTime.saturday:
-                        weekdayString = i18n?.t('theme.helpers.datetime.saturday') ?? "Saturday";
-                        break;
-                      case DateTime.sunday:
-                      default:
-                        weekdayString = i18n?.t('theme.helpers.datetime.sunday') ?? "Sunday";
-                        break;
-                    }
-                    return Container(
-                      width: width,
-                      height: 30,
-                      alignment: Alignment.center,
-                      child: Text(
-                        widget.smallWeekdays ? weekdayString.substring(0, 3) : weekdayString,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: ThemedGridDelegateWithFixedHeight(
-                    height: height,
-                    crossAxisCount: 7,
-                  ),
-                  itemCount: fullMonth.length,
-                  itemBuilder: (context, index) {
-                    DateTime day = fullMonth[index];
-                    List<ThemedCalendarEntry> dayEntries = _getEntriesOfDay(day);
-                    List<ThemedCalendarRangeEntry> dayRangeEntries = _getRangeEntriesOfDay(day);
-                    List<ThemedCalendarEntry> joinedEntries = [
-                      ...dayRangeEntries.map((entry) {
-                        return ThemedCalendarEntry(
-                          textAlign: entry.textAlign,
-                          at: day,
-                          color: entry.color,
-                          icon: entry.icon,
-                          title: entry.title,
-                          caption: entry.caption,
-                          onTap: entry.onTap,
-                        );
-                      }),
-                      ...dayEntries,
-                    ];
-
-                    DateTime now = DateTime(day.year, day.month, day.day);
-                    bool isToday = _validateIfIsToday(now);
-                    bool isFocusDay =
-                        day.year == _focusDay.year && day.month == _focusDay.month && day.day == _focusDay.day;
-                    bool isDisabled = widget.disabledDays.map((disabled) {
-                      return DateTime(disabled.year, disabled.month, disabled.day);
-                    }).contains(now);
-
-                    if (widget.isHighlightDaysAsRange) {
-                      isToday = false;
-                      isFocusDay = false;
-                      isDisabled = false;
-                    }
-
-                    if (!widget.todayIndicator) {
-                      isToday = false;
-                    }
-
-                    bool isCurrentMonth = day.month == _dayGenerator.month;
-
-                    List<DateTime> highlightedDays = widget.highlightedDays.map((highlight) {
-                      return DateTime(highlight.year, highlight.month, highlight.day);
-                    }).toList();
-
-                    bool hightlight = highlightedDays.contains(now);
-
-                    if (highlightedDays.isNotEmpty) {
-                      if (highlightedDays.first == now) {
-                        isToday = true;
-                      } else if (highlightedDays.last == now) {
-                        isToday = true;
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Container(
+                  height: 30,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Row(
+                    children: List.generate(7, (i) {
+                      String weekdayString = "";
+                      switch (i + 1) {
+                        case DateTime.monday:
+                          weekdayString = i18n?.t('theme.helpers.datetime.monday') ?? "Monday";
+                          break;
+                        case DateTime.tuesday:
+                          weekdayString = i18n?.t('theme.helpers.datetime.tuesday') ?? "Tuesday";
+                          break;
+                        case DateTime.wednesday:
+                          weekdayString = i18n?.t('theme.helpers.datetime.wednesday') ?? "Wednesday";
+                          break;
+                        case DateTime.thursday:
+                          weekdayString = i18n?.t('theme.helpers.datetime.thursday') ?? "Thursday";
+                          break;
+                        case DateTime.friday:
+                          weekdayString = i18n?.t('theme.helpers.datetime.friday') ?? "Friday";
+                          break;
+                        case DateTime.saturday:
+                          weekdayString = i18n?.t('theme.helpers.datetime.saturday') ?? "Saturday";
+                          break;
+                        case DateTime.sunday:
+                        default:
+                          weekdayString = i18n?.t('theme.helpers.datetime.sunday') ?? "Sunday";
+                          break;
                       }
-                    }
+                      return Container(
+                        width: width,
+                        height: 30,
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.smallWeekdays ? weekdayString.substring(0, 3) : weekdayString,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: ThemedGridDelegateWithFixedHeight(
+                      height: height,
+                      crossAxisCount: 7,
+                    ),
+                    itemCount: fullMonth.length,
+                    itemBuilder: (context, index) {
+                      DateTime day = fullMonth[index];
+                      List<ThemedCalendarEntry> dayEntries = _getEntriesOfDay(day);
+                      List<ThemedCalendarRangeEntry> dayRangeEntries = _getRangeEntriesOfDay(day);
+                      List<ThemedCalendarEntry> joinedEntries = [
+                        ...dayRangeEntries.map((entry) {
+                          return ThemedCalendarEntry(
+                            textAlign: entry.textAlign,
+                            at: day,
+                            color: entry.color,
+                            icon: entry.icon,
+                            title: entry.title,
+                            caption: entry.caption,
+                            onTap: entry.onTap,
+                          );
+                        }),
+                        ...dayEntries,
+                      ];
 
-                    return Container(
-                      color: Theme.of(context).dividerColor,
-                      padding: const EdgeInsets.all(1),
-                      child: Opacity(
+                      DateTime now = DateTime(day.year, day.month, day.day);
+                      bool isFocusDay =
+                          day.year == _focusDay.year && day.month == _focusDay.month && day.day == _focusDay.day;
+                      bool isDisabled = widget.disabledDays.map((disabled) {
+                        return DateTime(disabled.year, disabled.month, disabled.day);
+                      }).contains(now);
+
+                      if (widget.isHighlightDaysAsRange) {
+                        isFocusDay = false;
+                        isDisabled = false;
+                      }
+
+                      bool isCurrentMonth = day.month == _dayGenerator.month;
+
+                      List<DateTime> highlightedDays = widget.highlightedDays.map((highlight) {
+                        return DateTime(highlight.year, highlight.month, highlight.day);
+                      }).toList();
+
+                      bool hightlight = highlightedDays.contains(now);
+
+                      Color containerColor = (hightlight || isFocusDay) && isCurrentMonth
+                          ? primaryColor
+                          : Theme.of(context).scaffoldBackgroundColor;
+
+                      return Opacity(
                         opacity: isDisabled
                             ? 0.3
                             : isCurrentMonth
@@ -630,136 +620,140 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                 : 0.5,
                         child: Container(
                           color: Theme.of(context).scaffoldBackgroundColor,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              hoverColor: !widget.showEntries ? null : Colors.transparent,
-                              splashColor: !widget.showEntries ? null : Colors.transparent,
-                              mouseCursor: isDisabled
-                                  ? SystemMouseCursors.forbidden
-                                  : !widget.showEntries
-                                      ? null
-                                      : SystemMouseCursors.basic,
-                              highlightColor: !widget.showEntries ? null : Colors.transparent,
-                              onTap: isDisabled ? null : () => widget.onDayTap?.call(day),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    if (!widget.showEntries) const Spacer(),
-                                    Container(
-                                      width: widget.showEntries ? 30 : height * 0.5,
-                                      height: widget.showEntries ? 30 : height * 0.5,
-                                      decoration: isFocusDay
-                                          ? BoxDecoration(
-                                              border: Border.all(
-                                                color: primaryColor,
-                                                width: 2,
-                                              ),
-                                              borderRadius: BorderRadius.circular(100),
-                                            )
-                                          : (isToday || hightlight) && isCurrentMonth
-                                              ? BoxDecoration(
-                                                  color: isToday ? primaryColor : primaryColor.withOpacity(0.5),
-                                                  borderRadius: BorderRadius.circular(100),
-                                                )
-                                              : null,
-                                      child: Center(
-                                        child: Text(
-                                          day.day.toString(),
-                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: widget.showEntries ? null : height * 0.2,
-                                                color: validateColor(
-                                                  color: isFocusDay
-                                                      ? Theme.of(context).cardColor
-                                                      : isToday
-                                                          ? primaryColor
-                                                          : hightlight
-                                                              ? primaryColor.withOpacity(0.5)
-                                                              : Theme.of(context).cardColor,
-                                                ),
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                    if (!widget.showEntries) ...[
-                                      const Spacer(),
-                                    ] else ...[
-                                      const SizedBox(height: 5),
-                                      Expanded(
-                                        child: ListView.builder(
-                                          itemCount: joinedEntries.length,
-                                          itemExtent: 25,
-                                          itemBuilder: (context, index) {
-                                            ThemedCalendarEntry item = joinedEntries[index];
-                                            Color cardColor = item.color ?? primaryColor;
-
-                                            BorderRadius borderRadius = BorderRadius.circular(5);
-
-                                            return Padding(
-                                              padding: const EdgeInsets.all(2),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: cardColor,
-                                                  borderRadius: borderRadius,
-                                                ),
-                                                clipBehavior: Clip.antiAlias,
-                                                child: Material(
-                                                  color: Colors.transparent,
-                                                  child: InkWell(
-                                                    onTap: item.onTap ?? () {},
-                                                    splashColor: item.onTap == null ? Colors.transparent : null,
-                                                    mouseCursor: item.onTap == null ? SystemMouseCursors.basic : null,
-                                                    hoverColor: item.onTap == null ? Colors.transparent : null,
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        if (item.icon != null) ...[
-                                                          Padding(
-                                                            padding: const EdgeInsets.all(5),
-                                                            child: Icon(
-                                                              item.icon,
-                                                              color: validateColor(color: cardColor),
-                                                              size: 10,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                        Expanded(
-                                                          child: Text(
-                                                            item.title,
-                                                            textAlign: item.textAlign,
-                                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                  color: validateColor(color: cardColor),
-                                                                  fontSize: 10,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (!widget.showEntries) const Spacer(),
+                              Container(
+                                width: widget.showEntries ? 30 : height * 0.5,
+                                height: widget.showEntries ? 30 : height * 0.5,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: containerColor,
+                                  boxShadow: [
+                                    if (hightlight || isFocusDay) ...[
+                                      BoxShadow(
+                                        color: primaryColor.withOpacity(0.2),
+                                        blurRadius: 5,
+                                        spreadRadius: 3,
+                                      )
                                     ],
                                   ],
                                 ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    hoverColor: !widget.showEntries ? null : Colors.transparent,
+                                    splashColor: !widget.showEntries ? null : Colors.transparent,
+                                    mouseCursor: isDisabled
+                                        ? SystemMouseCursors.forbidden
+                                        : !widget.showEntries
+                                            ? null
+                                            : SystemMouseCursors.basic,
+                                    onTap: isDisabled ? null : () => widget.onDayTap?.call(day),
+                                    child: Center(
+                                      child: Text(
+                                        day.day.toString(),
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: widget.showEntries ? null : height * 0.2,
+                                              color: validateColor(
+                                                color: containerColor,
+                                              ),
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              if (!widget.showEntries) ...[
+                                const Spacer(),
+                              ] else ...[
+                                const SizedBox(height: 5),
+                                if (joinedEntries.isEmpty) ...[
+                                  Center(
+                                    child: Opacity(
+                                      opacity: 0.3,
+                                      child: Icon(
+                                        MdiIcons.calendarBlankOutline,
+                                        size: 20,
+                                        color: validateColor(color: containerColor),
+                                      ),
+                                    ),
+                                  ),
+                                ] else ...[
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: joinedEntries.length,
+                                      itemExtent: 25,
+                                      itemBuilder: (context, index) {
+                                        ThemedCalendarEntry item = joinedEntries[index];
+                                        Color cardColor = item.color ?? primaryColor;
+
+                                        BorderRadius borderRadius = BorderRadius.circular(5);
+
+                                        return Padding(
+                                          padding: const EdgeInsets.all(2),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: cardColor,
+                                              borderRadius: borderRadius,
+                                            ),
+                                            clipBehavior: Clip.antiAlias,
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                onTap: item.onTap ?? () {},
+                                                splashColor: item.onTap == null ? Colors.transparent : null,
+                                                mouseCursor: item.onTap == null ? SystemMouseCursors.basic : null,
+                                                hoverColor: item.onTap == null ? Colors.transparent : null,
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    if (item.icon != null) ...[
+                                                      const SizedBox(width: 5),
+                                                      Icon(
+                                                        item.icon,
+                                                        color: validateColor(color: cardColor),
+                                                        size: 10,
+                                                      ),
+                                                    ],
+                                                    const SizedBox(width: 5),
+                                                    Expanded(
+                                                      child: Text(
+                                                        item.title,
+                                                        textAlign: item.textAlign,
+                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                              color: validateColor(color: cardColor),
+                                                              fontSize: 10,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ],
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
