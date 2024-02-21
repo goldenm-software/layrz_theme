@@ -80,31 +80,41 @@ class ThemedCodeEditor extends StatefulWidget {
 
   @override
   State<ThemedCodeEditor> createState() => _ThemedCodeEditorState();
+
+  static AppFont get font => const AppFont(
+        source: FontSource.google,
+        name: 'JetBrains Mono',
+      );
 }
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  late CodeController _controller;
+  late ThemedCodeController _controller;
+
+  late LinkedScrollControllerGroup _scrolls;
+  late ScrollController _codeScroll;
+  late ScrollController _lineScroll;
+
   String _value = '';
   bool get _isLoading => _isLinting || _isRunning;
 
   bool _isRunning = false;
   bool _isLinting = false;
 
-  Mode get _language {
-    switch (widget.language) {
-      case LayrzSupportedLanguage.lml:
-        return lml.lml;
-      case LayrzSupportedLanguage.lcl:
-        return lcl.lcl;
-      case LayrzSupportedLanguage.mjml:
-        return mjml.mjml;
-      case LayrzSupportedLanguage.python:
-        return python.python;
-      default:
-        return Mode(refs: {}, disableAutodetect: true);
-    }
-  }
+  // Mode get _language {
+  //   switch (widget.language) {
+  //     case LayrzSupportedLanguage.lml:
+  //       return lml.lml;
+  //     case LayrzSupportedLanguage.lcl:
+  //       return lcl.lcl;
+  //     case LayrzSupportedLanguage.mjml:
+  //       return mjml.mjml;
+  //     case LayrzSupportedLanguage.python:
+  //       return python.python;
+  //     default:
+  //       return Mode();
+  //   }
+  // }
 
   Map<String, TextStyle> get _theme {
     switch (widget.language) {
@@ -123,44 +133,38 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
     }
   }
 
-  AbstractAnalyzer get _analyzer {
-    switch (widget.language) {
-      case LayrzSupportedLanguage.lml:
-        return lml.LmlAnalizer();
-      case LayrzSupportedLanguage.lcl:
-        return lcl.LclAnalizer();
-      case LayrzSupportedLanguage.mjml:
-        return mjml.MjmlAnalizer();
-      case LayrzSupportedLanguage.python:
-        return python.PythonAnalizer();
-      default:
-        return EmptyAnalyzer();
-    }
-  }
-
   Color get backgroundColor => _theme['root']!.backgroundColor ?? Colors.black;
   Color get textColor => validateColor(color: backgroundColor);
+
+  TextStyle? get codeTextStyle => TextStyle(
+        fontFamily: ThemedCodeEditor.font.name,
+        color: textColor,
+        fontSize: 18,
+      );
 
   @override
   void initState() {
     super.initState();
     _value = widget.value ?? '';
-    _controller = CodeController(
+    _controller = ThemedCodeController(
       text: _value,
-      language: _language,
-      analyzer: _analyzer,
+      language: widget.language.name,
+      theme: _theme,
     );
 
-    _controller.addListener(() {
-      widget.onChanged?.call(_controller.text);
-    });
+    _scrolls = LinkedScrollControllerGroup();
+    _codeScroll = _scrolls.addAndGet();
+    _lineScroll = _scrolls.addAndGet();
+
+    highlight.registerLanguage('lcl', lcl.lcl);
+    highlight.registerLanguage('lml', lml.lml);
+    highlight.registerLanguage('python', python.python);
+    highlight.registerLanguage('mjml', mjml.mjml);
   }
 
   @override
   void didUpdateWidget(ThemedCodeEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _controller.setLanguage(_language, analyzer: _analyzer);
-
     if (widget.value != null && widget.value != oldWidget.value) {
       int previousCursorOffset = _controller.selection.extentOffset;
 
@@ -188,18 +192,18 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
     super.dispose();
   }
 
-  Issue _formatLintError(ThemedCodeError error) {
-    String message = t(error.code, {
-      'name': error.name,
-      'expected': error.expected,
-      'received': error.received,
-    });
-    return Issue(
-      line: error.line - 1,
-      message: message,
-      type: IssueType.error,
-    );
-  }
+  // Issue _formatLintError(ThemedCodeError error) {
+  //   String message = t(error.code, {
+  //     'name': error.name,
+  //     'expected': error.expected,
+  //     'received': error.received,
+  //   });
+  //   return Issue(
+  //     line: error.line - 1,
+  //     message: message,
+  //     type: IssueType.error,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +220,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   children: [
                     Expanded(
@@ -229,141 +233,141 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                 ),
                           ),
                     ),
-                    const SizedBox(width: 10),
-                    if (widget.onLintTap != null) ...[
-                      ThemedTooltip(
-                        message: i18n?.t('actions.lint') ?? 'Lint',
-                        color: Colors.white,
-                        child: InkWell(
-                          onTap: _isLoading
-                              ? null
-                              : () async {
-                                  setState(() => _isLinting = true);
-                                  _controller.analysisResult = const AnalysisResult(issues: []);
-                                  await Future.delayed(const Duration(milliseconds: 500));
-                                  final result = await widget.onLintTap?.call(_value);
-                                  setState(() => _isLinting = false);
+                    // const SizedBox(width: 10),
+                    // if (widget.onLintTap != null) ...[
+                    //   ThemedTooltip(
+                    //     message: i18n?.t('actions.lint') ?? 'Lint',
+                    //     color: Colors.white,
+                    //     child: InkWell(
+                    //       onTap: _isLoading
+                    //           ? null
+                    //           : () async {
+                    //               setState(() => _isLinting = true);
+                    //               _controller.analysisResult = const AnalysisResult(issues: []);
+                    //               await Future.delayed(const Duration(milliseconds: 500));
+                    //               final result = await widget.onLintTap?.call(_value);
+                    //               setState(() => _isLinting = false);
 
-                                  if (result != null) {
-                                    _controller.analysisResult = AnalysisResult(
-                                      issues: result.map(_formatLintError).toList(),
-                                    );
-                                  }
-                                },
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isLinting ? 0.5 : 1,
-                                    duration: kHoverDuration,
-                                    child: Icon(
-                                      MdiIcons.bugOutline,
-                                      color: textColor,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isLinting ? 1 : 0,
-                                    duration: kHoverDuration,
-                                    child: CircularProgressIndicator(
-                                      color: textColor,
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                    if (widget.onRunTap != null)
-                      ThemedTooltip(
-                        message: i18n?.t('actions.run') ?? 'Run',
-                        color: Colors.white,
-                        child: InkWell(
-                          onTap: _isLoading
-                              ? null
-                              : () async {
-                                  setState(() => _isRunning = true);
-                                  await Future.delayed(const Duration(milliseconds: 500));
-                                  final result = await widget.onRunTap?.call(_value);
-                                  setState(() => _isRunning = false);
-                                  if (result != null && mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return Dialog(
-                                          elevation: 0,
-                                          backgroundColor: Colors.transparent,
-                                          child: Container(
-                                            decoration: generateContainerElevation(
-                                              context: context,
-                                              color: backgroundColor,
-                                              elevation: 3,
-                                            ),
-                                            constraints: const BoxConstraints(maxWidth: 400),
-                                            padding: const EdgeInsets.all(20),
-                                            child: Text(
-                                              result,
-                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                    color: textColor,
-                                                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                                                  ),
-                                              maxLines: 4,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isRunning ? 0.5 : 1,
-                                    duration: kHoverDuration,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 2, bottom: 2),
-                                      child: Icon(
-                                        MdiIcons.playOutline,
-                                        color: textColor,
-                                        size: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isRunning ? 1 : 0,
-                                    duration: kHoverDuration,
-                                    child: CircularProgressIndicator(
-                                      color: textColor,
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    //               if (result != null) {
+                    //                 _controller.analysisResult = AnalysisResult(
+                    //                   issues: result.map(_formatLintError).toList(),
+                    //                 );
+                    //               }
+                    //             },
+                    //       child: SizedBox(
+                    //         height: 20,
+                    //         width: 20,
+                    //         child: Stack(
+                    //           children: [
+                    //             Center(
+                    //               child: AnimatedOpacity(
+                    //                 opacity: _isLinting ? 0.5 : 1,
+                    //                 duration: kHoverDuration,
+                    //                 child: Icon(
+                    //                   MdiIcons.bugOutline,
+                    //                   color: textColor,
+                    //                   size: 16,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             Center(
+                    //               child: AnimatedOpacity(
+                    //                 opacity: _isLinting ? 1 : 0,
+                    //                 duration: kHoverDuration,
+                    //                 child: CircularProgressIndicator(
+                    //                   color: textColor,
+                    //                   strokeWidth: 2,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   const SizedBox(width: 10),
+                    // ],
+                    // if (widget.onRunTap != null)
+                    //   ThemedTooltip(
+                    //     message: i18n?.t('actions.run') ?? 'Run',
+                    //     color: Colors.white,
+                    //     child: InkWell(
+                    //       onTap: _isLoading
+                    //           ? null
+                    //           : () async {
+                    //               setState(() => _isRunning = true);
+                    //               await Future.delayed(const Duration(milliseconds: 500));
+                    //               final result = await widget.onRunTap?.call(_value);
+                    //               setState(() => _isRunning = false);
+                    //               if (result != null && mounted) {
+                    //                 showDialog(
+                    //                   context: context,
+                    //                   builder: (context) {
+                    //                     return Dialog(
+                    //                       elevation: 0,
+                    //                       backgroundColor: Colors.transparent,
+                    //                       child: Container(
+                    //                         decoration: generateContainerElevation(
+                    //                           context: context,
+                    //                           color: backgroundColor,
+                    //                           elevation: 3,
+                    //                         ),
+                    //                         constraints: const BoxConstraints(maxWidth: 400),
+                    //                         padding: const EdgeInsets.all(20),
+                    //                         child: Text(
+                    //                           result,
+                    //                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    //                                 color: textColor,
+                    //                                 fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    //                               ),
+                    //                           maxLines: 4,
+                    //                           textAlign: TextAlign.center,
+                    //                         ),
+                    //                       ),
+                    //                     );
+                    //                   },
+                    //                 );
+                    //               }
+                    //             },
+                    //       child: SizedBox(
+                    //         height: 20,
+                    //         width: 20,
+                    //         child: Stack(
+                    //           children: [
+                    //             Center(
+                    //               child: AnimatedOpacity(
+                    //                 opacity: _isRunning ? 0.5 : 1,
+                    //                 duration: kHoverDuration,
+                    //                 child: Padding(
+                    //                   padding: const EdgeInsets.only(left: 2, bottom: 2),
+                    //                   child: Icon(
+                    //                     MdiIcons.playOutline,
+                    //                     color: textColor,
+                    //                     size: 18,
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             Center(
+                    //               child: AnimatedOpacity(
+                    //                 opacity: _isRunning ? 1 : 0,
+                    //                 duration: kHoverDuration,
+                    //                 child: CircularProgressIndicator(
+                    //                   color: textColor,
+                    //                   strokeWidth: 2,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: LinearProgressIndicator(
                   value: _isLoading ? null : 0,
                   minHeight: 1,
@@ -371,27 +375,75 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                   color: textColor,
                 ),
               ),
-              Theme(
-                data: ThemeData.dark().copyWith(
-                  textTheme: GoogleFonts.jetBrainsMonoTextTheme(),
-                ),
-                child: CodeTheme(
-                  data: CodeThemeData(styles: _theme),
-                  child: Expanded(
-                    child: SingleChildScrollView(
-                      child: CodeField(
-                        readOnly: widget.disabled,
-                        controller: _controller,
-                        onChanged: (value) {
-                          // widget.onChanged?.call(value);
-                        },
-                      ),
+              Expanded(
+                child: Theme(
+                  data: ThemeData.dark().copyWith(
+                    scrollbarTheme: ScrollbarThemeData(
+                      thumbColor: MaterialStateProperty.all(Colors.transparent),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 60,
+                          padding: const EdgeInsets.only(right: 10),
+                          child: ListView.builder(
+                            controller: _lineScroll,
+                            itemCount: '\n'.allMatches(_value).length + 1,
+                            itemBuilder: (context, index) {
+                              return Text(
+                                '${index + 1}',
+                                style: codeTextStyle?.copyWith(
+                                  color: textColor.withOpacity(0.5),
+                                  height: 1.25,
+                                ),
+                                textAlign: TextAlign.end,
+                              );
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: TextField(
+                              readOnly: widget.disabled,
+                              scrollController: _codeScroll,
+                              style: codeTextStyle?.copyWith(
+                                color: _theme['root']!.color,
+                                height: 1.2,
+                              ),
+                              scrollPadding: EdgeInsets.zero,
+                              maxLines: null,
+                              minLines: null,
+                              expands: true,
+                              controller: _controller,
+                              cursorColor: textColor,
+                              decoration: const InputDecoration(
+                                isCollapsed: true,
+                                isDense: true,
+                                disabledBorder: InputBorder.none,
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                              onChanged: (val) {
+                                _value = val;
+                                widget.onChanged?.call(val);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
               ThemedFieldDisplayError(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.all(10),
                 errors: widget.errors,
               ),
             ],
@@ -467,13 +519,6 @@ enum LayrzSupportedLanguage {
   ;
 }
 
-class EmptyAnalyzer extends AbstractAnalyzer {
-  @override
-  Future<AnalysisResult> analyze(Code code) async {
-    return const AnalysisResult(issues: []);
-  }
-}
-
 class ThemedCodeError {
   /// [code] is the error code, this should be a translation key
   /// If is not a translation key, the error will be displayed as it is
@@ -499,4 +544,63 @@ class ThemedCodeError {
     this.expected,
     this.received,
   });
+}
+
+class ThemedCodeController extends TextEditingController {
+  String _language;
+  Map<String, TextStyle> _theme;
+
+  ThemedCodeController({
+    super.text = '',
+    String? language,
+    Map<String, TextStyle>? theme,
+  })  : _language = language ?? 'plain',
+        _theme = theme ?? const {};
+
+  void setLanguage(String language) {
+    _language = language;
+  }
+
+  void setTheme(Map<String, TextStyle> theme) {
+    _theme = theme;
+  }
+
+  @override
+  TextSpan buildTextSpan({required BuildContext context, TextStyle? style, bool? withComposing}) {
+    // Using highlight package to highlight the code
+    final result = highlight.parse(text, language: _language);
+
+    List<TextSpan> spans = [];
+    var currentSpans = spans;
+    List<List<TextSpan>> stack = [];
+
+    _traverse(Node node) {
+      if (node.value != null) {
+        currentSpans.add(node.className == null
+            ? TextSpan(text: node.value)
+            : TextSpan(text: node.value, style: _theme[node.className!]));
+      } else if (node.children != null) {
+        List<TextSpan> tmp = [];
+        currentSpans.add(TextSpan(children: tmp, style: _theme[node.className!]));
+        stack.add(currentSpans);
+        currentSpans = tmp;
+
+        for (var n in node.children!) {
+          _traverse(n);
+          if (n == node.children!.last) {
+            currentSpans = stack.isEmpty ? spans : stack.removeLast();
+          }
+        }
+      }
+    }
+
+    for (var node in result.nodes!) {
+      _traverse(node);
+    }
+
+    return TextSpan(
+      style: style,
+      children: spans,
+    );
+  }
 }

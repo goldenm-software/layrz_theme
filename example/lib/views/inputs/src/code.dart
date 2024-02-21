@@ -10,7 +10,7 @@ class CodeInputView extends StatefulWidget {
 class _CodeInputViewState extends State<CodeInputView> {
   List<String> get _errors => ['Error 1', 'Error 2', 'Error 3'];
   String _lclCode = "CONSTANT(True)";
-  String _pythonCode = "10 + 10";
+  String _pythonCode = "10 + 10\n20 + 20\ndef test():\n\treturn 10\n\nprint(test())";
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _CodeInputViewState extends State<CodeInputView> {
               children: [
                 ResponsiveCol(
                   xs: Sizes.col12,
-                  // md: Sizes.col6,
+                  md: Sizes.col6,
                   child: ThemedCodeEditor(
                     labelText: "Python example",
                     language: LayrzSupportedLanguage.python,
@@ -51,43 +51,43 @@ class _CodeInputViewState extends State<CodeInputView> {
                     onChanged: (val) => setState(() => _pythonCode = val),
                   ),
                 ),
-                // ResponsiveCol(
-                //   xs: Sizes.col12,
-                //   md: Sizes.col6,
-                //   child: ThemedCodeEditor(
-                //     labelText: "Plain text example",
-                //     language: LayrzSupportedLanguage.txt,
-                //     value: "Test text",
-                //     errors: _errors,
-                //     onChanged: (val) {
-                //       debugPrint("Code: $val");
-                //     },
-                //   ),
-                // ),
-                // ResponsiveCol(
-                //   xs: Sizes.col12,
-                //   md: Sizes.col6,
-                //   child: ThemedCodeEditor(
-                //     labelText: "LCL example",
-                //     language: LayrzSupportedLanguage.lcl,
-                //     value: _lclCode,
-                //     errors: _errors,
-                //     onChanged: (val) => setState(() => _lclCode = val),
-                //   ),
-                // ),
-                // ResponsiveCol(
-                //   xs: Sizes.col12,
-                //   md: Sizes.col6,
-                //   child: ThemedCodeEditor(
-                //     labelText: "LML example",
-                //     language: LayrzSupportedLanguage.lml,
-                //     value: "Positive of {{assetName}} at {{assetPositionLatitude}}",
-                //     errors: _errors,
-                //     onChanged: (val) {
-                //       debugPrint("Code: $val");
-                //     },
-                //   ),
-                // ),
+                ResponsiveCol(
+                  xs: Sizes.col12,
+                  md: Sizes.col6,
+                  child: ThemedCodeEditor(
+                    labelText: "Plain text example",
+                    language: LayrzSupportedLanguage.txt,
+                    value: "Test text",
+                    errors: _errors,
+                    onChanged: (val) {
+                      debugPrint("Code: $val");
+                    },
+                  ),
+                ),
+                ResponsiveCol(
+                  xs: Sizes.col12,
+                  md: Sizes.col6,
+                  child: ThemedCodeEditor(
+                    labelText: "LCL example",
+                    language: LayrzSupportedLanguage.lcl,
+                    value: _lclCode,
+                    errors: _errors,
+                    onChanged: (val) => setState(() => _lclCode = val),
+                  ),
+                ),
+                ResponsiveCol(
+                  xs: Sizes.col12,
+                  md: Sizes.col6,
+                  child: ThemedCodeEditor(
+                    labelText: "LML example",
+                    language: LayrzSupportedLanguage.lml,
+                    value: "Positive of {{assetName}} at {{assetPositionLatitude}}",
+                    errors: _errors,
+                    onChanged: (val) {
+                      debugPrint("Code: $val");
+                    },
+                  ),
+                ),
               ],
             ),
           ],
