@@ -98,23 +98,24 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   String _value = '';
   bool get _isLoading => _isLinting || _isRunning;
 
+  Map<int, List<ThemedCodeError>> _issues = {};
+
+  List<String> get globalErrors {
+    if (_issues.containsKey(0)) {
+      return _issues[0]!.map((e) {
+        return t(e.code, {
+          'name': e.name ?? '',
+          'expected': e.expected ?? '',
+          'received': e.received ?? '',
+        });
+      }).toList();
+    }
+
+    return [];
+  }
+
   bool _isRunning = false;
   bool _isLinting = false;
-
-  // Mode get _language {
-  //   switch (widget.language) {
-  //     case LayrzSupportedLanguage.lml:
-  //       return lml.lml;
-  //     case LayrzSupportedLanguage.lcl:
-  //       return lcl.lcl;
-  //     case LayrzSupportedLanguage.mjml:
-  //       return mjml.mjml;
-  //     case LayrzSupportedLanguage.python:
-  //       return python.python;
-  //     default:
-  //       return Mode();
-  //   }
-  // }
 
   Map<String, TextStyle> get _theme {
     switch (widget.language) {
@@ -136,10 +137,12 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   Color get backgroundColor => _theme['root']!.backgroundColor ?? Colors.black;
   Color get textColor => validateColor(color: backgroundColor);
 
+  final GlobalKey _textKey = GlobalKey();
+
   TextStyle? get codeTextStyle => TextStyle(
         fontFamily: ThemedCodeEditor.font.name,
         color: textColor,
-        fontSize: 18,
+        fontSize: 15,
       );
 
   @override
@@ -233,136 +236,140 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                 ),
                           ),
                     ),
-                    // const SizedBox(width: 10),
-                    // if (widget.onLintTap != null) ...[
-                    //   ThemedTooltip(
-                    //     message: i18n?.t('actions.lint') ?? 'Lint',
-                    //     color: Colors.white,
-                    //     child: InkWell(
-                    //       onTap: _isLoading
-                    //           ? null
-                    //           : () async {
-                    //               setState(() => _isLinting = true);
-                    //               _controller.analysisResult = const AnalysisResult(issues: []);
-                    //               await Future.delayed(const Duration(milliseconds: 500));
-                    //               final result = await widget.onLintTap?.call(_value);
-                    //               setState(() => _isLinting = false);
+                    if (widget.onLintTap != null) ...[
+                      ThemedTooltip(
+                        message: i18n?.t('actions.lint') ?? 'Lint',
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: _isLoading
+                              ? null
+                              : () async {
+                                  _issues = {};
+                                  setState(() => _isLinting = true);
+                                  await Future.delayed(const Duration(milliseconds: 500));
+                                  final result = await widget.onLintTap?.call(_value);
+                                  setState(() => _isLinting = false);
 
-                    //               if (result != null) {
-                    //                 _controller.analysisResult = AnalysisResult(
-                    //                   issues: result.map(_formatLintError).toList(),
-                    //                 );
-                    //               }
-                    //             },
-                    //       child: SizedBox(
-                    //         height: 20,
-                    //         width: 20,
-                    //         child: Stack(
-                    //           children: [
-                    //             Center(
-                    //               child: AnimatedOpacity(
-                    //                 opacity: _isLinting ? 0.5 : 1,
-                    //                 duration: kHoverDuration,
-                    //                 child: Icon(
-                    //                   MdiIcons.bugOutline,
-                    //                   color: textColor,
-                    //                   size: 16,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             Center(
-                    //               child: AnimatedOpacity(
-                    //                 opacity: _isLinting ? 1 : 0,
-                    //                 duration: kHoverDuration,
-                    //                 child: CircularProgressIndicator(
-                    //                   color: textColor,
-                    //                   strokeWidth: 2,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    //   const SizedBox(width: 10),
-                    // ],
-                    // if (widget.onRunTap != null)
-                    //   ThemedTooltip(
-                    //     message: i18n?.t('actions.run') ?? 'Run',
-                    //     color: Colors.white,
-                    //     child: InkWell(
-                    //       onTap: _isLoading
-                    //           ? null
-                    //           : () async {
-                    //               setState(() => _isRunning = true);
-                    //               await Future.delayed(const Duration(milliseconds: 500));
-                    //               final result = await widget.onRunTap?.call(_value);
-                    //               setState(() => _isRunning = false);
-                    //               if (result != null && mounted) {
-                    //                 showDialog(
-                    //                   context: context,
-                    //                   builder: (context) {
-                    //                     return Dialog(
-                    //                       elevation: 0,
-                    //                       backgroundColor: Colors.transparent,
-                    //                       child: Container(
-                    //                         decoration: generateContainerElevation(
-                    //                           context: context,
-                    //                           color: backgroundColor,
-                    //                           elevation: 3,
-                    //                         ),
-                    //                         constraints: const BoxConstraints(maxWidth: 400),
-                    //                         padding: const EdgeInsets.all(20),
-                    //                         child: Text(
-                    //                           result,
-                    //                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    //                                 color: textColor,
-                    //                                 fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                    //                               ),
-                    //                           maxLines: 4,
-                    //                           textAlign: TextAlign.center,
-                    //                         ),
-                    //                       ),
-                    //                     );
-                    //                   },
-                    //                 );
-                    //               }
-                    //             },
-                    //       child: SizedBox(
-                    //         height: 20,
-                    //         width: 20,
-                    //         child: Stack(
-                    //           children: [
-                    //             Center(
-                    //               child: AnimatedOpacity(
-                    //                 opacity: _isRunning ? 0.5 : 1,
-                    //                 duration: kHoverDuration,
-                    //                 child: Padding(
-                    //                   padding: const EdgeInsets.only(left: 2, bottom: 2),
-                    //                   child: Icon(
-                    //                     MdiIcons.playOutline,
-                    //                     color: textColor,
-                    //                     size: 18,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             Center(
-                    //               child: AnimatedOpacity(
-                    //                 opacity: _isRunning ? 1 : 0,
-                    //                 duration: kHoverDuration,
-                    //                 child: CircularProgressIndicator(
-                    //                   color: textColor,
-                    //                   strokeWidth: 2,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
+                                  if (result != null) {
+                                    for (var error in result) {
+                                      if (_issues.containsKey(error.line)) {
+                                        _issues[error.line]!.add(error);
+                                      } else {
+                                        _issues[error.line] = [error];
+                                      }
+                                    }
+                                  }
+                                },
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isLinting ? 0.5 : 1,
+                                    duration: kHoverDuration,
+                                    child: Icon(
+                                      MdiIcons.bugOutline,
+                                      color: textColor,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isLinting ? 1 : 0,
+                                    duration: kHoverDuration,
+                                    child: CircularProgressIndicator(
+                                      color: textColor,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (widget.onLintTap != null && widget.onRunTap != null) const SizedBox(width: 10),
+                    if (widget.onRunTap != null) ...[
+                      ThemedTooltip(
+                        message: i18n?.t('actions.run') ?? 'Run',
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: _isLoading
+                              ? null
+                              : () async {
+                                  setState(() => _isRunning = true);
+                                  await Future.delayed(const Duration(milliseconds: 500));
+                                  final result = await widget.onRunTap?.call(_value);
+                                  setState(() => _isRunning = false);
+                                  if (result != null && mounted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          elevation: 0,
+                                          backgroundColor: Colors.transparent,
+                                          child: Container(
+                                            decoration: generateContainerElevation(
+                                              context: context,
+                                              color: backgroundColor,
+                                              elevation: 3,
+                                            ),
+                                            constraints: const BoxConstraints(maxWidth: 400),
+                                            padding: const EdgeInsets.all(20),
+                                            child: Text(
+                                              result,
+                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                    color: textColor,
+                                                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                                                  ),
+                                              maxLines: 4,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isRunning ? 0.5 : 1,
+                                    duration: kHoverDuration,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 2, bottom: 2),
+                                      child: Icon(
+                                        MdiIcons.playOutline,
+                                        color: textColor,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: AnimatedOpacity(
+                                    opacity: _isRunning ? 1 : 0,
+                                    duration: kHoverDuration,
+                                    child: CircularProgressIndicator(
+                                      color: textColor,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -376,75 +383,172 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                 ),
               ),
               Expanded(
-                child: Theme(
-                  data: ThemeData.dark().copyWith(
-                    scrollbarTheme: ScrollbarThemeData(
-                      thumbColor: MaterialStateProperty.all(Colors.transparent),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 60,
-                          padding: const EdgeInsets.only(right: 10),
-                          child: ListView.builder(
-                            controller: _lineScroll,
-                            itemCount: '\n'.allMatches(_value).length + 1,
-                            itemBuilder: (context, index) {
-                              return Text(
-                                '${index + 1}',
-                                style: codeTextStyle?.copyWith(
-                                  color: textColor.withOpacity(0.5),
-                                  height: 1.25,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 60,
+                        padding: const EdgeInsets.only(right: 10),
+                        child: ListView.builder(
+                          controller: _lineScroll,
+                          itemCount: '\n'.allMatches(_value).length + 1,
+                          itemBuilder: (context, index) {
+                            bool hasError = _issues.containsKey(index + 1);
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: codeTextStyle?.copyWith(
+                                      color: textColor.withOpacity(0.5),
+                                      height: 1.25,
+                                    ),
+                                    textAlign: TextAlign.end,
+                                  ),
                                 ),
-                                textAlign: TextAlign.end,
-                              );
-                            },
-                          ),
+                                if (hasError) ...[
+                                  SizedBox(
+                                    width: 19,
+                                    child: ThemedTooltip(
+                                      position: ThemedTooltipPosition.right,
+                                      message: _issues[index + 1]!.map((e) {
+                                        return t(e.code, {
+                                          'name': e.name ?? '',
+                                          'expected': e.expected ?? '',
+                                          'received': e.received ?? '',
+                                        });
+                                      }).join('\n'),
+                                      color: Colors.red,
+                                      child: Icon(
+                                        MdiIcons.alertCircle,
+                                        color: Colors.red,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ] else ...[
+                                  const SizedBox(width: 19),
+                                ],
+                              ],
+                            );
+                          },
                         ),
-                        Expanded(
+                      ),
+                      Expanded(
+                        child: FocusableActionDetector(
+                          shortcuts: {
+                            LogicalKeySet(LogicalKeyboardKey.enter): ThemedNewLineIntent(),
+                            LogicalKeySet(LogicalKeyboardKey.tab): ThemedTabIntent(),
+                            LogicalKeySet(
+                              LogicalKeyboardKey.control,
+                              LogicalKeyboardKey.space,
+                            ): ThemedSuggestionIntent(),
+
+                            // Prevent Ctrl + S to save the page
+                            LogicalKeySet(
+                              LogicalKeyboardKey.controlLeft,
+                              LogicalKeyboardKey.keyS,
+                            ): Intent.doNothing,
+                          },
+                          actions: {
+                            ThemedNewLineIntent: CallbackAction(onInvoke: (e) {
+                              final TextEditingValue value = _controller.value;
+                              final int start = value.selection.start;
+                              final int end = value.selection.end;
+                              final String text = value.text;
+                              final String newText = text.replaceRange(start, end, '\n');
+                              _controller.value = TextEditingValue(
+                                text: newText,
+                                selection: TextSelection.collapsed(offset: start + 1),
+                              );
+                              return null;
+                            }),
+                            ThemedTabIntent: CallbackAction(onInvoke: (e) {
+                              final TextEditingValue value = _controller.value;
+                              final int start = value.selection.start;
+                              final int end = value.selection.end;
+                              final String text = value.text;
+                              final String newText = text.replaceRange(start, end, '\t');
+                              _controller.value = TextEditingValue(
+                                text: newText,
+                                selection: TextSelection.collapsed(offset: start + 1),
+                              );
+                              return null;
+                            }),
+                            ThemedSuggestionIntent: CallbackAction(onInvoke: (e) {
+                              TextSpan span = TextSpan(text: _controller.text);
+                              TextPainter painter = TextPainter(
+                                text: span,
+                                textDirection: TextDirection.ltr,
+                              )..layout();
+
+                              Offset localOffset = painter.getOffsetForCaret(
+                                TextPosition(offset: _controller.selection.extentOffset),
+                                Rect.zero,
+                              );
+
+                              final RenderBox box = _textKey.currentContext!.findRenderObject() as RenderBox;
+                              final Offset globalOffset = box.localToGlobal(localOffset);
+                              debugPrint("Global offset: $globalOffset");
+
+                              return null;
+                            }),
+                          },
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: TextField(
-                              readOnly: widget.disabled,
-                              scrollController: _codeScroll,
-                              style: codeTextStyle?.copyWith(
-                                color: _theme['root']!.color,
-                                height: 1.2,
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Theme(
+                              data: ThemeData.dark().copyWith(
+                                scrollbarTheme: ScrollbarThemeData(
+                                  thumbColor: MaterialStateProperty.all(Colors.transparent),
+                                ),
+                                textSelectionTheme: TextSelectionThemeData(
+                                  cursorColor: textColor,
+                                  selectionColor: textColor.withOpacity(0.1),
+                                  selectionHandleColor: textColor,
+                                ),
                               ),
-                              scrollPadding: EdgeInsets.zero,
-                              maxLines: null,
-                              minLines: null,
-                              expands: true,
-                              controller: _controller,
-                              cursorColor: textColor,
-                              decoration: const InputDecoration(
-                                isCollapsed: true,
-                                isDense: true,
-                                disabledBorder: InputBorder.none,
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                contentPadding: EdgeInsets.zero,
+                              child: TextField(
+                                key: _textKey,
+                                readOnly: widget.disabled,
+                                scrollController: _codeScroll,
+                                style: codeTextStyle?.copyWith(
+                                  color: _theme['root']!.color,
+                                  height: 1.2,
+                                ),
+                                scrollPadding: EdgeInsets.zero,
+                                maxLines: null,
+                                minLines: null,
+                                expands: false,
+                                controller: _controller,
+                                cursorColor: textColor,
+                                decoration: const InputDecoration(
+                                  isCollapsed: true,
+                                  isDense: true,
+                                  disabledBorder: InputBorder.none,
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                                scrollPhysics: const ClampingScrollPhysics(),
+                                onChanged: (val) {
+                                  _value = val;
+                                  widget.onChanged?.call(val);
+                                },
                               ),
-                              onChanged: (val) {
-                                _value = val;
-                                widget.onChanged?.call(val);
-                              },
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               ThemedFieldDisplayError(
                 padding: const EdgeInsets.all(10),
-                errors: widget.errors,
+                errors: widget.errors + globalErrors,
               ),
             ],
           ),
@@ -604,3 +708,9 @@ class ThemedCodeController extends TextEditingController {
     );
   }
 }
+
+class ThemedNewLineIntent extends Intent {}
+
+class ThemedTabIntent extends Intent {}
+
+class ThemedSuggestionIntent extends Intent {}
