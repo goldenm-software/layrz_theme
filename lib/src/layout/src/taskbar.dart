@@ -119,8 +119,7 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get activeColor => isDark ? Colors.white : Theme.of(context).primaryColor;
   String get favicon => useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white;
-  List<ThemedNavigatorItem> get items => widget.items;
-  List<ThemedNavigatorItem> get persistentItems => widget.persistentItems;
+  List<ThemedNavigatorItem> get items => widget.items + widget.persistentItems;
   List<ThemedNotificationItem> get notifications => widget.notifications;
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);

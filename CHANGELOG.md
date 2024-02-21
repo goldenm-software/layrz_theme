@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.33
+
+- Fixed `persistentItems` not showing on `ThemedTaskbar` when the `ThemedLayout` is `ThemedLayoutStyle.modern`
+
 ## 4.3.32
 
 - Adjusted design of `ThemedCalendar`
