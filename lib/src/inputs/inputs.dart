@@ -28,13 +28,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:layrz_models/layrz_models.dart';
 
 // Code editor
-import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:highlight/highlight.dart';
 import 'package:layrz_theme/src/languages/lcl/lcl.dart' as lcl;
 import 'package:layrz_theme/src/languages/lml/lml.dart' as lml;
 import 'package:layrz_theme/src/languages/python/python.dart' as python;
 import 'package:layrz_theme/src/languages/mjml/mjml.dart' as mjml;
 import 'package:pointer_interceptor/pointer_interceptor.dart';
+import './src/code_editor/code_editor.dart';
 
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
 export 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;

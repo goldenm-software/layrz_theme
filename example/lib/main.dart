@@ -14,7 +14,7 @@ const titleFont = AppFont(
 
 const bodyFont = AppFont(
   source: FontSource.google,
-  name: 'Fira Sans Condensed',
+  name: 'Ubuntu',
 );
 
 Future<void> main() async {

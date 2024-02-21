@@ -30,12 +30,11 @@ class _CodeInputViewState extends State<CodeInputView> {
               children: [
                 ResponsiveCol(
                   xs: Sizes.col12,
-                  md: Sizes.col6,
+                  // md: Sizes.col6,
                   child: ThemedCodeEditor(
                     labelText: "Python example",
                     language: LayrzSupportedLanguage.python,
                     value: _pythonCode,
-                    disabled: true,
                     errors: _errors,
                     onLintTap: (code) async {
                       debugPrint("Code linted $code");
@@ -52,43 +51,43 @@ class _CodeInputViewState extends State<CodeInputView> {
                     onChanged: (val) => setState(() => _pythonCode = val),
                   ),
                 ),
-                ResponsiveCol(
-                  xs: Sizes.col12,
-                  md: Sizes.col6,
-                  child: ThemedCodeEditor(
-                    labelText: "Plain text example",
-                    language: LayrzSupportedLanguage.txt,
-                    value: "Test text",
-                    errors: _errors,
-                    onChanged: (val) {
-                      debugPrint("Code: $val");
-                    },
-                  ),
-                ),
-                ResponsiveCol(
-                  xs: Sizes.col12,
-                  md: Sizes.col6,
-                  child: ThemedCodeEditor(
-                    labelText: "LCL example",
-                    language: LayrzSupportedLanguage.lcl,
-                    value: _lclCode,
-                    errors: _errors,
-                    onChanged: (val) => setState(() => _lclCode = val),
-                  ),
-                ),
-                ResponsiveCol(
-                  xs: Sizes.col12,
-                  md: Sizes.col6,
-                  child: ThemedCodeEditor(
-                    labelText: "LML example",
-                    language: LayrzSupportedLanguage.lml,
-                    value: "Positive of {{assetName}} at {{assetPositionLatitude}}",
-                    errors: _errors,
-                    onChanged: (val) {
-                      debugPrint("Code: $val");
-                    },
-                  ),
-                ),
+                // ResponsiveCol(
+                //   xs: Sizes.col12,
+                //   md: Sizes.col6,
+                //   child: ThemedCodeEditor(
+                //     labelText: "Plain text example",
+                //     language: LayrzSupportedLanguage.txt,
+                //     value: "Test text",
+                //     errors: _errors,
+                //     onChanged: (val) {
+                //       debugPrint("Code: $val");
+                //     },
+                //   ),
+                // ),
+                // ResponsiveCol(
+                //   xs: Sizes.col12,
+                //   md: Sizes.col6,
+                //   child: ThemedCodeEditor(
+                //     labelText: "LCL example",
+                //     language: LayrzSupportedLanguage.lcl,
+                //     value: _lclCode,
+                //     errors: _errors,
+                //     onChanged: (val) => setState(() => _lclCode = val),
+                //   ),
+                // ),
+                // ResponsiveCol(
+                //   xs: Sizes.col12,
+                //   md: Sizes.col6,
+                //   child: ThemedCodeEditor(
+                //     labelText: "LML example",
+                //     language: LayrzSupportedLanguage.lml,
+                //     value: "Positive of {{assetName}} at {{assetPositionLatitude}}",
+                //     errors: _errors,
+                //     onChanged: (val) {
+                //       debugPrint("Code: $val");
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ],

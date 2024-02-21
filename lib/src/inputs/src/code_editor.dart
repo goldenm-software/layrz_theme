@@ -150,6 +150,10 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
       language: _language,
       analyzer: _analyzer,
     );
+
+    _controller.addListener(() {
+      widget.onChanged?.call(_controller.text);
+    });
   }
 
   @override
@@ -376,12 +380,12 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                   child: Expanded(
                     child: SingleChildScrollView(
                       child: CodeField(
-                          readOnly: widget.disabled,
-                          controller: _controller,
-                          onChanged: (value) {
-                            widget.onChanged?.call(value);
-                            setState(() => _value = value);
-                          }),
+                        readOnly: widget.disabled,
+                        controller: _controller,
+                        onChanged: (value) {
+                          // widget.onChanged?.call(value);
+                        },
+                      ),
                     ),
                   ),
                 ),

@@ -789,21 +789,21 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   }
 
   /// [_validateIfIsToday] validates if the day is today.
-  bool _validateIfIsToday(DateTime day) {
-    switch (mode) {
-      case ThemedCalendarMode.year:
-        return day.year == _today.year && day.month == _today.month;
-      case ThemedCalendarMode.month:
-      case ThemedCalendarMode.week:
-        return day.year == _today.year && day.month == _today.month && day.day == _today.day;
-      case ThemedCalendarMode.day:
-        return day.year == _today.year &&
-            day.month == _today.month &&
-            day.day == _today.day &&
-            day.hour == _today.hour &&
-            day.minute == _today.minute;
-    }
-  }
+  // bool _validateIfIsToday(DateTime day) {
+  //   switch (mode) {
+  //     case ThemedCalendarMode.year:
+  //       return day.year == _today.year && day.month == _today.month;
+  //     case ThemedCalendarMode.month:
+  //     case ThemedCalendarMode.week:
+  //       return day.year == _today.year && day.month == _today.month && day.day == _today.day;
+  //     case ThemedCalendarMode.day:
+  //       return day.year == _today.year &&
+  //           day.month == _today.month &&
+  //           day.day == _today.day &&
+  //           day.hour == _today.hour &&
+  //           day.minute == _today.minute;
+  //   }
+  // }
 
   /// [_generateThisMonth] generates a list of days that are in the same month as [_focusDay].
   List<DateTime> _generateThisMonth() {
