@@ -152,7 +152,6 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
 
   late DateTime _focusDay;
   late DateTime _dayGenerator;
-  late DateTime _today;
 
   String get _title {
     switch (mode) {
@@ -197,7 +196,6 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   void initState() {
     super.initState();
     _focusDay = widget.focusDay ?? DateTime.now();
-    _today = DateTime.now();
     _dayGenerator = _focusDay.subtract(Duration(days: _focusDay.day - 1));
   }
 
@@ -209,7 +207,6 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _today = DateTime.now();
   }
 
   @override

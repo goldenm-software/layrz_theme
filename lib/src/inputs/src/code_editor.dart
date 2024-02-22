@@ -577,7 +577,6 @@ class _ThemedCodeSuggestions extends StatelessWidget {
   final void Function(String) onTap;
   final String? basePath;
   const _ThemedCodeSuggestions({
-    super.key,
     required this.options,
     required this.onTap,
     this.basePath,

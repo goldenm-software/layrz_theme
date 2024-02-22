@@ -10,7 +10,7 @@ class CodeInputView extends StatefulWidget {
 class _CodeInputViewState extends State<CodeInputView> {
   List<String> get _errors => [];
   String _lclCode = "CONSTANT(True)";
-  String _pythonCode = "\def test():\n\treturn 10 >= 20";
+  String _pythonCode = "def test():\n\treturn 10 >= 20";
 
   @override
   Widget build(BuildContext context) {

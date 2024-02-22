@@ -7,8 +7,6 @@ List<String> functions = [
   'assetPositionSpeed',
   'assetPositionSatellites',
   'assetPositionDirection',
-  'assetSensorName',
-  'assetSensorValue',
   'triggerName',
   'triggerCode',
   'triggerPresencegeofenceTypeRaw',
