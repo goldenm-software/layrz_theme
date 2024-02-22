@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.34
+
+- Redesigned `ThemedCodeEditor` to works with other library and prevent issues with `setState` and `markNeedsBuild` when the widget is disposed.
+
 ## 4.3.33
 
 - Fixed `persistentItems` not showing on `ThemedTaskbar` when the `ThemedLayout` is `ThemedLayoutStyle.modern`

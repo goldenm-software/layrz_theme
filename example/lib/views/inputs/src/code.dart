@@ -92,6 +92,7 @@ class _CodeInputViewState extends State<CodeInputView> {
                     language: LayrzSupportedLanguage.lml,
                     value: "Positive of {{assetName}} at {{assetPositionLatitude}}",
                     errors: _errors,
+                    disabled: true,
                     onChanged: (val) {
                       debugPrint("Code: $val");
                     },

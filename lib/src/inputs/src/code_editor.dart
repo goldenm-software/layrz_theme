@@ -440,36 +440,38 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                   ),
                 ),
               ),
-              ThemedFieldDisplayError(
-                padding: const EdgeInsets.all(10),
-                errors: widget.errors + globalErrors,
-                maxLines: 10,
-              ),
-              if (_options.isNotEmpty) ...[
-                _ThemedCodeSuggestions(
-                  options: _options,
-                  basePath: _basePath,
-                  onTap: (suggestion) {
-                    if (widget.language == LayrzSupportedLanguage.lml) {
-                      suggestion = '{{$suggestion}}';
-                    } else if (widget.language == LayrzSupportedLanguage.lcl) {
-                      suggestion = '$suggestion()';
-                    }
-                    // Define cursor position
-                    final cursorPosition = _controller.selection.extentOffset;
-                    if (cursorPosition < 0) {
-                      debugPrint('layrz_theme/ThemedCodeEditor: Cursor not found, aborting suggestion insertion');
-                      return;
-                    }
-                    // Define the new value
-                    String newValue = _controller.text.substring(0, cursorPosition);
-                    newValue += suggestion;
-                    newValue += _value.substring(cursorPosition);
-                    // Update the value
-                    _controller.text = newValue;
-                    widget.onChanged?.call(newValue);
-                  },
+              if (!widget.disabled) ...[
+                ThemedFieldDisplayError(
+                  padding: const EdgeInsets.all(10),
+                  errors: widget.errors + globalErrors,
+                  maxLines: 10,
                 ),
+                if (_options.isNotEmpty) ...[
+                  _ThemedCodeSuggestions(
+                    options: _options,
+                    basePath: _basePath,
+                    onTap: (suggestion) {
+                      if (widget.language == LayrzSupportedLanguage.lml) {
+                        suggestion = '{{$suggestion}}';
+                      } else if (widget.language == LayrzSupportedLanguage.lcl) {
+                        suggestion = '$suggestion()';
+                      }
+                      // Define cursor position
+                      final cursorPosition = _controller.selection.extentOffset;
+                      if (cursorPosition < 0) {
+                        debugPrint('layrz_theme/ThemedCodeEditor: Cursor not found, aborting suggestion insertion');
+                        return;
+                      }
+                      // Define the new value
+                      String newValue = _controller.text.substring(0, cursorPosition);
+                      newValue += suggestion;
+                      newValue += _value.substring(cursorPosition);
+                      // Update the value
+                      _controller.text = newValue;
+                      widget.onChanged?.call(newValue);
+                    },
+                  ),
+                ],
               ],
             ],
           ),
