@@ -184,12 +184,31 @@ class _ThemedTaskbarState extends State<ThemedTaskbar> with TickerProviderStateM
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: ListView.builder(
+              child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return _buildItem(items[index]);
-                },
+                child: Row(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: persistentItems.length,
+                      itemBuilder: (context, index) {
+                        return _buildItem(persistentItems[index]);
+                      },
+                    ),
+                    if (persistentItems.isNotEmpty && items.isNotEmpty) ...[
+                      _buildItem(ThemedNavigatorSeparator()),
+                    ],
+                    ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        return _buildItem(items[index]);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(width: 10),
