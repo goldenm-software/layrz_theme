@@ -10,12 +10,16 @@ class ThemedFieldDisplayError extends StatelessWidget {
   /// [padding] is the padding of the widget.
   final EdgeInsets padding;
 
+  /// [maxLines] defines the maximum number of lines the text can have.
+  final int maxLines;
+
   /// [ThemedFieldDisplayError] is a widget that displays the errors of a field.
   const ThemedFieldDisplayError({
     super.key,
     this.errors = const [],
     this.hideDetails = false,
     this.padding = const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+    this.maxLines = 1,
   });
 
   @override
@@ -33,6 +37,7 @@ class ThemedFieldDisplayError extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.red.shade800,
                           ),
+                      maxLines: maxLines,
                     ),
             ),
           );

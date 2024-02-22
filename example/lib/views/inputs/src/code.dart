@@ -8,9 +8,9 @@ class CodeInputView extends StatefulWidget {
 }
 
 class _CodeInputViewState extends State<CodeInputView> {
-  List<String> get _errors => ['Error 1', 'Error 2', 'Error 3'];
+  List<String> get _errors => [];
   String _lclCode = "CONSTANT(True)";
-  String _pythonCode = "10 + 10";
+  String _pythonCode = "def test():\n\treturn 10 >= 20";
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +35,17 @@ class _CodeInputViewState extends State<CodeInputView> {
                     labelText: "Python example",
                     language: LayrzSupportedLanguage.python,
                     value: _pythonCode,
-                    disabled: true,
                     errors: _errors,
                     onLintTap: (code) async {
                       debugPrint("Code linted $code");
 
                       return [
+                        const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
+                        const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
+                        const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
+                        const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
+                        const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
+                        const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
                         const ThemedCodeError(line: 1, code: 'Holiwis', name: 'GET_PARAM'),
                       ];
                     },
@@ -49,7 +54,10 @@ class _CodeInputViewState extends State<CodeInputView> {
 
                       return "15";
                     },
-                    onChanged: (val) => setState(() => _pythonCode = val),
+                    onChanged: (val) {
+                      debugPrint("Code: $val");
+                      setState(() => _pythonCode = val);
+                    },
                   ),
                 ),
                 ResponsiveCol(

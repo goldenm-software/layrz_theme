@@ -152,7 +152,6 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
 
   late DateTime _focusDay;
   late DateTime _dayGenerator;
-  late DateTime _today;
 
   String get _title {
     switch (mode) {
@@ -197,7 +196,6 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   void initState() {
     super.initState();
     _focusDay = widget.focusDay ?? DateTime.now();
-    _today = DateTime.now();
     _dayGenerator = _focusDay.subtract(Duration(days: _focusDay.day - 1));
   }
 
@@ -209,7 +207,6 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _today = DateTime.now();
   }
 
   @override
@@ -789,21 +786,21 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   }
 
   /// [_validateIfIsToday] validates if the day is today.
-  bool _validateIfIsToday(DateTime day) {
-    switch (mode) {
-      case ThemedCalendarMode.year:
-        return day.year == _today.year && day.month == _today.month;
-      case ThemedCalendarMode.month:
-      case ThemedCalendarMode.week:
-        return day.year == _today.year && day.month == _today.month && day.day == _today.day;
-      case ThemedCalendarMode.day:
-        return day.year == _today.year &&
-            day.month == _today.month &&
-            day.day == _today.day &&
-            day.hour == _today.hour &&
-            day.minute == _today.minute;
-    }
-  }
+  // bool _validateIfIsToday(DateTime day) {
+  //   switch (mode) {
+  //     case ThemedCalendarMode.year:
+  //       return day.year == _today.year && day.month == _today.month;
+  //     case ThemedCalendarMode.month:
+  //     case ThemedCalendarMode.week:
+  //       return day.year == _today.year && day.month == _today.month && day.day == _today.day;
+  //     case ThemedCalendarMode.day:
+  //       return day.year == _today.year &&
+  //           day.month == _today.month &&
+  //           day.day == _today.day &&
+  //           day.hour == _today.hour &&
+  //           day.minute == _today.minute;
+  //   }
+  // }
 
   /// [_generateThisMonth] generates a list of days that are in the same month as [_focusDay].
   List<DateTime> _generateThisMonth() {
