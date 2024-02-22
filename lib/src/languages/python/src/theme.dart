@@ -1,34 +1,125 @@
 part of '../python.dart';
 
-const theme = {
-  'comment': TextStyle(color: Color(0xff969896)),
-  'quote': TextStyle(color: Color(0xff969896)),
-  'variable': TextStyle(color: Color(0xffcc6666)),
-  'template-variable': TextStyle(color: Color(0xffcc6666)),
-  'tag': TextStyle(color: Color(0xffcc6666)),
-  'name': TextStyle(color: Color(0xffcc6666)),
-  'selector-id': TextStyle(color: Color(0xffcc6666)),
-  'selector-class': TextStyle(color: Color(0xffcc6666)),
-  'regexp': TextStyle(color: Color(0xffcc6666)),
-  'deletion': TextStyle(color: Color(0xffcc6666)),
-  'number': TextStyle(color: Color(0xffde935f)),
-  'built_in': TextStyle(color: Color(0xffde935f)),
-  'builtin-name': TextStyle(color: Color(0xffde935f)),
-  'literal': TextStyle(color: Color(0xffde935f)),
-  'type': TextStyle(color: Color(0xffde935f)),
-  'params': TextStyle(color: Color(0xffde935f)),
-  'meta': TextStyle(color: Color(0xffde935f)),
-  'link': TextStyle(color: Color(0xffde935f)),
-  'attribute': TextStyle(color: Color(0xfff0c674)),
-  'string': TextStyle(color: Color(0xffb5bd68)),
-  'symbol': TextStyle(color: Color(0xffb5bd68)),
-  'bullet': TextStyle(color: Color(0xffb5bd68)),
-  'addition': TextStyle(color: Color(0xffb5bd68)),
-  'title': TextStyle(color: Color(0xff81a2be)),
-  'section': TextStyle(color: Color(0xff81a2be)),
-  'keyword': TextStyle(color: Color(0xffb294bb)),
-  'selector-tag': TextStyle(color: Color(0xffb294bb)),
-  'root': TextStyle(backgroundColor: Color(0xff1a1a1a), color: Color(0xffecf0f1)),
-  'emphasis': TextStyle(fontStyle: FontStyle.italic),
-  'strong': TextStyle(fontWeight: FontWeight.bold),
+Map<String, TextStyle> theme = {
+  'comment': TextStyle(
+    color: const Color(0xff969896),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'quote': TextStyle(
+    color: const Color(0xff969896),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'variable': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'template-variable': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'tag': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'name': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'selector-id': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'selector-class': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'regexp': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'deletion': TextStyle(
+    color: const Color(0xffcc6666),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'number': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'built_in': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'builtin-name': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'literal': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'type': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'params': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'meta': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'link': TextStyle(
+    color: const Color(0xffde935f),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'attribute': TextStyle(
+    color: const Color(0xfff0c674),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'string': TextStyle(
+    color: const Color(0xffb5bd68),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'symbol': TextStyle(
+    color: const Color(0xffb5bd68),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'bullet': TextStyle(
+    color: const Color(0xffb5bd68),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'addition': TextStyle(
+    color: const Color(0xffb5bd68),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'title': TextStyle(
+    color: const Color(0xff81a2be),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'section': TextStyle(
+    color: const Color(0xff81a2be),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'keyword': TextStyle(
+    color: const Color(0xffb294bb),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'selector-tag': TextStyle(
+    color: const Color(0xffb294bb),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'root': TextStyle(
+    backgroundColor: const Color(0xff1a1a1a),
+    color: const Color(0xffecf0f1),
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'emphasis': TextStyle(
+    fontStyle: FontStyle.italic,
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
+  'strong': TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: ThemedCodeEditor.font.name,
+  ),
 };

@@ -81,19 +81,14 @@ class ThemedCodeEditor extends StatefulWidget {
   @override
   State<ThemedCodeEditor> createState() => _ThemedCodeEditorState();
 
-  static AppFont get font => const AppFont(
+  static AppFont get font => AppFont(
         source: FontSource.google,
-        name: 'JetBrains Mono',
+        name: GoogleFonts.jetBrainsMono().fontFamily ?? 'Ubuntu',
       );
 }
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  late ThemedCodeController _controller;
-
-  late LinkedScrollControllerGroup _scrolls;
-  late ScrollController _codeScroll;
-  late ScrollController _lineScroll;
 
   String _value = '';
   bool get _isLoading => _isLinting || _isRunning;
@@ -101,17 +96,25 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   Map<int, List<ThemedCodeError>> _issues = {};
 
   List<String> get globalErrors {
-    if (_issues.containsKey(0)) {
-      return _issues[0]!.map((e) {
-        return t(e.code, {
-          'name': e.name ?? '',
-          'expected': e.expected ?? '',
-          'received': e.received ?? '',
-        });
-      }).toList();
-    }
+    return _issues.entries
+        .map((e) {
+          final errors = e.value;
 
-    return [];
+          return errors.map((error) {
+            String msg = t(error.code, {
+              'name': error.name,
+              'expected': error.expected,
+              'received': error.received,
+            });
+
+            return t('layrz.editor.lint.error', {
+              'line': e.key,
+              'error': msg,
+            });
+          }).toList();
+        })
+        .expand((element) => element)
+        .toList();
   }
 
   bool _isRunning = false;
@@ -134,35 +137,68 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
     }
   }
 
+  Mode get _mode {
+    switch (widget.language) {
+      case LayrzSupportedLanguage.lml:
+        return lml.lml;
+      case LayrzSupportedLanguage.lcl:
+        return lcl.lcl;
+      case LayrzSupportedLanguage.mjml:
+        return mjml.mjml;
+      case LayrzSupportedLanguage.python:
+        return python.python;
+      default:
+        return Mode();
+    }
+  }
+
+  List<String> get _options {
+    switch (widget.language) {
+      case LayrzSupportedLanguage.lml:
+        return lml.functions;
+      case LayrzSupportedLanguage.lcl:
+        return lcl.functions;
+      case LayrzSupportedLanguage.mjml:
+      case LayrzSupportedLanguage.python:
+      default:
+        return [];
+    }
+  }
+
+  String? get _basePath {
+    switch (widget.language) {
+      case LayrzSupportedLanguage.lml:
+        return 'https://developers.layrz.com/lml/variables';
+      case LayrzSupportedLanguage.lcl:
+        return 'https://developers.layrz.com/lcl/functions';
+      case LayrzSupportedLanguage.mjml:
+      case LayrzSupportedLanguage.python:
+      default:
+        return null;
+    }
+  }
+
   Color get backgroundColor => _theme['root']!.backgroundColor ?? Colors.black;
   Color get textColor => validateColor(color: backgroundColor);
-
-  final GlobalKey _textKey = GlobalKey();
+  late CodeController _controller;
 
   TextStyle? get codeTextStyle => TextStyle(
         fontFamily: ThemedCodeEditor.font.name,
         color: textColor,
-        fontSize: 15,
+        fontSize: 18,
       );
 
   @override
   void initState() {
     super.initState();
     _value = widget.value ?? '';
-    _controller = ThemedCodeController(
+    _controller = CodeController(
       text: _value,
-      language: widget.language.name,
-      theme: _theme,
+      language: _mode,
+      params: const EditorParams(
+        tabSpaces: 4,
+      ),
     );
-
-    _scrolls = LinkedScrollControllerGroup();
-    _codeScroll = _scrolls.addAndGet();
-    _lineScroll = _scrolls.addAndGet();
-
-    highlight.registerLanguage('lcl', lcl.lcl);
-    highlight.registerLanguage('lml', lml.lml);
-    highlight.registerLanguage('python', python.python);
-    highlight.registerLanguage('mjml', mjml.mjml);
   }
 
   @override
@@ -195,19 +231,6 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
     super.dispose();
   }
 
-  // Issue _formatLintError(ThemedCodeError error) {
-  //   String message = t(error.code, {
-  //     'name': error.name,
-  //     'expected': error.expected,
-  //     'received': error.received,
-  //   });
-  //   return Issue(
-  //     line: error.line - 1,
-  //     message: message,
-  //     type: IssueType.error,
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -236,139 +259,141 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                 ),
                           ),
                     ),
-                    if (widget.onLintTap != null) ...[
-                      ThemedTooltip(
-                        message: i18n?.t('actions.lint') ?? 'Lint',
-                        color: Colors.white,
-                        child: InkWell(
-                          onTap: _isLoading
-                              ? null
-                              : () async {
-                                  _issues = {};
-                                  setState(() => _isLinting = true);
-                                  await Future.delayed(const Duration(milliseconds: 500));
-                                  final result = await widget.onLintTap?.call(_value);
-                                  setState(() => _isLinting = false);
+                    if (!widget.disabled) ...[
+                      if (widget.onLintTap != null) ...[
+                        ThemedTooltip(
+                          message: i18n?.t('actions.lint') ?? 'Lint',
+                          color: Colors.white,
+                          child: InkWell(
+                            onTap: _isLoading
+                                ? null
+                                : () async {
+                                    _issues = {};
+                                    setState(() => _isLinting = true);
+                                    await Future.delayed(const Duration(milliseconds: 500));
+                                    final result = await widget.onLintTap?.call(_value);
+                                    setState(() => _isLinting = false);
 
-                                  if (result != null) {
-                                    for (var error in result) {
-                                      if (_issues.containsKey(error.line)) {
-                                        _issues[error.line]!.add(error);
-                                      } else {
-                                        _issues[error.line] = [error];
+                                    if (result != null) {
+                                      for (var error in result) {
+                                        if (_issues.containsKey(error.line)) {
+                                          _issues[error.line]!.add(error);
+                                        } else {
+                                          _issues[error.line] = [error];
+                                        }
                                       }
                                     }
-                                  }
-                                },
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isLinting ? 0.5 : 1,
-                                    duration: kHoverDuration,
-                                    child: Icon(
-                                      MdiIcons.bugOutline,
-                                      color: textColor,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isLinting ? 1 : 0,
-                                    duration: kHoverDuration,
-                                    child: CircularProgressIndicator(
-                                      color: textColor,
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    if (widget.onLintTap != null && widget.onRunTap != null) const SizedBox(width: 10),
-                    if (widget.onRunTap != null) ...[
-                      ThemedTooltip(
-                        message: i18n?.t('actions.run') ?? 'Run',
-                        color: Colors.white,
-                        child: InkWell(
-                          onTap: _isLoading
-                              ? null
-                              : () async {
-                                  setState(() => _isRunning = true);
-                                  await Future.delayed(const Duration(milliseconds: 500));
-                                  final result = await widget.onRunTap?.call(_value);
-                                  setState(() => _isRunning = false);
-                                  if (result != null && mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return Dialog(
-                                          elevation: 0,
-                                          backgroundColor: Colors.transparent,
-                                          child: Container(
-                                            decoration: generateContainerElevation(
-                                              context: context,
-                                              color: backgroundColor,
-                                              elevation: 3,
-                                            ),
-                                            constraints: const BoxConstraints(maxWidth: 400),
-                                            padding: const EdgeInsets.all(20),
-                                            child: Text(
-                                              result,
-                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                    color: textColor,
-                                                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                                                  ),
-                                              maxLines: 4,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isRunning ? 0.5 : 1,
-                                    duration: kHoverDuration,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 2, bottom: 2),
+                                  },
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: AnimatedOpacity(
+                                      opacity: _isLinting ? 0.5 : 1,
+                                      duration: kHoverDuration,
                                       child: Icon(
-                                        MdiIcons.playOutline,
+                                        MdiIcons.bugOutline,
                                         color: textColor,
-                                        size: 18,
+                                        size: 16,
                                       ),
                                     ),
                                   ),
-                                ),
-                                Center(
-                                  child: AnimatedOpacity(
-                                    opacity: _isRunning ? 1 : 0,
-                                    duration: kHoverDuration,
-                                    child: CircularProgressIndicator(
-                                      color: textColor,
-                                      strokeWidth: 2,
+                                  Center(
+                                    child: AnimatedOpacity(
+                                      opacity: _isLinting ? 1 : 0,
+                                      duration: kHoverDuration,
+                                      child: CircularProgressIndicator(
+                                        color: textColor,
+                                        strokeWidth: 2,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
+                      if (widget.onLintTap != null && widget.onRunTap != null) const SizedBox(width: 10),
+                      if (widget.onRunTap != null) ...[
+                        ThemedTooltip(
+                          message: i18n?.t('actions.run') ?? 'Run',
+                          color: Colors.white,
+                          child: InkWell(
+                            onTap: _isLoading
+                                ? null
+                                : () async {
+                                    setState(() => _isRunning = true);
+                                    await Future.delayed(const Duration(milliseconds: 500));
+                                    final result = await widget.onRunTap?.call(_value);
+                                    setState(() => _isRunning = false);
+                                    if (result != null && mounted) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                            elevation: 0,
+                                            backgroundColor: Colors.transparent,
+                                            child: Container(
+                                              decoration: generateContainerElevation(
+                                                context: context,
+                                                color: backgroundColor,
+                                                elevation: 3,
+                                              ),
+                                              constraints: const BoxConstraints(maxWidth: 400),
+                                              padding: const EdgeInsets.all(20),
+                                              child: Text(
+                                                result,
+                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                      color: textColor,
+                                                      fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                                                    ),
+                                                maxLines: 4,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: AnimatedOpacity(
+                                      opacity: _isRunning ? 0.5 : 1,
+                                      duration: kHoverDuration,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 2, bottom: 2),
+                                        child: Icon(
+                                          MdiIcons.playOutline,
+                                          color: textColor,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Center(
+                                    child: AnimatedOpacity(
+                                      opacity: _isRunning ? 1 : 0,
+                                      duration: kHoverDuration,
+                                      child: CircularProgressIndicator(
+                                        color: textColor,
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ],
                 ),
@@ -383,173 +408,69 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 60,
-                        padding: const EdgeInsets.only(right: 10),
-                        child: ListView.builder(
-                          controller: _lineScroll,
-                          itemCount: '\n'.allMatches(_value).length + 1,
-                          itemBuilder: (context, index) {
-                            bool hasError = _issues.containsKey(index + 1);
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    '${index + 1}',
-                                    style: codeTextStyle?.copyWith(
-                                      color: textColor.withOpacity(0.5),
-                                      height: 1.25,
-                                    ),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                ),
-                                if (hasError) ...[
-                                  SizedBox(
-                                    width: 19,
-                                    child: ThemedTooltip(
-                                      position: ThemedTooltipPosition.right,
-                                      message: _issues[index + 1]!.map((e) {
-                                        return t(e.code, {
-                                          'name': e.name ?? '',
-                                          'expected': e.expected ?? '',
-                                          'received': e.received ?? '',
-                                        });
-                                      }).join('\n'),
-                                      color: Colors.red,
-                                      child: Icon(
-                                        MdiIcons.alertCircle,
-                                        color: Colors.red,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ] else ...[
-                                  const SizedBox(width: 19),
-                                ],
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: FocusableActionDetector(
-                          shortcuts: {
-                            LogicalKeySet(LogicalKeyboardKey.enter): ThemedNewLineIntent(),
-                            LogicalKeySet(LogicalKeyboardKey.tab): ThemedTabIntent(),
-                            LogicalKeySet(
-                              LogicalKeyboardKey.control,
-                              LogicalKeyboardKey.space,
-                            ): ThemedSuggestionIntent(),
+                child: Theme(
+                  data: ThemeData.dark(),
+                  child: CodeTheme(
+                    data: CodeThemeData(styles: _theme),
+                    child: CodeField(
+                      readOnly: widget.disabled,
+                      controller: _controller,
+                      lineNumberBuilder: (lineNumber, style) {
+                        bool hasError = _issues.containsKey(lineNumber);
 
-                            // Prevent Ctrl + S to save the page
-                            LogicalKeySet(
-                              LogicalKeyboardKey.controlLeft,
-                              LogicalKeyboardKey.keyS,
-                            ): Intent.doNothing,
-                          },
-                          actions: {
-                            ThemedNewLineIntent: CallbackAction(onInvoke: (e) {
-                              final TextEditingValue value = _controller.value;
-                              final int start = value.selection.start;
-                              final int end = value.selection.end;
-                              final String text = value.text;
-                              final String newText = text.replaceRange(start, end, '\n');
-                              _controller.value = TextEditingValue(
-                                text: newText,
-                                selection: TextSelection.collapsed(offset: start + 1),
-                              );
-                              return null;
-                            }),
-                            ThemedTabIntent: CallbackAction(onInvoke: (e) {
-                              final TextEditingValue value = _controller.value;
-                              final int start = value.selection.start;
-                              final int end = value.selection.end;
-                              final String text = value.text;
-                              final String newText = text.replaceRange(start, end, '\t');
-                              _controller.value = TextEditingValue(
-                                text: newText,
-                                selection: TextSelection.collapsed(offset: start + 1),
-                              );
-                              return null;
-                            }),
-                            ThemedSuggestionIntent: CallbackAction(onInvoke: (e) {
-                              TextSpan span = TextSpan(text: _controller.text);
-                              TextPainter painter = TextPainter(
-                                text: span,
-                                textDirection: TextDirection.ltr,
-                              )..layout();
-
-                              Offset localOffset = painter.getOffsetForCaret(
-                                TextPosition(offset: _controller.selection.extentOffset),
-                                Rect.zero,
-                              );
-
-                              final RenderBox box = _textKey.currentContext!.findRenderObject() as RenderBox;
-                              final Offset globalOffset = box.localToGlobal(localOffset);
-                              debugPrint("Global offset: $globalOffset");
-
-                              return null;
-                            }),
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 7),
-                            child: Theme(
-                              data: ThemeData.dark().copyWith(
-                                scrollbarTheme: ScrollbarThemeData(
-                                  thumbColor: MaterialStateProperty.all(Colors.transparent),
-                                ),
-                                textSelectionTheme: TextSelectionThemeData(
-                                  cursorColor: textColor,
-                                  selectionColor: textColor.withOpacity(0.1),
-                                  selectionHandleColor: textColor,
-                                ),
-                              ),
-                              child: TextField(
-                                key: _textKey,
-                                readOnly: widget.disabled,
-                                scrollController: _codeScroll,
-                                style: codeTextStyle?.copyWith(
-                                  color: _theme['root']!.color,
-                                  height: 1.2,
-                                ),
-                                scrollPadding: EdgeInsets.zero,
-                                maxLines: null,
-                                minLines: null,
-                                expands: false,
-                                controller: _controller,
-                                cursorColor: textColor,
-                                decoration: const InputDecoration(
-                                  isCollapsed: true,
-                                  isDense: true,
-                                  disabledBorder: InputBorder.none,
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                                scrollPhysics: const ClampingScrollPhysics(),
-                                onChanged: (val) {
-                                  _value = val;
-                                  widget.onChanged?.call(val);
-                                },
-                              ),
-                            ),
+                        return TextSpan(
+                          text: '$lineNumber',
+                          style: style?.copyWith(
+                            color: hasError ? Colors.red : textColor.withOpacity(0.5),
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
+                        );
+                      },
+                      textStyle: TextStyle(fontFamily: ThemedCodeEditor.font.name),
+                      expands: true,
+                      textSelectionTheme: TextSelectionThemeData(
+                        cursorColor: textColor,
+                        selectionColor: textColor.withOpacity(0.1),
+                        selectionHandleColor: textColor,
                       ),
-                    ],
+                      onChanged: (value) {
+                        widget.onChanged?.call(value);
+                      },
+                    ),
                   ),
                 ),
               ),
               ThemedFieldDisplayError(
                 padding: const EdgeInsets.all(10),
                 errors: widget.errors + globalErrors,
+                maxLines: 10,
               ),
+              if (_options.isNotEmpty) ...[
+                _ThemedCodeSuggestions(
+                  options: _options,
+                  basePath: _basePath,
+                  onTap: (suggestion) {
+                    if (widget.language == LayrzSupportedLanguage.lml) {
+                      suggestion = '{{$suggestion}}';
+                    } else if (widget.language == LayrzSupportedLanguage.lcl) {
+                      suggestion = '$suggestion()';
+                    }
+                    // Define cursor position
+                    final cursorPosition = _controller.selection.extentOffset;
+                    if (cursorPosition < 0) {
+                      debugPrint('layrz_theme/ThemedCodeEditor: Cursor not found, aborting suggestion insertion');
+                      return;
+                    }
+                    // Define the new value
+                    String newValue = _controller.text.substring(0, cursorPosition);
+                    newValue += suggestion;
+                    newValue += _value.substring(cursorPosition);
+                    // Update the value
+                    _controller.text = newValue;
+                    widget.onChanged?.call(newValue);
+                  },
+                ),
+              ],
             ],
           ),
         ),
@@ -602,6 +523,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
         'python.match.not.allowed': 'match/case statement not allowed',
         'python.global.not.allowed': 'The use of global variables is restricted',
         'python.nonlocal.not.allowed': 'The use of nonlocal variables is restricted',
+        'layrz.editor.lint.error': 'Error at line {line}: {error}',
       };
 }
 
@@ -650,67 +572,63 @@ class ThemedCodeError {
   });
 }
 
-class ThemedCodeController extends TextEditingController {
-  String _language;
-  Map<String, TextStyle> _theme;
-
-  ThemedCodeController({
-    super.text = '',
-    String? language,
-    Map<String, TextStyle>? theme,
-  })  : _language = language ?? 'plain',
-        _theme = theme ?? const {};
-
-  void setLanguage(String language) {
-    _language = language;
-  }
-
-  void setTheme(Map<String, TextStyle> theme) {
-    _theme = theme;
-  }
+class _ThemedCodeSuggestions extends StatelessWidget {
+  final List<String> options;
+  final void Function(String) onTap;
+  final String? basePath;
+  const _ThemedCodeSuggestions({
+    super.key,
+    required this.options,
+    required this.onTap,
+    this.basePath,
+  });
 
   @override
-  TextSpan buildTextSpan({required BuildContext context, TextStyle? style, bool? withComposing}) {
-    // Using highlight package to highlight the code
-    final result = highlight.parse(text, language: _language);
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          Widget content = Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => onTap(options[index]),
+              onLongPress: basePath == null ? null : () => _launchSite(options[index]),
+              onSecondaryTap: basePath == null ? null : () => _launchSite(options[index]),
+              hoverColor: Colors.white.withOpacity(0.1),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+                child: Text(
+                  options[index],
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ),
+            ),
+          );
 
-    List<TextSpan> spans = [];
-    var currentSpans = spans;
-    List<List<TextSpan>> stack = [];
+          if (basePath == null) return content;
 
-    _traverse(Node node) {
-      if (node.value != null) {
-        currentSpans.add(node.className == null
-            ? TextSpan(text: node.value)
-            : TextSpan(text: node.value, style: _theme[node.className!]));
-      } else if (node.children != null) {
-        List<TextSpan> tmp = [];
-        currentSpans.add(TextSpan(children: tmp, style: _theme[node.className!]));
-        stack.add(currentSpans);
-        currentSpans = tmp;
+          return ThemedTooltip(
+            position: ThemedTooltipPosition.top,
+            color: Colors.white,
+            message: LayrzAppLocalizations.maybeOf(context)?.t('layrz.editor.documentation') ??
+                'Long press or right click to open documentation',
+            child: content,
+          );
+        },
+      ),
+    );
+  }
 
-        for (var n in node.children!) {
-          _traverse(n);
-          if (n == node.children!.last) {
-            currentSpans = stack.isEmpty ? spans : stack.removeLast();
-          }
-        }
-      }
-    }
-
-    for (var node in result.nodes!) {
-      _traverse(node);
-    }
-
-    return TextSpan(
-      style: style,
-      children: spans,
+  void _launchSite(String option) {
+    String subpath = option.replaceAll('_', '-').toLowerCase();
+    launchUrlString(
+      '$basePath#$subpath',
+      mode: LaunchMode.externalApplication,
     );
   }
 }
-
-class ThemedNewLineIntent extends Intent {}
-
-class ThemedTabIntent extends Intent {}
-
-class ThemedSuggestionIntent extends Intent {}
