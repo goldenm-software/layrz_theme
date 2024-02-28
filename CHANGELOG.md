@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.35
+- Fix overflow in `ThemedDrawer` exactly when actions are `ThemedNavigatorAction` 
+
 ## 4.3.34
 
 - Redesigned `ThemedCodeEditor` to works with other library and prevent issues with `setState` and `markNeedsBuild` when the widget is disposed.
