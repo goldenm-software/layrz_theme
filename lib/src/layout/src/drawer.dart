@@ -488,7 +488,6 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
                           item.labelText ?? '',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: validateColor(color: backgroundColor),
-                                overflow: TextOverflow.visible,
                               ),
                         ),
                   ),
