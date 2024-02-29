@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.39
+
+- Changed workflow of the `layers` in `ThemedTileLayer` to prevent subdivisions in the list of selection.
+
 ## 4.3.38
 
 - Fixed issue with `ThemedNotificationIcon` in `ThemedLayout`, now when you use `ThemedLayoutStyle.modern`, the icon should only appear in the `ThemedTaskbar`, also, in mobile mode, the icon only will appear in the `ThemedAppBar` and the `ThemedDrawer` will not have the icon.
