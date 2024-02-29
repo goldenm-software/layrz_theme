@@ -121,6 +121,9 @@ class ThemedNavigatorLabel extends ThemedNavigatorItem {
 }
 
 class ThemedNotificationItem {
+  /// [key] is the key of the notification.
+  final String? key;
+
   /// [title] is the title of the notification.
   final String title;
 
@@ -136,14 +139,40 @@ class ThemedNotificationItem {
   /// [color] is the color of the notification.
   final Color? color;
 
+  /// [at] is the time of the notification.
+  final DateTime? at;
+
   /// [ThemedNotificationItem] is a helper class to handle the notifications of the view.
   const ThemedNotificationItem({
+    this.key,
     required this.title,
     required this.content,
     this.icon,
     this.onTap,
     this.color,
+    this.at,
   });
+
+  /// [copyWith] creates a new instance of [ThemedNotificationItem] with the given parameters.
+  ThemedNotificationItem copyWith({
+    String? key,
+    String? title,
+    String? content,
+    IconData? icon,
+    VoidCallback? onTap,
+    Color? color,
+    DateTime? at,
+  }) {
+    return ThemedNotificationItem(
+      key: key ?? this.key,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      icon: icon ?? this.icon,
+      onTap: onTap ?? this.onTap,
+      color: color ?? this.color,
+      at: at ?? this.at,
+    );
+  }
 }
 
 enum ThemedSeparatorType {

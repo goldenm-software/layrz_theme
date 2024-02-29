@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.37
+
+- Updated `ThemedNotificationItem` to display the `at`.
+- Updated `ThemedNotificationIcon` to use the native `Badge` widget to display an indicator.
+
 ## 4.3.36
 
 - Added `padding` prop in `ThemedDurationInput`,  `ThemedDynamicAvatarInput`, `ThemedMultiSelectInput`, `ThemedNumberInput`, `ThemedSelectInput`, `ThemedTextInput`, `ThemedDateRangePicker`, `ThemedDateTimeRangePicker`, `ThemedColorPicker`, `ThemedEmojiPicker`, `ThemedFileInput`, `ThemedIconPicker`, `ThemedMonthRangePicker`, `ThemedTimeRangePicker`.
