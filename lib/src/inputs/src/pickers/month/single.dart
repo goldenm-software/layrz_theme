@@ -84,6 +84,9 @@ class ThemedMonthPicker extends StatefulWidget {
   /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
 
+  /// [padding] is the padding of the input.
+  final EdgeInsets? padding;
+
   /// [ThemedMonthPicker] is a input to select a month and year.
   const ThemedMonthPicker({
     super.key,
@@ -116,6 +119,7 @@ class ThemedMonthPicker extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
+    this.padding,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -191,6 +195,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
       onTap: widget.disabled ? null : _showPicker,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
+      padding: widget.padding,
     );
   }
 

@@ -81,6 +81,9 @@ class ThemedDatePicker extends StatefulWidget {
   /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
 
+  /// [emptyListText] is the text to be displayed when the list is empty.
+  final EdgeInsets? padding;
+
   /// [ThemedDatePicker] is a date picker input. It is a wrapper of [ThemedTextInput] with a date picker.
   const ThemedDatePicker({
     super.key,
@@ -112,6 +115,7 @@ class ThemedDatePicker extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
+    this.padding,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -159,6 +163,7 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
       onTap: widget.disabled ? null : _showPicker,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
+      padding: widget.padding,
     );
   }
 

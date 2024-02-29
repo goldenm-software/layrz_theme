@@ -25,7 +25,7 @@ class ThemedColorPicker extends StatefulWidget {
   final bool hideDetails;
 
   /// [padding] is the padding of the input.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [dense] is the state of the input being dense.
   final bool dense;
@@ -85,7 +85,7 @@ class ThemedColorPicker extends StatefulWidget {
     this.value,
     this.errors = const [],
     this.hideDetails = false,
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
     this.dense = false,
     this.prefixIcon,
     this.onPrefixTap,
@@ -121,7 +121,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
     _controller.text = "#${_value.hex}";
   }
 
-  EdgeInsets get widgetPadding => widget.padding;
+  EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
 
   @override
@@ -164,6 +164,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
       hideDetails: widget.hideDetails,
       controller: _controller,
       readonly: true,
+      padding: widget.padding,
     );
   }
 

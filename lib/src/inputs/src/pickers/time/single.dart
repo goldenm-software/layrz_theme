@@ -86,6 +86,9 @@ class ThemedTimePicker extends StatefulWidget {
   /// disables blinking animation of the time selectors
   final bool disableBlink;
 
+  /// [padding] is the padding of the input.
+  final EdgeInsets? padding;
+
   /// [ThemedTimePicker] is a time picker input. It is a wrapper of [ThemedTextInput] with a time picker.
   const ThemedTimePicker({
     super.key,
@@ -117,6 +120,7 @@ class ThemedTimePicker extends StatefulWidget {
     this.errors = const [],
     this.hideDetails = false,
     this.disableBlink = false,
+    this.padding,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -164,6 +168,7 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
       onTap: widget.disabled ? null : _showPicker,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
+      padding: widget.padding,
     );
   }
 

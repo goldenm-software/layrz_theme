@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.3.36
+
+- Added `padding` prop in `ThemedDurationInput`,  `ThemedDynamicAvatarInput`, `ThemedMultiSelectInput`, `ThemedNumberInput`, `ThemedSelectInput`, `ThemedTextInput`, `ThemedDateRangePicker`, `ThemedDateTimeRangePicker`, `ThemedColorPicker`, `ThemedEmojiPicker`, `ThemedFileInput`, `ThemedIconPicker`, `ThemedMonthRangePicker`, `ThemedTimeRangePicker`.
+
+- Defined new static getter on `ThemedTextInput` to standarize the padding on most of the inputs and pickers
+
+## 4.3.35
+- Fix overflow in `ThemedDrawer` exactly when actions are `ThemedNavigatorAction` 
+
 ## 4.3.34
 
 - Redesigned `ThemedCodeEditor` to works with other library and prevent issues with `setState` and `markNeedsBuild` when the widget is disposed.

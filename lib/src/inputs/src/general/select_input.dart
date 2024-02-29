@@ -66,7 +66,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
   final String emptyText;
 
   /// [emptyListText] is the text to be displayed when the list is empty.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [emptyListText] is the text to be displayed when the list is empty.
   final EdgeInsets overlayPadding;
@@ -153,7 +153,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.autoclose = true,
     this.isRequired = false,
     this.dense = false,
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
     @Deprecated("Field unused") this.overlayPadding = const EdgeInsets.all(20),
     @Deprecated("Field unused") this.emptyText = "No item selected",
     @Deprecated("Field unused") this.emptyListText = "Without items available to select",

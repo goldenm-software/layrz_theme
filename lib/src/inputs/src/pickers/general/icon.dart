@@ -23,7 +23,7 @@ class ThemedIconPicker extends StatefulWidget {
   final bool hideDetails;
 
   /// [padding] is the padding of the icon picker.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [dense] is the state of the icon picker being dense.
   final bool dense;
@@ -85,7 +85,7 @@ class ThemedIconPicker extends StatefulWidget {
     this.value,
     this.errors = const [],
     this.hideDetails = false,
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
     this.dense = false,
     this.isRequired = false,
     this.focusNode,
@@ -113,7 +113,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
   IconData? _value;
 
   List<IconData>? selectedGroup;
-  EdgeInsets get widgetPadding => widget.padding;
+  EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
 
@@ -169,6 +169,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
       disabled: widget.disabled,
       value: const IconOrNullConverter().toJson(_value) ?? '',
       onTap: widget.disabled ? null : _showPicker,
+      padding: widget.padding,
     );
   }
 

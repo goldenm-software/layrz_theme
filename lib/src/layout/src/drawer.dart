@@ -482,13 +482,15 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
                     ),
                     const SizedBox(width: 10),
                   ],
-                  item.label ??
-                      Text(
-                        item.labelText ?? '',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: validateColor(color: backgroundColor),
-                            ),
-                      ),
+                  Expanded(
+                    child: item.label ??
+                        Text(
+                          item.labelText ?? '',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: validateColor(color: backgroundColor),
+                              ),
+                        ),
+                  ),
                 ],
               ),
             ),

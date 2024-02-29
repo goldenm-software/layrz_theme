@@ -23,7 +23,7 @@ class ThemedEmojiPicker extends StatefulWidget {
   final bool hideDetails;
 
   /// [padding] is the padding of the input.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [dense] is a flag that indicates if the input is dense.
   final bool dense;
@@ -95,7 +95,7 @@ class ThemedEmojiPicker extends StatefulWidget {
     this.disabled = false,
     this.errors = const [],
     this.hideDetails = false,
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
     this.dense = false,
     this.isRequired = false,
     this.focusNode,
@@ -138,7 +138,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
   }
 
   double get iconSize => 16;
-  EdgeInsets get widgetPadding => widget.padding;
+  EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
   final GlobalKey key = GlobalKey();

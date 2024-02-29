@@ -66,7 +66,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
   final String emptyListText;
 
   /// [padding] is the padding of the input.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [heightFactor] is the factor that will be used to calculate the height of the dropdown.
   final double heightFactor;
@@ -153,7 +153,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
     @Deprecated('Field unused') this.emptyText = "No items selected",
     this.isRequired = false,
     @Deprecated('Field unused') this.emptyListText = "Without items available to select",
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
     @Deprecated('Field unused') this.heightFactor = 0.7,
     @Deprecated('Field unused') this.maxHeight = 400,
     @Deprecated('Field unused') this.selectAllLabelText = "Select all",

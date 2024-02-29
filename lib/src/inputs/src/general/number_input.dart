@@ -26,7 +26,7 @@ class ThemedNumberInput extends StatefulWidget {
   final bool hideDetails;
 
   /// [padding] is the padding of the input.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [dense] is the state of the input being dense.
   final bool dense;
@@ -67,7 +67,7 @@ class ThemedNumberInput extends StatefulWidget {
     this.value,
     this.errors = const [],
     this.hideDetails = false,
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
     this.dense = false,
     this.isRequired = false,
     this.onSubmitted,
@@ -84,7 +84,6 @@ class ThemedNumberInput extends StatefulWidget {
 }
 
 class _ThemedNumberInputState extends State<ThemedNumberInput> {
-  EdgeInsets get widgetPadding => widget.padding;
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
 
