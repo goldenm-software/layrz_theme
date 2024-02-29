@@ -8,7 +8,7 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
   final bool disabled;
   final List<String> errors;
   final bool hideDetails;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
   final List<AvatarType> enabledTypes;
   final double heightFactor;
   final double maxHeight;
@@ -46,7 +46,7 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
     this.hideDetails = false,
 
     /// [padding] is the padding of the field.
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
 
     /// [enabledTypes] is the list of enabled types of the field.
     this.enabledTypes = const [
@@ -75,7 +75,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
   String search = "";
 
   late AvatarInput _value;
-  EdgeInsets get padding => widget.padding;
+  EdgeInsets get padding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get disabled => widget.disabled;
   GlobalKey key = GlobalKey();
 
@@ -156,7 +156,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
 
     Size screenSize = MediaQuery.of(context).size;
     bool isSmall = screenSize.width < kSmallGrid;
-    double width = box.size.width - widget.padding.right;
+    double width = box.size.width - padding.right;
 
     double height = screenSize.height * widget.heightFactor;
 

@@ -89,6 +89,9 @@ class ThemedMonthRangePicker extends StatefulWidget {
   /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
 
+  /// [padding] is the padding of the input.
+  final EdgeInsets? padding;
+
   /// Creates a [ThemedMonthRangePicker] input.
   const ThemedMonthRangePicker({
     super.key,
@@ -123,6 +126,7 @@ class ThemedMonthRangePicker extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
+    this.padding,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -211,6 +215,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
       onTap: widget.disabled ? null : _showPicker,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
+      padding: widget.padding,
     );
   }
 

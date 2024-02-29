@@ -137,6 +137,9 @@ class ThemedFilePicker extends StatefulWidget {
   /// [allowedExtensions] is the list of allowed extensions. Only will work when [acceptedTypes] is [FileType.custom].
   final List<String>? allowedExtensions;
 
+  /// [padding] is the padding of the input.
+  final EdgeInsets? padding;
+
   /// [ThemedFilePicker] is the input for file selection.
   /// It uses [ThemedTextInput] as the base.
   const ThemedFilePicker({
@@ -158,7 +161,8 @@ class ThemedFilePicker extends StatefulWidget {
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.allowedExtensions,
-  });
+    this.padding,
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedFilePicker> createState() => _ThemedFilePickerState();
@@ -208,6 +212,7 @@ class _ThemedFilePickerState extends State<ThemedFilePicker> with SingleTickerPr
       errors: widget.errors,
       hideDetails: widget.hideDetails,
       controller: _controller,
+      padding: widget.padding,
     );
   }
 

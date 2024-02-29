@@ -60,7 +60,7 @@ class ThemedTextInput extends StatefulWidget {
   final bool hideDetails;
 
   /// [padding] is the padding of the input.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [dense] is the state of the input being dense.
   final bool dense;
@@ -143,7 +143,7 @@ class ThemedTextInput extends StatefulWidget {
     this.value,
     this.errors = const [],
     this.hideDetails = false,
-    this.padding = const EdgeInsets.all(10),
+    this.padding,
     this.dense = false,
     this.isRequired = false,
     this.focusNode,
@@ -167,6 +167,9 @@ class ThemedTextInput extends StatefulWidget {
 
   @override
   State<ThemedTextInput> createState() => _ThemedTextInputState();
+
+  /// [padding] is the padding of the input.
+  static EdgeInsets get outerPadding => const EdgeInsets.all(10);
 }
 
 class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderStateMixin {
@@ -178,7 +181,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   OverlayEntry? _entry;
   bool get _isEntryOnTop => widget.position == ThemedComboboxPosition.above;
 
-  EdgeInsets get widgetPadding => widget.padding;
+  EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
 
@@ -409,10 +412,10 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     double? bottom;
 
     if (widget.position == ThemedComboboxPosition.above) {
-      bottom = (screenSize.height - offset.dy) - widget.padding.top;
+      bottom = (screenSize.height - offset.dy) - widgetPadding.top;
       top = null;
     } else {
-      top = offset.dy + renderBox.size.height - widget.padding.bottom;
+      top = offset.dy + renderBox.size.height - widgetPadding.bottom;
       bottom = null;
     }
 

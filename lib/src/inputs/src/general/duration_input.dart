@@ -26,7 +26,7 @@ class ThemedDurationInput extends StatefulWidget {
   final bool disabled;
 
   /// [disabled] is the state of the input
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// [visibleValues] is the list of values to display in the input
   final List<ThemedUnits> visibleValues;
@@ -41,7 +41,7 @@ class ThemedDurationInput extends StatefulWidget {
     this.label,
     this.suffixIcon,
     this.prefixIcon,
-    this.padding = const EdgeInsets.all(10.0),
+    this.padding,
     this.disabled = false,
     this.visibleValues = const [
       ThemedUnits.day,
@@ -49,7 +49,7 @@ class ThemedDurationInput extends StatefulWidget {
       ThemedUnits.minute,
       ThemedUnits.second,
     ],
-  });
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedDurationInput> createState() => _ThemedDurationInputState();

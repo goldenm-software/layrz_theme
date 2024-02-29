@@ -100,6 +100,9 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
   /// [hideDetails] is the state of hiding the details of the input.
   final bool hideDetails;
 
+  /// [emptyListText] is the text to be displayed when the list is empty.
+  final EdgeInsets? padding;
+
   /// [ThemedDateTimeRangePicker] is a date time picker input. It is a wrapper of [ThemedTextInput]
   /// with a date time picker.
   const ThemedDateTimeRangePicker({
@@ -144,7 +147,9 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+    this.padding,
+  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
+        assert(value.length == 0 || value.length == 2);
 
   @override
   State<ThemedDateTimeRangePicker> createState() => _ThemedDateTimeRangePickerState();
@@ -214,6 +219,7 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
       onTap: widget.disabled ? null : _showPicker,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
+      padding: widget.padding,
     );
   }
 
