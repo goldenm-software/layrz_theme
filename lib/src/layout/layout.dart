@@ -230,6 +230,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           onNavigatorPush: widget.onNavigatorPush,
           onNavigatorPop: widget.onNavigatorPop,
           currentPath: widget.currentPath,
+          enableNotifications: false,
         ),
       );
     }
@@ -255,7 +256,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       case ThemedLayoutStyle.modern:
         return Scaffold(
           key: _scaffoldKey,
-          appBar: _generateAppBar(),
+          appBar: _generateAppBar(displayNotifications: false),
           body: Column(
             children: [
               Expanded(child: child),
@@ -405,7 +406,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     }
   }
 
-  ThemedAppBar _generateAppBar() {
+  ThemedAppBar _generateAppBar({bool displayNotifications = true}) {
     return ThemedAppBar(
       scaffoldKey: _scaffoldKey,
       items: widget.items,
@@ -426,7 +427,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       backgroundColor: widget.backgroundColor,
       notifications: widget.notifications,
       mobileBreakpoint: widget.mobileBreakpoint,
-      enableNotifications: widget.enableNotifications,
+      enableNotifications: displayNotifications && widget.enableNotifications,
       onThemeSwitchTap: widget.onThemeSwitchTap,
       onNavigatorPush: widget.onNavigatorPush,
       isBackEnabled: widget.isBackEnabled,

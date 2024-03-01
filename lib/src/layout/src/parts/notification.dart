@@ -24,6 +24,20 @@ class ThemedNotificationIcon extends StatefulWidget {
   /// be displayed in a dense mode or not.
   final bool dense;
 
+  /// [icon] is the icon of the notification icon.
+  final IconData? icon;
+
+  /// [child] is the child of the notification icon.
+  final Widget? child;
+
+  /// [badgeColor] is the color of the badge.
+  final Color? badgeColor;
+
+  /// [badgeLabelBuilder] is the builder of the badge label.
+  /// Receives the number of notifications as a parameter.
+  /// and returns a widget.
+  final Widget? Function(int)? badgeLabelBuilder;
+
   /// Creates a [ThemedNotificationIcon] widget.
   const ThemedNotificationIcon({
     super.key,
@@ -33,6 +47,10 @@ class ThemedNotificationIcon extends StatefulWidget {
     this.forceFullSize = false,
     this.expandToLeft = false,
     this.dense = false,
+    this.icon,
+    this.child,
+    this.badgeColor,
+    this.badgeLabelBuilder,
   });
 
   @override
@@ -46,8 +64,6 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
   List<ThemedNotificationItem> get notifications => widget.notifications;
 
   Color get notificationIconColor => validateColor(color: backgroundColor).withOpacity(notifications.isEmpty ? 0.5 : 1);
-
-  IconData get notificationIcon => notifications.isNotEmpty ? MdiIcons.bellBadge : MdiIcons.bell;
 
   late AnimationController _controller;
   OverlayEntry? _overlay;
@@ -71,10 +87,19 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
         onTap: _buildOverlay,
         child: Padding(
           padding: EdgeInsets.all(widget.dense ? 5 : 10),
-          child: Icon(
-            notificationIcon,
-            color: notificationIconColor,
-            size: widget.dense ? 15 : 18,
+          child: Badge(
+            isLabelVisible: notifications.isNotEmpty,
+            backgroundColor: widget.badgeColor ?? Colors.orange,
+            label: widget.badgeLabelBuilder?.call(notifications.length),
+            offset: const Offset(10, -12),
+            smallSize: 10,
+            largeSize: 10,
+            child: widget.child ??
+                Icon(
+                  widget.icon ?? MdiIcons.bell,
+                  color: notificationIconColor,
+                  size: widget.dense ? 15 : 18,
+                ),
           ),
         ),
       ),
@@ -161,11 +186,11 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                             )
                           : ListView.builder(
                               shrinkWrap: true,
-                              itemExtent: 56,
                               padding: kListViewPadding,
                               itemCount: notifications.length,
                               itemBuilder: (context, index) {
                                 ThemedNotificationItem item = notifications[index];
+                                DateTime at = item.at ?? DateTime.now();
 
                                 return Material(
                                   color: Colors.transparent,
@@ -176,7 +201,6 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                           }
                                         : null,
                                     child: Container(
-                                      height: 56,
                                       padding: const EdgeInsets.all(10),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -187,18 +211,35 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                             color: item.color ?? Theme.of(context).primaryColor,
                                           ),
                                           const SizedBox(width: 10),
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                item.title,
-                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                              ),
-                                              Text(item.content, style: Theme.of(context).textTheme.bodySmall),
-                                            ],
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item.title,
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                ),
+                                                Text(
+                                                  item.content,
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                        fontSize: 13,
+                                                      ),
+                                                  textAlign: TextAlign.justify,
+                                                  maxLines: 2,
+                                                ),
+                                                Text(
+                                                  at.format(pattern: '%I:%M %p'),
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                        color: validateColor(
+                                                          color: Theme.of(context).scaffoldBackgroundColor,
+                                                        ).withOpacity(0.5),
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),

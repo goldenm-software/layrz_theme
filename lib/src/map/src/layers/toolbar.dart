@@ -13,6 +13,22 @@ class ThemedMapToolbar extends StatefulWidget {
   /// [layers] defines the list of layers to toggle.
   /// You must provide `selectedLayer` to define which layer is selected.
   /// If is empty, the toggler will not be shown.
+  ///
+  /// It's important to know that you should send the layers decomposed, to do that you can use the
+  /// function `subdivideLayersPerSource` from `layrz_theme` package.
+  ///
+  /// For example:
+  /// ```dart
+  /// final layers = subdivideLayersPerSource(rawLayers: [
+  ///  MapLayer(
+  ///   id: 'layer1',
+  ///   name: 'Layer 1',
+  ///   source: MapSource.google,
+  ///   googleToken: 'your_google_maps_token',
+  ///   googleLayers: GoogleMapLayer.values,
+  ///  ),
+  /// ]);
+  /// ```
   final List<MapLayer> layers;
 
   /// [selectedLayer] defines the selected layer to use.
@@ -152,7 +168,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   MapLayer? _selected;
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
 
-  List<MapLayer> get layers => subdivideLayersPerSource(rawLayers: widget.layers);
+  List<MapLayer> get layers => widget.layers;
 
   List<ThemedMapButton> get actions => [
         ...widget.additionalButtons,

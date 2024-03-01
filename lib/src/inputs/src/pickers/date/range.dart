@@ -205,8 +205,11 @@ class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
                       setState(() {});
                       return;
                     }
-
-                    Navigator.of(context).pop([tempDate!, day]);
+                    if (tempDate!.isAfter(day)) {
+                      Navigator.of(context).pop([day, tempDate!]);
+                    } else {
+                      Navigator.of(context).pop([tempDate!, day]);
+                    }
                   },
                 );
               },
