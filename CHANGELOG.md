@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.40
+
+- Add a sort in `ThemedDateRangePicker` .
+
 ## 4.3.39
 
 - Changed workflow of the `layers` in `ThemedTileLayer` to prevent subdivisions in the list of selection.
