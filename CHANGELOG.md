@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.41
+- Add a prop `dialogContraints` for default it is `BoxConstraints(maxWidth: 500, maxHeight: 500)`.
+
 ## 4.3.40
 
 - Add a sort in `ThemedDateRangePicker` .

@@ -131,6 +131,9 @@ class ThemedSelectInput<T> extends StatefulWidget {
   /// when [value] is null and it's the first render of the object (when the [initState] is called).
   final bool autoSelectFirst;
 
+  /// [dialogContraints] is the constraints of the dialog.
+  final BoxConstraints? dialogContraints;
+
   /// [ThemedSelectInput] is the input for selecting an item from a list.
   const ThemedSelectInput({
     super.key,
@@ -177,6 +180,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.canUnselect = false,
     this.returnNullOnClose = false,
     this.autoSelectFirst = false,
+    this.dialogContraints = const BoxConstraints(maxWidth: 500, maxHeight: 500),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -290,7 +294,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
               builder: (context, setState) {
                 return Container(
                   padding: const EdgeInsets.all(20),
-                  constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                  constraints: widget.dialogContraints,
                   decoration: generateContainerElevation(context: context, elevation: 3),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

@@ -105,7 +105,7 @@ class __ThemedSelectItemState<T> extends State<_ThemedSelectItem<T>> {
                     ),
                     const SizedBox(width: 5),
                   ],
-                  Expanded(child: Text(widget.item.label)),
+                  Expanded(child: Text(widget.item.label, maxLines: 2)),
                 ] else ...[
                   Expanded(child: widget.item.content!),
                 ],
