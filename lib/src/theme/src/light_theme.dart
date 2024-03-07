@@ -100,10 +100,7 @@ ThemeData generateLightTheme({
       contentPadding: const EdgeInsets.all(10),
       filled: true,
       fillColor: Colors.grey.shade200,
-      border: UnderlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
-      ),
+      border: const ThemedInputBorder(),
       labelStyle: TextStyle(
         color: Colors.grey.shade600,
       ),

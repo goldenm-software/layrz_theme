@@ -200,10 +200,10 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                 right: right,
                 bottom: bottom,
                 left: left,
-                child: RawKeyboardListener(
+                child: KeyboardListener(
                   focusNode: _focusNode,
-                  onKey: (event) {
-                    if (event.isKeyPressed(LogicalKeyboardKey.escape)) {
+                  onKeyEvent: (event) {
+                    if (event.logicalKey == LogicalKeyboardKey.escape) {
                       _destroyOverlay();
                     }
                   },

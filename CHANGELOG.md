@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.42
+
+- Added `ThemedInputBorder` to prevent rendering issues with Flutter 3.19 changes on `OutlinedInputBorder`.
+- Changed `RawKeyboardListener` to `KeyboardListener` to support Flutter 3.19
+
 ## 4.3.41
 - Add a prop `dialogContraints` for default it is `BoxConstraints(maxWidth: 500, maxHeight: 500)`.
 

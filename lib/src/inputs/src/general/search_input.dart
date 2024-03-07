@@ -210,9 +210,9 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                           child: Container(
                             height: height,
                             decoration: generateContainerElevation(context: context),
-                            child: RawKeyboardListener(
+                            child: KeyboardListener(
                               focusNode: FocusNode(),
-                              onKey: (ev) {
+                              onKeyEvent: (ev) {
                                 if (ev.logicalKey == LogicalKeyboardKey.escape) {
                                   _destroyOverlay();
                                 }

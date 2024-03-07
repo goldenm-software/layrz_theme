@@ -151,10 +151,10 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                 bottom: bottom,
                 left: left,
                 right: right,
-                child: RawKeyboardListener(
+                child: KeyboardListener(
                   focusNode: _focusNode,
-                  onKey: (event) {
-                    if (event.isKeyPressed(LogicalKeyboardKey.escape)) {
+                  onKeyEvent: (event) {
+                    if (event.logicalKey == LogicalKeyboardKey.escape) {
                       _destroyOverlay();
                     }
                   },

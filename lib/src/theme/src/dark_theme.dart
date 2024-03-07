@@ -101,10 +101,7 @@ ThemeData generateDarkTheme({
       contentPadding: const EdgeInsets.all(10),
       filled: true,
       fillColor: Colors.grey.shade800,
-      border: UnderlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
-      ),
+      border: const ThemedInputBorder(),
       labelStyle: TextStyle(
         color: Colors.grey.shade400,
       ),
