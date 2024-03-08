@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.43
+
+- Updated `google_fonts` package due to a issues with the previous version.
+- Linter cleanup
+
 ## 4.3.42
 
 - Added `ThemedInputBorder` to prevent rendering issues with Flutter 3.19 changes on `OutlinedInputBorder`.
