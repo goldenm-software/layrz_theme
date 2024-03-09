@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.44
+
+- Updated permission handler to 11.3.0
+
 ## 4.3.43
 
 - Updated `google_fonts` package due to a issues with the previous version.
