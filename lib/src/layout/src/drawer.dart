@@ -212,20 +212,6 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
           onTap: widget.onLogoutTap!,
         ),
     ];
-    // .map((act) {
-    //   if (act is ThemedNavigatorAction) {
-    //     return ThemedNavigatorAction(
-    //       labelText: act.labelText,
-    //       label: act.label,
-    //       icon: act.icon,
-    //       onTap: () => handleOnTap(act.onTap),
-    //       highlight: act.highlight,
-    //       forceOnTap: act.forceOnTap,
-    //     );
-    //   }
-
-    //   return act;
-    // }).toList();
 
     Color sidebarTextColor = validateColor(color: backgroundColor);
 
@@ -236,7 +222,16 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
         context: context,
         radius: 0,
         color: backgroundColor,
-        shadowColor: backgroundColor,
+      ).copyWith(
+        boxShadow: widget.fromScaffold
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 30,
+                  spreadRadius: 10,
+                )
+              ]
+            : null,
       ),
       child: SafeArea(
         child: Column(

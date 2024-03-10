@@ -48,7 +48,6 @@ ThemeData generateDarkTheme({
   /// ```
   AppFont? bodyFont,
 }) {
-  bool isIOS = !kIsWeb && Platform.isIOS;
   MaterialColor color = getThemeColor(
     theme: theme,
     color: mainColor,

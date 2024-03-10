@@ -3,6 +3,8 @@
 ## 4.3.45
 
 - Fixes related on Android status bar and Navigation bar colors on `ThemedLayout`.
+- Added shadow on `ThemedDrawer` only in mobile mode.
+- Fixes related on iOS status bar color on `ThemedLayout`.
 
 ## 4.3.44
 
