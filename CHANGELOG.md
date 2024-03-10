@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.45
+
+- Fixes related on Android status bar and Navigation bar colors on `ThemedLayout`.
+
 ## 4.3.44
 
 - Updated permission handler to 11.3.0

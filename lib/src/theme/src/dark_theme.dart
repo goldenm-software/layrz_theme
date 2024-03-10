@@ -136,17 +136,17 @@ ThemeData generateDarkTheme({
 
     // Header / AppBar
     secondaryHeaderColor: color,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle(
         // Changes the status bar colors and buttons (Top)
-        statusBarColor: kDarkBackgroundColor,
-        statusBarIconBrightness: isIOS ? Brightness.dark : Brightness.light,
-        statusBarBrightness: isIOS ? Brightness.dark : Brightness.light,
+        statusBarColor: kDarkBackgroundColor, // Android Only
+        statusBarIconBrightness: Brightness.light, // Android Only
+        statusBarBrightness: Brightness.dark, // iOS Only
 
         // Changes the navigation bar colors and buttons
-        systemNavigationBarColor: kDarkBackgroundColor,
-        systemNavigationBarDividerColor: kDarkBackgroundColor,
-        systemNavigationBarIconBrightness: isIOS ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: kDarkBackgroundColor, // Android only
+        systemNavigationBarDividerColor: kDarkBackgroundColor, // Android only
+        systemNavigationBarIconBrightness: Brightness.light, // Android only
       ),
       color: kDarkBackgroundColor,
       surfaceTintColor: kDarkBackgroundColor,

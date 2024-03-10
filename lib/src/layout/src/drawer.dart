@@ -154,6 +154,19 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
     super.dispose();
   }
 
+  VoidCallback? handleOnTap(VoidCallback? onTap) {
+    if (onTap == null) return null;
+
+    if (widget.fromScaffold) {
+      Navigator.of(context).pop(); // Close the drawer
+      Future.delayed(const Duration(milliseconds: 230), () {
+        WidgetsBinding.instance.addPostFrameCallback((_) => onTap.call());
+      });
+    }
+
+    return onTap;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<ThemedNavigatorItem> actions = [
@@ -194,6 +207,20 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
           onTap: widget.onLogoutTap!,
         ),
     ];
+    // .map((act) {
+    //   if (act is ThemedNavigatorAction) {
+    //     return ThemedNavigatorAction(
+    //       labelText: act.labelText,
+    //       label: act.label,
+    //       icon: act.icon,
+    //       onTap: () => handleOnTap(act.onTap),
+    //       highlight: act.highlight,
+    //       forceOnTap: act.forceOnTap,
+    //     );
+    //   }
+
+    //   return act;
+    // }).toList();
 
     Color sidebarTextColor = validateColor(color: backgroundColor);
 
@@ -395,9 +422,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: item.children.isEmpty
-                        ? () {
-                            onNavigatorPush.call(item.path);
-                          }
+                        ? () => handleOnTap(() => onNavigatorPush.call(item.path))
                         : () {
                             setState(() => isExpanded = !isExpanded);
                           },
@@ -467,7 +492,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: item.onTap,
+            onTap: () => handleOnTap(item.onTap),
             hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
             child: Padding(
               padding: const EdgeInsets.all(10),
