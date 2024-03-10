@@ -122,7 +122,12 @@ class ThemedDrawer extends StatefulWidget {
 class _ThemedDrawerState extends State<ThemedDrawer> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor =>
-      widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
+      widget.backgroundColor ??
+      (isDark
+          ? kDarkBackgroundColor
+          : widget.fromScaffold
+              ? kLightBackgroundColor
+              : Theme.of(context).primaryColor);
   Color get activeColor => validateColor(color: backgroundColor);
   dynamic get appTitle => widget.appTitle;
   String get companyName => widget.companyName;
