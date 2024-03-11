@@ -136,8 +136,8 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   Widget build(BuildContext context) {
     Widget child = Semantics(
       key: _key,
-      child: widget.child,
       tooltip: widget.message,
+      child: widget.child,
     );
 
     if (_hasMouseDetected) {

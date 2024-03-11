@@ -349,6 +349,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     return Padding(
       padding: widgetPadding,
       child: TextField(
+        clipBehavior: Clip.antiAlias,
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
         controller: _controller,

@@ -122,7 +122,12 @@ class ThemedDrawer extends StatefulWidget {
 class _ThemedDrawerState extends State<ThemedDrawer> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor =>
-      widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
+      widget.backgroundColor ??
+      (isDark
+          ? kDarkBackgroundColor
+          : widget.fromScaffold
+              ? kLightBackgroundColor
+              : Theme.of(context).primaryColor);
   Color get activeColor => validateColor(color: backgroundColor);
   dynamic get appTitle => widget.appTitle;
   String get companyName => widget.companyName;
@@ -152,6 +157,19 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  VoidCallback? handleOnTap(VoidCallback? onTap) {
+    if (onTap == null) return null;
+
+    if (widget.fromScaffold) {
+      Navigator.of(context).pop(); // Close the drawer
+      Future.delayed(const Duration(milliseconds: 230), () {
+        WidgetsBinding.instance.addPostFrameCallback((_) => onTap.call());
+      });
+    }
+
+    return onTap;
   }
 
   @override
@@ -204,7 +222,16 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
         context: context,
         radius: 0,
         color: backgroundColor,
-        shadowColor: backgroundColor,
+      ).copyWith(
+        boxShadow: widget.fromScaffold
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 30,
+                  spreadRadius: 10,
+                )
+              ]
+            : null,
       ),
       child: SafeArea(
         child: Column(
@@ -395,9 +422,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: item.children.isEmpty
-                        ? () {
-                            onNavigatorPush.call(item.path);
-                          }
+                        ? () => handleOnTap(() => onNavigatorPush.call(item.path))
                         : () {
                             setState(() => isExpanded = !isExpanded);
                           },
@@ -467,7 +492,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: item.onTap,
+            onTap: () => handleOnTap(item.onTap),
             hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
             child: Padding(
               padding: const EdgeInsets.all(10),

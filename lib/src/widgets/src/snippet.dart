@@ -28,7 +28,7 @@ class ThemedCodeSnippet extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: Theme.of(context).inputDecorationTheme.fillColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(

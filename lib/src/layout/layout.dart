@@ -175,6 +175,17 @@ class _ThemedLayoutState extends State<ThemedLayout> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
+  VoidCallback? get _onThemeSwitchTap {
+    if (widget.onThemeSwitchTap == null) return null;
+
+    return () {
+      widget.onThemeSwitchTap!.call();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        overrideAppBarStyle(context: context);
+      });
+    };
+  }
+
   @override
   void initState() {
     super.initState();
@@ -204,11 +215,6 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         key: _scaffoldKey,
         appBar: _generateAppBar(),
         body: child,
-        onDrawerChanged: (isExpanded) {
-          Color backgroundColor =
-              widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
-          overrideAppBarStyle(backgroundColor: backgroundColor, scaffoldKey: _scaffoldKey);
-        },
         drawer: ThemedDrawer(
           scaffoldKey: _scaffoldKey,
           fromScaffold: true,
@@ -224,7 +230,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           onSettingsTap: widget.onSettingsTap,
           onProfileTap: widget.onProfileTap,
           onLogoutTap: widget.onLogoutTap,
-          onThemeSwitchTap: widget.onThemeSwitchTap,
+          onThemeSwitchTap: _onThemeSwitchTap,
           additionalActions: widget.additionalActions,
           mobileBreakpoint: widget.mobileBreakpoint,
           onNavigatorPush: widget.onNavigatorPush,
@@ -276,7 +282,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                 onLogoutTap: widget.onLogoutTap,
                 notifications: widget.notifications,
                 additionalActions: widget.additionalActions,
-                onThemeSwitchTap: widget.onThemeSwitchTap,
+                onThemeSwitchTap: _onThemeSwitchTap,
                 onNavigatorPush: widget.onNavigatorPush,
                 currentPath: widget.currentPath,
                 enableNotifications: widget.enableNotifications,
@@ -354,7 +360,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                 onNavigatorPop: widget.onNavigatorPop,
                 onNavigatorPush: widget.onNavigatorPush,
                 currentPath: widget.currentPath,
-                onThemeSwitchTap: widget.onThemeSwitchTap,
+                onThemeSwitchTap: _onThemeSwitchTap,
                 enableNotifications: widget.enableNotifications,
                 notifications: widget.notifications,
               ),
@@ -428,7 +434,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       notifications: widget.notifications,
       mobileBreakpoint: widget.mobileBreakpoint,
       enableNotifications: displayNotifications && widget.enableNotifications,
-      onThemeSwitchTap: widget.onThemeSwitchTap,
+      onThemeSwitchTap: _onThemeSwitchTap,
       onNavigatorPush: widget.onNavigatorPush,
       isBackEnabled: widget.isBackEnabled,
       currentPath: widget.currentPath,
@@ -463,32 +469,23 @@ enum ThemedLayoutStyle {
 }
 
 void overrideAppBarStyle({
-  required GlobalKey<ScaffoldState> scaffoldKey,
-  required Color backgroundColor,
-  bool mounted = true,
+  required BuildContext context,
 }) {
-  if (!mounted) return;
   if (kIsWeb) return;
+  bool isDark = Theme.of(context).brightness == Brightness.dark;
+  isDark = !isDark; // Idk why, but when this algorithm is called, is inverted.
 
-  BuildContext? context = scaffoldKey.currentContext;
-  if (context == null) return;
-
-  bool isOpen = scaffoldKey.currentState?.isDrawerOpen ?? false;
-  SystemUiOverlayStyle style = Theme.of(context).appBarTheme.systemOverlayStyle!;
-
-  if (isOpen) {
-    Brightness brightness = useBlack(color: backgroundColor) ? Brightness.dark : Brightness.light;
-
-    if (Platform.isIOS) {
-      brightness = brightness == Brightness.dark ? Brightness.light : Brightness.dark;
-    }
-
-    style = style.copyWith(
-      statusBarIconBrightness: brightness,
-      statusBarBrightness: brightness,
-      systemNavigationBarIconBrightness: brightness,
-    );
+  if (Platform.isIOS) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+    ));
+  } else {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
+      statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      systemNavigationBarColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
+      systemNavigationBarDividerColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
+      systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+    ));
   }
-
-  SystemChrome.setSystemUIOverlayStyle(style);
 }

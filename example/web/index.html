@@ -1,150 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base href="$FLUTTER_BASE_HREF">
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
 
-    <meta charset="UTF-8">
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <meta name="robots" content="noindex,nofollow">
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
 
-    <!-- Favicon -->
-    
-    <!-- Available fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" media="all">
-    <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet" media="all">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet" media="all">
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" media="all">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" media="all">
-    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" media="all">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet" media="all">
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
 
-    <script src="flutter.js" defer></script>
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
 
-    <title>layrz_theme</title>
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
 
-    <link rel="shortcut icon" href="https://cdn.layrz.com/resources/layrz/appicon/favicon.png" type="image/png">
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="example">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-    <style>
-      body.dark {
-        background-color: #111;
-      }
-      
-      body.light {
-        background-color: #fafafa;
-      }
-      
-      #loading-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100vw;
-        height: 100vh;
-      }
-      .lds-ripple {
-        display: inline-block;
-        position: relative;
-        width: 80px;
-        height: 80px;
-      }
-      body.light > div > .lds-ripple div {
-        position: absolute;
-        border: 4px solid #111;
-        opacity: 1;
-        border-radius: 50%;
-        animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-      }
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
 
-      body.dark > div > .lds-ripple div {
-        position: absolute;
-        border: 4px solid #fafafa;
-        opacity: 1;
-        border-radius: 50%;
-        animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-      }
+  <title>example</title>
+  <link rel="manifest" href="manifest.json">
 
-      .lds-ripple div:nth-child(2) {
-        animation-delay: -0.5s;
-      }
-      @keyframes lds-ripple {
-        0% {
-          top: 36px;
-          left: 36px;
-          width: 0;
-          height: 0;
-          opacity: 0;
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    const serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+</head>
+<body>
+  <script>
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
         }
-        4.9% {
-          top: 36px;
-          left: 36px;
-          width: 0;
-          height: 0;
-          opacity: 0;
-        }
-        5% {
-          top: 36px;
-          left: 36px;
-          width: 0;
-          height: 0;
-          opacity: 1;
-        }
-        100% {
-          top: 0px;
-          left: 0px;
-          width: 72px;
-          height: 72px;
-          opacity: 0;
-        }
-      }
-    </style>
-  </head>
-  <body style="overflow: hidden">
-    <div id="loading-indicator">
-      <div class="lds-ripple">
-        <div id="one"></div>
-        <div id="two"></div>
-      </div>
-    </div>
-
-    <script>
-      // The value below is injected by flutter build, do not touch.
-      var serviceWorkerVersion = null;
-    </script>
-
-    <script type="text/javascript">
-      var theme = localStorage.getItem('flutter.layrz.theme.mode');
-
-      if (theme === undefined || theme === null || theme === '"system"') {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.body.classList.add('dark');
-        } else {
-          document.body.classList.add('light');
-        }
-      } else {
-        document.body.classList.add(theme.replace('"', '').replace('"', ''));
-      }
-
-      window.addEventListener('load', function (ev) {
-        _flutter.loader.loadEntrypoint({
-          entrypointUrl: "main.dart.js?v=" + serviceWorkerVersion,
-          serviceWorker: {
-            serviceWorkerVersion: serviceWorkerVersion,
-          },
-          onEntrypointLoaded: async function (engineInitializer) {
-            console.log('Flutter web entrypoint loaded');
-
-            let appRunner = await engineInitializer.initializeEngine({
-              renderer: 'canvaskit',
-            });
-
-            console.log('Flutter web engine initialized');
-            await appRunner.runApp();
-            var loadingIndicator = document.getElementById("loading-indicator");
-            if (loadingIndicator) {
-              loadingIndicator.remove();
-            }
-          },
-        });
-      })
-    </script>
-  </body>
+      });
+    });
+  </script>
+</body>
 </html>

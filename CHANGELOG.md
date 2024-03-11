@@ -1,5 +1,25 @@
 # Changelog
 
+## 4.3.45
+
+- Fixes related on Android status bar and Navigation bar colors on `ThemedLayout`.
+- Added shadow on `ThemedDrawer` only in mobile mode.
+- Fixes related on iOS status bar color on `ThemedLayout`.
+
+## 4.3.44
+
+- Updated permission handler to 11.3.0
+
+## 4.3.43
+
+- Updated `google_fonts` package due to a issues with the previous version.
+- Linter cleanup
+
+## 4.3.42
+
+- Added `ThemedInputBorder` to prevent rendering issues with Flutter 3.19 changes on `OutlinedInputBorder`.
+- Changed `RawKeyboardListener` to `KeyboardListener` to support Flutter 3.19
+
 ## 4.3.41
 - Add a prop `dialogContraints` for default it is `BoxConstraints(maxWidth: 500, maxHeight: 500)`.
 

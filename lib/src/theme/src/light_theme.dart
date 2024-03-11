@@ -48,8 +48,6 @@ ThemeData generateLightTheme({
   /// ```
   AppFont? bodyFont,
 }) {
-  bool isIOS = !kIsWeb && Platform.isIOS;
-
   MaterialColor color = getThemeColor(
     theme: theme,
     color: mainColor,
@@ -100,10 +98,7 @@ ThemeData generateLightTheme({
       contentPadding: const EdgeInsets.all(10),
       filled: true,
       fillColor: Colors.grey.shade200,
-      border: UnderlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
-      ),
+      border: const ThemedInputBorder(),
       labelStyle: TextStyle(
         color: Colors.grey.shade600,
       ),
@@ -137,29 +132,17 @@ ThemeData generateLightTheme({
 
     // Header / AppBar
     secondaryHeaderColor: color,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle(
         // Changes the status bar colors and buttons (Top)
-        statusBarColor: color,
-        statusBarIconBrightness: isIOS
-            ? Brightness.light
-            : useBlack(color: color)
-                ? Brightness.dark
-                : Brightness.light,
-        statusBarBrightness: isIOS
-            ? Brightness.light
-            : useBlack(color: color)
-                ? Brightness.dark
-                : Brightness.light,
+        statusBarColor: kLightBackgroundColor, // Android Only
+        statusBarIconBrightness: Brightness.dark, // Android Only
+        statusBarBrightness: Brightness.dark, // iOS Only
 
         // Changes the navigation bar colors and buttons
-        systemNavigationBarColor: color,
-        systemNavigationBarDividerColor: color,
-        systemNavigationBarIconBrightness: isIOS
-            ? Brightness.light
-            : useBlack(color: color)
-                ? Brightness.dark
-                : Brightness.light,
+        systemNavigationBarColor: kLightBackgroundColor, // Android only
+        systemNavigationBarDividerColor: kLightBackgroundColor, // Android only
+        systemNavigationBarIconBrightness: Brightness.light, // Android only
       ),
       color: kLightBackgroundColor,
       surfaceTintColor: kLightBackgroundColor,
