@@ -696,7 +696,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        debugPrint(constraints.maxWidth.toString());
         bool isMobile = constraints.maxWidth < widget.mobileBreakpoint;
+        bool isVerySmall = constraints.maxWidth <= 210;
         bool multiSelectionEnabled = widget.multiSelectionEnabled;
 
         if (isMobile) {
@@ -974,14 +976,172 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
               ),
             ),
             const SizedBox(height: 5),
-            _buildPaginator(constraints: constraints),
+            isVerySmall
+                ? _buildVerySmallPaginator(constraints: constraints, isDark: isDark)
+                : _buildWebPaginator(constraints: constraints, isMobile: isMobile, isDark: isDark),
           ],
         );
       },
     );
   }
 
-  Widget _buildPaginator({required BoxConstraints constraints}) {
+  Widget _buildVerySmallPaginator({required BoxConstraints constraints, required bool isDark}) {
+    String pageInfoStr = t('layrz.table.paginator.verySmall.showing', {
+      'count': _itemsPerPage,
+      'total': _items.length,
+    });
+    String currentPageStr = "${_currentPage + 1}";
+    int maxPages = _items.length ~/ _itemsPerPage;
+    String maxPagesStr = "${maxPages + 1}";
+    TextStyle? pageInfoStyle = Theme.of(context).textTheme.bodySmall;
+    Color backgrondFilterColor = Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor;
+
+    List<Widget> pageInfo = [
+      ThemedSelectInput<int?>(
+        labelText: t('layrz.table.paginator.rowsPerPage'),
+        dense: true,
+        customChild: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(8),
+            color: backgrondFilterColor,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(MdiIcons.filter, color: isDark ? Colors.white : Colors.black.withOpacity(0.6)),
+              Text(
+                pageInfoStr,
+                style: pageInfoStyle,
+              ),
+            ],
+          ),
+        ),
+        items: [
+          ThemedSelectItem(
+            label: t('layrz.table.paginator.auto'),
+            value: null,
+          ),
+          ...widget.availableRowsPerPage.map((page) {
+            return ThemedSelectItem(
+              value: page,
+              label: page.toString(),
+            );
+          }),
+        ],
+        onChanged: (value) {
+          setState(() {
+            _itemsPerPage = value?.value ?? _calculatedItemsPerPage;
+          });
+        },
+      ),
+    ];
+
+    final painter = TextPainter(
+      text: TextSpan(
+        text: currentPageStr,
+        style: pageInfoStyle,
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    double currentPageWidth = painter.width;
+
+    double buttonWidth = 30;
+    double availableWidth = constraints.maxWidth - (buttonWidth * 4) - (currentPageWidth + 10) - 5;
+
+    if (constraints.maxWidth >= widget.mobileBreakpoint) {
+      final painter2 = TextPainter(
+        text: TextSpan(
+          text: pageInfoStr,
+          style: pageInfoStyle,
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      availableWidth -= painter2.width;
+    }
+
+    availableWidth = min(availableWidth, 300);
+
+    List<Widget> navigator = [
+      // const SizedBox(width: 5),
+
+      /// Double left
+      ThemedButton(
+        labelText: t('layrz.table.paginator.start'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronDoubleLeft,
+        onTap: () => setState(() => _currentPage = 0),
+      ),
+
+      /// Left
+      ThemedButton(
+        labelText: t('layrz.table.paginator.previous'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronLeft,
+        isDisabled: _currentPage == 0,
+        onTap: () {
+          if (_currentPage > 0) {
+            setState(() => _currentPage -= 1);
+          }
+        },
+      ),
+      const SizedBox(width: 5),
+
+      /// Current page
+      Text("$currentPageStr/$maxPagesStr", style: pageInfoStyle),
+      const SizedBox(width: 5),
+
+      /// Right
+      ThemedButton(
+        labelText: t('layrz.table.paginator.next'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronRight,
+        isDisabled: _currentPage == maxPages,
+        onTap: () {
+          if (_currentPage < maxPages) {
+            setState(() => _currentPage += 1);
+          }
+        },
+      ),
+
+      /// Double right
+      ThemedButton(
+        labelText: t('layrz.table.paginator.end'),
+        color: paginatorColor,
+        style: ThemedButtonStyle.fab,
+        icon: MdiIcons.chevronDoubleRight,
+        onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
+      ),
+    ];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: pageInfo,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: navigator,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWebPaginator({required BoxConstraints constraints, required bool isMobile, required bool isDark}) {
     String pageInfoStr = t('layrz.table.paginator.showing', {
       'count': _itemsPerPage,
       'total': _items.length,
@@ -1021,13 +1181,36 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     availableWidth = min(availableWidth, 300);
+    Color backgrondFilterColor = Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor;
 
     List<Widget> navigator = [
       SizedBox(
-        width: availableWidth,
+        width: isMobile ? null : availableWidth,
         child: ThemedSelectInput<int?>(
           labelText: t('layrz.table.paginator.rowsPerPage'),
           dense: true,
+          customChild: isMobile
+              ? Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(8),
+                    color: backgrondFilterColor,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(MdiIcons.filter, color: isDark ? Colors.white : Colors.black.withOpacity(0.6)),
+                      Text(
+                        _itemsPerPage.toString(),
+                        style: pageInfoStyle,
+                      ),
+                    ],
+                  ),
+                )
+              : null,
           items: [
             ThemedSelectItem(
               label: t('layrz.table.paginator.auto'),

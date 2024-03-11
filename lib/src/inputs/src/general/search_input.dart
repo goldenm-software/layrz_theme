@@ -219,6 +219,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                               },
                               child: TextField(
                                 onChanged: widget.onSearch,
+                                autofocus: true,
                                 controller: _controller,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
