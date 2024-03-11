@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 part of '../../layout.dart';
 
 class ThemedNotificationIcon extends StatefulWidget {
@@ -151,10 +153,10 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                 bottom: bottom,
                 left: left,
                 right: right,
-                child: RawKeyboardListener(
+                child: KeyboardListener(
                   focusNode: _focusNode,
-                  onKey: (event) {
-                    if (event.isKeyPressed(LogicalKeyboardKey.escape)) {
+                  onKeyEvent: (event) {
+                    if (event.logicalKey == LogicalKeyboardKey.escape) {
                       _destroyOverlay();
                     }
                   },
