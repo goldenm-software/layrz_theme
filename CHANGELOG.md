@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 4.3.46
+- Add `autoFocus` inside `ThemedSearchInput`.
+- Fix overFlow inside `ThemedTable` and build a new paginator to very small devices
+
 ## 4.3.45
 
 - Fixes related on Android status bar and Navigation bar colors on `ThemedLayout`.
