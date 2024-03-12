@@ -292,17 +292,17 @@ packages:
     dependency: "direct main"
     description:
       name: layrz_models
-      sha256: fcc6c454647ff07a95f3e972699431228936b43c9785500ea5e3e12feca8a776
+      sha256: "8d7ac40c8d687d99755d7c854657e2fa7a77ab398e963bbad461f274a1954e43"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.10"
+    version: "2.1.11"
   layrz_theme:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "4.3.45"
+    version: "4.3.46"
   leak_tracker:
     dependency: transitive
     description:

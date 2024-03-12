@@ -4,6 +4,7 @@
 ## 4.3.46
 - Add `autoFocus` inside `ThemedSearchInput`.
 - Fix overFlow inside `ThemedTable` and build a new paginator to very small devices
+- Update layrz_models to v2.1.11
 
 ## 4.3.45
 
