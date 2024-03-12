@@ -42,7 +42,7 @@ class _LayoutState extends State<Layout> {
     }
 
     return ThemedLayout(
-      style: ThemedLayoutStyle.modern,
+      style: ThemedLayoutStyle.sidebar,
       isBackEnabled: false,
       // style: layoutStyle,
       scaffoldKey: _scaffoldKey,

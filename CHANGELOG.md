@@ -1,7 +1,11 @@
 # Changelog
 
+## 4.3.47
+
+- Fixes on `ThemedDrawer` related to onTap action
 
 ## 4.3.46
+
 - Add `autoFocus` inside `ThemedSearchInput`.
 - Fix overFlow inside `ThemedTable` and build a new paginator to very small devices
 - Update layrz_models to v2.1.11
