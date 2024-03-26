@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.48
+
+- Fixes on `ThemedAppBarAvatar` related to `padding` in the `OverlayEntry` used to display the actions in the avatar icon.
+
 ## 4.3.47
 
 - Fixes on `ThemedDrawer` related to onTap action
