@@ -202,7 +202,17 @@ class _ThemedButtonState extends State<ThemedButton> {
       );
 
   /// [disabledColor] is used to know the color of the disabled button.
-  Color get disabledColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+  Color get disabledColor {
+    if (style == ThemedButtonStyle.filledTonal ||
+        style == ThemedButtonStyle.filledTonalFab ||
+        style == ThemedButtonStyle.text ||
+        style == ThemedButtonStyle.fab ||
+        style == ThemedButtonStyle.outlined ||
+        style == ThemedButtonStyle.outlinedFab) {
+      return isDark ? Colors.grey.shade600 : Colors.grey.shade500;
+    }
+    return isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+  }
 
   /// [contentColor] is used to know the color of the content of the button.
   Color get contentColor => isDisabled ? disabledColor : (widget.color ?? defaultColor);
