@@ -43,6 +43,8 @@ class _LayoutState extends State<Layout> {
 
     return ThemedLayout(
       style: ThemedLayoutStyle.sidebar,
+      // style: ThemedLayoutStyle.modern,
+      // style: ThemedLayoutStyle.classic,
       isBackEnabled: false,
       // style: layoutStyle,
       scaffoldKey: _scaffoldKey,
@@ -56,6 +58,7 @@ class _LayoutState extends State<Layout> {
           labelText: 'Home',
           path: '/home',
           icon: MdiIcons.homeVariant,
+          // showHeaderInSidebarMode: false,
         ),
         ThemedNavigatorPage(
           labelText: 'Theme generation',

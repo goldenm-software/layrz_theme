@@ -140,7 +140,7 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
 
   bool actionsExpanded = false;
   bool isExpanded = false;
-  double get width => MediaQuery.of(context).size.width;
+  double get width => MediaQuery.sizeOf(context).width;
 
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
@@ -247,19 +247,12 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ThemedImage(
-                    path: useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white,
-                    width: 25,
-                    height: 25,
-                  ),
-                  const SizedBox(width: 10),
                   Expanded(
-                    child: Text(
-                      widget.appTitle,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: sidebarTextColor,
-                          ),
+                    child: ThemedImage(
+                      path: useBlack(color: backgroundColor) ? widget.logo.normal : widget.logo.white,
+                      width: 30 * kLogoAspectRatio,
+                      height: 30,
+                      alignment: Alignment.centerLeft,
                     ),
                   ),
                   if (widget.enableNotifications) ...[

@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.51
+
+- Changed `favicon` to `logo` in the `ThemedDrawer`.
+- Changed aspectRatio of the logos in the `ThemedLayout` and sub-widgets to use `kLogoAspectRatio`.
+- Added upper constraint on flutter version from `3.19.3` to `4.0.0`.
+
 ## 4.3.50
 
 - Fixes related to the `SystemUIOverlayStyle` to handle correctly the status bar and navigation bar colors on Android and iOS.

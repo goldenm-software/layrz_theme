@@ -24,6 +24,10 @@ part 'src/parts/avatar.dart';
 typedef ThemedNavigatorPushFunction = void Function(String path);
 typedef ThemdNavigatorPopFunction = VoidCallback;
 
+const double kLogoWidth = 2000;
+const double kLogoHeight = 500;
+const kLogoAspectRatio = kLogoWidth / kLogoHeight;
+
 class ThemedLayout extends StatefulWidget {
   /// [style] is the style of the layout. Defaults to [ThemedLayoutStyle.modern].
   final ThemedLayoutStyle style;

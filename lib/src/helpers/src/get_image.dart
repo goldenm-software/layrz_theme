@@ -59,6 +59,9 @@ class ThemedImage extends StatelessWidget {
   /// It's important to note that if you pass a custom provider, the [path] will be ignored.
   final ImageProvider? customProvider;
 
+  /// [alignment] is the alignment of the image. By default, it is `Alignment.center`.
+  final Alignment alignment;
+
   const ThemedImage({
     super.key,
     this.path,
@@ -67,6 +70,7 @@ class ThemedImage extends StatelessWidget {
     this.fit = BoxFit.contain,
     this.filterQuality = FilterQuality.medium,
     this.customProvider,
+    this.alignment = Alignment.center,
   })  : assert(path != null || customProvider != null, 'You must provide a path or a custom provider'),
         assert(path == null || customProvider == null, 'You must provide a path or a custom provider, not both');
 
@@ -89,6 +93,7 @@ class ThemedImage extends StatelessWidget {
       height: height,
       width: width,
       fit: fit,
+      alignment: alignment,
       filterQuality: filterQuality,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;

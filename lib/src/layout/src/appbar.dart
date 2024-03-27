@@ -233,9 +233,12 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   height: ThemedAppBar.size.height - 10,
-                  child: AspectRatio(
-                    aspectRatio: 1000 / 300, // 1000px X 300px - default dimensions of logos from Layrz
-                    child: ThemedImage(path: logo),
+                  child: ThemedImage(
+                    path: logo,
+                    width: (ThemedAppBar.size.height - 20) * kLogoAspectRatio,
+                    height: ThemedAppBar.size.height - 20,
+                    fit: BoxFit.contain,
+                    alignment: Alignment.centerLeft,
                   ),
                 ),
               ),
