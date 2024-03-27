@@ -1,7 +1,18 @@
 # Changelog
 
+## 4.3.49
+- Changed behavior of `disabledColor` on `ThemedButton` to change depending of the button style to allow better readability.
+
+## 4.3.48
+
+- Fixes on `ThemedAppBarAvatar` related to `padding` in the `OverlayEntry` used to display the actions in the avatar icon.
+
+## 4.3.47
+
+- Fixes on `ThemedDrawer` related to onTap action
 
 ## 4.3.46
+
 - Add `autoFocus` inside `ThemedSearchInput`.
 - Fix overFlow inside `ThemedTable` and build a new paginator to very small devices
 - Update layrz_models to v2.1.11

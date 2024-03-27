@@ -219,6 +219,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                           child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: actions.length,
+                            padding: EdgeInsets.zero,
                             itemBuilder: (context, index) {
                               final item = actions[index];
 
@@ -249,11 +250,13 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                             ),
                                             const SizedBox(width: 5),
                                           ],
-                                          item.label ??
-                                              Text(
-                                                item.labelText ?? '',
-                                                style: Theme.of(context).textTheme.bodyMedium,
-                                              )
+                                          Expanded(
+                                            child: item.label ??
+                                                Text(
+                                                  item.labelText ?? '',
+                                                  style: Theme.of(context).textTheme.bodyMedium,
+                                                ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -277,11 +280,13 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                             ),
                                             const SizedBox(width: 5),
                                           ],
-                                          item.label ??
-                                              Text(
-                                                item.labelText ?? '',
-                                                style: Theme.of(context).textTheme.bodyMedium,
-                                              )
+                                          Expanded(
+                                            child: item.label ??
+                                                Text(
+                                                  item.labelText ?? '',
+                                                  style: Theme.of(context).textTheme.bodyMedium,
+                                                ),
+                                          ),
                                         ],
                                       ),
                                     ),

@@ -159,17 +159,18 @@ class _ThemedDrawerState extends State<ThemedDrawer> {
     super.dispose();
   }
 
-  VoidCallback? handleOnTap(VoidCallback? onTap) {
-    if (onTap == null) return null;
+  void handleOnTap(VoidCallback? onTap) {
+    if (onTap == null) return;
 
     if (widget.fromScaffold) {
       Navigator.of(context).pop(); // Close the drawer
       Future.delayed(const Duration(milliseconds: 230), () {
         WidgetsBinding.instance.addPostFrameCallback((_) => onTap.call());
       });
+      return;
     }
 
-    return onTap;
+    return onTap.call();
   }
 
   @override
