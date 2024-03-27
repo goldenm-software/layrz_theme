@@ -181,7 +181,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     return () {
       widget.onThemeSwitchTap!.call();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        overrideAppBarStyle(context: context);
+        overrideAppBarStyle(isDark: isDark);
       });
     };
   }
@@ -468,24 +468,18 @@ enum ThemedLayoutStyle {
   sidebar,
 }
 
+/// [overrideAppBarStyle] overrides the app bar style.
+/// This should be used only when the theme changes from light to dark or vice versa.
 void overrideAppBarStyle({
-  required BuildContext context,
+  /// [isDark] is a boolean that indicates if the theme is dark.
+  required bool isDark,
 }) {
   if (kIsWeb) return;
-  bool isDark = Theme.of(context).brightness == Brightness.dark;
-  isDark = !isDark; // Idk why, but when this algorithm is called, is inverted.
+  // isDark = !isDark; // Idk why, but when this algorithm is called, is inverted.
 
-  if (Platform.isIOS) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-    ));
+  if (isDark) {
+    SystemChrome.setSystemUIOverlayStyle(kDarkSystemUiOverlayStyle);
   } else {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
-      statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-      systemNavigationBarColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
-      systemNavigationBarDividerColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
-      systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(kLightSystemUiOverlayStyle);
   }
 }

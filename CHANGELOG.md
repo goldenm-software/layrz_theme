@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.50
+
+- Fixes related to the `SystemUIOverlayStyle` to handle correctly the status bar and navigation bar colors on Android and iOS.
+
 ## 4.3.49
 - Changed behavior of `disabledColor` on `ThemedButton` to change depending of the button style to allow better readability.
 
