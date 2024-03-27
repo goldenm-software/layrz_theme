@@ -24,7 +24,7 @@ part 'src/parts/avatar.dart';
 typedef ThemedNavigatorPushFunction = void Function(String path);
 typedef ThemdNavigatorPopFunction = VoidCallback;
 
-const double kLogoWidth = 2000;
+const double kLogoWidth = 2800;
 const double kLogoHeight = 500;
 const kLogoAspectRatio = kLogoWidth / kLogoHeight;
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.52
+
+- Changed `kLogoWidth` from `2000` to `2800`.
+
 ## 4.3.51
 
 - Changed `favicon` to `logo` in the `ThemedDrawer`.
