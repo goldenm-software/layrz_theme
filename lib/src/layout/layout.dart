@@ -369,39 +369,41 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                 notifications: widget.notifications,
               ),
               Expanded(
-                child: Column(
-                  children: [
-                    if (pageName != null && displayHeader) ...[
-                      Container(
-                        height: ThemedAppBar.size.height,
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if (pageIcon != null) ...[
-                              Icon(
-                                pageIcon,
-                                color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                                size: 18,
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      if (pageName != null && displayHeader) ...[
+                        Container(
+                          height: ThemedAppBar.size.height,
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (pageIcon != null) ...[
+                                Icon(
+                                  pageIcon,
+                                  color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  pageName,
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                      ),
+                                ),
                               ),
-                              const SizedBox(width: 5),
                             ],
-                            Expanded(
-                              child: Text(
-                                pageName,
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                                    ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
+                      Expanded(child: child),
                     ],
-                    Expanded(child: child),
-                  ],
+                  ),
                 ),
               ),
             ],

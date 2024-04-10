@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.55
+
+- Fixes related to `ThemedLayoutStyle.sidebar`, the Page name now will be displayed inside of a `SafeArea` widget.
+
 ## 4.3.54
 
 - Bugfix on `ThemedImage` SVG support
