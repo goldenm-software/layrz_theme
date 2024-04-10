@@ -15,14 +15,23 @@ class _LayoutState extends State<Layout> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // AppThemedAsset get logo => const AppThemedAsset(
+  //       normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/normal.svg',
+  //       white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/white.svg',
+  //     );
+  // AppThemedAsset get favicon => const AppThemedAsset(
+  //       normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/normal.png',
+  //       white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/white.png',
+  //     );
+
   AppThemedAsset get logo => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/normal.svg',
-        white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/white.svg',
+        normal: 'https://cdn.layrz.com/resources/layrz/logo/normal.png',
+        white: 'https://cdn.layrz.com/resources/layrz/logo/white.png',
       );
 
   AppThemedAsset get favicon => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/normal.png',
-        white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/white.png',
+        normal: 'https://cdn.layrz.com/resources/layrz/favicon/normal.png',
+        white: 'https://cdn.layrz.com/resources/layrz/favicon/white.png',
       );
 
   @override
