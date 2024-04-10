@@ -74,13 +74,28 @@ class ThemedImage extends StatelessWidget {
   })  : assert(path != null || customProvider != null, 'You must provide a path or a custom provider'),
         assert(path == null || customProvider == null, 'You must provide a path or a custom provider, not both');
 
+  bool get isSvg {
+    if (customProvider != null) return false;
+    return path!.endsWith('.svg');
+  }
+
+  bool get isNetwork {
+    if (customProvider != null) return false;
+    return path!.startsWith('http');
+  }
+
+  bool get isBase64 {
+    if (customProvider != null) return false;
+    return path!.startsWith('data:');
+  }
+
   ImageProvider get provider {
     if (customProvider != null) return customProvider!;
 
-    if (path!.startsWith('http')) {
+    if (isNetwork) {
       return NetworkImage(path!);
     }
-    if (path!.startsWith('data:')) {
+    if (isBase64) {
       return MemoryImage(base64Decode(path!.split(',').last));
     }
     return AssetImage(path!);
@@ -88,6 +103,35 @@ class ThemedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isSvg) {
+      if (isNetwork) {
+        return SvgPicture.network(
+          path!,
+          height: height,
+          width: width,
+          fit: fit,
+          alignment: alignment,
+        );
+      }
+
+      if (isBase64) {
+        return SvgPicture.memory(
+          base64Decode(path!.split(',').last),
+          height: height,
+          width: width,
+          fit: fit,
+          alignment: alignment,
+        );
+      }
+
+      return SvgPicture.asset(
+        path!,
+        height: height,
+        width: width,
+        fit: fit,
+        alignment: alignment,
+      );
+    }
     return Image(
       image: provider,
       height: height,

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.53
+
+- Added support for SVG images in `ThemedImage` utility.
+
 ## 4.3.52
 
 - Changed `kLogoWidth` from `2000` to `2800`.
