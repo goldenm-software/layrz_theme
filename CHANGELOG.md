@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.54
+
+- Bugfix on `ThemedImage` SVG support
+
 ## 4.3.53
 
 - Added support for SVG images in `ThemedImage` utility.

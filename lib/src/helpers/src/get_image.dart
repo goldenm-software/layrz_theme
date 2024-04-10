@@ -76,6 +76,15 @@ class ThemedImage extends StatelessWidget {
 
   bool get isSvg {
     if (customProvider != null) return false;
+
+    if (isNetwork) {
+      return path!.endsWith('.svg');
+    }
+
+    if (isBase64) {
+      return path!.startsWith('data:image/svg+xml');
+    }
+
     return path!.endsWith('.svg');
   }
 
