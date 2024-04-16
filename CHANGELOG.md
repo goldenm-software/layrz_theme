@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.56
+
+- Fixes in `select_input.dart` & `multiselect_input.dart`, bug in scroll function on lists
+
 ## 4.3.55
 
 - Fixes related to `ThemedLayoutStyle.sidebar`, the Page name now will be displayed inside of a `SafeArea` widget.

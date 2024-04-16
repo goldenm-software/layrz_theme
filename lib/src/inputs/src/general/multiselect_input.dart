@@ -334,42 +334,38 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                           ),
                         ),
                       ] else ...[
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxHeight: 300),
-                          child: SingleChildScrollView(
-                            controller: scrollController,
-                            child: ListView.builder(
-                              itemCount: items.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                final itm = items[index];
-                                bool isSelected = temp.where((e) {
-                                  return itm.value == e.value;
-                                }).isNotEmpty;
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: items.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final itm = items[index];
+                              bool isSelected = temp.where((e) {
+                                return itm.value == e.value;
+                              }).isNotEmpty;
 
-                                return _ThemedSelectItem<T>(
-                                  item: itm,
-                                  selected: isSelected,
-                                  canUnselect: true,
-                                  onTap: () {
-                                    itm.onTap?.call();
+                              return _ThemedSelectItem<T>(
+                                item: itm,
+                                selected: isSelected,
+                                canUnselect: true,
+                                onTap: () {
+                                  itm.onTap?.call();
 
-                                    final tempIds = temp.map((e) => e.value).toList();
-                                    if (tempIds.contains(itm.value)) {
-                                      temp.removeWhere((e) => e.value == itm.value);
-                                    } else {
-                                      temp.add(itm);
-                                    }
+                                  final tempIds = temp.map((e) => e.value).toList();
+                                  if (tempIds.contains(itm.value)) {
+                                    temp.removeWhere((e) => e.value == itm.value);
+                                  } else {
+                                    temp.add(itm);
+                                  }
 
-                                    setState(() {});
+                                  setState(() {});
 
-                                    if (!widget.waitUntilClosedToSubmit) widget.onChanged?.call(temp);
+                                  if (!widget.waitUntilClosedToSubmit) widget.onChanged?.call(temp);
 
-                                    if (widget.autoclose) Navigator.of(context).pop(temp);
-                                  },
-                                );
-                              },
-                            ),
+                                  if (widget.autoclose) Navigator.of(context).pop(temp);
+                                },
+                              );
+                            },
                           ),
                         ),
                       ],
