@@ -24,6 +24,10 @@ part 'src/parts/avatar.dart';
 typedef ThemedNavigatorPushFunction = void Function(String path);
 typedef ThemdNavigatorPopFunction = VoidCallback;
 
+const double kLogoWidth = 2800;
+const double kLogoHeight = 500;
+const kLogoAspectRatio = kLogoWidth / kLogoHeight;
+
 class ThemedLayout extends StatefulWidget {
   /// [style] is the style of the layout. Defaults to [ThemedLayoutStyle.modern].
   final ThemedLayoutStyle style;
@@ -181,7 +185,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     return () {
       widget.onThemeSwitchTap!.call();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        overrideAppBarStyle(context: context);
+        overrideAppBarStyle(isDark: isDark);
       });
     };
   }
@@ -365,39 +369,41 @@ class _ThemedLayoutState extends State<ThemedLayout> {
                 notifications: widget.notifications,
               ),
               Expanded(
-                child: Column(
-                  children: [
-                    if (pageName != null && displayHeader) ...[
-                      Container(
-                        height: ThemedAppBar.size.height,
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if (pageIcon != null) ...[
-                              Icon(
-                                pageIcon,
-                                color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                                size: 18,
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      if (pageName != null && displayHeader) ...[
+                        Container(
+                          height: ThemedAppBar.size.height,
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (pageIcon != null) ...[
+                                Icon(
+                                  pageIcon,
+                                  color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  pageName,
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                                      ),
+                                ),
                               ),
-                              const SizedBox(width: 5),
                             ],
-                            Expanded(
-                              child: Text(
-                                pageName,
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                                    ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
+                      Expanded(child: child),
                     ],
-                    Expanded(child: child),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -468,24 +474,18 @@ enum ThemedLayoutStyle {
   sidebar,
 }
 
+/// [overrideAppBarStyle] overrides the app bar style.
+/// This should be used only when the theme changes from light to dark or vice versa.
 void overrideAppBarStyle({
-  required BuildContext context,
+  /// [isDark] is a boolean that indicates if the theme is dark.
+  required bool isDark,
 }) {
   if (kIsWeb) return;
-  bool isDark = Theme.of(context).brightness == Brightness.dark;
-  isDark = !isDark; // Idk why, but when this algorithm is called, is inverted.
+  // isDark = !isDark; // Idk why, but when this algorithm is called, is inverted.
 
-  if (Platform.isIOS) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-    ));
+  if (isDark) {
+    SystemChrome.setSystemUIOverlayStyle(kDarkSystemUiOverlayStyle);
   } else {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
-      statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-      systemNavigationBarColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
-      systemNavigationBarDividerColor: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
-      systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(kLightSystemUiOverlayStyle);
   }
 }

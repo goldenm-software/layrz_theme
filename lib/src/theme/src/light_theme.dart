@@ -133,17 +133,7 @@ ThemeData generateLightTheme({
     // Header / AppBar
     secondaryHeaderColor: color,
     appBarTheme: const AppBarTheme(
-      systemOverlayStyle: SystemUiOverlayStyle(
-        // Changes the status bar colors and buttons (Top)
-        statusBarColor: kLightBackgroundColor, // Android Only
-        statusBarIconBrightness: Brightness.dark, // Android Only
-        statusBarBrightness: Brightness.dark, // iOS Only
-
-        // Changes the navigation bar colors and buttons
-        systemNavigationBarColor: kLightBackgroundColor, // Android only
-        systemNavigationBarDividerColor: kLightBackgroundColor, // Android only
-        systemNavigationBarIconBrightness: Brightness.light, // Android only
-      ),
+      systemOverlayStyle: kLightSystemUiOverlayStyle,
       color: kLightBackgroundColor,
       surfaceTintColor: kLightBackgroundColor,
       shadowColor: Colors.transparent,

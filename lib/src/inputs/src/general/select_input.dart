@@ -341,31 +341,27 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                           ),
                         ),
                       ] else ...[
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxHeight: 300),
-                          child: SingleChildScrollView(
-                            controller: scrollController,
-                            child: ListView.builder(
-                              itemCount: items.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return _ThemedSelectItem<T>(
-                                  item: items[index],
-                                  selected: temp?.value == items[index].value,
-                                  canUnselect: widget.canUnselect,
-                                  onTap: () {
-                                    items[index].onTap?.call();
-                                    if (temp?.value == items[index].value && widget.canUnselect) {
-                                      setState(() => temp = null);
-                                      Navigator.of(context).pop(null);
-                                    } else {
-                                      setState(() => temp = items[index]);
-                                      Navigator.of(context).pop(temp);
-                                    }
-                                  },
-                                );
-                              },
-                            ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: items.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return _ThemedSelectItem<T>(
+                                item: items[index],
+                                selected: temp?.value == items[index].value,
+                                canUnselect: widget.canUnselect,
+                                onTap: () {
+                                  items[index].onTap?.call();
+                                  if (temp?.value == items[index].value && widget.canUnselect) {
+                                    setState(() => temp = null);
+                                    Navigator.of(context).pop(null);
+                                  } else {
+                                    setState(() => temp = items[index]);
+                                    Navigator.of(context).pop(temp);
+                                  }
+                                },
+                              );
+                            },
                           ),
                         ),
                       ],

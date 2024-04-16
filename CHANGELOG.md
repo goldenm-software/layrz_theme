@@ -1,5 +1,35 @@
 # Changelog
 
+## 4.3.56
+
+- Fixes in `select_input.dart` & `multiselect_input.dart`, bug in scroll function on lists
+
+## 4.3.55
+
+- Fixes related to `ThemedLayoutStyle.sidebar`, the Page name now will be displayed inside of a `SafeArea` widget.
+
+## 4.3.54
+
+- Bugfix on `ThemedImage` SVG support
+
+## 4.3.53
+
+- Added support for SVG images in `ThemedImage` utility.
+
+## 4.3.52
+
+- Changed `kLogoWidth` from `2000` to `2800`.
+
+## 4.3.51
+
+- Changed `favicon` to `logo` in the `ThemedDrawer`.
+- Changed aspectRatio of the logos in the `ThemedLayout` and sub-widgets to use `kLogoAspectRatio`.
+- Added upper constraint on flutter version from `3.19.3` to `4.0.0`.
+
+## 4.3.50
+
+- Fixes related to the `SystemUIOverlayStyle` to handle correctly the status bar and navigation bar colors on Android and iOS.
+
 ## 4.3.49
 - Changed behavior of `disabledColor` on `ThemedButton` to change depending of the button style to allow better readability.
 

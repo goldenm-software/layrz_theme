@@ -59,6 +59,9 @@ class ThemedImage extends StatelessWidget {
   /// It's important to note that if you pass a custom provider, the [path] will be ignored.
   final ImageProvider? customProvider;
 
+  /// [alignment] is the alignment of the image. By default, it is `Alignment.center`.
+  final Alignment alignment;
+
   const ThemedImage({
     super.key,
     this.path,
@@ -67,16 +70,41 @@ class ThemedImage extends StatelessWidget {
     this.fit = BoxFit.contain,
     this.filterQuality = FilterQuality.medium,
     this.customProvider,
+    this.alignment = Alignment.center,
   })  : assert(path != null || customProvider != null, 'You must provide a path or a custom provider'),
         assert(path == null || customProvider == null, 'You must provide a path or a custom provider, not both');
+
+  bool get isSvg {
+    if (customProvider != null) return false;
+
+    if (isNetwork) {
+      return path!.endsWith('.svg');
+    }
+
+    if (isBase64) {
+      return path!.startsWith('data:image/svg+xml');
+    }
+
+    return path!.endsWith('.svg');
+  }
+
+  bool get isNetwork {
+    if (customProvider != null) return false;
+    return path!.startsWith('http');
+  }
+
+  bool get isBase64 {
+    if (customProvider != null) return false;
+    return path!.startsWith('data:');
+  }
 
   ImageProvider get provider {
     if (customProvider != null) return customProvider!;
 
-    if (path!.startsWith('http')) {
+    if (isNetwork) {
       return NetworkImage(path!);
     }
-    if (path!.startsWith('data:')) {
+    if (isBase64) {
       return MemoryImage(base64Decode(path!.split(',').last));
     }
     return AssetImage(path!);
@@ -84,11 +112,41 @@ class ThemedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isSvg) {
+      if (isNetwork) {
+        return SvgPicture.network(
+          path!,
+          height: height,
+          width: width,
+          fit: fit,
+          alignment: alignment,
+        );
+      }
+
+      if (isBase64) {
+        return SvgPicture.memory(
+          base64Decode(path!.split(',').last),
+          height: height,
+          width: width,
+          fit: fit,
+          alignment: alignment,
+        );
+      }
+
+      return SvgPicture.asset(
+        path!,
+        height: height,
+        width: width,
+        fit: fit,
+        alignment: alignment,
+      );
+    }
     return Image(
       image: provider,
       height: height,
       width: width,
       fit: fit,
+      alignment: alignment,
       filterQuality: filterQuality,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;

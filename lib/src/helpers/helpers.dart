@@ -3,6 +3,7 @@ library helpers;
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 export 'src/save_file/native.dart' if (dart.library.html) 'src/save_file/web.dart';

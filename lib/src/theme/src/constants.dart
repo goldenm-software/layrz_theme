@@ -37,3 +37,27 @@ EdgeInsets? get kListViewPadding {
   if (Platform.isIOS) return EdgeInsets.zero;
   return null;
 }
+
+const kDarkSystemUiOverlayStyle = SystemUiOverlayStyle(
+  // Changes the status bar colors and buttons (Top)
+  statusBarColor: kDarkBackgroundColor, // Android Only
+  statusBarIconBrightness: Brightness.light, // Android Only
+  statusBarBrightness: Brightness.dark, // iOS Only
+
+  // Changes the navigation bar colors and buttons
+  systemNavigationBarColor: kDarkBackgroundColor, // Android only
+  systemNavigationBarDividerColor: kDarkBackgroundColor, // Android only
+  systemNavigationBarIconBrightness: Brightness.light, // Android only
+);
+
+const kLightSystemUiOverlayStyle = SystemUiOverlayStyle(
+  // Changes the status bar colors and buttons (Top)
+  statusBarColor: kLightBackgroundColor, // Android Only
+  statusBarIconBrightness: Brightness.dark, // Android Only
+  statusBarBrightness: Brightness.light, // iOS Only
+
+  // Changes the navigation bar colors and buttons
+  systemNavigationBarColor: kLightBackgroundColor, // Android only
+  systemNavigationBarDividerColor: kLightBackgroundColor, // Android only
+  systemNavigationBarIconBrightness: Brightness.dark, // Android only
+);
