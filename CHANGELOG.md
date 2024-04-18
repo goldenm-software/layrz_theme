@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.57
+
+- Enabled optional field `textStyle` on `ThemedTextInput`
+
 ## 4.3.56
 
 - Fixes in `select_input.dart` & `multiselect_input.dart`, bug in scroll function on lists
