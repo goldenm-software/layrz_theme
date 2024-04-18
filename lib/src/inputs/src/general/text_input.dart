@@ -120,6 +120,9 @@ class ThemedTextInput extends StatefulWidget {
   /// By default, it is [ThemedComboboxPosition.below].
   final ThemedComboboxPosition position;
 
+  /// Styles of the text inside the input
+  final TextStyle? textStyle;
+
   /// [ThemedTextInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedTextInput({
@@ -163,6 +166,7 @@ class ThemedTextInput extends StatefulWidget {
     this.enableCombobox = false,
     this.emptyChoicesText = "No choices",
     this.position = ThemedComboboxPosition.below,
+    this.textStyle,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -362,6 +366,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         autocorrect: widget.autocorrect,
         enableSuggestions: widget.enableSuggestions,
         autofocus: widget.autofocus,
+        style: widget.textStyle,
         onChanged: (String value) async {
           if (widget.validator?.call(value) ?? true) {
             setState(() => _value = value);

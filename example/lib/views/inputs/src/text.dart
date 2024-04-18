@@ -58,6 +58,7 @@ class _TextInputViewState extends State<TextInputView> {
                     ThemedTextInput(
                       labelText: "Example label",
                       placeholder: "Example placeholder",
+                      textStyle: TextStyle(color: Colors.purple),
                     ),
                   ],
                 ),
