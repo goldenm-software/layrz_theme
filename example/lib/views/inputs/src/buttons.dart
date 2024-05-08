@@ -60,7 +60,9 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.filledTonal),
+                                _factorButton(
+                                  style: ThemedButtonStyle.filledTonal,
+                                ),
                               ],
                             ),
                           ),
@@ -79,7 +81,10 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.filledTonalFab),
+                                _factorButton(
+                                  style: ThemedButtonStyle.filledTonalFab,
+                                  tooltipPosition: ThemedTooltipPosition.right,
+                                ),
                               ],
                             ),
                           ),
@@ -114,7 +119,9 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.elevated),
+                                _factorButton(
+                                  style: ThemedButtonStyle.elevated,
+                                ),
                               ],
                             ),
                           ),
@@ -133,7 +140,10 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.elevatedFab),
+                                _factorButton(
+                                  style: ThemedButtonStyle.elevatedFab,
+                                  tooltipPosition: ThemedTooltipPosition.left,
+                                ),
                               ],
                             ),
                           ),
@@ -168,7 +178,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.filled),
+                                _factorButton(style: ThemedButtonStyle.filled),
                               ],
                             ),
                           ),
@@ -187,7 +197,10 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.filledFab),
+                                _factorButton(
+                                  style: ThemedButtonStyle.filledFab,
+                                  tooltipPosition: ThemedTooltipPosition.top,
+                                ),
                               ],
                             ),
                           ),
@@ -222,7 +235,9 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.outlined),
+                                _factorButton(
+                                  style: ThemedButtonStyle.outlined,
+                                ),
                               ],
                             ),
                           ),
@@ -241,7 +256,10 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.outlinedFab),
+                                _factorButton(
+                                  style: ThemedButtonStyle.outlinedFab,
+                                  tooltipPosition: ThemedTooltipPosition.bottom,
+                                ),
                               ],
                             ),
                           ),
@@ -276,7 +294,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.text),
+                                _factorButton(style: ThemedButtonStyle.text),
                               ],
                             ),
                           ),
@@ -295,7 +313,9 @@ class _ButtonsViewState extends State<ButtonsView> {
                                   style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 5),
-                                _factorButton(ThemedButtonStyle.fab),
+                                _factorButton(
+                                  style: ThemedButtonStyle.fab,
+                                ),
                               ],
                             ),
                           ),
@@ -379,7 +399,10 @@ class _ButtonsViewState extends State<ButtonsView> {
     );
   }
 
-  Widget _factorButton(ThemedButtonStyle style) {
+  Widget _factorButton({
+    required style,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.right,
+  }) {
     return ThemedButton(
       icon: MdiIcons.accessPoint,
       cooldownDuration: const Duration(seconds: 4),
@@ -391,7 +414,7 @@ class _ButtonsViewState extends State<ButtonsView> {
       isDisabled: _isDisabled,
       // cooldownDuration: const Duration(seconds: 10),
       onCooldownFinish: () => setState(() => _isCooldown = false),
-      tooltipPosition: ThemedTooltipPosition.right,
+      tooltipPosition: tooltipPosition,
       onTap: () {
         // context.go('/inputs/text');
         ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
