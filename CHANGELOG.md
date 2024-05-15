@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.1
+
+- Moved the `ThemedDateTimeRangePicker` internal dialog to an external dialog to use in other widgets.
+
 ## 5.0.0
 
 - Added support for Flutter 3.22.0 (Tested)

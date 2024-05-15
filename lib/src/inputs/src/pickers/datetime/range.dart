@@ -226,225 +226,292 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
   void _showPicker() async {
     List<DateTime>? selected = await showDialog(
       context: context,
-      builder: (context) {
-        DateTime startDate = widget.value.isNotEmpty ? widget.value.first : DateTime.now();
-        DateTime endDate = widget.value.isNotEmpty ? widget.value.last : DateTime.now();
-        TimeOfDay startTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.first) : TimeOfDay.now();
-        TimeOfDay endTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.last) : TimeOfDay.now();
-        List<DateTime> filledDates = _fillDates([startDate, endDate]..sort((a, b) {
-            return a.compareTo(b);
-          }));
-
-        DateTime? tempDate;
-
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            constraints: const BoxConstraints(maxWidth: 400),
-            decoration: generateContainerElevation(context: context, elevation: 3),
-            child: StatefulBuilder(
-              builder: (context, setState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      widget.labelText ?? '',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).dividerColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: _tabController.index == 0
-                                    ? null
-                                    : () {
-                                        _tabController.animateTo(0);
-                                        setState(() {});
-                                      },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  height: double.infinity,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        _tabController.index == 0 ? Theme.of(context).primaryColor : Colors.transparent,
-                                  ),
-                                  child: Text(
-                                    t('layrz.datetimePicker.date'),
-                                    style: TextStyle(
-                                      color: _tabController.index == 0
-                                          ? isDark
-                                              ? Colors.white
-                                              : validateColor(color: Theme.of(context).primaryColor)
-                                          : null,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: _tabController.index == 1
-                                    ? null
-                                    : () {
-                                        _tabController.animateTo(1);
-                                        setState(() {});
-                                      },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  height: double.infinity,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        _tabController.index == 1 ? Theme.of(context).primaryColor : Colors.transparent,
-                                  ),
-                                  child: Text(
-                                    t('layrz.datetimePicker.time'),
-                                    style: TextStyle(
-                                      color: _tabController.index == 1
-                                          ? isDark
-                                              ? Colors.white
-                                              : validateColor(color: Theme.of(context).primaryColor)
-                                          : null,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      constraints: const BoxConstraints(maxWidth: 400, maxHeight: 400),
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          ThemedCalendar(
-                            focusDay: tempDate,
-                            showEntries: false,
-                            smallWeekdays: true,
-                            todayIndicator: false,
-                            todayButton: false,
-                            highlightedDays: tempDate != null ? [] : filledDates,
-                            isHighlightDaysAsRange: tempDate == null,
-                            disabledDays: widget.disabledDays,
-                            translations: widget.translations,
-                            overridesLayrzTranslations: widget.overridesLayrzTranslations,
-                            onDayTap: (newDate) {
-                              if (tempDate == null) {
-                                tempDate = newDate;
-                                startDate = newDate;
-                                setState(() {});
-                                return;
-                              }
-
-                              endDate = newDate;
-                              tempDate = null;
-                              filledDates = _fillDates([startDate, endDate]..sort((a, b) {
-                                  return a.compareTo(b);
-                                }));
-                              setState(() {});
-                            },
-                          ),
-                          Column(
-                            children: [
-                              const Spacer(),
-                              _ThemedTimeUtility(
-                                value: startTime,
-                                use24HourFormat: widget.use24HourFormat,
-                                titleText: widget.labelText ?? '',
-                                hoursText: t('layrz.timePicker.hours'),
-                                minutesText: t('layrz.timePicker.minutes'),
-                                saveText: t('actions.save'),
-                                cancelText: t('actions.cancel'),
-                                inDialog: false,
-                                onChanged: (newTime) => setState(() => startTime = newTime),
-                              ),
-                              const Spacer(),
-                              _ThemedTimeUtility(
-                                value: endTime,
-                                use24HourFormat: widget.use24HourFormat,
-                                titleText: widget.labelText ?? '',
-                                hoursText: t('layrz.timePicker.hours'),
-                                minutesText: t('layrz.timePicker.minutes'),
-                                saveText: t('actions.save'),
-                                cancelText: t('actions.cancel'),
-                                inDialog: false,
-                                onChanged: (newTime) => setState(() => endTime = newTime),
-                              ),
-                              const Spacer(),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ThemedButton.cancel(
-                          labelText: t('actions.cancel'),
-                          onTap: () => Navigator.of(context).pop(),
-                        ),
-                        ThemedButton.save(
-                          labelText: t('actions.save'),
-                          onTap: () {
-                            DateTime start = DateTime(
-                              startDate.year,
-                              startDate.month,
-                              startDate.day,
-                              startTime.hour,
-                              startTime.minute,
-                            );
-                            DateTime end = DateTime(
-                              endDate.year,
-                              endDate.month,
-                              endDate.day,
-                              endTime.hour,
-                              endTime.minute,
-                            );
-
-                            _tabController.animateTo(0);
-
-                            Navigator.of(context).pop([start, end]..sort((a, b) {
-                                return a.compareTo(b);
-                              }));
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        );
-      },
+      builder: (context) => ThemedDateTimeRangeDialog(
+        value: widget.value,
+        labelText: widget.labelText,
+        disabledDays: widget.disabledDays,
+        translations: widget.translations,
+        overridesLayrzTranslations: widget.overridesLayrzTranslations,
+        use24HourFormat: widget.use24HourFormat,
+      ),
     );
 
     if (selected != null) {
       widget.onChanged?.call(selected);
     }
+  }
+
+  String t(String key, [Map<String, dynamic> args = const {}]) {
+    String result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
+
+    if (widget.overridesLayrzTranslations) {
+      result = widget.translations[key] ?? key;
+    }
+
+    if (args.isNotEmpty) {
+      args.forEach((key, value) {
+        result = result.replaceAll('{$key}', value.toString());
+      });
+    }
+
+    return result;
+  }
+}
+
+class ThemedDateTimeRangeDialog extends StatefulWidget {
+  final List<DateTime> value;
+  final String? labelText;
+  final List<DateTime> disabledDays;
+  final Map<String, String> translations;
+  final bool overridesLayrzTranslations;
+  final bool use24HourFormat;
+
+  const ThemedDateTimeRangeDialog({
+    super.key,
+    this.value = const [],
+    this.labelText,
+    this.disabledDays = const [],
+    this.translations = const {},
+    this.overridesLayrzTranslations = false,
+    this.use24HourFormat = false,
+  });
+
+  @override
+  State<ThemedDateTimeRangeDialog> createState() => _ThemedDateTimeRangeDialogState();
+}
+
+class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> with TickerProviderStateMixin {
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  late TabController _tabController;
+  late DateTime startDate;
+  late DateTime endDate;
+  late TimeOfDay startTime;
+  late TimeOfDay endTime;
+  late List<DateTime> filledDates;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    startDate = widget.value.isNotEmpty ? widget.value.first : DateTime.now();
+    endDate = widget.value.isNotEmpty ? widget.value.last : DateTime.now();
+    startTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.first) : TimeOfDay.now();
+    endTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.last) : TimeOfDay.now();
+    filledDates = _fillDates([startDate, endDate]..sort((a, b) {
+        return a.compareTo(b);
+      }));
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime? tempDate;
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        constraints: const BoxConstraints(maxWidth: 400),
+        decoration: generateContainerElevation(context: context, elevation: 3),
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.labelText ?? '',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).dividerColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: _tabController.index == 0
+                                ? null
+                                : () {
+                                    _tabController.animateTo(0);
+                                    setState(() {});
+                                  },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              height: double.infinity,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: _tabController.index == 0 ? Theme.of(context).primaryColor : Colors.transparent,
+                              ),
+                              child: Text(
+                                t('layrz.datetimePicker.date'),
+                                style: TextStyle(
+                                  color: _tabController.index == 0
+                                      ? isDark
+                                          ? Colors.white
+                                          : validateColor(color: Theme.of(context).primaryColor)
+                                      : null,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: _tabController.index == 1
+                                ? null
+                                : () {
+                                    _tabController.animateTo(1);
+                                    setState(() {});
+                                  },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              height: double.infinity,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: _tabController.index == 1 ? Theme.of(context).primaryColor : Colors.transparent,
+                              ),
+                              child: Text(
+                                t('layrz.datetimePicker.time'),
+                                style: TextStyle(
+                                  color: _tabController.index == 1
+                                      ? isDark
+                                          ? Colors.white
+                                          : validateColor(color: Theme.of(context).primaryColor)
+                                      : null,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  constraints: const BoxConstraints(maxWidth: 400, maxHeight: 400),
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      ThemedCalendar(
+                        focusDay: tempDate,
+                        showEntries: false,
+                        smallWeekdays: true,
+                        todayIndicator: false,
+                        todayButton: false,
+                        highlightedDays: tempDate != null ? [] : filledDates,
+                        isHighlightDaysAsRange: tempDate == null,
+                        disabledDays: widget.disabledDays,
+                        translations: widget.translations,
+                        overridesLayrzTranslations: widget.overridesLayrzTranslations,
+                        onDayTap: (newDate) {
+                          if (tempDate == null) {
+                            tempDate = newDate;
+                            startDate = newDate;
+                            setState(() {});
+                            return;
+                          }
+
+                          endDate = newDate;
+                          tempDate = null;
+                          filledDates = _fillDates([startDate, endDate]..sort((a, b) {
+                              return a.compareTo(b);
+                            }));
+                          setState(() {});
+                        },
+                      ),
+                      Column(
+                        children: [
+                          const Spacer(),
+                          _ThemedTimeUtility(
+                            value: startTime,
+                            use24HourFormat: widget.use24HourFormat,
+                            titleText: widget.labelText ?? '',
+                            hoursText: t('layrz.timePicker.hours'),
+                            minutesText: t('layrz.timePicker.minutes'),
+                            saveText: t('actions.save'),
+                            cancelText: t('actions.cancel'),
+                            inDialog: false,
+                            onChanged: (newTime) => setState(() => startTime = newTime),
+                          ),
+                          const Spacer(),
+                          _ThemedTimeUtility(
+                            value: endTime,
+                            use24HourFormat: widget.use24HourFormat,
+                            titleText: widget.labelText ?? '',
+                            hoursText: t('layrz.timePicker.hours'),
+                            minutesText: t('layrz.timePicker.minutes'),
+                            saveText: t('actions.save'),
+                            cancelText: t('actions.cancel'),
+                            inDialog: false,
+                            onChanged: (newTime) => setState(() => endTime = newTime),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ThemedButton.cancel(
+                      labelText: t('actions.cancel'),
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
+                    ThemedButton.save(
+                      labelText: t('actions.save'),
+                      onTap: () {
+                        DateTime start = DateTime(
+                          startDate.year,
+                          startDate.month,
+                          startDate.day,
+                          startTime.hour,
+                          startTime.minute,
+                        );
+                        DateTime end = DateTime(
+                          endDate.year,
+                          endDate.month,
+                          endDate.day,
+                          endTime.hour,
+                          endTime.minute,
+                        );
+
+                        _tabController.animateTo(0);
+
+                        Navigator.of(context).pop([start, end]..sort((a, b) {
+                            return a.compareTo(b);
+                          }));
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 
   List<DateTime> _fillDates(List<DateTime> source) {
