@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.2
+
+- Changed `_getChildrenUrls()` invoke in `ThemedLayout`, now use `WidgetsBinding.instance.addPostFrameCallback` to prevent issues with the `initState`.
+
 ## 5.0.1
 
 - Moved the `ThemedDateTimeRangePicker` internal dialog to an external dialog to use in other widgets.

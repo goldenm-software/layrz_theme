@@ -221,13 +221,13 @@ class _ThemedLayoutState extends State<ThemedLayout> {
   @override
   void initState() {
     super.initState();
-    _getChildrenUrls();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _getChildrenUrls());
   }
 
   @override
   void didUpdateWidget(ThemedLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _getChildrenUrls();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _getChildrenUrls());
   }
 
   void _getChildrenUrls() {
