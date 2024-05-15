@@ -179,8 +179,6 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
       context: context,
       builder: (context) {
         IconData? icon;
-        String search = '';
-
         return Dialog(
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -198,29 +196,19 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
                           ),
                     ),
                     const SizedBox(height: 10),
-                    ThemedTextInput(
-                      labelText: t('helpers.search'),
-                      value: search,
-                      prefixIcon: MdiIcons.magnify,
-                      dense: true,
-                      onChanged: (value) {
-                        setState(() => search = value);
-                      },
-                    ),
-                    const SizedBox(height: 10),
                     Expanded(
                       child: LayoutBuilder(
-                        builder: (BuildContext context, BoxConstraints constraints) {
+                        builder: (context, constraints) {
                           return _IconGrid(
-                            iconSize: 16,
-                            selected: icon,
+                            selected: _value,
                             constraints: constraints,
-                            allowedIcons: widget.allowedIcons,
-                            onTap: (newIcon) {
-                              setState(() => icon = newIcon);
+                            onTap: (icon) {
+                              setState(() {
+                                _value = icon;
+                                _textController.text = const IconOrNullConverter().toJson(_value) ?? '';
+                              });
                               Navigator.of(context).pop(icon);
                             },
-                            search: search,
                           );
                         },
                       ),
@@ -229,14 +217,12 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ThemedButton(
+                        ThemedButton.cancel(
                           labelText: t('actions.cancel'),
-                          color: Colors.red,
                           onTap: () => Navigator.of(context).pop(),
                         ),
-                        ThemedButton(
+                        ThemedButton.save(
                           labelText: t('actions.save'),
-                          color: Colors.green,
                           onTap: () => Navigator.of(context).pop(icon),
                         ),
                       ],
@@ -280,18 +266,15 @@ typedef IconDataTapCallback = void Function(IconData icon);
 
 class _IconGrid extends StatefulWidget {
   final IconDataTapCallback? onTap;
-  final String search;
-  final double iconSize;
   final IconData? selected;
   final BoxConstraints constraints;
   final List<IconData> allowedIcons;
 
   const _IconGrid({
-    required this.iconSize,
     required this.constraints,
     this.onTap,
-    this.search = '',
     this.selected,
+    // ignore: unused_element
     this.allowedIcons = const [],
   });
 
@@ -299,119 +282,155 @@ class _IconGrid extends StatefulWidget {
   State<_IconGrid> createState() => __IconGridState();
 }
 
-class __IconGridState extends State<_IconGrid> {
+class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
+  final ScrollController _scrollController = ScrollController();
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get activeColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+  String search = '';
+
   BoxConstraints get constraints => widget.constraints;
-  int get numOfColumns => (constraints.maxWidth / (widget.iconSize * 3)).floor();
-  late ScrollController _scrollController;
-  List<IconData> get icons {
-    if (widget.allowedIcons.isNotEmpty) return widget.allowedIcons;
-    return iconMap.entries.where((entry) {
-      if (widget.search.isNotEmpty) {
-        return entry.key.toLowerCase().contains(widget.search.toLowerCase());
-      }
-      return true;
-    }).map<IconData>((entry) {
-      return entry.value;
-    }).toList();
+  double get _iconHeight => 50;
+
+  List<NamedIcon> _icons = [];
+
+  List<NamedIcon> get _filteredIcons {
+    if (search.isEmpty) return _icons;
+
+    return _icons.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).toList();
+  }
+
+  void _populateIcons() {
+    _icons = [];
+
+    for (var icon in iconMap.values) {
+      if (widget.allowedIcons.isNotEmpty && !widget.allowedIcons.contains(icon)) continue;
+
+      String name = _getName(icon);
+      if (search.isNotEmpty && !name.toLowerCase().contains(search.toLowerCase())) continue;
+
+      _icons.add(NamedIcon(
+        name: name,
+        icon: icon,
+      ));
+    }
+
+    _icons.sort((a, b) => a.name.compareTo(b.name));
+
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-
-    _postFrameCallback();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _populateIcons();
+      _relocateScroll();
+    });
   }
 
   @override
   void didUpdateWidget(_IconGrid oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _postFrameCallback();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _relocateScroll();
+      final eq = const ListEquality().equals;
+      if (!eq(oldWidget.allowedIcons, widget.allowedIcons)) {
+        _populateIcons();
+      }
+    });
   }
 
-  void _postFrameCallback() {
-    if (widget.selected != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final index = icons.indexOf(widget.selected!);
-        if (index != -1) {
-          final lines = (index / numOfColumns).floor();
-          /*
-          lines * ((widget.iconSize * scale factor of width and height of button) + padding)
-          */
-          _scrollController.jumpTo(lines * ((widget.iconSize * 2.5) + 10));
-        }
-      });
-    }
-  }
+  void _relocateScroll() {
+    if (widget.selected == null) return;
 
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      controller: _scrollController,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: numOfColumns,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: icons.length,
-      itemBuilder: (context, index) {
-        return _IconButton(
-          icon: icons[index],
-          iconSize: widget.iconSize,
-          onTap: () => widget.onTap?.call(icons[index]),
-          isSelected: widget.selected == icons[index],
-        );
-      },
+    final index = _icons.indexWhere((element) => element.icon == widget.selected);
+    if (index == -1) return;
+
+    final offset = index * _iconHeight;
+    _scrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeInOut,
     );
   }
-}
-
-class _IconButton extends StatefulWidget {
-  final IconData icon;
-  final VoidCallback? onTap;
-  final double iconSize;
-  final bool isSelected;
-
-  const _IconButton({
-    required this.icon,
-    this.onTap,
-    this.iconSize = 16,
-    this.isSelected = false,
-  });
-
-  @override
-  State<_IconButton> createState() => __IconButtonState();
-}
-
-class __IconButtonState extends State<_IconButton> {
-  bool isHover = false;
-  double get iconSize => widget.iconSize;
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color hoverColor = isDark ? Colors.grey.shade700 : Colors.grey.shade200;
-    return InkWell(
-      onHover: (value) => setState(() {
-        isHover = value;
-      }),
-      onTap: widget.onTap,
-      child: AnimatedContainer(
-        duration: kHoverDuration,
-        width: iconSize * 2.5,
-        height: iconSize * 2.5,
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: widget.isSelected || isHover ? hoverColor : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(10),
+    return Column(
+      children: [
+        ThemedTextInput(
+          padding: EdgeInsets.zero,
+          dense: true,
+          labelText: i18n?.t('helpers.search') ?? 'Search an icon',
+          value: search,
+          onChanged: (value) => setState(() => search = value),
+          prefixIcon: MdiIcons.magnify,
         ),
-        child: Center(
-          child: Icon(
-            widget.icon,
-            size: iconSize,
+        if (mounted)
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: _filteredIcons.length,
+              itemExtent: _iconHeight,
+              itemBuilder: (context, index) {
+                final icon = _filteredIcons[index];
+                bool isSelected = widget.selected == icon.icon;
+
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  decoration: BoxDecoration(
+                    color: isSelected ? activeColor : Colors.transparent,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(5),
+                      onTap: () {
+                        widget.onTap?.call(icon.icon);
+
+                        search = '';
+                        _relocateScroll();
+                        setState(() {});
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            Icon(
+                              icon.icon,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              icon.name,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-      ),
+      ],
     );
   }
+
+  String _getName(IconData icon) {
+    return const IconOrNullConverter().toJson(icon) ?? '';
+  }
+}
+
+class NamedIcon {
+  final IconData icon;
+  final String name;
+
+  NamedIcon({
+    required this.icon,
+    required this.name,
+  });
 }

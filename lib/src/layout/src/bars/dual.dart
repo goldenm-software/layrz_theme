@@ -1,6 +1,6 @@
-part of '../layout.dart';
+part of '../../layout.dart';
 
-class ThemedSidebar extends StatefulWidget {
+class ThemedDualBar extends StatefulWidget {
   /// [items] is the list of buttons to be displayed in the drawer.
   final List<ThemedNavigatorItem> items;
 
@@ -19,9 +19,9 @@ class ThemedSidebar extends StatefulWidget {
   /// [persistentItems] is the list of buttons to be displayed in the drawer.
   final List<ThemedNavigatorItem> persistentItems;
 
-  /// [ThemedSidebar] is the sidebar of the app in desktop mode, only will work in desktop.
+  /// [ThemedDualBar] is the sidebar of the app in desktop mode, only will work in desktop.
   /// On mobile or tablet devices, this widget could not work as expected.
-  const ThemedSidebar({
+  const ThemedDualBar({
     super.key,
     this.items = const [],
     this.backgroundColor,
@@ -31,12 +31,12 @@ class ThemedSidebar extends StatefulWidget {
   });
 
   @override
-  State<ThemedSidebar> createState() => _ThemedSidebarState();
+  State<ThemedDualBar> createState() => _ThemedDualBarState();
 
   static double get width => 60;
 }
 
-class _ThemedSidebarState extends State<ThemedSidebar> {
+class _ThemedDualBarState extends State<ThemedDualBar> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor =>
       widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
@@ -56,7 +56,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: ThemedSidebar.width,
+      width: ThemedDualBar.width,
       height: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(

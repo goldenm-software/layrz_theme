@@ -1,40 +1,5 @@
 part of '../../../inputs.dart';
 
-class ThemedAvatarInput extends StatelessWidget {
-  final String? labelText;
-  final Widget? label;
-  final String? value;
-  final void Function(String?)? onChanged;
-  final bool disabled;
-  final List<String> errors;
-  final bool hideDetails;
-
-  @Deprecated("Use `ThemedAvatarPicker` instead")
-  const ThemedAvatarInput({
-    super.key,
-    this.label,
-    this.value,
-    this.labelText,
-    this.onChanged,
-    this.disabled = false,
-    this.errors = const [],
-    this.hideDetails = false,
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
-
-  @override
-  Widget build(BuildContext context) {
-    return ThemedAvatarPicker(
-      label: label,
-      value: value,
-      labelText: labelText,
-      onChanged: onChanged,
-      disabled: disabled,
-      errors: errors,
-      hideDetails: hideDetails,
-    );
-  }
-}
-
 class ThemedAvatarPicker extends StatefulWidget {
   /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.
   final String? labelText;

@@ -190,10 +190,10 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
                 ),
               ] else ...[
                 Checkbox(
-                  fillColor: MaterialStateProperty.resolveWith((states) {
-                    if (states.contains(MaterialState.disabled)) {
+                  fillColor: WidgetStateProperty.resolveWith((states) {
+                    if (states.contains(WidgetState.disabled)) {
                       return Theme.of(context).disabledColor;
-                    } else if (states.contains(MaterialState.selected)) {
+                    } else if (states.contains(WidgetState.selected)) {
                       return Theme.of(context).primaryColor;
                     }
 

@@ -108,6 +108,138 @@ class ThemedButton extends StatefulWidget {
     this.showCooldownRemainingDuration = true,
   }) : assert(label != null || labelText != null);
 
+  factory ThemedButton.save({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.contentSave,
+      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      color: Colors.green,
+    );
+  }
+
+  factory ThemedButton.cancel({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.closeCircle,
+      style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+      color: Colors.red,
+    );
+  }
+
+  factory ThemedButton.info({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.closeCircle,
+      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      color: Colors.blue,
+    );
+  }
+
+  factory ThemedButton.show({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.magnifyScan,
+      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      color: Colors.blue,
+    );
+  }
+
+  factory ThemedButton.edit({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.squareEditOutline,
+      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      color: Colors.orange,
+    );
+  }
+
+  factory ThemedButton.delete({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.trashCan,
+      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      color: Colors.red,
+    );
+  }
+
   @override
   State<ThemedButton> createState() => _ThemedButtonState();
 

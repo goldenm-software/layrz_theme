@@ -402,14 +402,12 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ThemedButton(
+                        ThemedButton.cancel(
                           labelText: t('actions.cancel'),
-                          color: Colors.red,
                           onTap: () => Navigator.of(context).pop(),
                         ),
-                        ThemedButton(
+                        ThemedButton.save(
                           labelText: t('actions.save'),
-                          color: Colors.green,
                           onTap: () {
                             DateTime start = DateTime(
                               startDate.year,

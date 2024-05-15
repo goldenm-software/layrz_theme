@@ -696,7 +696,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        debugPrint(constraints.maxWidth.toString());
         bool isMobile = constraints.maxWidth < widget.mobileBreakpoint;
         bool isVerySmall = constraints.maxWidth <= 210;
         bool multiSelectionEnabled = widget.multiSelectionEnabled;

@@ -1,10 +1,12 @@
 part of '../../inputs.dart';
 
+typedef ThemedDynamicAvatarOnChanged = void Function(AvatarInput? value);
+
 class ThemedDynamicAvatarInput extends StatefulWidget {
   final String? labelText;
   final Widget? label;
   final AvatarInput? value;
-  final void Function(AvatarInput?)? onChanged;
+  final ThemedDynamicAvatarOnChanged? onChanged;
   final bool disabled;
   final List<String> errors;
   final bool hideDetails;
@@ -68,16 +70,14 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
 }
 
 class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> with TickerProviderStateMixin {
-  late AnimationController animation;
-  OverlayEntry? overlayEntry;
-  final ScrollController _emojiController = ScrollController();
-  EmojiGroup? selectedGroup;
-  String search = "";
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get containerColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+  Color get iconColor => isDark ? Colors.grey.shade300 : Colors.grey.shade600;
 
   late AvatarInput _value;
   EdgeInsets get padding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get disabled => widget.disabled;
-  GlobalKey key = GlobalKey();
 
   List<AvatarType> get enabledTypes => [
         AvatarType.none,
@@ -88,15 +88,10 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
   void initState() {
     super.initState();
     _value = widget.value ?? AvatarInput();
-    animation = AnimationController(vsync: this, duration: kHoverDuration);
   }
 
   @override
   Widget build(BuildContext context) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color containerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade200;
-    Color iconColor = isDark ? Colors.grey.shade300 : Colors.grey.shade600;
     return Padding(
       padding: padding,
       child: Column(
@@ -104,9 +99,8 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
         children: [
           InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: disabled ? null : _handleTap,
+            onTap: disabled ? null : _showDialog,
             child: Container(
-              key: key,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: containerColor,
@@ -128,7 +122,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
                     const SizedBox(width: 10),
                     IconButton(
                       icon: Icon(Icons.edit, size: 15, color: iconColor),
-                      onPressed: disabled ? null : _handleTap,
+                      onPressed: disabled ? null : _showDialog,
                     ),
                   ],
                 ],
@@ -141,174 +135,119 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
     );
   }
 
-  void _handleTap() {
-    if (overlayEntry == null) {
-      _buildOverlay();
-    } else {
-      _destroyOverlay();
-    }
+  Future<void> _showDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => _ThemedDynamicAvatarDialog(
+        types: enabledTypes,
+        value: _value,
+        onChanged: (output) {
+          _value = output ?? AvatarInput();
+          widget.onChanged?.call(output);
+          setState(() {});
+        },
+      ),
+    );
   }
+}
 
-  void _buildOverlay() {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
-    RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
-    Offset offset = box.localToGlobal(Offset.zero);
+class _ThemedDynamicAvatarDialog extends StatefulWidget {
+  final ThemedDynamicAvatarOnChanged onChanged;
+  final AvatarInput value;
+  final List<AvatarType> types;
 
-    Size screenSize = MediaQuery.of(context).size;
-    bool isSmall = screenSize.width < kSmallGrid;
-    double width = box.size.width - padding.right;
+  const _ThemedDynamicAvatarDialog({
+    // ignore: unused_element
+    super.key,
+    required this.onChanged,
+    required this.value,
+    required this.types,
+  });
 
-    double height = screenSize.height * widget.heightFactor;
+  @override
+  State<_ThemedDynamicAvatarDialog> createState() => _ThemedDynamicAvatarDialogState();
+}
 
-    double? top;
-    double? bottom;
+class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> {
+  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  AvatarInput get _value => widget.value;
 
-    if (screenSize.height - offset.dy > height) {
-      top = offset.dy;
-    } else {
-      bottom = screenSize.height - offset.dy - box.size.height;
-    }
+  final ScrollController _emojiController = ScrollController();
+  EmojiGroup? _selectedGroup;
 
-    if (height > widget.maxHeight) {
-      height = widget.maxHeight;
-    }
-
-    if (_value.type == AvatarType.emoji && _value.emoji != null) {
-      final emoji = Emoji.byChar(_value.emoji!);
-      selectedGroup = emoji?.emojiGroup;
-    }
-
-    ScrollController typesController = ScrollController();
-
-    if (isSmall) {
-      typesController = ScrollController(initialScrollOffset: enabledTypes.indexOf(_value.type) * 150.0);
-    }
-
-    overlayEntry = OverlayEntry(
-      builder: (context) {
-        return Material(
-          color: Colors.transparent,
-          child: Stack(
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 600, maxHeight: 500),
+        padding: const EdgeInsets.all(10),
+        decoration: generateContainerElevation(context: context, elevation: 5, radius: 10),
+        child: DefaultTabController(
+          length: widget.types.length,
+          initialIndex: widget.types.indexOf(_value.type),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Positioned.fill(
-                child: GestureDetector(
-                  onTap: _destroyOverlay,
+              Theme(
+                data: Theme.of(context).copyWith(
+                  tabBarTheme: const TabBarTheme(tabAlignment: TabAlignment.start),
+                ),
+                child: TabBar(
+                  isScrollable: true,
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 5),
+                  onTap: (index) {
+                    final type = widget.types[index];
+                    widget.onChanged.call(_value.copyWith(type: type));
+                  },
+                  tabs: [
+                    ...widget.types.map((type) {
+                      return ThemedTab(
+                        labelText: i18n?.t('helpers.dynamicAvatar.types.$type') ?? type.readableName,
+                        leading: Icon(type.icon, size: 16),
+                      );
+                    }),
+                  ],
                 ),
               ),
-              Positioned(
-                top: top,
-                bottom: bottom,
-                left: offset.dx,
-                right: screenSize.width - box.size.width - offset.dx,
-                child: SizedBox(
-                  width: width,
-                  child: Column(
-                    children: [
-                      FadeTransition(
-                        opacity: animation,
-                        child: StatefulBuilder(
-                          builder: (BuildContext context, setState) {
-                            double contentHeight =
-                                height - 20 /* Global padding */ - 30 /* Confirm button */ - 40 /* Toolbar */;
-                            return Container(
-                              padding: const EdgeInsets.all(10),
-                              height: height,
-                              decoration: generateContainerElevation(context: context),
-                              child: Column(
-                                children: [
-                                  SingleChildScrollView(
-                                    controller: typesController,
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: enabledTypes.map((type) {
-                                        return ThemedButton(
-                                          style: _value.type == type
-                                              ? ThemedButtonStyle.filledTonal
-                                              : ThemedButtonStyle.text,
-                                          labelText: i18n?.t('helpers.dynamicAvatar.types.$type') ?? "Type: $type",
-                                          onTap: _value.type == type
-                                              ? null
-                                              : () {
-                                                  setState(() {
-                                                    _value.type = type;
-                                                  });
-                                                  widget.onChanged?.call(_value);
-                                                },
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: _buildContent(isSmall: isSmall, height: contentHeight, setState: setState),
-                                  ),
-                                  const Divider(),
-                                  const SizedBox(height: 10),
-                                  ThemedButton(
-                                    style: ThemedButtonStyle.filledTonal,
-                                    labelText: i18n?.t('actions.save') ?? 'Confirm',
-                                    onTap: () {
-                                      _destroyOverlay(callback: () {
-                                        widget.onChanged?.call(_value);
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return TabBarView(
+                      children: [
+                        ...widget.types.map((type) {
+                          return _buildContent(
+                            type: type,
+                            setState: setState,
+                            constraints: constraints,
+                          );
+                        }),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
           ),
-        );
-      },
+        ),
+      ),
     );
-
-    Overlay.of(context, rootOverlay: true).insert(overlayEntry!);
-    animation.forward();
   }
 
-  void _destroyOverlay({VoidCallback? callback}) async {
-    await animation.reverse();
-    overlayEntry?.remove();
-    overlayEntry = null;
-    search = '';
-    selectedGroup = null;
-    setState(() {});
-    callback?.call();
-  }
-
-  Widget _buildContent({required bool isSmall, required double height, dynamic setState}) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
-
-    Widget searchBar = ThemedTextInput(
-      labelText: i18n?.t('helpers.search') ?? 'Search',
-      value: search,
-      prefixIcon: MdiIcons.magnify,
-      dense: isSmall,
-      onChanged: (value) {
-        setState(() => search = value);
-      },
-    );
-
+  Widget _buildContent({
+    required BoxConstraints constraints,
+    dynamic setState,
+    required AvatarType type,
+  }) {
     Widget content;
-    switch (_value.type) {
+    switch (type) {
       case AvatarType.emoji:
         content = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              i18n?.t('helpers.dynamicAvatar.types.EMOJI.hint') ?? "Select your emoji",
-              overflow: TextOverflow.visible,
-              textAlign: TextAlign.justify,
-            ),
-            if (!isSmall) searchBar,
             SizedBox(
               width: double.infinity,
               child: SingleChildScrollView(
@@ -325,9 +264,9 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
                         child: _EmojiGroupButton(
                           group: group,
                           onTap: () {
-                            setState(() => selectedGroup = group);
+                            setState(() => _selectedGroup = group);
                           },
-                          isSelected: selectedGroup == group,
+                          isSelected: _selectedGroup == group,
                           iconSize: 16,
                         ),
                       );
@@ -349,16 +288,14 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
                     constraints: constraints,
                     onTap: (emoji) {
                       setState(() {
-                        _value.type = AvatarType.emoji;
                         _value.base64 = null;
                         _value.icon = null;
                         _value.url = null;
                         _value.emoji = emoji.char;
                       });
-                      widget.onChanged?.call(_value);
+                      widget.onChanged.call(_value);
                     },
-                    group: selectedGroup,
-                    search: search,
+                    group: _selectedGroup,
                   );
                 },
               ),
@@ -367,110 +304,87 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
         );
         break;
       case AvatarType.icon:
-        content = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              i18n?.t('helpers.dynamicAvatar.types.ICON.hint') ?? "Select your icon",
-              overflow: TextOverflow.visible,
-              textAlign: TextAlign.justify,
-            ),
-            searchBar,
-            Expanded(
-              child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  return _IconGrid(
-                    iconSize: 16,
-                    selected: _value.icon,
-                    constraints: constraints,
-                    onTap: (icon) {
-                      setState(() {
-                        _value.type = AvatarType.icon;
-                        _value.base64 = null;
-                        _value.emoji = null;
-                        _value.url = null;
-                        _value.icon = icon;
-                      });
-                      widget.onChanged?.call(_value);
-                    },
-                    search: search,
-                  );
-                },
-              ),
-            ),
-          ],
+        content = _IconGrid(
+          selected: _value.icon,
+          constraints: constraints,
+          onTap: (icon) {
+            setState(() {
+              _value.base64 = null;
+              _value.emoji = null;
+              _value.url = null;
+              _value.icon = icon;
+            });
+            widget.onChanged.call(_value);
+          },
         );
         break;
       case AvatarType.url:
-        content = Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              i18n?.t('helpers.dynamicAvatar.types.URL.hint') ?? "Insert your image URL",
-              overflow: TextOverflow.visible,
-              textAlign: TextAlign.justify,
-            ),
-            ThemedTextInput(
-              labelText: i18n?.t('helpers.dynamicAvatar.types.URL.url') ?? "URL",
-              value: _value.url,
-              onChanged: (value) {
-                setState(() {
-                  _value.type = AvatarType.url;
-                  _value.icon = null;
-                  _value.emoji = null;
-                  _value.base64 = null;
-                  _value.url = value;
-                  widget.onChanged?.call(_value);
-                });
-              },
-            ),
-          ],
+        content = SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ThemedTextInput(
+                labelText: i18n?.t('helpers.dynamicAvatar.types.URL.url') ?? "URL",
+                value: _value.url,
+                prefixIcon: MdiIcons.link,
+                onChanged: (value) {
+                  setState(() {
+                    _value.type = AvatarType.url;
+                    _value.icon = null;
+                    _value.emoji = null;
+                    _value.base64 = null;
+                    _value.url = value;
+                    widget.onChanged.call(_value);
+                  });
+                },
+              ),
+            ],
+          ),
         );
         break;
       case AvatarType.base64:
-        content = Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              i18n?.t('helpers.dynamicAvatar.types.BASE64.hint') ?? "Insert your image BASE64",
-              overflow: TextOverflow.visible,
-              textAlign: TextAlign.justify,
-            ),
-            ThemedFilePicker(
-              labelText: i18n?.t('helpers.dynamicAvatar.types.BASE64.file') ?? "File",
-              acceptedTypes: FileType.image,
-              value: _value.base64,
-              onChanged: (value, _) {
-                setState(() {
-                  _value.type = AvatarType.base64;
-                  _value.icon = null;
-                  _value.emoji = null;
-                  _value.url = null;
-                  _value.base64 = value;
-                });
-                widget.onChanged?.call(_value);
-              },
-            ),
-          ],
+        content = SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ThemedAvatarPicker(
+                labelText: i18n?.t('helpers.dynamicAvatar.types.BASE64') ?? type.readableName,
+                value: _value.base64,
+                onChanged: (base64) {
+                  setState(() {
+                    _value.icon = null;
+                    _value.emoji = null;
+                    _value.url = null;
+                    _value.base64 = base64;
+                  });
+                  widget.onChanged.call(_value);
+                },
+              ),
+            ],
+          ),
         );
         break;
       case AvatarType.none:
       default:
-        content = Center(
-          child: Text(
-            i18n?.t('helpers.dynamicAvatar.types.NONE.hint') ?? "No avatar",
-            overflow: TextOverflow.visible,
-            textAlign: TextAlign.justify,
+        content = Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: Text(
+              i18n?.t('helpers.dynamicAvatar.types.NONE.hint') ??
+                  "This type does not support any content, to change that, select other option in the tab bar.",
+              overflow: TextOverflow.visible,
+              textAlign: TextAlign.center,
+              maxLines: 8,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
         );
         break;
     }
 
     return Container(
-      height: height,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
@@ -478,5 +392,41 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
       ),
       child: content,
     );
+  }
+}
+
+extension on AvatarType {
+  IconData? get icon {
+    switch (this) {
+      case AvatarType.none:
+        return MdiIcons.imageOff;
+      case AvatarType.url:
+        return MdiIcons.link;
+      case AvatarType.base64:
+        return MdiIcons.imageFilterHdr;
+      case AvatarType.icon:
+        return MdiIcons.emoticon;
+      case AvatarType.emoji:
+        return MdiIcons.emoticon;
+      default:
+        return null;
+    }
+  }
+
+  String get readableName {
+    switch (this) {
+      case AvatarType.none:
+        return "Without avatar";
+      case AvatarType.url:
+        return "Direct URL";
+      case AvatarType.base64:
+        return "Upload your image";
+      case AvatarType.icon:
+        return "Layrz Icon";
+      case AvatarType.emoji:
+        return "Emoji";
+      default:
+        return "";
+    }
   }
 }

@@ -320,22 +320,15 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.close,
-                          color: Colors.red,
+                        ThemedButton.cancel(
+                          isMobile: isMobile,
                           labelText: t('actions.cancel'),
                           onTap: () => Navigator.of(context).pop(),
                         ),
-                        const Spacer(),
-                        ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.contentSave,
-                          color: Colors.green,
+                        ThemedButton.save(
+                          isMobile: isMobile,
                           labelText: t('actions.save'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ],
                     ),
