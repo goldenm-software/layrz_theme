@@ -276,7 +276,6 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
       builder: (context) {
         searchText = "";
         List<ThemedSelectItem<T>> temp = selected;
-        ScrollController scrollController = ScrollController();
         // Predict scroll position based on `_ThemedSelectItem.height` and the position in the list of the
         // selected element
 

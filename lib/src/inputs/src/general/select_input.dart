@@ -274,18 +274,6 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
       builder: (context) {
         searchText = "";
         ThemedSelectItem<T>? temp = selected;
-        ScrollController scrollController = ScrollController();
-        // Predict scroll position based on `_ThemedSelectItem.height` and the position in the list of the
-        // selected element
-        if (temp != null) {
-          int index = items.map((e) => e.value).toList().indexOf(temp.value);
-
-          if (index != -1) {
-            double height = _ThemedSelectItem.height;
-            double offset = index * height;
-            scrollController = ScrollController(initialScrollOffset: offset);
-          }
-        }
 
         return PopScope(
           canPop: widget.hideButtons || temp != null,

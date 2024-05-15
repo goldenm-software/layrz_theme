@@ -1,9 +1,6 @@
-part of '../layout.dart';
+part of '../../layout.dart';
 
-class ThemedDrawer extends StatefulWidget {
-  /// [scaffoldKey] is the key of the scaffold.
-  final GlobalKey<ScaffoldState> scaffoldKey;
-
+class ThemedSidebar extends StatefulWidget {
   /// [items] is the list of buttons to be displayed in the drawer.
   final List<ThemedNavigatorItem> items;
 
@@ -85,10 +82,9 @@ class ThemedDrawer extends StatefulWidget {
   /// [notifications] is the list of notifications to be displayed in the drawer.
   final List<ThemedNotificationItem> notifications;
 
-  /// [ThemedDrawer] is the custom native [Drawer]
-  const ThemedDrawer({
+  /// [ThemedSidebar] is the custom native [Drawer]
+  const ThemedSidebar({
     super.key,
-    required this.scaffoldKey,
     this.items = const [],
     this.enableAbout = true,
     this.onSettingsTap,
@@ -116,10 +112,10 @@ class ThemedDrawer extends StatefulWidget {
   });
 
   @override
-  State<ThemedDrawer> createState() => _ThemedDrawerState();
+  State<ThemedSidebar> createState() => _ThemedSidebarState();
 }
 
-class _ThemedDrawerState extends State<ThemedDrawer> {
+class _ThemedSidebarState extends State<ThemedSidebar> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor =>
       widget.backgroundColor ??

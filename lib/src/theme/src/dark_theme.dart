@@ -162,49 +162,49 @@ ThemeData generateDarkTheme({
       endIndent: 0,
     ),
     scrollbarTheme: ScrollbarThemeData(
-      trackVisibility: MaterialStateProperty.all(true),
-      thumbVisibility: MaterialStateProperty.all(true),
-      thumbColor: MaterialStateColor.resolveWith((states) {
+      trackVisibility: WidgetStateProperty.all(true),
+      thumbVisibility: WidgetStateProperty.all(true),
+      thumbColor: WidgetStateColor.resolveWith((states) {
         return Colors.grey.shade500.withOpacity(0.4);
       }),
-      trackColor: MaterialStateProperty.all(Colors.transparent),
-      trackBorderColor: MaterialStateProperty.all(Colors.transparent),
-      thickness: MaterialStateProperty.all(7),
+      trackColor: WidgetStateProperty.all(Colors.transparent),
+      trackBorderColor: WidgetStateProperty.all(Colors.transparent),
+      thickness: WidgetStateProperty.all(7),
     ),
 
     // Inputs
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return Colors.white;
         }
         return Colors.grey.shade700;
       }),
-      checkColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      checkColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return Colors.black;
         }
         return Colors.transparent;
       }),
-      mouseCursor: MaterialStateMouseCursor.clickable,
+      mouseCursor: WidgetStateMouseCursor.clickable,
     ),
     switchTheme: SwitchThemeData(
-      trackColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      trackColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return Colors.white.withOpacity(0.7);
         }
         return Colors.grey.shade500;
       }),
-      thumbColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      thumbColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return Colors.white;
         }
         return Colors.grey.shade300;
       }),
     ),
     radioTheme: RadioThemeData(
-      fillColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return Colors.white;
         }
         return Colors.grey.shade700;

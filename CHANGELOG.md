@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.0.0
+
+- New pre-designed buttons `ThemedButton.save`, `ThemedButton.cancel`, `ThemedButton.info`, `ThemedButton.show`, `ThemedButton.edit`, `ThemedButton.delete`
+- Deprecated layout style `ThemedLayoutStyle.modern`
+- Renamed `ThemedLayoutStyle.sidebar` to `ThemedLayoutStyle.dual`
+- New `ThemedLayoutStyle.mini` to replace the deprecated `ThemedLayoutStyle.modern`
+- Cleanup lint issues
+
 ## 4.3.57
 
 - Enabled optional field `textStyle` on `ThemedTextInput`

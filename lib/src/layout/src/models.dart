@@ -102,7 +102,7 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
   /// [type] is the type of the separator.
   final ThemedSeparatorType type;
 
-  /// [ThemedNavigatorSeparator] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedDrawer.items].
+  /// [ThemedNavigatorSeparator] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedSidebar.items].
   ThemedNavigatorSeparator({
     this.type = ThemedSeparatorType.line,
   });
@@ -112,7 +112,7 @@ class ThemedNavigatorLabel extends ThemedNavigatorItem {
   /// [labelStyle] is the style of the label. Only applies when [labelText] is not null.
   final TextStyle? labelStyle;
 
-  /// [ThemedNavigatorLabel] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedDrawer.items].
+  /// [ThemedNavigatorLabel] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedSidebar.items].
   ThemedNavigatorLabel({
     super.label,
     super.labelText,

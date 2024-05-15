@@ -170,22 +170,21 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
     Size size = renderBox.size;
     EdgeInsets padding = MediaQuery.of(context).padding;
 
-    double? top = offset.dy + size.height + padding.top + 5;
-    double? right = padding.right + 10;
+    double? top = offset.dy;
+    double? left = offset.dx + size.width + 10;
 
     double? bottom;
-    double? left;
+    double? right;
 
     double width = MediaQuery.of(context).size.width * 0.4;
-    if (width > 250) {
-      width = 250;
+    if (width > 300) {
+      width = 300;
     }
 
-    if (widget.asTaskBar) {
-      top = null;
-      right = null;
-      bottom = padding.bottom + ThemedTaskbar.height + 10;
-      left = padding.left + 10;
+    if (left + width > MediaQuery.of(context).size.width) {
+      left = null;
+      right = 10;
+      top = offset.dy + size.height + padding.top + 5;
     }
 
     _overlayEntry = OverlayEntry(
@@ -209,7 +208,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                   },
                   child: ScaleTransition(
                     scale: _animationController,
-                    alignment: widget.asTaskBar ? Alignment.bottomLeft : Alignment.topRight,
+                    alignment: left != null ? Alignment.topLeft : Alignment.topRight,
                     child: StatefulBuilder(
                       builder: (context, setState) {
                         return Container(

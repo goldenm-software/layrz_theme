@@ -13,8 +13,6 @@ class _LayoutState extends State<Layout> {
   AppStore get store => VxState.store as AppStore;
   ThemedLayoutStyle get layoutStyle => store.layoutStyle;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   // AppThemedAsset get logo => const AppThemedAsset(
   //       normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/normal.svg',
   //       white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/white.svg',
@@ -51,12 +49,11 @@ class _LayoutState extends State<Layout> {
     }
 
     return ThemedLayout(
-      style: ThemedLayoutStyle.sidebar,
-      // style: ThemedLayoutStyle.modern,
-      // style: ThemedLayoutStyle.classic,
+      style: ThemedLayoutStyle.mini,
+      // style: ThemedLayoutStyle.dual,
+      // style: ThemedLayoutStyle.sidebar,
       isBackEnabled: false,
       // style: layoutStyle,
-      scaffoldKey: _scaffoldKey,
       logo: logo,
       currentPath: path,
       favicon: favicon,
@@ -218,6 +215,13 @@ class _LayoutState extends State<Layout> {
         ),
       ],
       persistentItems: [
+        ThemedNavigatorAction(
+          labelText: 'onTap action',
+          icon: MdiIcons.calendar,
+          onTap: () {
+            debugPrint('onTap action');
+          },
+        ),
         ThemedNavigatorAction(
           labelText: "GitHub repository",
           icon: MdiIcons.github,
