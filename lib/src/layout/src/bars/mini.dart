@@ -80,6 +80,10 @@ class ThemedMiniBar extends StatefulWidget {
   /// [homePath] is the path of the home page.
   final String homePath;
 
+  /// [depthColorFactor] is the factor to be used to calculate the color of the depth.
+  /// By default is `0.15`.
+  final double depthColorFactor;
+
   /// [ThemedMiniBar] is the custom native [Drawer]
   const ThemedMiniBar({
     super.key,
@@ -107,13 +111,14 @@ class ThemedMiniBar extends StatefulWidget {
     this.enableNotifications = true,
     this.notifications = const [],
     this.homePath = '/home',
+    this.depthColorFactor = 0.15,
   });
 
   @override
   State<ThemedMiniBar> createState() => _ThemedMiniBarState();
 }
 
-class _ThemedMiniBarState extends State<ThemedMiniBar> {
+class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateMixin {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor =>
       isDark ? Theme.of(context).scaffoldBackgroundColor : widget.backgroundColor ?? Theme.of(context).primaryColor;
@@ -238,10 +243,16 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> {
     if (item is ThemedNavigatorPage) {
       bool highlight = currentPath.startsWith(item.path);
       bool isExpanded = highlight;
+      AnimationController controller = AnimationController(
+        duration: kHoverDuration,
+        vsync: this,
+        value: isExpanded ? 1 : 0,
+      );
 
       return StatefulBuilder(
         builder: (context, setState) {
-          bool highlightTop = isExpanded && depth == 0 && item.children.isNotEmpty;
+          bool highlightTop = isExpanded && item.children.isNotEmpty;
+
           Widget baseWidget = ThemedTooltip(
             position: ThemedTooltipPosition.right,
             message: item.labelText ?? item.label?.toString() ?? '',
@@ -252,11 +263,11 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> {
               width: actionSize - 10,
               height: actionSize - 10,
               decoration: BoxDecoration(
-                color: highlight
-                    ? depth > 0
+                color: highlightTop
+                    ? activeColor.withOpacity(0.2)
+                    : highlight
                         ? activeColor
-                        : activeColor.withOpacity(0.2)
-                    : Colors.transparent,
+                        : Colors.transparent,
                 borderRadius: BorderRadius.circular(actionSize),
               ),
               clipBehavior: Clip.antiAlias,
@@ -268,6 +279,11 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> {
                       item.onTap.call(onNavigatorPush);
                     } else {
                       setState(() => isExpanded = !isExpanded);
+                      if (isExpanded) {
+                        controller.forward();
+                      } else {
+                        controller.reverse();
+                      }
                     }
                   },
                   hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
@@ -275,31 +291,39 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> {
                     child: Icon(
                       highlightTop ? MdiIcons.menuDown : (item.icon ?? MdiIcons.help),
                       size: highlightTop ? 22 : 18,
-                      color: highlight
-                          ? depth > 0
-                              ? validateColor(color: activeColor)
-                              : activeColor
-                          : validateColor(color: backgroundColor),
+                      color: highlightTop
+                          ? validateColor(color: backgroundColor)
+                          : highlight
+                              ? backgroundColor
+                              : validateColor(color: backgroundColor),
                     ),
                   ),
                 ),
               ),
             ),
           );
+
+          bool display = isExpanded && item.children.isNotEmpty;
+
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (isExpanded && depth == 0 && item.children.isNotEmpty) ...[
-                Container(
-                  decoration: BoxDecoration(
-                    color: activeColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(actionSize),
-                  ),
-                  child: Column(
-                    children: [
-                      baseWidget,
-                      ListView.builder(
+              AnimatedContainer(
+                duration: kHoverDuration,
+                decoration: BoxDecoration(
+                  color: activeColor.withOpacity(display ? widget.depthColorFactor : 0),
+                  borderRadius: BorderRadius.circular(actionSize),
+                ),
+                child: Column(
+                  children: [
+                    baseWidget,
+                    SizeTransition(
+                      sizeFactor: CurvedAnimation(
+                        parent: controller,
+                        curve: Curves.easeInOutQuart,
+                      ),
+                      child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: item.children.length,
                         itemBuilder: (context, index) {
@@ -309,12 +333,10 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> {
                           );
                         },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ] else ...[
-                baseWidget,
-              ],
+              ),
             ],
           );
         },

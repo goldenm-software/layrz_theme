@@ -391,14 +391,12 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ThemedButton(
+                ThemedButton.cancel(
                   labelText: widget.cancelText,
-                  color: Colors.red,
                   onTap: () => Navigator.of(context).pop(),
                 ),
-                ThemedButton(
+                ThemedButton.save(
                   labelText: widget.saveText,
-                  color: Colors.green,
                   onTap: () => Navigator.of(context).pop(_value),
                 ),
               ],

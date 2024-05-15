@@ -115,7 +115,7 @@ class ThemedSidebar extends StatefulWidget {
   State<ThemedSidebar> createState() => _ThemedSidebarState();
 }
 
-class _ThemedSidebarState extends State<ThemedSidebar> {
+class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateMixin {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get backgroundColor =>
       widget.backgroundColor ??
@@ -145,13 +145,20 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
 
   String get currentPath => widget.currentPath ?? '';
 
+  late AnimationController _actionsAnimation;
+
   @override
   void initState() {
     super.initState();
+    _actionsAnimation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
   }
 
   @override
   void dispose() {
+    _actionsAnimation.dispose();
     super.dispose();
   }
 
@@ -278,7 +285,14 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () => setState(() => isExpanded = !isExpanded),
+                    onTap: () {
+                      setState(() => isExpanded = !isExpanded);
+                      if (isExpanded) {
+                        _actionsAnimation.forward();
+                      } else {
+                        _actionsAnimation.reverse();
+                      }
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(5),
                       child: Row(
@@ -314,8 +328,9 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                 ),
               ),
             ),
-            if (isExpanded) ...[
-              Padding(
+            SizeTransition(
+              sizeFactor: CurvedAnimation(parent: _actionsAnimation, curve: Curves.easeInOut),
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -328,7 +343,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                   },
                 ),
               ),
-            ],
+            ),
             _buildItem(ThemedNavigatorSeparator(), removePadding: true),
             const SizedBox(height: 10),
             Expanded(
@@ -393,6 +408,12 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
       bool highlight = currentPath.startsWith(item.path);
       bool isExpanded = highlight;
 
+      AnimationController animation = AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 150),
+        value: isExpanded ? 1 : 0,
+      );
+
       return StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -415,6 +436,11 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                         ? () => handleOnTap(() => onNavigatorPush.call(item.path))
                         : () {
                             setState(() => isExpanded = !isExpanded);
+                            if (isExpanded) {
+                              animation.forward();
+                            } else {
+                              animation.reverse();
+                            }
                           },
                     hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
                     child: Padding(
@@ -452,8 +478,9 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                   ),
                 ),
               ),
-              if (isExpanded) ...[
-                ListView.builder(
+              SizeTransition(
+                sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: item.children.length,
                   itemBuilder: (context, index) {
@@ -463,7 +490,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> {
                     );
                   },
                 ),
-              ],
+              ),
             ],
           );
         },

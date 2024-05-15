@@ -375,15 +375,13 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.close,
-                          color: Colors.red,
+                        ThemedButton.cancel(
+                          isMobile: isMobile,
                           labelText: t('actions.cancel'),
-                          onTap: () => Navigator.of(context).pop(),
+                          onTap: () => Navigator.of(context).pop(null),
                         ),
                         ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
+                          style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
                           icon: MdiIcons.refresh,
                           color: Colors.orange,
                           labelText: t('actions.reset'),
@@ -394,16 +392,11 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                             });
                           },
                         ),
-                        ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.contentSave,
-                          color: Colors.green,
+                        ThemedButton.save(
+                          isMobile: isMobile,
                           labelText: t('actions.save'),
                           onTap: () {
-                            if (tempPicks.isNotEmpty) {
-                              selections = [tempPicks.first, tempPicks.last];
-                            }
-
+                            if (tempPicks.isNotEmpty) selections = [tempPicks.first, tempPicks.last];
                             Navigator.of(context).pop(selections);
                           },
                         ),

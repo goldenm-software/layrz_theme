@@ -281,101 +281,117 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Container(
-                  padding: const EdgeInsets.all(20),
                   constraints: widget.dialogContraints,
-                  decoration: generateContainerElevation(context: context, elevation: 3),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (!widget.hideTitle) ...[
-                        Row(
-                          children: [
-                            Expanded(
+                  decoration: generateContainerElevation(
+                    context: context,
+                    elevation: 5,
+                    radius: 10,
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      double availableHeight = constraints.maxHeight - (60 * 2);
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (!widget.hideTitle) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(
+                                top: 14,
+                                left: 5,
+                              )),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      widget.labelText ?? '',
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                  if (widget.enableSearch) ...[
+                                    const SizedBox(height: 10),
+                                    Expanded(
+                                      child: ThemedTextInput(
+                                        labelText: t('layrz.select.search'),
+                                        padding: EdgeInsets.zero,
+                                        onChanged: (value) => setState(() => searchText = value),
+                                        prefixIcon: MdiIcons.magnify,
+                                        suffixIcon: searchText.isNotEmpty ? MdiIcons.close : null,
+                                        onSuffixTap:
+                                            searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
+                                        hideDetails: true,
+                                        dense: true,
+                                        keyboardType: widget.searchKeyboardType,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
+                          if (items.isEmpty) ...[
+                            Center(
                               child: Text(
-                                widget.labelText ?? '',
+                                t('layrz.select.empty'),
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                            if (widget.enableSearch) ...[
-                              const SizedBox(height: 10),
-                              Expanded(
-                                child: ThemedTextInput(
-                                  labelText: t('layrz.select.search'),
-                                  onChanged: (value) => setState(() => searchText = value),
-                                  prefixIcon: MdiIcons.magnify,
-                                  suffixIcon: searchText.isNotEmpty ? MdiIcons.close : null,
-                                  onSuffixTap: searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
-                                  hideDetails: true,
-                                  dense: true,
-                                  keyboardType: widget.searchKeyboardType,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ],
-                      const SizedBox(height: 10),
-                      if (items.isEmpty) ...[
-                        Center(
-                          child: Text(
-                            t('layrz.select.empty'),
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ] else ...[
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: items.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return _ThemedSelectItem<T>(
-                                item: items[index],
-                                selected: temp?.value == items[index].value,
-                                canUnselect: widget.canUnselect,
-                                onTap: () {
-                                  items[index].onTap?.call();
-                                  if (temp?.value == items[index].value && widget.canUnselect) {
-                                    setState(() => temp = null);
-                                    Navigator.of(context).pop(null);
-                                  } else {
-                                    setState(() => temp = items[index]);
-                                    Navigator.of(context).pop(temp);
-                                  }
+                          ] else ...[
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxHeight: availableHeight),
+                              child: ListView.builder(
+                                itemCount: items.length,
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.all(10),
+                                itemBuilder: (context, index) {
+                                  return _ThemedSelectItem<T>(
+                                    item: items[index],
+                                    selected: temp?.value == items[index].value,
+                                    canUnselect: widget.canUnselect,
+                                    onTap: () {
+                                      items[index].onTap?.call();
+                                      if (temp?.value == items[index].value && widget.canUnselect) {
+                                        setState(() => temp = null);
+                                        Navigator.of(context).pop(null);
+                                      } else {
+                                        setState(() => temp = items[index]);
+                                        Navigator.of(context).pop(temp);
+                                      }
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                      if (!widget.hideButtons) ...[
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ThemedButton(
-                              style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                              icon: MdiIcons.close,
-                              labelText: t('actions.cancel'),
-                              color: Colors.red,
-                              onTap: () => Navigator.of(context).pop(null),
-                            ),
-                            ThemedButton(
-                              style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                              icon: MdiIcons.check,
-                              labelText: t('actions.save'),
-                              color: Colors.green,
-                              onTap: () => Navigator.of(context).pop(temp),
+                              ),
                             ),
                           ],
-                        ),
-                      ],
-                    ],
+                          if (!widget.hideButtons) ...[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 14)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ThemedButton.cancel(
+                                    isMobile: isMobile,
+                                    labelText: t('actions.cancel'),
+                                    onTap: () => Navigator.of(context).pop(null),
+                                  ),
+                                  ThemedButton.save(
+                                    isMobile: isMobile,
+                                    labelText: t('actions.save'),
+                                    onTap: () => Navigator.of(context).pop(temp),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+                      );
+                    },
                   ),
                 );
               },

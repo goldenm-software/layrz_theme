@@ -112,9 +112,9 @@ class ThemedButton extends StatefulWidget {
     bool isMobile = false,
     required VoidCallback onTap,
     required String labelText,
-    required bool isLoading,
+    bool isLoading = false,
     bool isDisabled = false,
-    required bool isCooldown,
+    bool isCooldown = false,
     VoidCallback? onCooldownFinish,
   }) {
     return ThemedButton(
@@ -134,9 +134,9 @@ class ThemedButton extends StatefulWidget {
     bool isMobile = false,
     required VoidCallback onTap,
     required String labelText,
-    required bool isLoading,
+    bool isLoading = false,
     bool isDisabled = false,
-    required bool isCooldown,
+    bool isCooldown = false,
     VoidCallback? onCooldownFinish,
   }) {
     return ThemedButton(
@@ -156,9 +156,9 @@ class ThemedButton extends StatefulWidget {
     bool isMobile = false,
     required VoidCallback onTap,
     required String labelText,
-    required bool isLoading,
+    bool isLoading = false,
     bool isDisabled = false,
-    required bool isCooldown,
+    bool isCooldown = false,
     VoidCallback? onCooldownFinish,
   }) {
     return ThemedButton(
@@ -178,9 +178,9 @@ class ThemedButton extends StatefulWidget {
     bool isMobile = false,
     required VoidCallback onTap,
     required String labelText,
-    required bool isLoading,
+    bool isLoading = false,
     bool isDisabled = false,
-    required bool isCooldown,
+    bool isCooldown = false,
     VoidCallback? onCooldownFinish,
   }) {
     return ThemedButton(
@@ -200,9 +200,9 @@ class ThemedButton extends StatefulWidget {
     bool isMobile = false,
     required VoidCallback onTap,
     required String labelText,
-    required bool isLoading,
+    bool isLoading = false,
     bool isDisabled = false,
-    required bool isCooldown,
+    bool isCooldown = false,
     VoidCallback? onCooldownFinish,
   }) {
     return ThemedButton(
@@ -222,9 +222,9 @@ class ThemedButton extends StatefulWidget {
     bool isMobile = false,
     required VoidCallback onTap,
     required String labelText,
-    required bool isLoading,
+    bool isLoading = false,
     bool isDisabled = false,
-    required bool isCooldown,
+    bool isCooldown = false,
     VoidCallback? onCooldownFinish,
   }) {
     return ThemedButton(

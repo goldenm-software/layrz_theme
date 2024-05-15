@@ -196,18 +196,15 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.close,
-                          color: Colors.red,
+                        ThemedButton.cancel(
+                          isMobile: isMobile,
                           labelText: i18n?.t('actions.cancel') ?? 'Cancel',
                           onTap: () => Navigator.of(context).pop(),
                         ),
-                        const SizedBox(width: 10),
                         ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
+                          style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
                           icon: MdiIcons.refresh,
-                          color: Colors.blue,
+                          color: Colors.orange,
                           labelText: i18n?.t('actions.reset') ?? 'Reset',
                           onTap: () {
                             setState(() {
@@ -218,11 +215,8 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             });
                           },
                         ),
-                        const Spacer(),
-                        ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.contentSave,
-                          color: Colors.green,
+                        ThemedButton.save(
+                          isMobile: isMobile,
                           labelText: i18n?.t('actions.save') ?? 'Save',
                           onTap: () {
                             Navigator.of(context).pop(_parseDuration(

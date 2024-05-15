@@ -8,32 +8,19 @@ class GeneralPickersView extends StatefulWidget {
 }
 
 class _GeneralPickersViewState extends State<GeneralPickersView> {
-  List<ThemedSelectItem<int>> get _choices => [
-        const ThemedSelectItem(
-          value: 1,
-          label: "Choice 1",
-        ),
-        const ThemedSelectItem(
-          value: 2,
-          label: "Choice 2",
-        ),
-        const ThemedSelectItem(
-          value: 3,
-          label: "Choice 3",
-        ),
-        const ThemedSelectItem(
-          value: 4,
-          label: "Choice 4",
-        ),
-        const ThemedSelectItem(
-          value: 22,
-          label: "Choice 22",
-        ),
-        const ThemedSelectItem(
-          value: 12,
-          label: "Choice 12",
-        ),
-      ];
+  List<ThemedSelectItem<int>> get _choices => List.generate(20, (i) {
+        return ThemedSelectItem(
+          value: i + 1,
+          label: "Choice ${i + 1}",
+          // content: Row(
+          //   children: [
+          //     drawAvatar(context: context),
+          //     const SizedBox(width: 10),
+          //     Text("Choice ${i + 1}"),
+          //   ],
+          // ),
+        );
+      });
 
   List<int> selectedMultiple = [];
   int? selectedSingle;
@@ -127,13 +114,29 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                     ),
                   ],
                 ),
-                const Column(
+                Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Dynamic Avatar picker"),
+                    const Text("Dynamic Avatar picker"),
                     ThemedDynamicAvatarInput(
                       labelText: "Example label",
+                      onChanged: (newVal) {
+                        debugPrint("New type: ${newVal?.type}");
+                      },
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Icon picker"),
+                    ThemedIconPicker(
+                      labelText: "Example label",
+                      onChanged: (newVal) {
+                        debugPrint("New type: $newVal");
+                      },
                     ),
                   ],
                 ),

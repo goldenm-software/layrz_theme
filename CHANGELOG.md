@@ -2,11 +2,16 @@
 
 ## 5.0.0
 
+- Added support for Flutter 3.22.0 (Tested)
 - New pre-designed buttons `ThemedButton.save`, `ThemedButton.cancel`, `ThemedButton.info`, `ThemedButton.show`, `ThemedButton.edit`, `ThemedButton.delete`
 - Deprecated layout style `ThemedLayoutStyle.modern`
 - Renamed `ThemedLayoutStyle.sidebar` to `ThemedLayoutStyle.dual`
 - New `ThemedLayoutStyle.mini` to replace the deprecated `ThemedLayoutStyle.modern`
-- Cleanup lint issues
+- Removed `ThemedAvatarInput` widget
+- Design changes of `ThemedDualListInput` to unify the design with the other pickers and fields
+- Changed actions buttons of `ThemedSelectInput`, `ThemedMultiSelectInput` and `ThemedColorPicker`. Now instead of using a classic `ThemedButton`, will use `ThemedButton.save` and `ThemedButton.cancel`
+- Redesigned list of icons of `ThemedIconPicker` and `ThemedDynamicAvatarInput` to use `ListView.builder` instead of `GridView.builder`
+- Added `SizeTransition` to `ThemedSidebar` to animate the expansion and collapse of the sidebar items
 
 ## 4.3.57
 
