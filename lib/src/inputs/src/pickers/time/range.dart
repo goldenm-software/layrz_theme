@@ -257,14 +257,12 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ThemedButton(
+                    ThemedButton.cancel(
                       labelText: t('actions.cancel'),
-                      color: Colors.red,
                       onTap: () => Navigator.of(context).pop(),
                     ),
-                    ThemedButton(
+                    ThemedButton.save(
                       labelText: t('actions.save'),
-                      color: Colors.green,
                       onTap: () => Navigator.of(context).pop([start, end]),
                     ),
                   ],

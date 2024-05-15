@@ -109,13 +109,13 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
   @override
   void initState() {
     super.initState();
-    _handleUpdate();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleUpdate());
   }
 
   @override
   void didUpdateWidget(ThemedDualListInput<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _handleUpdate();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleUpdate());
   }
 
   void _handleUpdate() {
@@ -136,10 +136,18 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
       }
     }
 
-    searchAvailable = "";
-    searchSelected = "";
     availableFiltered = getAvailableFiltered();
     selectedFiltered = getSelectedFiltered();
+    if (availableFiltered.isEmpty) {
+      searchAvailable = "";
+      availableFiltered = getAvailableFiltered();
+    }
+    if (selectedFiltered.isEmpty) {
+      searchSelected = "";
+      selectedFiltered = getSelectedFiltered();
+    }
+
+    setState(() {});
   }
 
   @override
@@ -149,7 +157,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         IconData allToSelected = MdiIcons.chevronDoubleRight;
         IconData allToAvailable = MdiIcons.chevronDoubleLeft;
         bool displayVertical = false;
-        Color buttonsColors = isDark ? Colors.white : Theme.of(context).primaryColor;
+        Color actionButtonColor = isDark ? Colors.white : Theme.of(context).primaryColor;
 
         if (constraints.maxWidth <= kExtraSmallGrid) {
           allToSelected = MdiIcons.chevronDoubleDown;
@@ -159,43 +167,25 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
         List<Widget> actions = [
           Padding(
-            padding: const EdgeInsets.all(10),
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: generateContainerElevation(
-                context: context,
-                elevation: 2,
-                color: buttonsColors,
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => toggleAllToSelected(),
-                  child: Icon(allToSelected, color: validateColor(color: buttonsColors)),
-                ),
-              ),
+            padding: const EdgeInsets.all(5),
+            child: ThemedButton(
+              color: actionButtonColor,
+              style: ThemedButtonStyle.filledFab,
+              icon: allToSelected,
+              onTap: toggleAllToSelected,
+              isDisabled: available.isEmpty,
+              labelText: t('layrz.duallist.toggleToSelected'),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: generateContainerElevation(
-                context: context,
-                elevation: 2,
-                color: buttonsColors,
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => toggleAllToAvailable(),
-                  child: Icon(allToAvailable, color: validateColor(color: buttonsColors)),
-                ),
-              ),
+            padding: const EdgeInsets.all(5),
+            child: ThemedButton(
+              color: actionButtonColor,
+              style: ThemedButtonStyle.filledFab,
+              icon: allToAvailable,
+              onTap: toggleAllToAvailable,
+              isDisabled: selected.isEmpty,
+              labelText: t('layrz.duallist.toggleToAvailable'),
             ),
           ),
         ];
@@ -203,36 +193,42 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         Widget availableWidget = Padding(
           padding: const EdgeInsets.all(10),
           child: Container(
-            decoration: generateContainerElevation(context: context, elevation: 2),
-            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).cardColor,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "${widget.availableListName} (${available.length})",
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(top: 10)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "${widget.availableListName} (${available.length})",
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
                       ),
-                    ),
-                    ThemedSearchInput(
-                      labelText: t('layrz.duallist.search', {'name': widget.availableListName}),
-                      value: searchAvailable,
-                      onSearch: (value) {
-                        searchAvailable = value;
-                        availableFiltered = getAvailableFiltered();
-                        setState(() {});
-                      },
-                    ),
-                  ],
+                      ThemedSearchInput(
+                        labelText: t('layrz.duallist.search', {'name': widget.availableListName}),
+                        value: searchAvailable,
+                        onSearch: (value) {
+                          searchAvailable = value;
+                          availableFiltered = getAvailableFiltered();
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
                     itemCount: availableFiltered.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 10)),
                     itemBuilder: (context, index) {
                       final item = availableFiltered[index];
 
@@ -265,36 +261,42 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         Widget selectedWidget = Padding(
           padding: const EdgeInsets.all(10),
           child: Container(
-            decoration: generateContainerElevation(context: context, elevation: 2),
-            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).cardColor,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "${widget.selectedListName} (${selected.length})",
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(top: 10)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "${widget.selectedListName} (${selected.length})",
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
                       ),
-                    ),
-                    ThemedSearchInput(
-                      labelText: t('layrz.duallist.search', {'name': widget.selectedListName}),
-                      value: searchSelected,
-                      onSearch: (value) {
-                        searchSelected = value;
-                        selectedFiltered = getSelectedFiltered();
-                        setState(() {});
-                      },
-                    ),
-                  ],
+                      ThemedSearchInput(
+                        labelText: t('layrz.duallist.search', {'name': widget.selectedListName}),
+                        value: searchSelected,
+                        onSearch: (value) {
+                          searchSelected = value;
+                          selectedFiltered = getSelectedFiltered();
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
                     itemCount: selectedFiltered.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 10)),
                     itemBuilder: (context, index) {
                       final item = selectedFiltered[index];
 

@@ -276,134 +276,153 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
       builder: (context) {
         searchText = "";
         List<ThemedSelectItem<T>> temp = selected;
-        ScrollController scrollController = ScrollController();
         // Predict scroll position based on `_ThemedSelectItem.height` and the position in the list of the
         // selected element
 
         return PopScope(
           canPop: false,
           child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Container(
-                  padding: const EdgeInsets.all(20),
                   constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
-                  decoration: generateContainerElevation(context: context, elevation: 3),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (!widget.hideTitle) ...[
-                        Row(
-                          children: [
-                            Expanded(
+                  decoration: generateContainerElevation(
+                    context: context,
+                    elevation: 5,
+                    radius: 10,
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      double availableHeight = constraints.maxHeight - (60 * 2);
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (!widget.hideTitle) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(
+                                top: 14,
+                                left: 5,
+                              )),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      widget.labelText ?? '',
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                  if (widget.enableSearch) ...[
+                                    const SizedBox(height: 10),
+                                    Expanded(
+                                      child: ThemedTextInput(
+                                        padding: EdgeInsets.zero,
+                                        labelText: t('layrz.select.search'),
+                                        onChanged: (value) => setState(() => searchText = value),
+                                        prefixIcon: MdiIcons.magnify,
+                                        suffixIcon: searchText.isNotEmpty ? MdiIcons.close : null,
+                                        onSuffixTap:
+                                            searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
+                                        hideDetails: true,
+                                        dense: true,
+                                        keyboardType: widget.searchKeyboardType,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
+                          if (items.isEmpty) ...[
+                            Center(
                               child: Text(
-                                widget.labelText ?? '',
+                                t('layrz.select.empty'),
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                            if (widget.enableSearch) ...[
-                              const SizedBox(height: 10),
-                              Expanded(
-                                child: ThemedTextInput(
-                                  labelText: t('layrz.select.search'),
-                                  onChanged: (value) => setState(() => searchText = value),
-                                  prefixIcon: MdiIcons.magnify,
-                                  suffixIcon: searchText.isNotEmpty ? MdiIcons.close : null,
-                                  onSuffixTap: searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
-                                  hideDetails: true,
-                                  dense: true,
-                                  keyboardType: widget.searchKeyboardType,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ],
-                      const SizedBox(height: 10),
-                      if (items.isEmpty) ...[
-                        Center(
-                          child: Text(
-                            t('layrz.select.empty'),
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ] else ...[
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: items.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final itm = items[index];
-                              bool isSelected = temp.where((e) {
-                                return itm.value == e.value;
-                              }).isNotEmpty;
+                          ] else ...[
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxHeight: availableHeight),
+                              child: ListView.builder(
+                                itemCount: items.length,
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.all(10),
+                                itemBuilder: (context, index) {
+                                  final itm = items[index];
+                                  bool isSelected = temp.where((e) {
+                                    return itm.value == e.value;
+                                  }).isNotEmpty;
 
-                              return _ThemedSelectItem<T>(
-                                item: itm,
-                                selected: isSelected,
-                                canUnselect: true,
-                                onTap: () {
-                                  itm.onTap?.call();
+                                  return _ThemedSelectItem<T>(
+                                    item: itm,
+                                    selected: isSelected,
+                                    canUnselect: true,
+                                    onTap: () {
+                                      itm.onTap?.call();
 
-                                  final tempIds = temp.map((e) => e.value).toList();
-                                  if (tempIds.contains(itm.value)) {
-                                    temp.removeWhere((e) => e.value == itm.value);
-                                  } else {
-                                    temp.add(itm);
-                                  }
+                                      final tempIds = temp.map((e) => e.value).toList();
+                                      if (tempIds.contains(itm.value)) {
+                                        temp.removeWhere((e) => e.value == itm.value);
+                                      } else {
+                                        temp.add(itm);
+                                      }
 
-                                  setState(() {});
+                                      setState(() {});
 
-                                  if (!widget.waitUntilClosedToSubmit) widget.onChanged?.call(temp);
+                                      if (!widget.waitUntilClosedToSubmit) widget.onChanged?.call(temp);
 
-                                  if (widget.autoclose) Navigator.of(context).pop(temp);
+                                      if (widget.autoclose) Navigator.of(context).pop(temp);
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ThemedButton(
-                            style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                            icon: MdiIcons.close,
-                            labelText: t('actions.cancel'),
-                            color: Colors.red,
-                            onTap: () => Navigator.of(context).pop(),
-                          ),
-                          ThemedButton(
-                            style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                            icon: temp.length == items.length ? MdiIcons.checkboxMarked : MdiIcons.checkboxBlankOutline,
-                            labelText: t('layrz.select.${temp.length == items.length ? 'unselect' : 'select'}All'),
-                            color: Colors.orange,
-                            onTap: () {
-                              if (temp.length == items.length) {
-                                temp = [];
-                              } else {
-                                temp = items;
-                              }
-                              setState(() {});
-                            },
-                          ),
-                          ThemedButton(
-                            style: isMobile ? ThemedButtonStyle.filledFab : ThemedButtonStyle.filledTonal,
-                            icon: MdiIcons.check,
-                            labelText: t('actions.save'),
-                            color: Colors.green,
-                            onTap: () => Navigator.of(context).pop(temp),
+                              ),
+                            ),
+                          ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 14)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ThemedButton.cancel(
+                                  isMobile: isMobile,
+                                  labelText: t('actions.cancel'),
+                                  onTap: () => Navigator.of(context).pop(null),
+                                ),
+                                ThemedButton(
+                                  style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+                                  icon: temp.length == items.length
+                                      ? MdiIcons.checkboxMarked
+                                      : MdiIcons.checkboxBlankOutline,
+                                  labelText:
+                                      t('layrz.select.${temp.length == items.length ? 'unselect' : 'select'}All'),
+                                  color: Colors.orange,
+                                  onTap: () {
+                                    if (temp.length == items.length) {
+                                      temp = [];
+                                    } else {
+                                      temp = items;
+                                    }
+                                    setState(() {});
+                                  },
+                                ),
+                                ThemedButton.save(
+                                  isMobile: isMobile,
+                                  labelText: t('actions.save'),
+                                  onTap: () => Navigator.of(context).pop(temp),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 );
               },

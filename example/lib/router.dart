@@ -17,16 +17,8 @@ Page<void> customTransitionBuilder(BuildContext context, GoRouterState state, Wi
     child: child,
     transitionDuration: kHoverDuration * 1.5,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      // Combine both animations to a single one
-      final combinedAnimation = CurvedAnimation(
-        parent: animation,
-        curve: Curves.easeIn,
-        reverseCurve: Curves.easeOut,
-      );
-
-      // Fade in
       return FadeTransition(
-        opacity: combinedAnimation,
+        opacity: CurveTween(curve: Curves.linearToEaseOut).animate(animation),
         child: child,
       );
     },

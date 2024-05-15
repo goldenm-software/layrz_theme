@@ -1,9 +1,6 @@
 part of '../layout.dart';
 
 class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
-  /// [scaffoldKey] is the key of the scaffold.
-  final GlobalKey<ScaffoldState> scaffoldKey;
-
   /// [buttons] is the list of buttons to be displayed in the drawer.
   final List<ThemedNavigatorItem> items;
 
@@ -109,7 +106,6 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// [ThemedAppBar] is the app bar of the app.
   const ThemedAppBar({
     super.key,
-    required this.scaffoldKey,
     this.items = const [],
     this.homePath = '/home',
     this.disableLeading = false,
@@ -202,7 +198,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(50),
-                    onTap: () => widget.scaffoldKey.currentState?.openDrawer(),
+                    onTap: () => Scaffold.of(context).openDrawer(),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Icon(

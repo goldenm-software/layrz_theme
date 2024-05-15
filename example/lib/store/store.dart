@@ -13,7 +13,7 @@ part 'src/wrapper.dart';
 
 class AppStore extends VxStore {
   ThemeMode themeMode = ThemeMode.light;
-  ThemedLayoutStyle layoutStyle = ThemedLayoutStyle.modern;
+  ThemedLayoutStyle layoutStyle = ThemedLayoutStyle.mini;
   String? mapboxToken;
   String? googleToken;
   String? hereToken;
@@ -110,7 +110,7 @@ class GetLayout extends VxMutation<AppStore> {
     if (layoutStyle != null) {
       store!.layoutStyle = ThemedLayoutStyle.values.firstWhere(
         (e) => e.name == layoutStyle,
-        orElse: () => ThemedLayoutStyle.modern,
+        orElse: () => ThemedLayoutStyle.mini,
       );
     }
   }

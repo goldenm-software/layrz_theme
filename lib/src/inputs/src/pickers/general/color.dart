@@ -222,18 +222,12 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ThemedButton(
-                          style: ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.close,
+                        ThemedButton.cancel(
                           labelText: widget.cancelText,
-                          color: Colors.red,
                           onTap: () => Navigator.of(context).pop(null),
                         ),
-                        ThemedButton(
-                          style: ThemedButtonStyle.filledTonal,
-                          icon: MdiIcons.check,
+                        ThemedButton.save(
                           labelText: widget.saveText,
-                          color: Colors.green,
                           onTap: () => Navigator.of(context).pop(currentColor),
                         ),
                       ],

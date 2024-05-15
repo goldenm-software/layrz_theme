@@ -27,6 +27,11 @@ dependencies:
 
 dependency_overrides:
   http: ^1.0.0
+  permission_handler_html:
+    git:
+      url: https://github.com/raldhafiri/flutter-permission-handler.git
+      ref: main
+      path: permission_handler_html
   # layrz_models:
   #   path: ../../layrz_models
 
