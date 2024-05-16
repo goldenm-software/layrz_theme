@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.5
+
+- Fixed an issue with `ThemedBottomBar` when does not have `items` and `persistentItems`.
+
 ## 5.0.4
 
 - Fixes on `ThemedActionButton` to prevent unnecesary `Padding`

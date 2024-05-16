@@ -217,9 +217,12 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                   ),
                 ),
               ],
-              Padding(
+              Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
+                height: kBottomBarHeight,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ThemedAppBarAvatar(
                       asTaskBar: true,
