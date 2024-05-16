@@ -43,14 +43,45 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
 
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);
+
+  List<ThemedNavigatorItem> _children = [];
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _getChildrenUrls());
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  void didUpdateWidget(ThemedDualBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _getChildrenUrls());
+  }
+
+  void _getChildrenUrls() {
+    String path = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
+    final parent =
+        widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((parents) => path.startsWith(parents.path));
+
+    if (parent == null) {
+      _children = [];
+      return;
+    }
+
+    _children = parent.children
+        .map((child) {
+          if (child is ThemedNavigatorPage) {
+            if (child.children.isEmpty) return [child];
+
+            return [...child.children];
+          }
+
+          return [child];
+        })
+        .expand((element) => element)
+        .toList();
+
+    setState(() {});
   }
 
   @override
@@ -75,9 +106,9 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: widget.items.length,
+                itemCount: _children.length,
                 itemBuilder: (context, index) {
-                  return _buildItem(widget.items[index]);
+                  return _buildItem(_children[index]);
                 },
               ),
             ),

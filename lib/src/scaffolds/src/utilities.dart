@@ -31,32 +31,48 @@ Future<bool> deleteConfirmationDialog({
   bool? result = await showDialog(
     context: context,
     builder: (context) {
-      return ThemedDialog(
-        titleText: title,
-        body: Text(
-          content,
-          textAlign: TextAlign.center,
-        ),
-        dismiss: ThemedDialogAction(
-          color: Colors.red,
-          labelText: i18n?.t('actions.confirmation.dismiss') ?? 'Nevermind',
-          isLoading: isLoading,
-          isCooldown: isCooldown,
-          onCooldown: onCooldown,
-          style: ThemedButtonStyle.text,
-          onTap: () => Navigator.of(context).pop(false),
-        ),
-        actions: [
-          ThemedDialogAction(
-            style: ThemedButtonStyle.filledTonal,
-            color: Colors.green,
-            labelText: i18n?.t('actions.confirmation.confirm') ?? 'Do it!',
-            isLoading: isLoading,
-            isCooldown: isCooldown,
-            onCooldown: onCooldown,
-            onTap: () => Navigator.of(context).pop(true),
+      return Dialog(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+          decoration: generateContainerElevation(context: context, elevation: 5),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Text(
+                content,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  ThemedButton.cancel(
+                    labelText: i18n?.t('actions.confirmation.dismiss') ?? 'Nevermind',
+                    onTap: () => Navigator.of(context).pop(false),
+                    isCooldown: isCooldown,
+                    isLoading: isLoading,
+                  ),
+                  ThemedButton.save(
+                    labelText: i18n?.t('actions.confirmation.confirm') ?? 'Do it!',
+                    onTap: () => Navigator.of(context).pop(true),
+                    isCooldown: isCooldown,
+                    isLoading: isLoading,
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       );
     },
   );

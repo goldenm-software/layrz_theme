@@ -168,7 +168,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.closeCircle,
+      icon: MdiIcons.informationOutline,
       style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
       color: Colors.blue,
     );
@@ -245,6 +245,19 @@ class ThemedButton extends StatefulWidget {
 
   /// [height] is used to know the height of the button.
   static double get height => 30;
+
+  /// [disabledColor] is used to know the color of the disabled button.
+  static Color getDisabledColor(bool isDark, ThemedButtonStyle style) {
+    if (style == ThemedButtonStyle.filledTonal ||
+        style == ThemedButtonStyle.filledTonalFab ||
+        style == ThemedButtonStyle.text ||
+        style == ThemedButtonStyle.fab ||
+        style == ThemedButtonStyle.outlined ||
+        style == ThemedButtonStyle.outlinedFab) {
+      return isDark ? Colors.grey.shade600 : Colors.grey.shade500;
+    }
+    return isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+  }
 }
 
 class _ThemedButtonState extends State<ThemedButton> {
@@ -333,18 +346,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         fontSize: widget.fontSize,
       );
 
-  /// [disabledColor] is used to know the color of the disabled button.
-  Color get disabledColor {
-    if (style == ThemedButtonStyle.filledTonal ||
-        style == ThemedButtonStyle.filledTonalFab ||
-        style == ThemedButtonStyle.text ||
-        style == ThemedButtonStyle.fab ||
-        style == ThemedButtonStyle.outlined ||
-        style == ThemedButtonStyle.outlinedFab) {
-      return isDark ? Colors.grey.shade600 : Colors.grey.shade500;
-    }
-    return isDark ? Colors.grey.shade800 : Colors.grey.shade200;
-  }
+  Color get disabledColor => ThemedButton.getDisabledColor(isDark, style);
 
   /// [contentColor] is used to know the color of the content of the button.
   Color get contentColor => isDisabled ? disabledColor : (widget.color ?? defaultColor);

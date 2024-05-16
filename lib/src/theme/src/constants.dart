@@ -34,8 +34,7 @@ const kHoverDuration = Duration(milliseconds: 100);
 /// Corrects the padding for iOS
 EdgeInsets? get kListViewPadding {
   if (kIsWeb) return null;
-  if (Platform.isIOS) return EdgeInsets.zero;
-  return null;
+  return EdgeInsets.zero;
 }
 
 const kDarkSystemUiOverlayStyle = SystemUiOverlayStyle(

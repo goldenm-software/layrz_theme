@@ -187,6 +187,11 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       top = offset.dy + size.height + padding.top + 5;
     }
 
+    if (top + 200 > MediaQuery.of(context).size.height) {
+      top = null;
+      bottom = 20 + padding.bottom + size.height;
+    }
+
     _overlayEntry = OverlayEntry(
       builder: (context) {
         return Material(
@@ -208,7 +213,13 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                   },
                   child: ScaleTransition(
                     scale: _animationController,
-                    alignment: left != null ? Alignment.topLeft : Alignment.topRight,
+                    alignment: bottom != null
+                        ? left == null
+                            ? Alignment.bottomRight
+                            : Alignment.bottomLeft
+                        : left == null
+                            ? Alignment.topRight
+                            : Alignment.topLeft,
                     child: StatefulBuilder(
                       builder: (context, setState) {
                         return Container(

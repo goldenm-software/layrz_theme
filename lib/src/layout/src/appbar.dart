@@ -152,6 +152,8 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   Color get activeColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   String get logo => isDark ? widget.logo.white : widget.logo.normal;
+  String get favicon => isDark ? widget.favicon.white : widget.favicon.normal;
+
   Color get backgroundColor => widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
   double get width => MediaQuery.of(context).size.width;
   bool get isMobile => width < widget.mobileBreakpoint;
@@ -186,219 +188,243 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
         ],
       ),
       child: SafeArea(
-        child: SizedBox(
-          height: ThemedAppBar.size.height,
-          child: Row(
-            children: [
-              if (isMacOS) ...[
-                const SizedBox(width: 62),
-              ],
-              if (isMobile) ...[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(50),
-                    onTap: () => Scaffold.of(context).openDrawer(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Icon(
-                        MdiIcons.dotsVertical,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            double logoHeight = ThemedAppBar.size.height - 20;
+            double logoWidth = logoHeight * kLogoAspectRatio;
+            String logoPath = logo;
+
+            if (isMobile) {
+              logoWidth = constraints.maxWidth - 120;
+              logoHeight = logoWidth / kLogoAspectRatio;
+
+              if (logoHeight > ThemedAppBar.size.height - 20) {
+                logoHeight = ThemedAppBar.size.height - 20;
+              }
+
+              if (constraints.maxWidth < 300) {
+                logoWidth = ThemedAppBar.size.height - 20;
+                logoHeight = ThemedAppBar.size.height - 20;
+                logoPath = favicon;
+              }
+            }
+
+            return SizedBox(
+              height: ThemedAppBar.size.height,
+              child: Row(
+                children: [
+                  if (isMacOS) ...[
+                    const SizedBox(width: 62),
+                  ],
+                  if (isMobile) ...[
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(50),
+                        onTap: () => Scaffold.of(context).openDrawer(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Icon(
+                            MdiIcons.dotsVertical,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                  ] else if (!isHome && widget.isBackEnabled) ...[
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(50),
+                        onTap: () => onNavigatorPop.call(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Icon(
+                            MdiIcons.chevronLeft,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  InkWell(
+                    onTap: (!isMobile && !isHome) ? () => onNavigatorPush.call(widget.homePath) : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      width: logoWidth,
+                      height: logoHeight,
+                      child: ThemedImage(
+                        path: logoPath,
+                        width: logoWidth,
+                        height: logoHeight,
+                        fit: BoxFit.contain,
+                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-              ] else if (!isHome && widget.isBackEnabled) ...[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(50),
-                    onTap: () => onNavigatorPop.call(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Icon(
-                        MdiIcons.chevronLeft,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-              ],
-              InkWell(
-                onTap: (!isMobile && !isHome) ? () => onNavigatorPush.call(widget.homePath) : null,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  height: ThemedAppBar.size.height - 10,
-                  child: ThemedImage(
-                    path: logo,
-                    width: (ThemedAppBar.size.height - 20) * kLogoAspectRatio,
-                    height: ThemedAppBar.size.height - 20,
-                    fit: BoxFit.contain,
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-              ),
-              if (!isMobile) ...[
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      reverse: true,
-                      child: Row(
-                        children: widget.items.map((item) {
-                          if (item is ThemedNavigatorLabel) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: item.label ?? Text(item.labelText ?? ''),
-                            );
-                          }
+                  if (!isMobile) ...[
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          child: Row(
+                            children: widget.items.map((item) {
+                              if (item is ThemedNavigatorLabel) {
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: item.label ?? Text(item.labelText ?? ''),
+                                );
+                              }
 
-                          if (item is ThemedNavigatorPage) {
-                            bool highlight = currentPath.startsWith(item.path);
+                              if (item is ThemedNavigatorPage) {
+                                bool highlight = currentPath.startsWith(item.path);
 
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                              decoration: BoxDecoration(
-                                color: highlight ? activeColor.withOpacity(0.2) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () => item.onTap.call(onNavigatorPush),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (item.icon != null) ...[
-                                          Icon(
-                                            item.icon ?? MdiIcons.help,
-                                            size: 16,
-                                            color: highlight ? activeColor : validateColor(color: backgroundColor),
-                                          ),
-                                          const SizedBox(width: 10),
-                                        ],
-                                        item.label ?? Text(item.labelText ?? ''),
-                                      ],
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                  decoration: BoxDecoration(
+                                    color: highlight ? activeColor.withOpacity(0.2) : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () => item.onTap.call(onNavigatorPush),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            if (item.icon != null) ...[
+                                              Icon(
+                                                item.icon ?? MdiIcons.help,
+                                                size: 16,
+                                                color: highlight ? activeColor : validateColor(color: backgroundColor),
+                                              ),
+                                              const SizedBox(width: 10),
+                                            ],
+                                            item.label ?? Text(item.labelText ?? ''),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }
+                                );
+                              }
 
-                          if (item is ThemedNavigatorAction) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: item.onTap,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (item.icon != null) ...[
-                                          Icon(
-                                            item.icon ?? MdiIcons.help,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 10),
-                                        ],
-                                        item.label ?? Text(item.labelText ?? ''),
-                                      ],
+                              if (item is ThemedNavigatorAction) {
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: item.onTap,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            if (item.icon != null) ...[
+                                              Icon(
+                                                item.icon ?? MdiIcons.help,
+                                                size: 16,
+                                              ),
+                                              const SizedBox(width: 10),
+                                            ],
+                                            item.label ?? Text(item.labelText ?? ''),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }
+                                );
+                              }
 
-                          if (item is ThemedNavigatorSeparator) {
-                            if (item.type == ThemedSeparatorType.line) {
-                              return Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                                child: const VerticalDivider(),
-                              );
-                            }
-
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: List.generate(6, (_) {
+                              if (item is ThemedNavigatorSeparator) {
+                                if (item.type == ThemedSeparatorType.line) {
                                   return Container(
-                                    width: 3,
-                                    height: 3,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).dividerColor,
-                                      shape: BoxShape.circle,
-                                    ),
+                                    margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                    child: const VerticalDivider(),
                                   );
-                                }),
-                              ),
-                            );
-                          }
+                                }
 
-                          return const SizedBox();
-                        }).toList(),
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: List.generate(6, (_) {
+                                      return Container(
+                                        width: 3,
+                                        height: 3,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).dividerColor,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                );
+                              }
+
+                              return const SizedBox();
+                            }).toList(),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                if (widget.enableNotifications) ...[
-                  const SizedBox(width: 10),
-                  ThemedNotificationIcon(
-                    notifications: widget.notifications,
-                    backgroundColor: backgroundColor,
-                    inAppBar: true,
-                  ),
+                    if (widget.enableNotifications) ...[
+                      const SizedBox(width: 10),
+                      ThemedNotificationIcon(
+                        notifications: widget.notifications,
+                        backgroundColor: backgroundColor,
+                        location: ThemedNotificationLocation.appBar,
+                      ),
+                    ],
+                    if (!widget.hideAvatar) ...[
+                      const SizedBox(width: 10),
+                      ThemedAppBarAvatar(
+                        appTitle: widget.appTitle,
+                        logo: widget.logo,
+                        favicon: widget.favicon,
+                        version: widget.version,
+                        companyName: widget.companyName,
+                        userName: widget.userName,
+                        userDynamicAvatar: widget.userDynamicAvatar,
+                        enableAbout: widget.enableAbout,
+                        onSettingsTap: widget.onSettingsTap,
+                        onProfileTap: widget.onProfileTap,
+                        onLogoutTap: widget.onLogoutTap,
+                        onNavigatorPush: onNavigatorPush,
+                        onNavigatorPop: onNavigatorPop,
+                        additionalActions: widget.additionalActions,
+                        backgroundColor: widget.backgroundColor,
+                        onThemeSwitchTap: widget.onThemeSwitchTap,
+                      ),
+                    ],
+                  ] else ...[
+                    const Spacer(),
+                    if (widget.enableNotifications) ...[
+                      ThemedNotificationIcon(
+                        notifications: widget.notifications,
+                        backgroundColor: backgroundColor,
+                        location: ThemedNotificationLocation.appBar,
+                        forceFullSize: width < kSmallGrid,
+                      ),
+                    ],
+                    const SizedBox(width: 10),
+                  ],
                 ],
-                if (!widget.hideAvatar) ...[
-                  const SizedBox(width: 10),
-                  ThemedAppBarAvatar(
-                    appTitle: widget.appTitle,
-                    logo: widget.logo,
-                    favicon: widget.favicon,
-                    version: widget.version,
-                    companyName: widget.companyName,
-                    userName: widget.userName,
-                    userDynamicAvatar: widget.userDynamicAvatar,
-                    enableAbout: widget.enableAbout,
-                    onSettingsTap: widget.onSettingsTap,
-                    onProfileTap: widget.onProfileTap,
-                    onLogoutTap: widget.onLogoutTap,
-                    onNavigatorPush: onNavigatorPush,
-                    onNavigatorPop: onNavigatorPop,
-                    additionalActions: widget.additionalActions,
-                    backgroundColor: widget.backgroundColor,
-                    onThemeSwitchTap: widget.onThemeSwitchTap,
-                  ),
-                ],
-              ] else ...[
-                const Spacer(),
-                if (widget.enableNotifications) ...[
-                  ThemedNotificationIcon(
-                    notifications: widget.notifications,
-                    backgroundColor: backgroundColor,
-                    inAppBar: true,
-                    forceFullSize: width < kSmallGrid,
-                  ),
-                ],
-                const SizedBox(width: 10),
-              ],
-            ],
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

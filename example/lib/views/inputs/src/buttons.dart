@@ -319,22 +319,27 @@ class _ButtonsViewState extends State<ButtonsView> {
                               ],
                             ),
                           ),
-                          // ThemedActionsButtons(
-                          //   forceMobileMode: true,
-                          //   // actionsOffset: const Offset(20, 20),
-                          //   actions: [
-                          //     ThemedActionButton(
-                          //       labelText: 'test',
-                          //       icon: MdiIcons.accessPoint,
-                          //       onTap: () => {},
-                          //     ),
-                          //     ThemedActionButton(
-                          //       labelText: 'test2',
-                          //       icon: MdiIcons.accessPoint,
-                          //       onTap: () => {},
-                          //     ),
-                          //   ],
-                          // ),
+                          ThemedActionsButtons(
+                            // actionsOffset: const Offset(20, 20),
+                            actions: [
+                              ThemedActionButton.cancel(
+                                isMobile: true,
+                                labelText: 'Cancel',
+                                onTap: () => {},
+                              ),
+                              ThemedActionButton.save(
+                                isMobile: true,
+                                labelText: 'Save',
+                                onTap: () => {},
+                              ),
+                              ThemedActionButton.info(
+                                isMobile: true,
+                                labelText: 'Info',
+                                isDisabled: true,
+                                onTap: () => {},
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],

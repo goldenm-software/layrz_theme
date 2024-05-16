@@ -5,6 +5,13 @@
 - Removed `titleTextFontFamily`, `textFontFamily` and `isLocalFont` from `generateLightTheme()` and `generateDarkTheme()` in favor of `titleFont` and `bodyFont`.
 - Removed deprecated class `ThemedFileInput` in favor of `ThemedFilePicker`.
 - Removed all `@Deprecated` warnings in the package.
+- Constant `kListViewPadding` modified to return `EdgeInsets.zero` in native platforms.
+- New mobile layout mode `ThemedMobileLayoutStyle.bottomBar` (New default). The previous mobile layout design uses `ThemedMobileLayoutStyle.appBar`. You can change the mobile layout using the `mobileLayoutStyle` prop in the `ThemedLayout` widget.
+- Added `isDisabled` to `ThemedActionButton` to handle disable property.
+- New pre-designed buttons `ThemedActionButton.save`, `ThemedActionButton.cancel`, `ThemedActionButton.info`, `ThemedActionButton.show`, `ThemedActionButton.edit`, `ThemedActionButton.delete`
+- Changed design of `onlyIcon: true` in `ThemedActionButton`, now use `ThemedButtonStyle.filledTonalFab` instead of `ThemedButtonStyle.fab`
+- Fully removal of `ThemedDialog` and sub-dependencies.
+- Removed `_getChildrenUrls()` from `ThemedLayout`, now each sub-layout style will handle the children URLs.
 
 ## 5.0.2
 

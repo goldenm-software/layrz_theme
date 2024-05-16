@@ -36,8 +36,11 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
   OverlayEntry? _overlayEntry;
   late AnimationController _animationController;
   final GlobalKey _key = GlobalKey();
-  double get width => MediaQuery.of(context).size.width;
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+
+  double get width => MediaQuery.sizeOf(context).width;
   bool get isMobile => width <= widget.mobileBreakpoint;
+
   Offset get actionsOffset => widget.actionsOffset;
 
   double get _itemHeight => 40;
@@ -72,37 +75,27 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
         onTap: _handleTap,
       );
     }
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: widget.actions.map<Widget>((ThemedActionButton action) {
-          if (action.onlyIcon) {
-            return ThemedButton(
-              style: ThemedButtonStyle.fab,
-              icon: action.icon,
-              labelText: action.labelText,
-              onTap: action.onTap ?? action.onTap,
-              tooltipPosition: action.tooltipPosition,
-              isLoading: action.isLoading,
-              color: action.color,
-            );
-          }
-
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: ThemedButton(
-              style: ThemedButtonStyle.filledTonal,
+              style: action.onlyIcon ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
               icon: action.icon,
               label: action.label,
               labelText: action.labelText,
               color: action.color,
-              onTap: action.onTap ?? action.onTap,
+              onTap: action.onTap,
               tooltipPosition: action.tooltipPosition,
               isLoading: action.isLoading,
               cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
               isCooldown: action.isCooldown,
               onCooldownFinish: action.onCooldownFinish,
+              isDisabled: action.isDisabled,
             ),
           );
         }).toList(),
@@ -124,7 +117,12 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
     Size boxSize = box.size;
     Size screenSize = MediaQuery.of(context).size;
 
-    double width = 150;
+    double width = this.width * 0.5;
+    if (width > 400) width = 400;
+
+    if (this.width < kExtraSmallGrid) {
+      width = this.width - 20;
+    }
 
     double? right = screenSize.width - offset.dx - boxSize.width + actionsOffset.dx;
     double? left;
@@ -137,7 +135,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
       left = offset.dx + actionsOffset.dx;
     }
 
-    if (top + _overlayHeight >= screenSize.height) {
+    if ((top + _overlayHeight + 20) >= screenSize.height) {
       top = null;
       bottom = screenSize.height - offset.dy - boxSize.height + actionsOffset.dy;
     }
@@ -169,15 +167,20 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                           clipBehavior: Clip.antiAlias,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            padding: EdgeInsets.zero,
+                            padding: kListViewPadding,
                             itemCount: widget.actions.length,
                             itemExtent: _itemHeight,
                             itemBuilder: (context, index) {
                               ThemedActionButton action = widget.actions[index];
+                              Color color = action.color ?? (isDark ? Colors.white : Colors.black);
+                              if (action.isDisabled) {
+                                color = ThemedButton.getDisabledColor(isDark, ThemedButtonStyle.filledTonal);
+                              }
+
                               return Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () => _removeOverlay(callback: action.onTap),
+                                  onTap: action.isDisabled ? null : () => _removeOverlay(callback: action.onTap),
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Row(
@@ -186,7 +189,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                                       children: [
                                         Icon(
                                           action.icon,
-                                          color: action.color,
+                                          color: color,
                                           size: 16,
                                         ),
                                         const SizedBox(width: 5),
@@ -197,7 +200,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                                           child: Text(
                                             action.labelText ?? "",
                                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                  color: action.color,
+                                                  color: color,
                                                   overflow: TextOverflow.fade,
                                                 ),
                                             textAlign: TextAlign.end,
@@ -268,6 +271,9 @@ class ThemedActionButton {
   /// [tooltip] is the tooltip to be displayed on the button.
   final ThemedTooltipPosition tooltipPosition;
 
+  /// [isDisabled] forces the button to be displayed as disabled.
+  final bool isDisabled;
+
   const ThemedActionButton({
     this.label,
     this.labelText,
@@ -280,5 +286,138 @@ class ThemedActionButton {
     this.isCooldown = false,
     this.onCooldownFinish,
     this.tooltipPosition = ThemedTooltipPosition.bottom,
+    this.isDisabled = false,
   }) : assert(label != null || labelText != null);
+
+  factory ThemedActionButton.save({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedActionButton(
+      onlyIcon: isMobile,
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.contentSave,
+      color: Colors.green,
+    );
+  }
+
+  factory ThemedActionButton.cancel({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedActionButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.closeCircle,
+      onlyIcon: isMobile,
+      color: Colors.red,
+    );
+  }
+
+  factory ThemedActionButton.info({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedActionButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.informationOutline,
+      onlyIcon: isMobile,
+      color: Colors.blue,
+    );
+  }
+
+  factory ThemedActionButton.show({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedActionButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.magnifyScan,
+      onlyIcon: isMobile,
+      color: Colors.blue,
+    );
+  }
+
+  factory ThemedActionButton.edit({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedActionButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.squareEditOutline,
+      onlyIcon: isMobile,
+      color: Colors.orange,
+    );
+  }
+
+  factory ThemedActionButton.delete({
+    bool isMobile = false,
+    required VoidCallback onTap,
+    required String labelText,
+    bool isLoading = false,
+    bool isDisabled = false,
+    bool isCooldown = false,
+    VoidCallback? onCooldownFinish,
+  }) {
+    return ThemedActionButton(
+      labelText: labelText,
+      onTap: onTap,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      isCooldown: isCooldown,
+      onCooldownFinish: onCooldownFinish,
+      icon: MdiIcons.trashCan,
+      onlyIcon: isMobile,
+      color: Colors.red,
+    );
+  }
 }

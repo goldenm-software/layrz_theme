@@ -13,23 +13,14 @@ class _LayoutState extends State<Layout> {
   AppStore get store => VxState.store as AppStore;
   ThemedLayoutStyle get layoutStyle => store.layoutStyle;
 
-  // AppThemedAsset get logo => const AppThemedAsset(
-  //       normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/normal.svg',
-  //       white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/white.svg',
-  //     );
-  // AppThemedAsset get favicon => const AppThemedAsset(
-  //       normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/normal.png',
-  //       white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/white.png',
-  //     );
-
   AppThemedAsset get logo => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/layrz/logo/normal.png',
-        white: 'https://cdn.layrz.com/resources/layrz/logo/white.png',
+        normal: 'https://cdn.layrz.com/resources/com.layrz.one/logo/normal.svg',
+        white: 'https://cdn.layrz.com/resources/com.layrz.one/logo/white.svg',
       );
 
   AppThemedAsset get favicon => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/layrz/favicon/normal.png',
-        white: 'https://cdn.layrz.com/resources/layrz/favicon/white.png',
+        normal: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/normal.svg',
+        white: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/white.svg',
       );
 
   @override
@@ -49,16 +40,41 @@ class _LayoutState extends State<Layout> {
     }
 
     return ThemedLayout(
-      style: ThemedLayoutStyle.mini,
-      // style: ThemedLayoutStyle.dual,
+      // style: ThemedLayoutStyle.mini,
+      style: ThemedLayoutStyle.dual,
       // style: ThemedLayoutStyle.sidebar,
+      mobileStyle: ThemedMobileLayoutStyle.appBar,
+      // mobileStyle: ThemedMobileLayoutStyle.bottomBar,
       isBackEnabled: false,
       // style: layoutStyle,
       logo: logo,
       currentPath: path,
       favicon: favicon,
       appTitle: "Layrz Theme",
-      enableNotifications: false,
+      enableNotifications: true,
+      notifications: [
+        ThemedNotificationItem(
+          title: 'Notification title',
+          content: 'Notification message',
+          onTap: () {
+            debugPrint('Notification tapped');
+          },
+        ),
+        ThemedNotificationItem(
+          title: 'Notification title',
+          content: 'Notification message',
+          onTap: () {
+            debugPrint('Notification tapped');
+          },
+        ),
+        ThemedNotificationItem(
+          title: 'Notification title',
+          content: 'Notification message',
+          onTap: () {
+            debugPrint('Notification tapped');
+          },
+        ),
+      ],
       items: [
         ThemedNavigatorPage(
           labelText: 'Home',
