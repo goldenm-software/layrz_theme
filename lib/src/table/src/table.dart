@@ -512,7 +512,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     double usedSize = sizes.values.reduce((value, element) => value + element);
-    double emptySize = constraints.maxWidth - usedSize;
+    double emptySize = constraints.maxWidth - usedSize - 10;
 
     if (emptySize > 0) {
       // Distruibute the empty space between the columns
@@ -809,36 +809,30 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                   actions: [
                                                     ...widget.additionalActions?.call(context, item) ?? [],
                                                     if (widget.onShow != null)
-                                                      ThemedActionButton(
-                                                        onlyIcon: true,
+                                                      ThemedActionButton.show(
+                                                        isMobile: true,
                                                         tooltipPosition: ThemedTooltipPosition.left,
                                                         labelText: t('helpers.buttons.show'),
-                                                        icon: MdiIcons.magnifyScan,
-                                                        color: Colors.blue,
                                                         isLoading: widget.isLoading,
                                                         isCooldown: widget.isCooldown,
                                                         onCooldownFinish: widget.onCooldown,
                                                         onTap: () => widget.onShow?.call(context, item),
                                                       ),
                                                     if (widget.onEdit != null && widget.canEdit.call(context, item))
-                                                      ThemedActionButton(
-                                                        onlyIcon: true,
+                                                      ThemedActionButton.edit(
+                                                        isMobile: true,
                                                         tooltipPosition: ThemedTooltipPosition.left,
                                                         labelText: t('helpers.buttons.edit'),
-                                                        icon: MdiIcons.squareEditOutline,
-                                                        color: Colors.orange,
                                                         isLoading: widget.isLoading,
                                                         isCooldown: widget.isCooldown,
                                                         onCooldownFinish: widget.onCooldown,
                                                         onTap: () => widget.onEdit?.call(context, item),
                                                       ),
                                                     if (widget.onDelete != null && widget.canDelete.call(context, item))
-                                                      ThemedActionButton(
-                                                        onlyIcon: true,
+                                                      ThemedActionButton.delete(
+                                                        isMobile: true,
                                                         tooltipPosition: ThemedTooltipPosition.left,
                                                         labelText: t('helpers.buttons.delete'),
-                                                        icon: MdiIcons.trashCan,
-                                                        color: Colors.red,
                                                         isLoading: widget.isLoading,
                                                         isCooldown: widget.isCooldown,
                                                         onCooldownFinish: widget.onCooldown,

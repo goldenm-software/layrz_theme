@@ -13,7 +13,11 @@ class ThemedActionsButtons extends StatefulWidget {
   /// [mobileBreakpoint] is the breakpoint to be used to determine if it's mobile or not.
   final double mobileBreakpoint;
 
+  /// [actionsOffset] is the offset to be used to display the actions.
   final Offset actionsOffset;
+
+  /// [actionPadding] defines the padding to be used on the buttons.
+  final EdgeInsetsGeometry actionPadding;
 
   /// Creates a [ThemedActionsButtons] widget. This utility is to create a list of actions to be displayed.
   /// When it's in desktop mode (Before [mobileBreakpoint] width), it will display a row of buttons.
@@ -25,6 +29,7 @@ class ThemedActionsButtons extends StatefulWidget {
     this.forceMobileMode = false,
     this.mobileBreakpoint = kSmallGrid,
     this.actionsOffset = Offset.zero,
+    this.actionPadding = EdgeInsets.zero,
   });
 
   @override
@@ -82,7 +87,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
         mainAxisSize: MainAxisSize.min,
         children: widget.actions.map<Widget>((ThemedActionButton action) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: widget.actionPadding,
             child: ThemedButton(
               style: action.onlyIcon ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
               icon: action.icon,
@@ -297,8 +302,10 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
   }) {
     return ThemedActionButton(
+      tooltipPosition: tooltipPosition,
       onlyIcon: isMobile,
       labelText: labelText,
       onTap: onTap,
@@ -319,8 +326,10 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
   }) {
     return ThemedActionButton(
+      tooltipPosition: tooltipPosition,
       labelText: labelText,
       onTap: onTap,
       isLoading: isLoading,
@@ -341,8 +350,10 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
   }) {
     return ThemedActionButton(
+      tooltipPosition: tooltipPosition,
       labelText: labelText,
       onTap: onTap,
       isLoading: isLoading,
@@ -363,8 +374,10 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
   }) {
     return ThemedActionButton(
+      tooltipPosition: tooltipPosition,
       labelText: labelText,
       onTap: onTap,
       isLoading: isLoading,
@@ -385,8 +398,10 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
   }) {
     return ThemedActionButton(
+      tooltipPosition: tooltipPosition,
       labelText: labelText,
       onTap: onTap,
       isLoading: isLoading,
@@ -407,8 +422,10 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
   }) {
     return ThemedActionButton(
+      tooltipPosition: tooltipPosition,
       labelText: labelText,
       onTap: onTap,
       isLoading: isLoading,

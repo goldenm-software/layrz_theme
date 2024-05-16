@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.4
+
+- Fixes on `ThemedActionButton` to prevent unnecesary `Padding`
+- Now, `ThemedActionsButtons` receives a new argument `actionsPadding` to handle the padding of the actions. By default is `EdgeInsets.zero`
+
 ## 5.0.3
 
 - Removed `titleTextFontFamily`, `textFontFamily` and `isLocalFont` from `generateLightTheme()` and `generateDarkTheme()` in favor of `titleFont` and `bodyFont`.
