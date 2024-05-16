@@ -82,7 +82,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
               style: ThemedButtonStyle.fab,
               icon: action.icon,
               labelText: action.labelText,
-              onTap: action.onTap ?? action.onTap ?? action.onPressed,
+              onTap: action.onTap ?? action.onTap,
               tooltipPosition: action.tooltipPosition,
               isLoading: action.isLoading,
               color: action.color,
@@ -97,7 +97,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
               label: action.label,
               labelText: action.labelText,
               color: action.color,
-              onTap: action.onTap ?? action.onTap ?? action.onPressed,
+              onTap: action.onTap ?? action.onTap,
               tooltipPosition: action.tooltipPosition,
               isLoading: action.isLoading,
               cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
@@ -177,7 +177,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                               return Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () => _removeOverlay(callback: action.onTap ?? action.onPressed),
+                                  onTap: () => _removeOverlay(callback: action.onTap),
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Row(
@@ -244,9 +244,6 @@ class ThemedActionButton {
   /// [icon] is the icon to be displayed on the button.
   final IconData icon;
 
-  /// [onPressed] is the callback to be called when the button is pressed.
-  final VoidCallback? onPressed;
-
   /// [onTap] is the callback to be called when the button is tapped.
   final VoidCallback? onTap;
 
@@ -275,7 +272,6 @@ class ThemedActionButton {
     this.label,
     this.labelText,
     required this.icon,
-    @Deprecated('Use `onTap` instead') this.onPressed,
     this.onTap,
     this.color,
     this.onlyIcon = false,

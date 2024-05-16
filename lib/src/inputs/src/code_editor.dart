@@ -43,13 +43,6 @@ class ThemedCodeEditor extends StatefulWidget {
   /// [constraints] is the constraints of the editor
   final BoxConstraints? constraints;
 
-  /// [i18n] is the i18n of the editor
-  final LayrzAppLocalizations? i18n;
-
-  /// [lintErrors] is the list of errors to display in the editor
-  /// This is deprecated, now you should use [onLintTap] to perform the lint
-  final List<LintError> lintErrors;
-
   /// [customInsers] is a list of Strings to add a shurtcut to insert them in the editor
   final List<String> customInserts;
 
@@ -72,9 +65,6 @@ class ThemedCodeEditor extends StatefulWidget {
     this.onSubmitted,
     this.language = LayrzSupportedLanguage.lcl,
     this.constraints,
-    @Deprecated('Now, if you want to append lintErrors, you should use `onLintTap` to perform the lint')
-    this.lintErrors = const [],
-    @Deprecated('The i18n will be extracted automatically from the context') this.i18n,
     this.customInserts = const [],
     this.onLintTap,
     this.onRunTap,

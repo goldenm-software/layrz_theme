@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.3
+
+- Removed `titleTextFontFamily`, `textFontFamily` and `isLocalFont` from `generateLightTheme()` and `generateDarkTheme()` in favor of `titleFont` and `bodyFont`.
+- Removed deprecated class `ThemedFileInput` in favor of `ThemedFilePicker`.
+- Removed all `@Deprecated` warnings in the package.
+
 ## 5.0.2
 
 - Changed `_getChildrenUrls()` invoke in `ThemedLayout`, now use `WidgetsBinding.instance.addPostFrameCallback` to prevent issues with the `initState`.

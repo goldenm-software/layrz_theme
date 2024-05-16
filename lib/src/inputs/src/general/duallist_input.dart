@@ -22,15 +22,6 @@ class ThemedDualListInput<T> extends StatefulWidget {
   /// [errors] is the list of errors of the dual list input.
   final List<String> errors;
 
-  /// [availableText] is the text of the available list.
-  final String availableText;
-
-  /// [selectedText] is the text of the selected list.
-  final String selectedText;
-
-  /// [searchText] is the text of the search input.
-  final String searchText;
-
   /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
   /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
   /// is the default value of this property.
@@ -71,9 +62,6 @@ class ThemedDualListInput<T> extends StatefulWidget {
     this.value,
     this.disabled = false,
     this.errors = const [],
-    @Deprecated("Field unused") this.availableText = "Available",
-    @Deprecated("Field unused") this.selectedText = "Selected",
-    @Deprecated("Field unused") this.searchText = "Search",
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',

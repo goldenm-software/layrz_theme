@@ -12,22 +12,6 @@ ThemeData generateLightTheme({
   /// By default, it is [kPrimaryColor].
   Color mainColor = kPrimaryColor,
 
-  /// [titleTextFontFamily] is the font family of the title text.
-  /// By default, it is Cabin. (Google Font)
-  /// To use a local font (Any other different to any available in Google Fonts), you should change the
-  /// argument [isLocalFont] to `true`.
-  @Deprecated('This property will not work, use `titleFont` instead') String titleTextFontFamily = "Cabin",
-
-  /// [textFontFamily] is the font family of the text.
-  /// By default, it is Fira Sans Condensed. (Google Font)
-  /// To use a local font (Any other different to any available in Google Fonts), you should change the
-  /// argument [isLocalFont] to `true`.
-  @Deprecated('This property will not work, use `bodyFont` instead') String textFontFamily = "Fira Sans Condensed",
-
-  /// [isLocalFont] is a boolean to indicate if the font family is a local font.
-  /// By default, it is `false`.
-  @Deprecated('This property will not work, check out `titleFont` and `bodyFont`') bool isLocalFont = false,
-
   /// [titleFont] is the font of the title text.
   /// By default, uses `Cabin` from `Google Fonts`.
   /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
