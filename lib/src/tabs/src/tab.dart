@@ -34,6 +34,10 @@ class ThemedTab extends StatelessWidget {
   /// [color] is the color of the tab
   final Color? color;
 
+  /// [child] is the child of the tab
+  /// This information is only used when the tab is a child of a [ThemedTabView]
+  final Widget child;
+
   /// [ThemedTab] is a tab for the [TabBar] widget
   const ThemedTab({
     super.key,
@@ -46,6 +50,7 @@ class ThemedTab extends StatelessWidget {
     this.trailingIcon,
     this.padding = const EdgeInsets.all(10),
     this.color,
+    this.child = const SizedBox(),
   }) : assert(labelText != null || label != null);
 
   @override

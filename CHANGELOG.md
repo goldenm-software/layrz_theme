@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.7
+
+- New widget `ThemedTabView` to handle a combination of `TabBar` and `TabBarView` in a single widget.
+- New prop `child` on `ThemedTab` to handle a custom child widget. Only used in the new `ThemedTabView`.
+
 ## 5.0.6
 
 - Bug fix related to `ThemedMiniBar`, now will not show the `additionalActions` in the bar.

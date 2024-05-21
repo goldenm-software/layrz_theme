@@ -104,6 +104,7 @@ ThemeData generateDarkTheme({
     tabBarTheme: TabBarTheme(
       labelColor: Colors.white,
       unselectedLabelColor: Colors.grey.shade500,
+      dividerColor: Colors.transparent,
     ),
 
     // Dialog

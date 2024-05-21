@@ -102,6 +102,7 @@ ThemeData generateLightTheme({
     tabBarTheme: TabBarTheme(
       labelColor: color,
       unselectedLabelColor: Colors.grey.shade700,
+      dividerColor: Colors.transparent,
     ),
 
     dialogTheme: const DialogTheme(
