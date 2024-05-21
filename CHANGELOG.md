@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.8
+
+- Added `separatorPadding`to `ThemedTabView` to handle the padding between the `TabBar` and the `TabBarView`.
+
 ## 5.0.7
 
 - New widget `ThemedTabView` to handle a combination of `TabBar` and `TabBarView` in a single widget.

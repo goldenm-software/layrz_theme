@@ -19,6 +19,9 @@ class ThemedTabView extends StatelessWidget {
   /// [physics] is the physics of the tab bar view
   final ScrollPhysics? physics;
 
+  /// [separatorPadding] is the padding of the separator between the tab and the tab view
+  final EdgeInsetsGeometry separatorPadding;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -31,6 +34,7 @@ class ThemedTabView extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.animationDuration = const Duration(milliseconds: 250),
     this.physics,
+    this.separatorPadding = const EdgeInsets.only(top: 10),
   });
 
   @override
@@ -53,6 +57,7 @@ class ThemedTabView extends StatelessWidget {
                 tabs: tabs,
               ),
             ),
+            Padding(padding: separatorPadding),
             Expanded(
               child: TabBarView(
                 physics: physics,
