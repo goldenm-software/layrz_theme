@@ -28,7 +28,6 @@
 .packages
 build/
 
-.fvm/flutter_sdk
 example/.fvm/flutter_sdk
 
 .flutter-plugins
@@ -44,3 +43,6 @@ credentials.json
 **/*/Flutter/GeneratedPluginRegistrant.*
 
 .env
+
+# FVM Version Cache
+.fvm/

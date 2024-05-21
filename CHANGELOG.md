@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.6
+
+- Bug fix related to `ThemedMiniBar`, now will not show the `additionalActions` in the bar.
+
 ## 5.0.5
 
 - Fixed an issue with `ThemedBottomBar` when does not have `items` and `persistentItems`.

@@ -200,16 +200,6 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                         },
                       ),
                     ],
-                    if (widget.additionalActions.isNotEmpty) ...[
-                      _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: widget.additionalActions.length,
-                        itemBuilder: (context, index) {
-                          return _buildItem(widget.additionalActions[index]);
-                        },
-                      ),
-                    ],
                   ],
                 ),
               ),
