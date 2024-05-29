@@ -177,42 +177,42 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
         ...fixedButtons,
       ];
 
-  bool get _canStreetView =>
-      widget.enableGoogleStreetView &&
-      _selected?.source == MapSource.google &&
-      widget.controller != null &&
-      widget.mapController != null &&
-      widget.mapKey != null;
+  // bool get _canStreetView =>
+  //     widget.enableGoogleStreetView &&
+  //     _selected?.source == MapSource.google &&
+  //     widget.controller != null &&
+  //     widget.mapController != null &&
+  //     widget.mapKey != null;
 
   List<ThemedMapButton> get fixedButtons => [
-        if (_canStreetView) ...[
-          ThemedMapDragButton(
-            labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
-            icon: MdiIcons.googleStreetView,
-            color: buttonColor,
-            onDragStart: (offset) {
-              widget.controller?.notify(StartGoogleStreetView());
-            },
-            onDragFinish: (offset) async {
-              widget.controller?.notify(StopGoogleStreetView());
+        // if (_canStreetView) ...[
+        //   ThemedMapDragButton(
+        //     labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
+        //     icon: MdiIcons.googleStreetView,
+        //     color: buttonColor,
+        //     onDragStart: (offset) {
+        //       widget.controller?.notify(StartGoogleStreetView());
+        //     },
+        //     onDragFinish: (offset) async {
+        //       widget.controller?.notify(StopGoogleStreetView());
 
-              if (offset == null) return;
-              if (widget.mapKey == null) return;
-              if (widget.mapController == null) return;
+        //       if (offset == null) return;
+        //       if (widget.mapKey == null) return;
+        //       if (widget.mapController == null) return;
 
-              RenderBox box = widget.mapKey!.currentContext!.findRenderObject() as RenderBox;
-              final projectedOffset = box.globalToLocal(offset);
-              math.Point p = math.Point(projectedOffset.dx, projectedOffset.dy);
-              LatLng coordinates = widget.mapController!.camera.pointToLatLng(p);
-              final result = await _searchStreetView(coordinates);
-              if (result == null) return;
-              _openStreetView(result.$1, result.$2, result.$3);
-            },
-            onDragCancel: () {
-              widget.controller?.notify(StopGoogleStreetView());
-            },
-          ),
-        ],
+        //       RenderBox box = widget.mapKey!.currentContext!.findRenderObject() as RenderBox;
+        //       final projectedOffset = box.globalToLocal(offset);
+        //       math.Point p = math.Point(projectedOffset.dx, projectedOffset.dy);
+        //       LatLng coordinates = widget.mapController!.camera.pointToLatLng(p);
+        //       final result = await _searchStreetView(coordinates);
+        //       if (result == null) return;
+        //       _openStreetView(result.$1, result.$2, result.$3);
+        //     },
+        //     onDragCancel: () {
+        //       widget.controller?.notify(StopGoogleStreetView());
+        //     },
+        //   ),
+        // ],
         if (widget.onZoomIn != null) ...[
           ThemedMapButton(
             labelText: i18n?.t('layrz.map.zoom.in') ?? widget.zoomInLabelText,
@@ -353,44 +353,6 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     debugPrint("Event received in toolbar: $event");
   }
 
-  /// [_openStreetView] opens a street view with the given [panoId], [xTiles], [yTiles] and [tileSize].
-  /// Each parameter comes from the metadata query,
-  /// [xTiles] is calculated using `imageWidth` and `tileWidth` from the metadata query.
-  /// [yTiles] is calculated using `imageHeight` and `tileWidth` from the metadata query.
-  /// Why `tileWidth`? Because `tileWidth` and `tileHeight` are the same (At least in the tests I did).
-
-  void _openStreetView(String panoId, int xTiles, int yTiles) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    String? googleSession = prefs.getString('google.maps.${_selected!.id}.streetView.token');
-    int? googleExpiration = prefs.getInt('google.maps.${_selected!.id}.streetView.expiration');
-
-    if (googleSession == null || googleExpiration == null) {
-      debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): No session found');
-      return;
-    }
-
-    if (googleExpiration < DateTime.now().secondsSinceEpoch) {
-      debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): Session expired');
-      return;
-    }
-
-    debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): Opening street view');
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ThemedStreetViewDialog(
-          panoId: panoId,
-          session: googleSession,
-          googleToken: _selected!.googleToken!,
-          xTiles: xTiles,
-          yTiles: yTiles,
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     EdgeInsetsGeometry margin = const EdgeInsets.all(10);
@@ -420,6 +382,44 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     );
   }
 
+  /// [_openStreetView] opens a street view with the given [panoId], [xTiles], [yTiles] and [tileSize].
+  /// Each parameter comes from the metadata query,
+  /// [xTiles] is calculated using `imageWidth` and `tileWidth` from the metadata query.
+  /// [yTiles] is calculated using `imageHeight` and `tileWidth` from the metadata query.
+  /// Why `tileWidth`? Because `tileWidth` and `tileHeight` are the same (At least in the tests I did).
+
+  // void _openStreetView(String panoId, int xTiles, int yTiles) async {
+  //   final prefs = await SharedPreferences.getInstance();
+
+  //   String? googleSession = prefs.getString('google.maps.${_selected!.id}.streetView.token');
+  //   int? googleExpiration = prefs.getInt('google.maps.${_selected!.id}.streetView.expiration');
+
+  //   if (googleSession == null || googleExpiration == null) {
+  //     debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): No session found');
+  //     return;
+  //   }
+
+  //   if (googleExpiration < DateTime.now().secondsSinceEpoch) {
+  //     debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): Session expired');
+  //     return;
+  //   }
+
+  //   debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): Opening street view');
+
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return ThemedStreetViewDialog(
+  //         panoId: panoId,
+  //         session: googleSession,
+  //         googleToken: _selected!.googleToken!,
+  //         xTiles: xTiles,
+  //         yTiles: yTiles,
+  //       );
+  //     },
+  //   );
+  // }
+
   /// [_searchStreetView] searches for a street view in Map Tiles API with the given [point].
   /// Returns the `panoId` of the street view if found, otherwise returns `null`.
   /// Also, can return `null` if the requirements are not met.
@@ -429,99 +429,99 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   /// - double: `xTiles` of the street view.
   /// - double: `yTiles` of the street view.
   /// - double: `tileSize` of the street view.
-  Future<(String, int, int)?> _searchStreetView(LatLng point) async {
-    if (_selected == null) return null;
-    if (_selected!.source != MapSource.google) return null;
-    String? googleMapsKey = _selected!.googleToken;
+  // Future<(String, int, int)?> _searchStreetView(LatLng point) async {
+  //   if (_selected == null) return null;
+  //   if (_selected!.source != MapSource.google) return null;
+  //   String? googleMapsKey = _selected!.googleToken;
 
-    if (googleMapsKey == null) return null;
+  //   if (googleMapsKey == null) return null;
 
-    final prefs = await SharedPreferences.getInstance();
+  //   final prefs = await SharedPreferences.getInstance();
 
-    String? googleSession = prefs.getString('google.maps.${_selected!.id}.streetView.token');
-    int? googleExpiration = prefs.getInt('google.maps.${_selected!.id}.streetView.expiration');
+  //   String? googleSession = prefs.getString('google.maps.${_selected!.id}.streetView.token');
+  //   int? googleExpiration = prefs.getInt('google.maps.${_selected!.id}.streetView.expiration');
 
-    if (googleSession == null || googleExpiration == null) {
-      final resp = await _startSession(prefs, googleMapsKey);
-      if (resp == null) return null;
+  //   if (googleSession == null || googleExpiration == null) {
+  //     final resp = await _startSession(prefs, googleMapsKey);
+  //     if (resp == null) return null;
 
-      googleSession = resp.$1;
-      googleExpiration = resp.$2;
-    }
+  //     googleSession = resp.$1;
+  //     googleExpiration = resp.$2;
+  //   }
 
-    if (googleExpiration < DateTime.now().secondsSinceEpoch) {
-      final resp = await _startSession(prefs, googleMapsKey);
-      if (resp == null) return null;
+  //   if (googleExpiration < DateTime.now().secondsSinceEpoch) {
+  //     final resp = await _startSession(prefs, googleMapsKey);
+  //     if (resp == null) return null;
 
-      googleSession = resp.$1;
-      googleExpiration = resp.$2;
-    }
+  //     googleSession = resp.$1;
+  //     googleExpiration = resp.$2;
+  //   }
 
-    debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): Searching street view');
+  //   debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): Searching street view');
 
-    try {
-      final search = await http.get(Uri.parse(
-        'https://tile.googleapis.com/v1/streetview/metadata?'
-        'session=$googleSession&'
-        'key=$googleMapsKey&'
-        'lat=${point.latitude}&'
-        'lng=${point.longitude}&'
-        'radius=100',
-      ));
+  //   try {
+  //     final search = await http.get(Uri.parse(
+  //       'https://tile.googleapis.com/v1/streetview/metadata?'
+  //       'session=$googleSession&'
+  //       'key=$googleMapsKey&'
+  //       'lat=${point.latitude}&'
+  //       'lng=${point.longitude}&'
+  //       'radius=100',
+  //     ));
 
-      final pano = jsonDecode(search.body);
-      if (pano['error'] != null) {
-        debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): metadata error ${pano['error']}');
-        prefs.remove('google.maps.${_selected!.id}.streetView.token');
-        prefs.remove('google.maps.${_selected!.id}.streetView.expiration');
-        return null;
-      }
+  //     final pano = jsonDecode(search.body);
+  //     if (pano['error'] != null) {
+  //       debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): metadata error ${pano['error']}');
+  //       prefs.remove('google.maps.${_selected!.id}.streetView.token');
+  //       prefs.remove('google.maps.${_selected!.id}.streetView.expiration');
+  //       return null;
+  //     }
 
-      num imageWidth = pano['imageWidth'] as num;
-      num imageHeight = pano['imageHeight'] as num;
-      num tileSize = pano['tileWidth'] as num;
+  //     num imageWidth = pano['imageWidth'] as num;
+  //     num imageHeight = pano['imageHeight'] as num;
+  //     num tileSize = pano['tileWidth'] as num;
 
-      int xTiles = (imageWidth / tileSize).ceil();
-      int yTiles = (imageHeight / tileSize).ceil();
+  //     int xTiles = (imageWidth / tileSize).ceil();
+  //     int yTiles = (imageHeight / tileSize).ceil();
 
-      return (pano['panoId'] as String, xTiles, yTiles);
-    } catch (e) {
-      debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): metadata exception $e');
-      return null;
-    }
-  }
+  //     return (pano['panoId'] as String, xTiles, yTiles);
+  //   } catch (e) {
+  //     debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): metadata exception $e');
+  //     return null;
+  //   }
+  // }
 
-  Future<(String, int)?> _startSession(SharedPreferences prefs, String googleMapsKey) async {
-    try {
-      final params = {
-        'mapType': 'streetview',
-        'language': 'en-US',
-      };
+  // Future<(String, int)?> _startSession(SharedPreferences prefs, String googleMapsKey) async {
+  //   try {
+  //     final params = {
+  //       'mapType': 'streetview',
+  //       'language': 'en-US',
+  //     };
 
-      debugPrint('layrz_theme/ThemedMApToolbar/_searchStreetView(): Request $params');
-      final response = await http.post(
-        Uri.parse('https://tile.googleapis.com/v1/createSession?key=$googleMapsKey'),
-        body: jsonEncode(params),
-      );
-      if (response.statusCode != 200) {
-        debugPrint(
-          'layrz_theme/ThemedMapToolbar/_searchStreetView(): createSession error code ${response.statusCode}',
-        );
-        return null;
-      }
+  //     debugPrint('layrz_theme/ThemedMApToolbar/_searchStreetView(): Request $params');
+  //     final response = await http.post(
+  //       Uri.parse('https://tile.googleapis.com/v1/createSession?key=$googleMapsKey'),
+  //       body: jsonEncode(params),
+  //     );
+  //     if (response.statusCode != 200) {
+  //       debugPrint(
+  //         'layrz_theme/ThemedMapToolbar/_searchStreetView(): createSession error code ${response.statusCode}',
+  //       );
+  //       return null;
+  //     }
 
-      debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): Response ${response.body}');
-      final data = jsonDecode(response.body);
+  //     debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): Response ${response.body}');
+  //     final data = jsonDecode(response.body);
 
-      prefs.setString('google.maps.${_selected!.id}.streetView.token', data['session']);
-      prefs.setInt('google.maps.${_selected!.id}.streetView.expiration', int.parse(data['expiry']));
-      String googleSession = data['session'];
-      int googleExpiration = int.parse(data['expiry']);
+  //     prefs.setString('google.maps.${_selected!.id}.streetView.token', data['session']);
+  //     prefs.setInt('google.maps.${_selected!.id}.streetView.expiration', int.parse(data['expiry']));
+  //     String googleSession = data['session'];
+  //     int googleExpiration = int.parse(data['expiry']);
 
-      return (googleSession, googleExpiration);
-    } catch (e) {
-      debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): createSession exception $e');
-      return null;
-    }
-  }
+  //     return (googleSession, googleExpiration);
+  //   } catch (e) {
+  //     debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): createSession exception $e');
+  //     return null;
+  //   }
+  // }
 }

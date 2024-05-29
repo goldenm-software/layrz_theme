@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.9
+
+- Upgraded `flutter_map` to 7.0.0 and their dependencies.
+- Disabled (Temporarily) the `ThemedStreetViewDialog` due to the changes in the `flutter_map` package.
+
 ## 5.0.8
 
 - Added `separatorPadding`to `ThemedTabView` to handle the padding between the `TabBar` and the `TabBarView`.
