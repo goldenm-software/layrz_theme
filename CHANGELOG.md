@@ -1,7 +1,12 @@
 # Changelog
 
-## 5.0.9
+## 5.0.10
 
+- Upgraded `flutter_map` to 6.2.1 and their dependencies.
+
+## 5.0.9 (RETRACTED)
+
+- Retracted due to issues with the `flutter_map` package and polygon layers.
 - Upgraded `flutter_map` to 7.0.0 and their dependencies.
 - Disabled (Temporarily) the `ThemedStreetViewDialog` due to the changes in the `flutter_map` package.
 
