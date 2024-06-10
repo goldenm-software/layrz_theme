@@ -40,10 +40,7 @@ class _LayoutState extends State<Layout> {
     }
 
     return ThemedLayout(
-      // style: ThemedLayoutStyle.mini,
-      style: ThemedLayoutStyle.dual,
-      // style: ThemedLayoutStyle.sidebar,
-      // mobileStyle: ThemedMobileLayoutStyle.appBar,
+      style: ThemedLayoutStyle.mini,
       mobileStyle: ThemedMobileLayoutStyle.bottomBar,
       isBackEnabled: false,
       // style: layoutStyle,
@@ -75,186 +72,117 @@ class _LayoutState extends State<Layout> {
           },
         ),
       ],
-      // items: [
-      //   ThemedNavigatorPage(
-      //     labelText: 'Home',
-      //     path: '/home',
-      //     icon: MdiIcons.homeVariant,
-      //     // showHeaderInSidebarMode: false,
-      //   ),
-      //   ThemedNavigatorPage(
-      //     labelText: 'Theme generation',
-      //     path: '/theme',
-      //     icon: MdiIcons.themeLightDark,
-      //     showHeaderInSidebarMode: false,
-      //   ),
-      //   // ThemedNavigatorPage(
-      //   //   labelText: 'Layout',
-      //   //   path: '/layout',
-      //   //   icon: MdiIcons.viewGrid,
-      //   //   useDefaultRedirect: false,
-      //   //   children: [
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'App bar / Header',
-      //   //       path: '/layout/appbar',
-      //   //       icon: MdiIcons.viewDashboard,
-      //   //     ),
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'Task bar',
-      //   //       path: '/layout/bottomnavigationbar',
-      //   //       icon: MdiIcons.viewDashboard,
-      //   //     ),
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'Drawer',
-      //   //       path: '/layout/drawer',
-      //   //       icon: MdiIcons.viewDashboard,
-      //   //     ),
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'Sidebar',
-      //   //       path: '/layout/sidebar',
-      //   //       icon: MdiIcons.viewDashboard,
-      //   //     ),
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'Layout',
-      //   //       path: '/layout/layout',
-      //   //       icon: MdiIcons.viewDashboard,
-      //   //     ),
-      //   //   ],
-      //   // ),
-      //   ThemedNavigatorPage(
-      //     labelText: 'Inputs',
-      //     path: '/inputs',
-      //     icon: MdiIcons.text,
-      //     children: [
-      //       ThemedNavigatorPage(
-      //         labelText: 'Text fields',
-      //         path: '/inputs/text',
-      //         icon: MdiIcons.text,
-      //       ),
-      //       ThemedNavigatorPage(
-      //         labelText: 'Buttons',
-      //         path: '/inputs/buttons',
-      //         icon: MdiIcons.buttonCursor,
-      //       ),
-      //       ThemedNavigatorPage(
-      //         labelText: 'Checkboxes',
-      //         path: '/inputs/checkboxes',
-      //         icon: MdiIcons.checkboxBlank,
-      //       ),
-      //       ThemedNavigatorPage(
-      //         labelText: 'Radio buttons',
-      //         path: '/inputs/radiobuttons',
-      //         icon: MdiIcons.radioboxMarked,
-      //       ),
-      //       ThemedNavigatorPage(
-      //         labelText: 'Selectors',
-      //         path: '/inputs/selectors',
-      //         icon: MdiIcons.listBox,
-      //         children: [
-      //           ThemedNavigatorPage(
-      //             labelText: 'General selectors',
-      //             path: '/inputs/selectors/general',
-      //             icon: MdiIcons.calendarClock,
-      //           ),
-      //           ThemedNavigatorPage(
-      //             labelText: 'Date & Time selectors',
-      //             path: '/inputs/selectors/datetime',
-      //             icon: MdiIcons.calendarClock,
-      //           ),
-      //         ],
-      //       ),
-      //       ThemedNavigatorPage(
-      //         labelText: 'Calendar',
-      //         path: '/inputs/calendar',
-      //         icon: MdiIcons.calendar,
-      //       ),
-      //     ],
-      //   ),
-      //   // ThemedNavigatorPage(
-      //   //   labelText: 'Scaffold',
-      //   //   path: '/scaffold',
-      //   //   icon: MdiIcons.table,
-      //   //   useDefaultRedirect: false,
-      //   //   children: [
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'Table',
-      //   //       path: '/scaffold/table',
-      //   //       icon: MdiIcons.table,
-      //   //     ),
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'Details preset',
-      //   //       path: '/scaffold/details',
-      //   //       icon: MdiIcons.table,
-      //   //     ),
-      //   //   ],
-      //   // ),
-      //   // ThemedNavigatorPage(
-      //   //   labelText: 'Utilities',
-      //   //   path: '/utilities',
-      //   //   icon: MdiIcons.codeBraces,
-      //   //   useDefaultRedirect: false,
-      //   //   children: [
-      //   //     // ThemedNavigatorPage(
-      //   //     //   labelText: 'Functions',
-      //   //     //   path: '/utilities/functions',
-      //   //     //   icon: MdiIcons.codeBraces,
-      //   //     // ),
-      //   //     ThemedNavigatorPage(
-      //   //       labelText: 'Widgets',
-      //   //       path: '/utilities/widgets',
-      //   //       icon: MdiIcons.codeBraces,
-      //   //     ),
-      //   //   ],
-      //   // ),
-      //   ThemedNavigatorPage(
-      //     labelText: 'Layo',
-      //     path: '/layo',
-      //     icon: MdiIcons.robotOutline,
-      //   ),
-      //   ThemedNavigatorPage(
-      //     labelText: 'Avatars',
-      //     path: '/avatars',
-      //     icon: MdiIcons.accountCircleOutline,
-      //     useDefaultRedirect: false,
-      //     children: [
-      //       ThemedNavigatorPage(
-      //         labelText: 'Static avatars',
-      //         path: '/avatars/static',
-      //         icon: MdiIcons.accountCircle,
-      //       ),
-      //       ThemedNavigatorPage(
-      //         labelText: 'Dynamic avatars',
-      //         path: '/avatars/dynamic',
-      //         icon: MdiIcons.accountCircleOutline,
-      //       ),
-      //     ],
-      //   ),
-      // ],
-      // persistentItems: [
-      //   ThemedNavigatorAction(
-      //     labelText: 'onTap action',
-      //     icon: MdiIcons.calendar,
-      //     onTap: () {
-      //       debugPrint('onTap action');
-      //     },
-      //   ),
-      //   ThemedNavigatorAction(
-      //     labelText: "GitHub repository",
-      //     icon: MdiIcons.github,
-      //     onTap: () => launchUrlString(
-      //       'https://github.com/goldenm-software/layrz_theme',
-      //       mode: LaunchMode.externalApplication,
-      //     ),
-      //   ),
-      //   ThemedNavigatorAction(
-      //     labelText: "Our discord",
-      //     icon: MdiIcons.messageBadgeOutline,
-      //     onTap: () => launchUrlString(
-      //       'https://discord.gg/tv56VVDYqf',
-      //       mode: LaunchMode.externalApplication,
-      //     ),
-      //   ),
-      // ],
+      items: [
+        ThemedNavigatorPage(
+          labelText: 'Home',
+          path: '/home',
+          icon: MdiIcons.homeVariant,
+          // showHeaderInSidebarMode: false,
+        ),
+        ThemedNavigatorPage(
+          labelText: 'Theme generation',
+          path: '/theme',
+          icon: MdiIcons.themeLightDark,
+          showHeaderInSidebarMode: false,
+        ),
+        ThemedNavigatorPage(
+          labelText: 'Inputs',
+          path: '/inputs',
+          icon: MdiIcons.text,
+          children: [
+            ThemedNavigatorPage(
+              labelText: 'Text fields',
+              path: '/inputs/text',
+              icon: MdiIcons.text,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Buttons',
+              path: '/inputs/buttons',
+              icon: MdiIcons.buttonCursor,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Checkboxes',
+              path: '/inputs/checkboxes',
+              icon: MdiIcons.checkboxBlank,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Radio buttons',
+              path: '/inputs/radiobuttons',
+              icon: MdiIcons.radioboxMarked,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Selectors',
+              path: '/inputs/selectors',
+              icon: MdiIcons.listBox,
+              children: [
+                ThemedNavigatorPage(
+                  labelText: 'General selectors',
+                  path: '/inputs/selectors/general',
+                  icon: MdiIcons.calendarClock,
+                ),
+                ThemedNavigatorPage(
+                  labelText: 'Date & Time selectors',
+                  path: '/inputs/selectors/datetime',
+                  icon: MdiIcons.calendarClock,
+                ),
+              ],
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Calendar',
+              path: '/inputs/calendar',
+              icon: MdiIcons.calendar,
+            ),
+          ],
+        ),
+        ThemedNavigatorPage(
+          labelText: 'Layo',
+          path: '/layo',
+          icon: MdiIcons.robotOutline,
+        ),
+        ThemedNavigatorPage(
+          labelText: 'Avatars',
+          path: '/avatars',
+          icon: MdiIcons.accountCircleOutline,
+          useDefaultRedirect: false,
+          children: [
+            ThemedNavigatorPage(
+              labelText: 'Static avatars',
+              path: '/avatars/static',
+              icon: MdiIcons.accountCircle,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Dynamic avatars',
+              path: '/avatars/dynamic',
+              icon: MdiIcons.accountCircleOutline,
+            ),
+          ],
+        ),
+      ],
+      persistentItems: [
+        ThemedNavigatorAction(
+          labelText: 'onTap action',
+          icon: MdiIcons.calendar,
+          onTap: () {
+            debugPrint('onTap action');
+          },
+        ),
+        ThemedNavigatorAction(
+          labelText: "GitHub repository",
+          icon: MdiIcons.github,
+          onTap: () => launchUrlString(
+            'https://github.com/goldenm-software/layrz_theme',
+            mode: LaunchMode.externalApplication,
+          ),
+        ),
+        ThemedNavigatorAction(
+          labelText: "Our discord",
+          icon: MdiIcons.messageBadgeOutline,
+          onTap: () => launchUrlString(
+            'https://discord.gg/tv56VVDYqf',
+            mode: LaunchMode.externalApplication,
+          ),
+        ),
+      ],
       additionalActions: [
         ThemedNavigatorPage(
           labelText: 'Layo',

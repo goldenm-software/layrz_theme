@@ -425,10 +425,12 @@ class _ButtonsViewState extends State<ButtonsView> {
         ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
           icon: MdiIcons.accessPoint,
           width: 700,
+          maxLines: 4,
           color: Colors.red,
           title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut nulla sit amet "
-              "tellus dictum molestie in sit amet ligula. Nullam pulvinar risus eu sapien dictum blandit.",
+                  "tellus dictum molestie in sit amet ligula. Nullam pulvinar risus eu sapien dictum blandit." *
+              2,
         ));
       },
     );

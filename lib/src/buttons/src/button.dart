@@ -244,7 +244,7 @@ class ThemedButton extends StatefulWidget {
   State<ThemedButton> createState() => _ThemedButtonState();
 
   /// [height] is used to know the height of the button.
-  static double get height => 30;
+  static double get height => 35;
 
   /// [disabledColor] is used to know the color of the disabled button.
   static Color getDisabledColor(bool isDark, ThemedButtonStyle style) {
@@ -361,6 +361,10 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [iconSize] is used to know the size of the icon.
   /// It's always `16`.
   double get iconSize => 16;
+
+  /// [borderRadius] is used to know the border radius of the button.
+  /// It's always `10`.
+  double get borderRadius => 10;
 
   /// [message] is used to know the message of the button.
   /// This message is only used when the button uses [label] instead of [labelText] and
@@ -495,7 +499,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: colorOverride ?? contentColor.withOpacity(kHoverOpacity),
-        borderRadius: BorderRadius.circular(height),
+        borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(
         color: Colors.transparent,
@@ -542,7 +546,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: colorOverride ?? contentColor.withOpacity(kHoverOpacity),
-          borderRadius: BorderRadius.circular(height),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -577,7 +581,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: colorOverride ?? Colors.transparent,
-        borderRadius: BorderRadius.circular(height),
+        borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(
         color: Colors.transparent,
@@ -624,7 +628,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: colorOverride ?? Colors.transparent,
-          borderRadius: BorderRadius.circular(height),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -659,7 +663,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: colorOverride ?? Colors.transparent,
-        borderRadius: BorderRadius.circular(height),
+        borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
           color: contentColor,
           width: 1,
@@ -715,7 +719,7 @@ class _ThemedButtonState extends State<ThemedButton> {
             width: 1,
           ),
           color: colorOverride ?? Colors.transparent,
-          borderRadius: BorderRadius.circular(height),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -750,7 +754,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: colorOverride ?? contentColor,
-        borderRadius: BorderRadius.circular(height),
+        borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(
         color: Colors.transparent,
@@ -799,7 +803,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: colorOverride ?? contentColor,
-          borderRadius: BorderRadius.circular(height),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -832,10 +836,17 @@ class _ThemedButtonState extends State<ThemedButton> {
   Widget _buildElevated() {
     return Container(
       clipBehavior: Clip.antiAlias,
-      decoration: generateContainerElevation(
-        context: context,
+      decoration: BoxDecoration(
         color: colorOverride ?? contentColor,
-        radius: height,
+        borderRadius: BorderRadius.circular(borderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            offset: const Offset(0, 1),
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -882,10 +893,17 @@ class _ThemedButtonState extends State<ThemedButton> {
     return _handleTooltip(
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: generateContainerElevation(
-          context: context,
+        decoration: BoxDecoration(
           color: colorOverride ?? contentColor,
-          radius: height,
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: const Offset(0, 1),
+              blurRadius: 4,
+              spreadRadius: 2,
+            ),
+          ],
         ),
         child: Material(
           color: Colors.transparent,

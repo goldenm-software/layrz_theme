@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.11
+
+- Changed button style to use a new rounded style, now the styling is rouned square instead of rounded circle.
+- Fixed issues with the `ThemedSnackbar` and `ThemedDynamicAvatarInput`, now should work correctly.
+- Adapted design of `ThemedCalentar` to follow the Layrz design standard.
+
 ## 5.0.10
 
 - Upgraded `flutter_map` to 6.2.1 and their dependencies.
