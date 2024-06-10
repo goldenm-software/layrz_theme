@@ -177,42 +177,42 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
         ...fixedButtons,
       ];
 
-  bool get _canStreetView =>
-      widget.enableGoogleStreetView &&
-      _selected?.source == MapSource.google &&
-      widget.controller != null &&
-      widget.mapController != null &&
-      widget.mapKey != null;
+  // bool get _canStreetView =>
+  //     widget.enableGoogleStreetView &&
+  //     _selected?.source == MapSource.google &&
+  //     widget.controller != null &&
+  //     widget.mapController != null &&
+  //     widget.mapKey != null;
 
   List<ThemedMapButton> get fixedButtons => [
-        if (_canStreetView) ...[
-          ThemedMapDragButton(
-            labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
-            icon: MdiIcons.googleStreetView,
-            color: buttonColor,
-            onDragStart: (offset) {
-              widget.controller?.notify(StartGoogleStreetView());
-            },
-            onDragFinish: (offset) async {
-              widget.controller?.notify(StopGoogleStreetView());
+        // if (_canStreetView) ...[
+        //   ThemedMapDragButton(
+        //     labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
+        //     icon: MdiIcons.googleStreetView,
+        //     color: buttonColor,
+        //     onDragStart: (offset) {
+        //       widget.controller?.notify(StartGoogleStreetView());
+        //     },
+        //     onDragFinish: (offset) async {
+        //       widget.controller?.notify(StopGoogleStreetView());
 
-              if (offset == null) return;
-              if (widget.mapKey == null) return;
-              if (widget.mapController == null) return;
+        //       if (offset == null) return;
+        //       if (widget.mapKey == null) return;
+        //       if (widget.mapController == null) return;
 
-              RenderBox box = widget.mapKey!.currentContext!.findRenderObject() as RenderBox;
-              final projectedOffset = box.globalToLocal(offset);
-              math.Point p = math.Point(projectedOffset.dx, projectedOffset.dy);
-              LatLng coordinates = widget.mapController!.camera.pointToLatLng(p);
-              final result = await _searchStreetView(coordinates);
-              if (result == null) return;
-              _openStreetView(result.$1, result.$2, result.$3);
-            },
-            onDragCancel: () {
-              widget.controller?.notify(StopGoogleStreetView());
-            },
-          ),
-        ],
+        //       RenderBox box = widget.mapKey!.currentContext!.findRenderObject() as RenderBox;
+        //       final projectedOffset = box.globalToLocal(offset);
+        //       math.Point p = math.Point(projectedOffset.dx, projectedOffset.dy);
+        //       LatLng coordinates = widget.mapController!.camera.pointToLatLng(p);
+        //       final result = await _searchStreetView(coordinates);
+        //       if (result == null) return;
+        //       _openStreetView(result.$1, result.$2, result.$3);
+        //     },
+        //     onDragCancel: () {
+        //       widget.controller?.notify(StopGoogleStreetView());
+        //     },
+        //   ),
+        // ],
         if (widget.onZoomIn != null) ...[
           ThemedMapButton(
             labelText: i18n?.t('layrz.map.zoom.in') ?? widget.zoomInLabelText,
@@ -353,6 +353,35 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     debugPrint("Event received in toolbar: $event");
   }
 
+  @override
+  Widget build(BuildContext context) {
+    EdgeInsetsGeometry margin = const EdgeInsets.all(10);
+
+    if (widget.position == Alignment.bottomLeft) {
+      margin = margin.add(EdgeInsets.only(bottom: ThemedTileLayer.reservedAttributionHeight));
+    }
+    return Align(
+      alignment: widget.position,
+      child: Container(
+        margin: margin,
+        decoration: generateContainerElevation(
+          context: context,
+          radius: 8,
+        ),
+        clipBehavior: Clip.antiAlias,
+        width: widget.flow == ThemedMapToolbarFlow.horizontal ? calculatedSize : buttonSize,
+        height: widget.flow == ThemedMapToolbarFlow.horizontal ? buttonSize : calculatedSize,
+        child: widget.flow == ThemedMapToolbarFlow.horizontal
+            ? Row(
+                children: items,
+              )
+            : Column(
+                children: items,
+              ),
+      ),
+    );
+  }
+
   /// [_openStreetView] opens a street view with the given [panoId], [xTiles], [yTiles] and [tileSize].
   /// Each parameter comes from the metadata query,
   /// [xTiles] is calculated using `imageWidth` and `tileWidth` from the metadata query.
@@ -388,35 +417,6 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
           yTiles: yTiles,
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    EdgeInsetsGeometry margin = const EdgeInsets.all(10);
-
-    if (widget.position == Alignment.bottomLeft) {
-      margin = margin.add(EdgeInsets.only(bottom: ThemedTileLayer.reservedAttributionHeight));
-    }
-    return Align(
-      alignment: widget.position,
-      child: Container(
-        margin: margin,
-        decoration: generateContainerElevation(
-          context: context,
-          radius: 8,
-        ),
-        clipBehavior: Clip.antiAlias,
-        width: widget.flow == ThemedMapToolbarFlow.horizontal ? calculatedSize : buttonSize,
-        height: widget.flow == ThemedMapToolbarFlow.horizontal ? buttonSize : calculatedSize,
-        child: widget.flow == ThemedMapToolbarFlow.horizontal
-            ? Row(
-                children: items,
-              )
-            : Column(
-                children: items,
-              ),
-      ),
     );
   }
 

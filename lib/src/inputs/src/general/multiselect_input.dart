@@ -28,9 +28,6 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
   /// [autoselectFirst] is a flag that indicates if the first item of the list should be selected by default.
   final bool autoselectFirst;
 
-  /// [searchLabel] is the label of the search input.
-  final String searchLabel;
-
   /// [filter] is the function that will be used to filter the items.
   final bool Function(String, ThemedSelectItem<T>)? filter;
 
@@ -50,38 +47,14 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
   /// Important, when this property is true, automatically the search field is disabled.
   final bool hideTitle;
 
-  /// [saveText] is the text of the save button.
-  final String saveText;
-
   /// [autoclose] is a flag that indicates if the dropdown should be closed when the user selects an item.
   final bool autoclose;
-
-  /// [emptyText] is the text that will be displayed when no items are selected.
-  final String emptyText;
 
   /// [isRequired] is a flag that indicates if the input is required.
   final bool isRequired;
 
-  /// [emptyListText] is the text that will be displayed when the list of items is empty.
-  final String emptyListText;
-
   /// [padding] is the padding of the input.
   final EdgeInsets? padding;
-
-  /// [heightFactor] is the factor that will be used to calculate the height of the dropdown.
-  final double heightFactor;
-
-  /// [maxHeight] is the maximum height of the dropdown.
-  final double maxHeight;
-
-  /// [selectAllLabelText] is the text of the select all button.
-  final String selectAllLabelText;
-
-  /// [unselectAllLabelText] is the text of the unselect all button.
-  final String unselectAllLabelText;
-
-  /// [searchKeyboardType] is the keyboard type of the search input.
-  final TextInputType searchKeyboardType;
 
   /// [translations] is the translations of the input. By default we use [LayrzAppLocalizations] for translations,
   /// but you can submit your own translations using this property. Consider when [LayrzAppLocalizations] is present,
@@ -140,25 +113,16 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
     this.onPrefixTap,
     this.onChanged,
     this.value,
-    this.autoselectFirst = true,
-    @Deprecated('Field unused') this.searchLabel = "Search",
+    this.autoselectFirst = false,
     this.filter,
     this.enableSearch = true,
     this.disabled = false,
     this.errors = const [],
     this.hideDetails = false,
     this.hideTitle = false,
-    @Deprecated('Field unused') this.saveText = "OK",
     this.autoclose = false,
-    @Deprecated('Field unused') this.emptyText = "No items selected",
     this.isRequired = false,
-    @Deprecated('Field unused') this.emptyListText = "Without items available to select",
     this.padding,
-    @Deprecated('Field unused') this.heightFactor = 0.7,
-    @Deprecated('Field unused') this.maxHeight = 400,
-    @Deprecated('Field unused') this.selectAllLabelText = "Select all",
-    @Deprecated('Field unused') this.unselectAllLabelText = "Unselect all",
-    @Deprecated('Field unused') this.searchKeyboardType = TextInputType.text,
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
@@ -263,7 +227,6 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
       value: selected.isEmpty ? t('layrz.select.empty') : selected.map((e) => e.label).join(', '),
       focusNode: _focusNode,
       readonly: true,
-      placeholder: widget.searchLabel,
     );
   }
 
@@ -329,7 +292,6 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                             searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
                                         hideDetails: true,
                                         dense: true,
-                                        keyboardType: widget.searchKeyboardType,
                                       ),
                                     ),
                                   ],

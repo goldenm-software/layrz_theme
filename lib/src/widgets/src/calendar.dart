@@ -627,17 +627,8 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                 width: widget.showEntries ? 30 : height * 0.5,
                                 height: widget.showEntries ? 30 : height * 0.5,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(10),
                                   color: containerColor,
-                                  boxShadow: [
-                                    if (hightlight || isFocusDay) ...[
-                                      BoxShadow(
-                                        color: primaryColor.withOpacity(0.2),
-                                        blurRadius: 5,
-                                        spreadRadius: 3,
-                                      )
-                                    ],
-                                  ],
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: Material(

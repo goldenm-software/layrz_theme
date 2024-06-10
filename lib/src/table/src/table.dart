@@ -4,7 +4,7 @@ bool kThemedTableCanTrue(BuildContext context, item) => true;
 
 class ThemedTable<T> extends StatefulWidget {
   /// Represents the columns or headers of the table. This columns only will be displayed in desktop size.
-  /// For mobile mode, refer to the [rowTitleBuilder], [rowSubtitleBuilder] and [rowAvatarBuilder] properties.
+  ///
   /// You can display many columns as you want, but I don't recommend it.
   /// Our performance tests show that the table can display 30 columns without any problem.
   final List<ThemedColumn<T>> columns;
@@ -53,20 +53,6 @@ class ThemedTable<T> extends StatefulWidget {
   /// using the [module] property.
   final Widget? title;
 
-  /// Represents the builders of row avatar when the table is in mobile size.
-  /// This will appear at the left of the row, before the title and subtitle.
-  final ThemedTableAvatar Function(BuildContext, List<ThemedColumn<T>>, T)? rowAvatarBuilder;
-
-  /// Represents the builders of row title when the table is in mobile size.
-  /// This will appear at the center of the row, after the avatar and above the subtitle.
-  /// This widget returned will be inside in a [Expanded][Column] widget.
-  final Widget Function(BuildContext, List<ThemedColumn<T>>, T)? rowTitleBuilder;
-
-  /// Represents the builders of row subtitle when the table is in mobile size.
-  /// This will appear at the center of the row, after the title and below the avatar.
-  /// This widget returned will be inside in a [Expanded][Column] widget.
-  final Widget Function(BuildContext, List<ThemedColumn<T>>, T)? rowSubtitleBuilder;
-
   /// Represents the builder of the id of the item.
   /// This will be used to sort the items by id, and will appear as the first column of the table.
   final String Function(BuildContext, T) idBuilder;
@@ -96,14 +82,6 @@ class ThemedTable<T> extends StatefulWidget {
   /// This will be called when the user clicks on the refresh button
   final VoidCallback? onRefresh;
 
-  /// Represents the custom translations of the table.
-  /// If you cannot use Layrz Translation Engine, you can add your custom translations here.
-  /// If the Layrz Translation Engine is null, the table will use this property to generate the translations,
-  /// but you may see this error: `Missing translation for key: translation.key : {itemCount} : {arguments}`
-  /// `{itemCount}` is the number of items in the table. Only will appear when the translation has pluralization.
-  /// `{arguments}` is the representation of a `Map<String, dynamic>` arguments object.
-  final Map<String, dynamic> customTranslations;
-
   /// Represents the callback when the user selects multiple items.
   /// This callback will be called when the user selects or deselects an item.
   final void Function(BuildContext, List<T>)? onSelectedItemsChanged;
@@ -123,10 +101,6 @@ class ThemedTable<T> extends StatefulWidget {
   /// By default, this function returns true.
   final bool Function(BuildContext, T) canDelete;
 
-  /// [mobileRowHeight] represents the height of the row when the table is in mobile size.
-  /// By default, this value is 72.0
-  final double mobileRowHeight;
-
   /// [idLabel] represents the label of the id column.
   /// By default, this value is `ID`
   final String idLabel;
@@ -139,38 +113,8 @@ class ThemedTable<T> extends StatefulWidget {
   /// By default, this value is 40.0
   final double rowHeight;
 
-  /// [initialPage] represents the initial page of the table.
-  /// By default, this value is 0
-  final int initialPage;
-
-  /// [onPageChanged] represents the callback when the user changes the page.
-  /// By default, this value is null
-  final void Function(int)? onPageChanged;
-
-  /// [enablePaginator] represents the indicator of the paginator.
-  /// Will only apply in desktop mode.
-  /// By default, this value is true
-  /// We strongly recommend to use the paginator to prevent issues displaying a lot of items with many columns.
-  final bool enablePaginator;
-
-  /// [itemsPerPage] represents the number of items per page.
-  /// By default, this value is calculated using the [rowHeight] and the available height of the table
-  final int? itemsPerPage;
-
-  /// [paginatorLeading] represents the widget to display before the paginator.
-  /// By default, this value is null
-  final Widget? paginatorLeading;
-
-  /// [paginatorTrailing] represents the widget to display after the paginator.
-  /// By default, this value is null
-  final Widget? paginatorTrailing;
-
   /// [onIdTap] represents the callback when the user taps on a cell.
   final CellTap? onIdTap;
-
-  /// [shouldExpand] represents the callback to check if the table in desktop mode should use `Expanded` widget.
-  /// By default, this value is true
-  final bool shouldExpand;
 
   /// [idEnabled] refers to the id column. If this property is false, the id column will be hidden.
   /// By default, this value is true
@@ -277,9 +221,6 @@ class ThemedTable<T> extends StatefulWidget {
     this.title,
     this.onAdd,
     this.additionalButtons = const [],
-    @Deprecated('This property was removed, submitting it does not work') this.rowAvatarBuilder,
-    @Deprecated('This property was removed, submitting it does not work') this.rowTitleBuilder,
-    @Deprecated('This property was removed, submitting it does not work') this.rowSubtitleBuilder,
     required this.idBuilder,
     this.multiSelectionEnabled = true,
     this.multiSelectionActions = const [],
@@ -289,54 +230,14 @@ class ThemedTable<T> extends StatefulWidget {
     this.isCooldown = false,
     this.onCooldown,
     this.onRefresh,
-    @Deprecated(
-      'You can remove it safely. '
-      'To support this feature, you must use the following new properties: '
-      ' - `paginatorStartText` to customize the text of the first page button '
-      ' - `paginatorPreviousText` to customize the text of the previous page button '
-      ' - `paginatorShowingText` to customize the text of the showing items label '
-      ' - `paginatorNextText` to customize the text of the next page button '
-      ' - `paginatorEndText` to customize the text of the last page button '
-      ' - `paginatorAutoText` to customize the text of the fit screen button '
-      ' - `paginatorRowsPerPageText` to customize the text of the rows per page label '
-      ' - `showButtonLabelText` to customize the text of the show button '
-      ' - `editButtonLabelText` to customize the text of the edit button '
-      ' - `deleteButtonLabelText` to customize the text of the delete button '
-      ' - `actionsLabelText` to customize the text of the actions label '
-      ' - `searchLabelText` to customize the text of the search label ',
-    )
-    this.customTranslations = const {
-      'layrz.table.paginator.start': 'First page',
-      'layrz.table.paginator.previous': 'Previous page',
-      'layrz.table.paginator.showing': 'Showing {count} of {total}',
-      'layrz.table.paginator.next': 'Next page',
-      'layrz.table.paginator.end': 'Last page',
-      'layrz.table.paginator.auto': 'Fit screen',
-      'layrz.table.paginator.rowsPerPage': 'Rows per page',
-      'helpers.buttons.show': 'Show item',
-      'helpers.buttons.edit': 'Edit item',
-      'helpers.buttons.delete': 'Delete item',
-      'helpers.actions': 'Actions',
-      'helpers.search': 'Search',
-    },
     this.onSelectedItemsChanged,
     this.enableMultiSelectDialog = true,
     this.canEdit = kThemedTableCanTrue,
     this.canDelete = kThemedTableCanTrue,
-    @Deprecated('This property was removed, submitting it does not work') this.mobileRowHeight = 72.0,
     this.idLabel = 'ID',
     this.customTitleText,
     this.rowHeight = 40.0,
-    @Deprecated('This property was removed, submitting it does not work') this.initialPage = 0,
-    @Deprecated('This property was removed, submitting it does not work') this.onPageChanged,
-    @Deprecated('This property was removed, submitting it does not work') this.enablePaginator = true,
-    @Deprecated('Use `rowsPerPage` instead '
-        'This property was removed, submitting it does not work.')
-    this.itemsPerPage,
-    @Deprecated('This property was removed, submitting it does not work') this.paginatorLeading,
-    @Deprecated('This property was removed, submitting it does not work') this.paginatorTrailing,
     this.onIdTap,
-    @Deprecated('This property was removed, submitting it does not work') this.shouldExpand = true,
     this.idEnabled = true,
     this.rowsPerPage,
     this.availableRowsPerPage = const [10, 25, 50, 100],
@@ -611,7 +512,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     double usedSize = sizes.values.reduce((value, element) => value + element);
-    double emptySize = constraints.maxWidth - usedSize;
+    double emptySize = constraints.maxWidth - usedSize - 10;
 
     if (emptySize > 0) {
       // Distruibute the empty space between the columns
@@ -908,36 +809,30 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                   actions: [
                                                     ...widget.additionalActions?.call(context, item) ?? [],
                                                     if (widget.onShow != null)
-                                                      ThemedActionButton(
-                                                        onlyIcon: true,
+                                                      ThemedActionButton.show(
+                                                        isMobile: true,
                                                         tooltipPosition: ThemedTooltipPosition.left,
                                                         labelText: t('helpers.buttons.show'),
-                                                        icon: MdiIcons.magnifyScan,
-                                                        color: Colors.blue,
                                                         isLoading: widget.isLoading,
                                                         isCooldown: widget.isCooldown,
                                                         onCooldownFinish: widget.onCooldown,
                                                         onTap: () => widget.onShow?.call(context, item),
                                                       ),
                                                     if (widget.onEdit != null && widget.canEdit.call(context, item))
-                                                      ThemedActionButton(
-                                                        onlyIcon: true,
+                                                      ThemedActionButton.edit(
+                                                        isMobile: true,
                                                         tooltipPosition: ThemedTooltipPosition.left,
                                                         labelText: t('helpers.buttons.edit'),
-                                                        icon: MdiIcons.squareEditOutline,
-                                                        color: Colors.orange,
                                                         isLoading: widget.isLoading,
                                                         isCooldown: widget.isCooldown,
                                                         onCooldownFinish: widget.onCooldown,
                                                         onTap: () => widget.onEdit?.call(context, item),
                                                       ),
                                                     if (widget.onDelete != null && widget.canDelete.call(context, item))
-                                                      ThemedActionButton(
-                                                        onlyIcon: true,
+                                                      ThemedActionButton.delete(
+                                                        isMobile: true,
                                                         tooltipPosition: ThemedTooltipPosition.left,
                                                         labelText: t('helpers.buttons.delete'),
-                                                        icon: MdiIcons.trashCan,
-                                                        color: Colors.red,
                                                         isLoading: widget.isLoading,
                                                         isCooldown: widget.isCooldown,
                                                         onCooldownFinish: widget.onCooldown,
@@ -1461,10 +1356,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       result = _getEquivalence(key);
     }
 
-    if (result == null && widget.customTranslations.containsKey(key)) {
-      result = widget.customTranslations[key]!;
-    }
-
     result ??= 'Missing translation for key $key : $args';
 
     args.forEach((key, value) => result = result!.replaceAll('{$key}', value.toString()));
@@ -1490,10 +1381,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     String? result;
     if (_getEquivalence(key) != key) {
       result = _getEquivalence(key);
-    }
-
-    if (result == null && widget.customTranslations.containsKey(key)) {
-      result = widget.customTranslations[key]!;
     }
 
     result ??= 'Missing translation for key $key : $args';

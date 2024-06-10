@@ -25,9 +25,6 @@ class ThemedSelectInput<T> extends StatefulWidget {
   /// [value] is the value of the input.
   final T? value;
 
-  /// [searchLabel] is the label of the search input.
-  final String searchLabel;
-
   /// [filter] is the callback to filter the items.
   final bool Function(String, ThemedSelectItem<T>)? filter;
 
@@ -47,9 +44,6 @@ class ThemedSelectInput<T> extends StatefulWidget {
   /// Important, when this property is true, automatically the search field is disabled.
   final bool hideTitle;
 
-  /// [saveText] is the text of the save button.
-  final String saveText;
-
   /// [autoclose] is the flag to close the input when an item is selected.
   final bool autoclose;
 
@@ -60,22 +54,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
   final bool dense;
 
   /// [emptyListText] is the text to be displayed when the list is empty.
-  final String emptyListText;
-
-  /// [emptyListText] is the text to be displayed when the list is empty.
-  final String emptyText;
-
-  /// [emptyListText] is the text to be displayed when the list is empty.
   final EdgeInsets? padding;
-
-  /// [emptyListText] is the text to be displayed when the list is empty.
-  final EdgeInsets overlayPadding;
-
-  /// [heightFactor] is the factor of the height of the input.
-  final double heightFactor;
-
-  /// [maxHeight] is the maximum height of the input.
-  final double maxHeight;
 
   /// [searchKeyboardType] is the keyboard type of the search input.
   final TextInputType searchKeyboardType;
@@ -145,23 +124,16 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.prefixText,
     this.onPrefixTap,
     this.value,
-    @Deprecated("Field unused") this.searchLabel = "Search",
     this.filter,
     this.enableSearch = true,
     this.disabled = false,
     this.errors = const [],
     this.hideDetails = false,
     this.hideTitle = false,
-    @Deprecated("Field unused") this.saveText = "OK",
     this.autoclose = true,
     this.isRequired = false,
     this.dense = false,
     this.padding,
-    @Deprecated("Field unused") this.overlayPadding = const EdgeInsets.all(20),
-    @Deprecated("Field unused") this.emptyText = "No item selected",
-    @Deprecated("Field unused") this.emptyListText = "Without items available to select",
-    @Deprecated("Field unused") this.heightFactor = 0.7,
-    @Deprecated("Field unused") this.maxHeight = 300,
     this.searchKeyboardType = TextInputType.text,
     this.translations = const {
       'actions.cancel': 'Cancel',
@@ -261,7 +233,6 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
       value: selected?.label ?? t('layrz.select.empty'),
       focusNode: _focusNode,
       readonly: true,
-      placeholder: widget.searchLabel,
     );
   }
 

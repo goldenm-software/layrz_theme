@@ -83,11 +83,11 @@ class _ThemedStreetViewDialogState extends State<ThemedStreetViewDialog> {
             pinchMoveWinGestures: MultiFingerGesture.none,
           ),
           onPositionChanged: (position, hasGesture) {
-            if (position.bounds == null) return;
-            if (position.center == null) return;
+            final bounds = position.bounds;
+            if (bounds == null) return;
 
-            final bounds = position.bounds!;
-            final center = position.center!;
+            final center = position.center;
+            if (center == null) return;
 
             if (bounds.northEast.longitude > widget.xTiles.toDouble() - 1) {
               mapController.move(

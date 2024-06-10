@@ -13,23 +13,14 @@ class _LayoutState extends State<Layout> {
   AppStore get store => VxState.store as AppStore;
   ThemedLayoutStyle get layoutStyle => store.layoutStyle;
 
-  // AppThemedAsset get logo => const AppThemedAsset(
-  //       normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/normal.svg',
-  //       white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/logo/white.svg',
-  //     );
-  // AppThemedAsset get favicon => const AppThemedAsset(
-  //       normal: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/normal.png',
-  //       white: 'https://cdn.layrz.com/resources/com.mappit.analyticsadmin/favicon/white.png',
-  //     );
-
   AppThemedAsset get logo => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/layrz/logo/normal.png',
-        white: 'https://cdn.layrz.com/resources/layrz/logo/white.png',
+        normal: 'https://cdn.layrz.com/resources/com.layrz.one/logo/normal.svg',
+        white: 'https://cdn.layrz.com/resources/com.layrz.one/logo/white.svg',
       );
 
   AppThemedAsset get favicon => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/layrz/favicon/normal.png',
-        white: 'https://cdn.layrz.com/resources/layrz/favicon/white.png',
+        normal: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/normal.svg',
+        white: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/white.svg',
       );
 
   @override
@@ -50,15 +41,37 @@ class _LayoutState extends State<Layout> {
 
     return ThemedLayout(
       style: ThemedLayoutStyle.mini,
-      // style: ThemedLayoutStyle.dual,
-      // style: ThemedLayoutStyle.sidebar,
+      mobileStyle: ThemedMobileLayoutStyle.bottomBar,
       isBackEnabled: false,
       // style: layoutStyle,
       logo: logo,
       currentPath: path,
       favicon: favicon,
       appTitle: "Layrz Theme",
-      enableNotifications: false,
+      enableNotifications: true,
+      notifications: [
+        ThemedNotificationItem(
+          title: 'Notification title',
+          content: 'Notification message',
+          onTap: () {
+            debugPrint('Notification tapped');
+          },
+        ),
+        ThemedNotificationItem(
+          title: 'Notification title',
+          content: 'Notification message',
+          onTap: () {
+            debugPrint('Notification tapped');
+          },
+        ),
+        ThemedNotificationItem(
+          title: 'Notification title',
+          content: 'Notification message',
+          onTap: () {
+            debugPrint('Notification tapped');
+          },
+        ),
+      ],
       items: [
         ThemedNavigatorPage(
           labelText: 'Home',
@@ -72,39 +85,6 @@ class _LayoutState extends State<Layout> {
           icon: MdiIcons.themeLightDark,
           showHeaderInSidebarMode: false,
         ),
-        // ThemedNavigatorPage(
-        //   labelText: 'Layout',
-        //   path: '/layout',
-        //   icon: MdiIcons.viewGrid,
-        //   useDefaultRedirect: false,
-        //   children: [
-        //     ThemedNavigatorPage(
-        //       labelText: 'App bar / Header',
-        //       path: '/layout/appbar',
-        //       icon: MdiIcons.viewDashboard,
-        //     ),
-        //     ThemedNavigatorPage(
-        //       labelText: 'Task bar',
-        //       path: '/layout/bottomnavigationbar',
-        //       icon: MdiIcons.viewDashboard,
-        //     ),
-        //     ThemedNavigatorPage(
-        //       labelText: 'Drawer',
-        //       path: '/layout/drawer',
-        //       icon: MdiIcons.viewDashboard,
-        //     ),
-        //     ThemedNavigatorPage(
-        //       labelText: 'Sidebar',
-        //       path: '/layout/sidebar',
-        //       icon: MdiIcons.viewDashboard,
-        //     ),
-        //     ThemedNavigatorPage(
-        //       labelText: 'Layout',
-        //       path: '/layout/layout',
-        //       icon: MdiIcons.viewDashboard,
-        //     ),
-        //   ],
-        // ),
         ThemedNavigatorPage(
           labelText: 'Inputs',
           path: '/inputs',
@@ -154,42 +134,6 @@ class _LayoutState extends State<Layout> {
             ),
           ],
         ),
-        // ThemedNavigatorPage(
-        //   labelText: 'Scaffold',
-        //   path: '/scaffold',
-        //   icon: MdiIcons.table,
-        //   useDefaultRedirect: false,
-        //   children: [
-        //     ThemedNavigatorPage(
-        //       labelText: 'Table',
-        //       path: '/scaffold/table',
-        //       icon: MdiIcons.table,
-        //     ),
-        //     ThemedNavigatorPage(
-        //       labelText: 'Details preset',
-        //       path: '/scaffold/details',
-        //       icon: MdiIcons.table,
-        //     ),
-        //   ],
-        // ),
-        // ThemedNavigatorPage(
-        //   labelText: 'Utilities',
-        //   path: '/utilities',
-        //   icon: MdiIcons.codeBraces,
-        //   useDefaultRedirect: false,
-        //   children: [
-        //     // ThemedNavigatorPage(
-        //     //   labelText: 'Functions',
-        //     //   path: '/utilities/functions',
-        //     //   icon: MdiIcons.codeBraces,
-        //     // ),
-        //     ThemedNavigatorPage(
-        //       labelText: 'Widgets',
-        //       path: '/utilities/widgets',
-        //       icon: MdiIcons.codeBraces,
-        //     ),
-        //   ],
-        // ),
         ThemedNavigatorPage(
           labelText: 'Layo',
           path: '/layo',

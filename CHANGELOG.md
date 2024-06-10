@@ -1,5 +1,64 @@
 # Changelog
 
+## 5.0.11
+
+- Changed button style to use a new rounded style, now the styling is rouned square instead of rounded circle.
+- Fixed issues with the `ThemedSnackbar` and `ThemedDynamicAvatarInput`, now should work correctly.
+- Adapted design of `ThemedCalentar` to follow the Layrz design standard.
+
+## 5.0.10
+
+- Upgraded `flutter_map` to 6.2.1 and their dependencies.
+
+## 5.0.9 (RETRACTED)
+
+- Retracted due to issues with the `flutter_map` package and polygon layers.
+- Upgraded `flutter_map` to 7.0.0 and their dependencies.
+- Disabled (Temporarily) the `ThemedStreetViewDialog` due to the changes in the `flutter_map` package.
+
+## 5.0.8
+
+- Added `separatorPadding`to `ThemedTabView` to handle the padding between the `TabBar` and the `TabBarView`.
+
+## 5.0.7
+
+- New widget `ThemedTabView` to handle a combination of `TabBar` and `TabBarView` in a single widget.
+- New prop `child` on `ThemedTab` to handle a custom child widget. Only used in the new `ThemedTabView`.
+
+## 5.0.6
+
+- Bug fix related to `ThemedMiniBar`, now will not show the `additionalActions` in the bar.
+
+## 5.0.5
+
+- Fixed an issue with `ThemedBottomBar` when does not have `items` and `persistentItems`.
+
+## 5.0.4
+
+- Fixes on `ThemedActionButton` to prevent unnecesary `Padding`
+- Now, `ThemedActionsButtons` receives a new argument `actionsPadding` to handle the padding of the actions. By default is `EdgeInsets.zero`
+
+## 5.0.3
+
+- Removed `titleTextFontFamily`, `textFontFamily` and `isLocalFont` from `generateLightTheme()` and `generateDarkTheme()` in favor of `titleFont` and `bodyFont`.
+- Removed deprecated class `ThemedFileInput` in favor of `ThemedFilePicker`.
+- Removed all `@Deprecated` warnings in the package.
+- Constant `kListViewPadding` modified to return `EdgeInsets.zero` in native platforms.
+- New mobile layout mode `ThemedMobileLayoutStyle.bottomBar` (New default). The previous mobile layout design uses `ThemedMobileLayoutStyle.appBar`. You can change the mobile layout using the `mobileLayoutStyle` prop in the `ThemedLayout` widget.
+- Added `isDisabled` to `ThemedActionButton` to handle disable property.
+- New pre-designed buttons `ThemedActionButton.save`, `ThemedActionButton.cancel`, `ThemedActionButton.info`, `ThemedActionButton.show`, `ThemedActionButton.edit`, `ThemedActionButton.delete`
+- Changed design of `onlyIcon: true` in `ThemedActionButton`, now use `ThemedButtonStyle.filledTonalFab` instead of `ThemedButtonStyle.fab`
+- Fully removal of `ThemedDialog` and sub-dependencies.
+- Removed `_getChildrenUrls()` from `ThemedLayout`, now each sub-layout style will handle the children URLs.
+
+## 5.0.2
+
+- Changed `_getChildrenUrls()` invoke in `ThemedLayout`, now use `WidgetsBinding.instance.addPostFrameCallback` to prevent issues with the `initState`.
+
+## 5.0.1
+
+- Moved the `ThemedDateTimeRangePicker` internal dialog to an external dialog to use in other widgets.
+
 ## 5.0.0
 
 - Added support for Flutter 3.22.0 (Tested)

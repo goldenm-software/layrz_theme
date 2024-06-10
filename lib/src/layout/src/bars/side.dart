@@ -264,7 +264,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                       dense: true,
                       notifications: widget.notifications,
                       backgroundColor: backgroundColor,
-                      inAppBar: true,
+                      location: ThemedNotificationLocation.sideBar,
                       expandToLeft: true,
                     ),
                   ],

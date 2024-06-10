@@ -17,6 +17,7 @@ part 'src/bars/dual.dart';
 part 'src/bars/side.dart';
 part 'src/models.dart';
 part 'src/bars/mini.dart';
+part 'src/bars/bottom.dart';
 
 // Parts
 part 'src/parts/notification.dart';
@@ -28,6 +29,7 @@ typedef ThemdNavigatorPopFunction = VoidCallback;
 const double kLogoWidth = 2800;
 const double kLogoHeight = 500;
 const kLogoAspectRatio = kLogoWidth / kLogoHeight;
+const double kBottomBarHeight = 50;
 
 /// [ThemedLayoutStyle] is an enum that represents the layout style.
 /// The layout style can be dual, sidebar or mini.
@@ -42,6 +44,17 @@ enum ThemedLayoutStyle {
   /// [ThemedLayoutStyle.mini] is similar to a [ThemedLayoutStyle.sidebar], but the sidebar is smaller and
   /// designed to grant more space to the main content.
   mini,
+}
+
+/// [ThemedMobileLayoutStyle] is an enum that represents the layout style.
+/// The layout style can be dual, sidebar or mini.
+enum ThemedMobileLayoutStyle {
+  /// [ThemedMobileLayoutStyle.appBar] is the traditional AppBar layout.
+  appBar,
+
+  /// [ThemedMobileLayoutStyle.bottomBar] is a new conceptual idea for navigational layout, nesting the elements
+  /// in two or more levels in the bottom part of the screen.
+  bottomBar,
 }
 
 /// [overrideAppBarStyle] overrides the app bar style.
@@ -63,6 +76,9 @@ void overrideAppBarStyle({
 class ThemedLayout extends StatefulWidget {
   /// [style] is the style of the layout. Defaults to [ThemedLayoutStyle.modern].
   final ThemedLayoutStyle style;
+
+  /// [mobileStyle] is the style of the mobile layout. Defaults to [ThemedMobileLayoutStyle.bottomBar].
+  final ThemedMobileLayoutStyle mobileStyle;
 
   /// [body] is the body of the layout. It is the main content of the application.
   final Widget body;
@@ -168,6 +184,7 @@ class ThemedLayout extends StatefulWidget {
   const ThemedLayout({
     super.key,
     this.style = ThemedLayoutStyle.mini,
+    this.mobileStyle = ThemedMobileLayoutStyle.bottomBar,
     required this.body,
     this.items = const [],
     this.homePath = '/home',
@@ -205,8 +222,6 @@ class ThemedLayout extends StatefulWidget {
 class _ThemedLayoutState extends State<ThemedLayout> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
-  List<ThemedNavigatorItem> _childrenItems = [];
-
   VoidCallback? get _onThemeSwitchTap {
     if (widget.onThemeSwitchTap == null) return null;
 
@@ -216,30 +231,6 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         overrideAppBarStyle(isDark: isDark);
       });
     };
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getChildrenUrls();
-  }
-
-  @override
-  void didUpdateWidget(ThemedLayout oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _getChildrenUrls();
-  }
-
-  void _getChildrenUrls() {
-    String path = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
-    final parent = widget.items.whereType<ThemedNavigatorPage>().where((parents) => path.startsWith(parents.path));
-
-    if (parent.isEmpty) {
-      _childrenItems = [];
-      return;
-    }
-
-    _childrenItems = parent.first.children;
   }
 
   @override
@@ -278,12 +269,40 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       );
     }
 
+    if (widget.mobileStyle == ThemedMobileLayoutStyle.appBar) {
+      return Scaffold(
+        appBar: _buildAppBar(hideAvatar: true),
+        body: child,
+        drawer: ThemedSidebar(
+          fromScaffold: true,
+          items: widget.items,
+          appTitle: widget.appTitle,
+          companyName: widget.companyName,
+          logo: widget.logo,
+          favicon: widget.favicon,
+          version: widget.version,
+          userName: widget.userName,
+          userDynamicAvatar: widget.userDynamicAvatar,
+          enableAbout: widget.enableAbout,
+          onSettingsTap: widget.onSettingsTap,
+          onProfileTap: widget.onProfileTap,
+          onLogoutTap: widget.onLogoutTap,
+          onThemeSwitchTap: _onThemeSwitchTap,
+          additionalActions: widget.additionalActions,
+          mobileBreakpoint: widget.mobileBreakpoint,
+          onNavigatorPush: widget.onNavigatorPush,
+          onNavigatorPop: widget.onNavigatorPop,
+          currentPath: widget.currentPath,
+          enableNotifications: false,
+        ),
+      );
+    }
+
     return Scaffold(
-      appBar: _buildAppBar(hideAvatar: true),
       body: child,
-      drawer: ThemedSidebar(
-        fromScaffold: true,
+      bottomNavigationBar: ThemedBottomBar(
         items: widget.items,
+        persistentItems: widget.persistentItems,
         appTitle: widget.appTitle,
         companyName: widget.companyName,
         logo: widget.logo,
@@ -301,7 +320,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         onNavigatorPush: widget.onNavigatorPush,
         onNavigatorPop: widget.onNavigatorPop,
         currentPath: widget.currentPath,
-        enableNotifications: false,
+        enableNotifications: widget.enableNotifications,
+        notifications: widget.notifications,
       ),
     );
   }
@@ -341,7 +361,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             onNavigatorPush: widget.onNavigatorPush,
             onNavigatorPop: widget.onNavigatorPop,
             currentPath: widget.currentPath,
-            enableNotifications: false,
+            enableNotifications: widget.enableNotifications,
+            notifications: widget.notifications,
           ),
           Expanded(child: child),
         ],
@@ -507,7 +528,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             onNavigatorPush: widget.onNavigatorPush,
             currentPath: widget.currentPath,
             persistentItems: widget.persistentItems,
-            items: _childrenItems,
+            items: widget.items,
           ),
           Expanded(
             child: child,

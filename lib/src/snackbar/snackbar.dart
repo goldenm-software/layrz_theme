@@ -33,9 +33,3 @@ bool debugCheckHasThemedSnackbarMessenger(BuildContext context) {
   }());
   return true;
 }
-
-@Deprecated('showThemedSnackbar was deprecated.' 'Use ThemedSnackbarMessenger.of(context).showThemedSnackbar instead')
-void showThemedSnackbar(ThemedSnackbar item) {}
-
-@Deprecated('setThemedSnackbarScaffoldKey was deprecated.')
-void setThemedSnackbarScaffoldKey(GlobalKey<ScaffoldState> key) {}

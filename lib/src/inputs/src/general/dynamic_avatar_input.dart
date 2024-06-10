@@ -292,6 +292,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                         _value.icon = null;
                         _value.url = null;
                         _value.emoji = emoji.char;
+                        _value.type = AvatarType.emoji;
                       });
                       widget.onChanged.call(_value);
                     },
@@ -313,6 +314,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
               _value.emoji = null;
               _value.url = null;
               _value.icon = icon;
+              _value.type = AvatarType.icon;
             });
             widget.onChanged.call(_value);
           },
@@ -330,11 +332,11 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                 prefixIcon: MdiIcons.link,
                 onChanged: (value) {
                   setState(() {
-                    _value.type = AvatarType.url;
                     _value.icon = null;
                     _value.emoji = null;
                     _value.base64 = null;
                     _value.url = value;
+                    _value.type = AvatarType.url;
                     widget.onChanged.call(_value);
                   });
                 },
@@ -358,6 +360,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                     _value.emoji = null;
                     _value.url = null;
                     _value.base64 = base64;
+                    _value.type = AvatarType.base64;
                   });
                   widget.onChanged.call(_value);
                 },

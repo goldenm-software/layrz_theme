@@ -17,7 +17,6 @@ export 'src/theme/theme.dart';
 export 'src/scaffolds/scaffolds.dart';
 export 'src/snackbar/snackbar.dart';
 export 'src/buttons/buttons.dart';
-export 'src/dialogs/dialogs.dart';
 export 'src/extensions/extensions.dart';
 export 'src/widgets/widgets.dart';
 export 'src/views/views.dart';

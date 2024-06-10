@@ -2,6 +2,70 @@
 
 part of '../../layout.dart';
 
+class ThemedCustomNotificationLocation {
+  /// [top] is the top position of the notification icon.
+  final double? top;
+
+  /// [bottom] is the bottom position of the notification icon.
+  final double? bottom;
+
+  /// [left] is the left position of the notification icon.
+  final double? left;
+
+  /// [right] is the right position of the notification icon.
+  final double? right;
+
+  /// [width] is the width of the notification icon.
+  final double width;
+
+  /// [alignment] is the alignment of the notification icon.
+  final Alignment alignment;
+
+  /// [ThemedCustomNotificationLocation] defines the exact location and width of the notification tray.
+  const ThemedCustomNotificationLocation({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+    required this.width,
+    required this.alignment,
+  });
+}
+
+/// [ThemedNotificationLocation] defeines the location of the notification.
+enum ThemedNotificationLocation {
+  /// [ThemedNotificationLocation.appBar] defines the notification location in the app bar.
+  ///
+  /// Layout mode: [ThemedLayoutStyle.dual]
+  /// Mobile layout mode: [ThemedLayoutStyle.appBar]
+  appBar,
+
+  /// [ThemedNotificationLocation.miniBar] defines the notification location in the mini bar.
+  ///
+  /// Layout mode: [ThemedLayoutStyle.mini]
+  /// Mobile layout mode: `null`
+  miniBar,
+
+  /// [ThemedNotificationLocation.bottomBar] defines the notification location in the bottom bar.
+  ///
+  /// Layout mode: `null`
+  /// Mobile layout mode: [ThemedLayoutStyle.bottomBar]
+  bottomBar,
+
+  /// [ThemedNotificationLocation.sideBar] defines the notification location in the side bar.
+  ///
+  /// Layout mode: [ThemedLayoutStyle.sidebar]
+  /// Mobile layout mode: `null`
+  sideBar,
+
+  /// [ThemedNotificationLocation.custom]
+  ///
+  /// Using this mode, you can provide the exact location using `ThemedCustomNotificationLocation` to
+  /// move the notification icon to the desired location.
+  custom,
+  ;
+}
+
 class ThemedNotificationIcon extends StatefulWidget {
   /// [notifications] is the list of notifications to be displayed in the
   /// notification icon.
@@ -9,10 +73,6 @@ class ThemedNotificationIcon extends StatefulWidget {
 
   /// [backgroundColor] is the background color of the notification icon.
   final Color backgroundColor;
-
-  /// [inAppBar] is a boolean that indicates whether the notification icon is
-  /// in the app bar or not.
-  final bool inAppBar;
 
   /// [forceFullSize] is a boolean that forces the notification icon to be
   /// displayed in full size.
@@ -40,12 +100,17 @@ class ThemedNotificationIcon extends StatefulWidget {
   /// and returns a widget.
   final Widget? Function(int)? badgeLabelBuilder;
 
+  /// [location] is the location of the notification icon.
+  final ThemedNotificationLocation location;
+
+  /// [customLocation] is the custom location of the notification icon.
+  final ThemedCustomNotificationLocation? customLocation;
+
   /// Creates a [ThemedNotificationIcon] widget.
   const ThemedNotificationIcon({
     super.key,
     required this.notifications,
     required this.backgroundColor,
-    this.inAppBar = false,
     this.forceFullSize = false,
     this.expandToLeft = false,
     this.dense = false,
@@ -53,7 +118,9 @@ class ThemedNotificationIcon extends StatefulWidget {
     this.child,
     this.badgeColor,
     this.badgeLabelBuilder,
-  });
+    required this.location,
+    this.customLocation,
+  }) : assert(location != ThemedNotificationLocation.custom || customLocation != null);
 
   @override
   State<ThemedNotificationIcon> createState() => _ThemedNotificationIconState();
@@ -117,28 +184,65 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
     Offset offset = renderBox.localToGlobal(Offset.zero);
     Size screenSize = MediaQuery.of(context).size;
     EdgeInsets padding = MediaQuery.of(context).padding;
-    double? bottom = screenSize.height - offset.dy + padding.bottom + 20;
-    double? right = screenSize.width - offset.dx - renderBox.size.width + padding.right;
+    Size iconSize = renderBox.size;
+
+    double? bottom;
+    double? right;
     double? top;
     double? left;
+    double? width;
+    late Alignment alignment;
 
-    if (widget.inAppBar) {
-      top = offset.dy + renderBox.size.height + padding.top + 10;
-      bottom = null;
-    }
+    switch (widget.location) {
+      case ThemedNotificationLocation.custom:
+        top = widget.customLocation!.top;
+        bottom = widget.customLocation!.bottom;
+        left = widget.customLocation!.left;
+        right = widget.customLocation!.right;
+        width = widget.customLocation!.width;
+        alignment = Alignment.topLeft;
+        break;
+      case ThemedNotificationLocation.appBar:
+        alignment = Alignment.topRight;
+        top = padding.top + iconSize.width + offset.dy + 10;
+        right = (screenSize.width - offset.dx - iconSize.width - padding.right);
+        width = screenSize.width * 0.5;
+        if (width > 400) width = 400;
+        if (widget.forceFullSize) {
+          left = padding.left + 10;
+          right = padding.right + 10;
+          width = null;
+        }
+        break;
+      case ThemedNotificationLocation.miniBar:
+        alignment = Alignment.bottomLeft;
+        left = padding.left + iconSize.width + offset.dx + 10;
+        bottom = padding.bottom + 10;
 
-    if (widget.expandToLeft) {
-      left = offset.dx + renderBox.size.width + padding.left;
-      right = null;
-      top = offset.dy;
-    }
-
-    double? width = screenSize.width * 0.5;
-
-    if (width < 200 || widget.forceFullSize) {
-      left = padding.left + 10;
-      right = padding.right + 10;
-      width = null;
+        width = screenSize.width * 0.5;
+        if (width > 400) width = 400;
+        break;
+      case ThemedNotificationLocation.bottomBar:
+        alignment = Alignment.bottomRight;
+        bottom = 20 + iconSize.height + padding.bottom;
+        right = 10 + padding.right;
+        width = screenSize.width * 0.5;
+        if (width > 400) width = 400;
+        if (widget.forceFullSize) {
+          left = padding.left + 10;
+          right = padding.right + 10;
+          width = null;
+        }
+        break;
+      case ThemedNotificationLocation.sideBar:
+        alignment = Alignment.topLeft;
+        top = padding.top + iconSize.width + offset.dy + 10;
+        left = padding.left + iconSize.width + offset.dx + 10;
+        width = screenSize.width * 0.5;
+        if (width > 400) width = 400;
+        break;
+      default:
+        return;
     }
 
     _overlay = OverlayEntry(
@@ -162,11 +266,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                   },
                   child: ScaleTransition(
                     scale: _controller,
-                    alignment: widget.inAppBar
-                        ? widget.expandToLeft
-                            ? Alignment.topLeft
-                            : Alignment.topRight
-                        : Alignment.bottomRight,
+                    alignment: alignment,
                     child: Container(
                       width: width == null ? null : width - 50,
                       constraints: BoxConstraints(
@@ -189,6 +289,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                           : ListView.builder(
                               shrinkWrap: true,
                               padding: kListViewPadding,
+                              itemExtent: 75,
                               itemCount: notifications.length,
                               itemBuilder: (context, index) {
                                 ThemedNotificationItem item = notifications[index];

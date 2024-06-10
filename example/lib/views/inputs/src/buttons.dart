@@ -319,22 +319,27 @@ class _ButtonsViewState extends State<ButtonsView> {
                               ],
                             ),
                           ),
-                          // ThemedActionsButtons(
-                          //   forceMobileMode: true,
-                          //   // actionsOffset: const Offset(20, 20),
-                          //   actions: [
-                          //     ThemedActionButton(
-                          //       labelText: 'test',
-                          //       icon: MdiIcons.accessPoint,
-                          //       onTap: () => {},
-                          //     ),
-                          //     ThemedActionButton(
-                          //       labelText: 'test2',
-                          //       icon: MdiIcons.accessPoint,
-                          //       onTap: () => {},
-                          //     ),
-                          //   ],
-                          // ),
+                          ThemedActionsButtons(
+                            // actionsOffset: const Offset(20, 20),
+                            actions: [
+                              ThemedActionButton.cancel(
+                                isMobile: true,
+                                labelText: 'Cancel',
+                                onTap: () => {},
+                              ),
+                              ThemedActionButton.save(
+                                isMobile: true,
+                                labelText: 'Save',
+                                onTap: () => {},
+                              ),
+                              ThemedActionButton.info(
+                                isMobile: true,
+                                labelText: 'Info',
+                                isDisabled: true,
+                                onTap: () => {},
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],
@@ -420,10 +425,12 @@ class _ButtonsViewState extends State<ButtonsView> {
         ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
           icon: MdiIcons.accessPoint,
           width: 700,
+          maxLines: 4,
           color: Colors.red,
           title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut nulla sit amet "
-              "tellus dictum molestie in sit amet ligula. Nullam pulvinar risus eu sapien dictum blandit.",
+                  "tellus dictum molestie in sit amet ligula. Nullam pulvinar risus eu sapien dictum blandit." *
+              2,
         ));
       },
     );
