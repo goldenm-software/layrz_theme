@@ -1,5 +1,9 @@
 # Changelog
 
+# 5.0.12
+
+- Fixed `ThemedTable` not showing the `additionalActions` when the `onShow` or `onEdit` or `onDelete` is not provided.
+
 ## 5.0.11
 
 - Changed button style to use a new rounded style, now the styling is rouned square instead of rounded circle.

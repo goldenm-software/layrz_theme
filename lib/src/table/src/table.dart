@@ -298,7 +298,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [actionsEnabled] predicts if the actions should be displayed.
   bool get actionsEnabled {
-    return widget.onShow != null || widget.onEdit != null || widget.onDelete != null;
+    return widget.onShow != null ||
+        widget.onEdit != null ||
+        widget.onDelete != null ||
+        widget.additionalActions != null;
   }
 
   /// [module] represents the module name of the table.
