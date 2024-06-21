@@ -160,7 +160,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
   /// [height] predicts the height of the snackbar based on the text length and the max lines
   double get height {
     double effectiveHeight = predictedTitleSize.height + predictedMessageSize.height;
-    effectiveHeight = max(effectiveHeight, ThemedButton.height);
+    effectiveHeight = max(effectiveHeight, ThemedButton.defaultHeight);
     effectiveHeight += padding.vertical;
     effectiveHeight += elementsSpacing;
     effectiveHeight += progressHeight;

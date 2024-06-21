@@ -86,6 +86,14 @@ class ThemedButton extends StatefulWidget {
   /// [showCooldownRemainingDuration] if false the text counting down the cooldown will not be shown.
   final bool showCooldownRemainingDuration;
 
+  /// [height] is used to override the height of the button.
+  /// and replace the ThemedButton.height value used by default.
+  /// height 35. Using [defaultHeight]
+  final double height;
+
+  /// [defaultHeight] is used to know the default height of the button.
+  static const double defaultHeight = 35.0;
+
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -106,7 +114,9 @@ class ThemedButton extends StatefulWidget {
     this.fontSize = 13,
     this.tooltipEnabled = true,
     this.showCooldownRemainingDuration = true,
-  }) : assert(label != null || labelText != null);
+    this.height = defaultHeight,
+  })  : assert(label != null || labelText != null),
+        assert(height >= 25);
 
   factory ThemedButton.save({
     bool isMobile = false,
@@ -244,7 +254,7 @@ class ThemedButton extends StatefulWidget {
   State<ThemedButton> createState() => _ThemedButtonState();
 
   /// [height] is used to know the height of the button.
-  static double get height => 35;
+  // static double get height => 35;
 
   /// [disabledColor] is used to know the color of the disabled button.
   static Color getDisabledColor(bool isDark, ThemedButtonStyle style) {
@@ -429,8 +439,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [height] is used to set the height of the button.
-  /// Always will be `30`.
-  double get height => ThemedButton.height;
+  /// Defaults to `35`.
+  double get height => widget.height;
 
   bool get showCooldownRemainingDuration => widget.showCooldownRemainingDuration;
 
@@ -819,7 +829,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                     child: Icon(
                       icon ?? MdiIcons.help,
                       color: validateColor(color: contentColor),
-                      size: 20,
+                      size: iconSize,
                     ),
                   ),
                 ),
@@ -919,7 +929,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                     child: Icon(
                       icon ?? MdiIcons.help,
                       color: validateColor(color: contentColor),
-                      size: 20,
+                      size: iconSize,
                     ),
                   ),
                 ),
@@ -965,21 +975,6 @@ class _ThemedButtonState extends State<ThemedButton> {
                   valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
                   value: value,
                 );
-
-                // double converted = value * 0.8;
-                // Widget progress = Container(
-                //   decoration: BoxDecoration(
-                //     gradient: LinearGradient(
-                //       colors: [
-                //         loadingColor,
-                //         disabledColor,
-                //       ],
-                //       stops: [converted, 1],
-                //       begin: Alignment.centerLeft,
-                //       end: Alignment.centerRight,
-                //     ),
-                //   ),
-                // );
 
                 return Stack(
                   children: [

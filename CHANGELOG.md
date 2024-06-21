@@ -1,5 +1,8 @@
 # Changelog
 
+# 5.0.13
+- Addded `height` prop to `ThemedButton` to change the default height of the button.
+
 # 5.0.12
 
 - Fixed `ThemedTable` not showing the `additionalActions` when the `onShow` or `onEdit` or `onDelete` is not provided.
