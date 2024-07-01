@@ -108,6 +108,12 @@ class _CalendarViewState extends State<CalendarView> {
                 debugPrint("Day tapped: $day");
                 setState(() => focusDay = day);
               },
+              onDayNextMonthTap: (day) {
+                debugPrint("Day next month tapped: $day");
+              },
+              onDayPreviousMonthTap: (day) {
+                debugPrint("Day previous month tapped: $day");
+              },
             ),
           ),
         ],
