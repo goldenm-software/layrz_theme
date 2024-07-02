@@ -67,6 +67,14 @@ class ThemedCalendar extends StatefulWidget {
   /// If [onDayTap] is null, the days will not be tappable.
   final void Function(DateTime)? onDayTap;
 
+  /// [onDayPreviousMonthTap] is the callback that will be called when the user taps the previous month button.
+  /// If [onDayPreviousMonthTap] is null, the previous month button will not be tappable.
+  final void Function(DateTime)? onDayPreviousMonthTap;
+
+  /// [onDayNextMonthTap] is the callback that will be called when the user taps the next month button.
+  /// If [onDayNextMonthTap] is null, the next month button will not be tappable.
+  final void Function(DateTime)? onDayNextMonthTap;
+
   /// [isHighlightDaysAsRange] is the flag to highlight the days as a range.
   /// By default, the days will be highlighted as a single day using the default style
   final bool isHighlightDaysAsRange;
@@ -132,6 +140,8 @@ class ThemedCalendar extends StatefulWidget {
     this.highlightedDays = const [],
     this.showEntries = true,
     this.onDayTap,
+    this.onDayPreviousMonthTap,
+    this.onDayNextMonthTap,
     this.isHighlightDaysAsRange = false,
     this.smallWeekdays = false,
     this.disabledDays = const [],
@@ -408,6 +418,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
         break;
     }
     _dayGenerator = next;
+    widget.onDayNextMonthTap?.call(next);
     setState(() {});
   }
 
@@ -499,6 +510,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
         break;
     }
     _dayGenerator = next;
+    widget.onDayPreviousMonthTap?.call(next);
     setState(() {});
   }
 
