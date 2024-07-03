@@ -1,6 +1,9 @@
 part of '../buttons.dart';
 
 class ThemedButton extends StatefulWidget {
+  /// [defaultHeight] is used to know the default height of the button.
+  static const double defaultHeight = 35.0;
+
   /// [label] and [labelText] is the label of the button. Cannot provide both.
   ///
   /// [label] is for send a custom widget and control the colors and related things.
@@ -90,9 +93,6 @@ class ThemedButton extends StatefulWidget {
   /// and replace the ThemedButton.height value used by default.
   /// height 35. Using [defaultHeight]
   final double height;
-
-  /// [defaultHeight] is used to know the default height of the button.
-  static const double defaultHeight = 35.0;
 
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
