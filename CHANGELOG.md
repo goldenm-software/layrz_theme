@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.16
+- Added `dialogConstraints` in `ThemedMultiSelectInput`.
+
 ## 5.0.15
 
 - Added `ThemedDynamicConfigurableBlock` to handle dynamic blocks of credentials or dynamic fields.
