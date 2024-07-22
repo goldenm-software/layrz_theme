@@ -102,6 +102,9 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
   /// to submit the value (Call [onChanged]).
   final bool waitUntilClosedToSubmit;
 
+  /// [dialogConstraints] is the constraints of the dialog.
+  final BoxConstraints dialogConstraints;
+
   /// [ThemedMultiSelectInput] is a multi select input that allows the user to select multiple items from a list.
   const ThemedMultiSelectInput({
     super.key,
@@ -140,6 +143,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.waitUntilClosedToSubmit = false,
+    this.dialogConstraints = const BoxConstraints(maxWidth: 500, maxHeight: 500),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -250,7 +254,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Container(
-                  constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                  constraints: widget.dialogConstraints,
                   decoration: generateContainerElevation(
                     context: context,
                     elevation: 5,
