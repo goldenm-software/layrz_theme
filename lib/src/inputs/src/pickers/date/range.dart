@@ -194,6 +194,7 @@ class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
                 return ThemedCalendar(
                   highlightedDays: tempDate != null ? [] : filledDates,
                   focusDay: tempDate,
+                  focusOnHighlightedDays: tempDate == null,
                   isHighlightDaysAsRange: tempDate == null,
                   showEntries: false,
                   smallWeekdays: true,

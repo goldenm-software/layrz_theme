@@ -27,6 +27,13 @@ class ThemedSearchInput extends StatefulWidget {
   /// Defaults to [ThemedSearchPosition.auto].
   final ThemedSearchPosition position;
 
+  /// [asField] changes the design of the search input to a field instead of a button.
+  /// Defaults to `false`.
+  final bool asField;
+
+  /// [inputPadding] is the padding of the search input, only will work when [asField] is `true`.
+  final EdgeInsets inputPadding;
+
   /// [ThemedSearchInput] is a search input.
   const ThemedSearchInput({
     super.key,
@@ -37,6 +44,8 @@ class ThemedSearchInput extends StatefulWidget {
     this.customChild,
     this.disabled = false,
     this.position = ThemedSearchPosition.left,
+    this.asField = false,
+    this.inputPadding = EdgeInsets.zero,
   });
 
   @override
@@ -94,6 +103,21 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
       return InkWell(
         onTap: widget.disabled ? null : _handleTap,
         child: widget.customChild,
+      );
+    }
+
+    if (widget.asField) {
+      return SizedBox(
+        height: height,
+        width: widget.maxWidth,
+        child: ThemedTextInput(
+          value: widget.value,
+          padding: widget.inputPadding,
+          onChanged: widget.onSearch,
+          labelText: widget.labelText,
+          disabled: widget.disabled,
+          suffixIcon: MdiIcons.magnify,
+        ),
       );
     }
 

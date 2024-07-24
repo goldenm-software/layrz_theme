@@ -193,7 +193,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
         return Dialog(
           child: Container(
             padding: const EdgeInsets.all(20),
-            constraints: BoxConstraints(maxWidth: 400, maxHeight: widget.use24HourFormat ? 430 : 530),
+            constraints: BoxConstraints(maxWidth: 400, maxHeight: widget.use24HourFormat ? 430 : 540),
             decoration: generateContainerElevation(context: context, elevation: 3),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
