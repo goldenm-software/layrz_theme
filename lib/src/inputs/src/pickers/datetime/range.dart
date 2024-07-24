@@ -414,6 +414,7 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
                     children: [
                       ThemedCalendar(
                         focusDay: tempDate,
+                        focusOnHighlightedDays: tempDate == null,
                         showEntries: false,
                         smallWeekdays: true,
                         todayIndicator: false,

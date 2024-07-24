@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.17
+
+- Added `asField` and `inputPadding` props in `ThemedSearchInput` to change the display of the search input.
+- Finally! Fixed the issue related to the `ThemedTable` and an unexpected horizontal scroll. Now, the table will not show the horizontal scroll when the content is less than the width of the table.
+- Fixes on `ThemedDateRangePicker` and `ThemedDateTimeRangePicker` to focus on selection instead of today.
+
 ## 5.0.16
 - Added `dialogConstraints` in `ThemedMultiSelectInput`.
 

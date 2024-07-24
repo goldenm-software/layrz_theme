@@ -288,7 +288,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   /// - Otherwise, the color will be white.
   /// - If the device is using a light theme, the color will be the same as the theme `primaryColor`.
   Color get primaryColor {
-    Color color = Theme.of(context).primaryColor;
+    Color color = Colors.lightBlue;
 
     if (isDark && !useBlack(color: color)) {
       return Colors.white;
@@ -352,7 +352,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   bool _sortAsc = true;
 
   /// [_actionSize] represents the size of the actions individual buttons.
-  double get _actionSize => 40;
+  double get _actionSize => ThemedButton.defaultHeight;
 
   /// [_idWidth] represents the width of the id column.
   /// This is used to calculate the width of the table.
@@ -395,6 +395,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_verticalScroll] represents the scroll controller of the table.
   final ScrollController _verticalScroll = ScrollController();
+
+  /// [_actionsPadding] is the separator between the actions buttons.
+  EdgeInsetsGeometry get _actionsPadding => const EdgeInsets.only(left: 5);
 
   @override
   void initState() {
@@ -466,27 +469,31 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       } else {
         double width = 0;
         if (widget.onShow != null) {
-          width += _actionSize;
+          width += _actionSize + _actionsPadding.horizontal;
         }
 
         if (widget.onEdit != null) {
-          width += _actionSize;
+          width += _actionSize + _actionsPadding.horizontal;
         }
 
         if (widget.onDelete != null) {
-          width += _actionSize;
+          width += _actionSize + _actionsPadding.horizontal;
         }
+
+        width += ThemedColumn.padding.horizontal;
+
         double additionalWidth = 0;
 
         for (T item in items) {
+          int totalAdditionalActions = widget.additionalActions?.call(context, item).length ?? 0;
           additionalWidth = max(
             additionalWidth,
-            (widget.additionalActions?.call(context, item).length ?? 0) * _actionSize,
+            totalAdditionalActions * (_actionSize + _actionsPadding.horizontal),
           );
         }
         width += additionalWidth;
 
-        sizes[-1] = max(width, 100);
+        sizes[-1] = max(width, 150);
       }
     }
 
@@ -496,7 +503,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       int index = entry.key;
       ThemedColumn<T> column = entry.value;
 
-      sizes[index] = column.predictedHeaderSize(context, _headerStyle).width;
+      sizes[index] = column.predictedHeaderSize(context, _headerStyle).width + ThemedColumn.padding.horizontal;
       usedSizes.add(sizes[index] ?? 0);
     }
 
@@ -507,7 +514,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
         sizes[index] = max(
           sizes[index] ?? 0,
-          column.predictedContentSize(context, item, _rowStyle).width,
+          column.predictedContentSize(context, item, _rowStyle).width + ThemedColumn.padding.horizontal,
         );
 
         usedSizes[index] = sizes[index] ?? 0;
@@ -515,7 +522,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     double usedSize = sizes.values.reduce((value, element) => value + element);
-    double emptySize = constraints.maxWidth - usedSize - 10;
+    double emptySize = constraints.maxWidth - usedSize - (border.width * sizes.length);
 
     if (emptySize > 0) {
       // Distruibute the empty space between the columns
@@ -525,6 +532,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         sizes[index] = prevSize + size;
       }
     }
+
+    double totalSize = sizes.values.reduce((value, element) => value + element);
+    debugPrint("usedSize: $usedSize, totalSize: $totalSize - size: ${constraints.maxWidth}");
 
     return {
       'hasHorizontalScroll': usedSize > constraints.maxWidth,
@@ -543,7 +553,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     _calculatedItemsPerPage = _itemsPerPage;
   }
 
-  ///
   /// [_sort] sorts the items.
   /// and searches all the items with the [_searchText].
   void _sort() {
@@ -615,8 +624,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           multiSelectionEnabled: multiSelectionEnabled,
         );
 
-        final hasHorizontalScroll = prediction['hasHorizontalScroll'] as bool;
         final sizes = prediction['sizes'] as Map<int, double>;
+
+        double searchLength = constraints.maxWidth * 0.3;
+        if (searchLength > 300) searchLength = 300;
 
         return Column(
           children: [
@@ -633,8 +644,12 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
                 /// Search bar
                 //
+
                 ThemedSearchInput(
+                  asField: !isMobile,
+                  maxWidth: isMobile ? 300 : searchLength,
                   value: _searchText,
+                  inputPadding: const EdgeInsets.symmetric(vertical: 2),
                   labelText: t('helpers.search'),
                   onSearch: (value) {
                     _searchText = value;
@@ -643,6 +658,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     _sort();
                   },
                 ),
+                const SizedBox(width: 5),
 
                 // Actions
                 ...widget.additionalButtons,
@@ -651,7 +667,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                   ThemedButton(
                     labelText: t('$module.title.new'),
                     icon: MdiIcons.plus,
-                    style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.filledTonal,
+                    style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
                     color: primaryColor,
                     onTap: widget.onAdd,
                     isLoading: widget.isLoading,
@@ -678,195 +694,195 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
             Expanded(
               child: Scrollbar(
                 controller: _horizontalScroll,
-                trackVisibility: !isMobile && hasHorizontalScroll,
-                thumbVisibility: !isMobile && hasHorizontalScroll,
+                trackVisibility: !isMobile,
+                thumbVisibility: !isMobile,
                 child: Scrollbar(
                   controller: _verticalScroll,
                   notificationPredicate: (notif) => notif.depth == 1,
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                    child: SingleChildScrollView(
-                      controller: _horizontalScroll,
-                      scrollDirection: Axis.horizontal,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              if (multiSelectionEnabled) ...[
-                                _drawColumn(
-                                  index: -3,
-                                  column: ThemedColumn(
-                                    labelText: '',
-                                    valueBuilder: (context, item) => '',
-                                    isSortable: false,
-                                  ),
-                                  content: ThemedAnimatedCheckbox(
-                                    value: _isAllSelected,
-                                    onChanged: (value) {
-                                      if (value) {
-                                        _selectedItems = List.from(_items);
-                                      } else {
-                                        _selectedItems = [];
-                                      }
+                  thumbVisibility: false,
+                  trackVisibility: false,
+                  child: SingleChildScrollView(
+                    controller: _horizontalScroll,
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            if (multiSelectionEnabled) ...[
+                              _drawColumn(
+                                index: -3,
+                                column: ThemedColumn(
+                                  labelText: '',
+                                  valueBuilder: (context, item) => '',
+                                  isSortable: false,
+                                ),
+                                content: ThemedAnimatedCheckbox(
+                                  value: _isAllSelected,
+                                  onChanged: (value) {
+                                    if (value) {
+                                      _selectedItems = List.from(_items);
+                                    } else {
+                                      _selectedItems = [];
+                                    }
 
-                                      _validateSelection();
-                                    },
-                                  ),
-                                  sizes: sizes,
+                                    _validateSelection();
+                                  },
                                 ),
-                              ],
-                              if (widget.idEnabled) ...[
-                                _drawColumn(
-                                  index: _idIndex,
-                                  column: ThemedColumn(
-                                    labelText: widget.idLabel,
-                                    valueBuilder: (context, item) => '',
-                                  ),
-                                  sizes: sizes,
-                                ),
-                              ],
-                              ...widget.columns.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                ThemedColumn<T> column = entry.value;
-                                return _drawColumn(
-                                  index: index,
-                                  column: column,
-                                  sizes: sizes,
-                                );
-                              }),
-                              if (actionsEnabled) ...[
-                                _drawColumn(
-                                  index: -1,
-                                  content: Icon(MdiIcons.toolbox, size: 20),
-                                  column: ThemedColumn(
-                                    labelText: 'Actions',
-                                    alignment: Alignment.centerRight,
-                                    valueBuilder: (context, item) => '',
-                                    isSortable: false,
-                                  ),
-                                  sizes: sizes,
-                                ),
-                              ],
+                                sizes: sizes,
+                              ),
                             ],
-                          ),
-                          Expanded(
-                            child: Container(
-                              key: _tableKey,
-                              child: SingleChildScrollView(
-                                controller: _verticalScroll,
-                                child: Column(
-                                  children: [
-                                    ...items.map((item) {
-                                      bool isSelected = _selectedItems.contains(item);
-
-                                      return SizedBox(
-                                        height: widget.rowHeight,
-                                        child: Row(
-                                          children: [
-                                            if (multiSelectionEnabled) ...[
-                                              _drawCell(
-                                                index: -3,
-                                                child: ThemedAnimatedCheckbox(
-                                                  value: isSelected,
-                                                  onChanged: (value) {
-                                                    if (value) {
-                                                      _selectedItems.add(item);
-                                                    } else {
-                                                      _selectedItems.remove(item);
-                                                    }
-
-                                                    _validateSelection();
-                                                  },
-                                                ),
-                                                sizes: sizes,
-                                              ),
-                                            ],
-                                            if (widget.idEnabled) ...[
-                                              _drawCell(
-                                                index: _idIndex,
-                                                value: "#${widget.idBuilder(context, item)}",
-                                                sizes: sizes,
-                                                onTap: widget.onIdTap == null ? null : () => widget.onIdTap?.call(item),
-                                              ),
-                                            ],
-                                            ...widget.columns.asMap().entries.map((entry) {
-                                              int index = entry.key;
-                                              ThemedColumn<T> column = entry.value;
-                                              return _drawCell(
-                                                index: index,
-                                                child: column.widgetBuilder?.call(context, item),
-                                                value: column.valueBuilder(context, item),
-                                                sizes: sizes,
-                                                onTap: column.onTap == null ? null : () => column.onTap?.call(item),
-                                                cellColor: column.cellColor?.call(item),
-                                                cellTextColor: column.cellTextColor?.call(item),
-                                              );
-                                            }),
-                                            if (actionsEnabled) ...[
-                                              _drawCell(
-                                                index: -1,
-                                                alignment: Alignment.centerRight,
-                                                child: ThemedActionsButtons(
-                                                  actionsLabel: t('helpers.actions'),
-                                                  actions: [
-                                                    ...widget.additionalActions?.call(context, item) ?? [],
-                                                    if (widget.onShow != null)
-                                                      ThemedActionButton.show(
-                                                        isMobile: true,
-                                                        tooltipPosition: ThemedTooltipPosition.left,
-                                                        labelText: t('helpers.buttons.show'),
-                                                        isLoading: widget.isLoading,
-                                                        isCooldown: widget.isCooldown,
-                                                        onCooldownFinish: widget.onCooldown,
-                                                        onTap: () => widget.onShow?.call(context, item),
-                                                      ),
-                                                    if (widget.onEdit != null && widget.canEdit.call(context, item))
-                                                      ThemedActionButton.edit(
-                                                        isMobile: true,
-                                                        tooltipPosition: ThemedTooltipPosition.left,
-                                                        labelText: t('helpers.buttons.edit'),
-                                                        isLoading: widget.isLoading,
-                                                        isCooldown: widget.isCooldown,
-                                                        onCooldownFinish: widget.onCooldown,
-                                                        onTap: () => widget.onEdit?.call(context, item),
-                                                      ),
-                                                    if (widget.onDelete != null && widget.canDelete.call(context, item))
-                                                      ThemedActionButton.delete(
-                                                        isMobile: true,
-                                                        tooltipPosition: ThemedTooltipPosition.left,
-                                                        labelText: t('helpers.buttons.delete'),
-                                                        isLoading: widget.isLoading,
-                                                        isCooldown: widget.isCooldown,
-                                                        onCooldownFinish: widget.onCooldown,
-                                                        onTap: () async {
-                                                          bool confirmation = await deleteConfirmationDialog(
-                                                            context: context,
-                                                            isCooldown: widget.isCooldown,
-                                                            isLoading: widget.isLoading,
-                                                            onCooldown: widget.onCooldown,
-                                                          );
-                                                          if (confirmation) {
-                                                            if (context.mounted) widget.onDelete?.call(context, item);
-                                                          }
-                                                        },
-                                                      ),
-                                                  ],
-                                                ),
-                                                sizes: sizes,
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      );
-                                    }),
-                                  ],
+                            if (widget.idEnabled) ...[
+                              _drawColumn(
+                                index: _idIndex,
+                                column: ThemedColumn(
+                                  labelText: widget.idLabel,
+                                  valueBuilder: (context, item) => '',
                                 ),
+                                sizes: sizes,
+                              ),
+                            ],
+                            ...widget.columns.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              ThemedColumn<T> column = entry.value;
+                              return _drawColumn(
+                                index: index,
+                                column: column,
+                                sizes: sizes,
+                              );
+                            }),
+                            if (actionsEnabled) ...[
+                              _drawColumn(
+                                index: -1,
+                                content: Icon(MdiIcons.toolbox, size: 20),
+                                column: ThemedColumn(
+                                  labelText: 'Actions',
+                                  alignment: Alignment.centerRight,
+                                  valueBuilder: (context, item) => '',
+                                  isSortable: false,
+                                ),
+                                sizes: sizes,
+                              ),
+                            ],
+                          ],
+                        ),
+                        Expanded(
+                          child: Container(
+                            key: _tableKey,
+                            child: SingleChildScrollView(
+                              controller: _verticalScroll,
+                              child: Column(
+                                children: [
+                                  ...items.map((item) {
+                                    bool isSelected = _selectedItems.contains(item);
+
+                                    return SizedBox(
+                                      height: widget.rowHeight,
+                                      child: Row(
+                                        children: [
+                                          if (multiSelectionEnabled) ...[
+                                            _drawCell(
+                                              index: -3,
+                                              child: ThemedAnimatedCheckbox(
+                                                value: isSelected,
+                                                onChanged: (value) {
+                                                  if (value) {
+                                                    _selectedItems.add(item);
+                                                  } else {
+                                                    _selectedItems.remove(item);
+                                                  }
+
+                                                  _validateSelection();
+                                                },
+                                              ),
+                                              sizes: sizes,
+                                            ),
+                                          ],
+                                          if (widget.idEnabled) ...[
+                                            _drawCell(
+                                              index: _idIndex,
+                                              value: "#${widget.idBuilder(context, item)}",
+                                              sizes: sizes,
+                                              onTap: widget.onIdTap == null ? null : () => widget.onIdTap?.call(item),
+                                            ),
+                                          ],
+                                          ...widget.columns.asMap().entries.map((entry) {
+                                            int index = entry.key;
+                                            ThemedColumn<T> column = entry.value;
+                                            return _drawCell(
+                                              index: index,
+                                              child: column.widgetBuilder?.call(context, item),
+                                              value: column.valueBuilder(context, item),
+                                              sizes: sizes,
+                                              onTap: column.onTap == null ? null : () => column.onTap?.call(item),
+                                              cellColor: column.cellColor?.call(item),
+                                              cellTextColor: column.cellTextColor?.call(item),
+                                            );
+                                          }),
+                                          if (actionsEnabled) ...[
+                                            _drawCell(
+                                              index: -1,
+                                              alignment: Alignment.centerRight,
+                                              child: ThemedActionsButtons(
+                                                actionsLabel: t('helpers.actions'),
+                                                actionPadding: _actionsPadding,
+                                                actions: [
+                                                  ...widget.additionalActions?.call(context, item) ?? [],
+                                                  if (widget.onShow != null)
+                                                    ThemedActionButton.show(
+                                                      isMobile: true,
+                                                      tooltipPosition: ThemedTooltipPosition.left,
+                                                      labelText: t('helpers.buttons.show'),
+                                                      isLoading: widget.isLoading,
+                                                      isCooldown: widget.isCooldown,
+                                                      onCooldownFinish: widget.onCooldown,
+                                                      onTap: () => widget.onShow?.call(context, item),
+                                                    ),
+                                                  if (widget.onEdit != null && widget.canEdit.call(context, item))
+                                                    ThemedActionButton.edit(
+                                                      isMobile: true,
+                                                      tooltipPosition: ThemedTooltipPosition.left,
+                                                      labelText: t('helpers.buttons.edit'),
+                                                      isLoading: widget.isLoading,
+                                                      isCooldown: widget.isCooldown,
+                                                      onCooldownFinish: widget.onCooldown,
+                                                      onTap: () => widget.onEdit?.call(context, item),
+                                                    ),
+                                                  if (widget.onDelete != null && widget.canDelete.call(context, item))
+                                                    ThemedActionButton.delete(
+                                                      isMobile: true,
+                                                      tooltipPosition: ThemedTooltipPosition.left,
+                                                      labelText: t('helpers.buttons.delete'),
+                                                      isLoading: widget.isLoading,
+                                                      isCooldown: widget.isCooldown,
+                                                      onCooldownFinish: widget.onCooldown,
+                                                      onTap: () async {
+                                                        bool confirmation = await deleteConfirmationDialog(
+                                                          context: context,
+                                                          isCooldown: widget.isCooldown,
+                                                          isLoading: widget.isLoading,
+                                                          onCooldown: widget.onCooldown,
+                                                        );
+                                                        if (confirmation) {
+                                                          if (context.mounted) widget.onDelete?.call(context, item);
+                                                        }
+                                                      },
+                                                    ),
+                                                ],
+                                              ),
+                                              sizes: sizes,
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                ],
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

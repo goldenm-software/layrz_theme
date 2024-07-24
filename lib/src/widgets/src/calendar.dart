@@ -110,6 +110,9 @@ class ThemedCalendar extends StatefulWidget {
   /// [aditionalButtons] is a list of buttons that will be displayed in the calendar.
   final List<ThemedButton> aditionalButtons;
 
+  /// [focusOnHighlightedDays] allows to focus the calendar in a day between the highlighted days.
+  final bool focusOnHighlightedDays;
+
   const ThemedCalendar({
     super.key,
     this.focusDay,
@@ -148,6 +151,7 @@ class ThemedCalendar extends StatefulWidget {
     this.todayIndicator = true,
     this.todayButton = true,
     this.aditionalButtons = const [],
+    this.focusOnHighlightedDays = false,
   });
 
   @override
@@ -205,8 +209,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   @override
   void initState() {
     super.initState();
-    _focusDay = widget.focusDay ?? DateTime.now();
-    _dayGenerator = _focusDay.subtract(Duration(days: _focusDay.day - 1));
+    _overrideDayGenerator();
   }
 
   @override
@@ -223,6 +226,25 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   void didUpdateWidget(ThemedCalendar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.focusDay != oldWidget.focusDay) {
+      _overrideDayGenerator();
+    }
+  }
+
+  void _overrideDayGenerator() {
+    if (widget.focusOnHighlightedDays) {
+      // Get a middle day between the highlighted days
+      List<DateTime> sortedHighlightedDays = widget.highlightedDays..sort((a, b) => a.compareTo(b));
+      if (sortedHighlightedDays.isEmpty) {
+        _focusDay = widget.focusDay ?? DateTime.now();
+        _dayGenerator = _focusDay.copyWith(day: 1);
+      } else {
+        DateTime middle = sortedHighlightedDays.first.add(
+          sortedHighlightedDays.last.difference(sortedHighlightedDays.first) ~/ 2,
+        );
+        _focusDay = middle;
+        _dayGenerator = middle.copyWith(day: 1);
+      }
+    } else {
       _focusDay = widget.focusDay ?? DateTime.now();
       _dayGenerator = _focusDay.subtract(Duration(days: _focusDay.day - 1));
     }
@@ -417,6 +439,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
         }
         break;
     }
+
     _dayGenerator = next;
     widget.onDayNextMonthTap?.call(next);
     setState(() {});
@@ -517,6 +540,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   /// [_buildMonthCalendar] builds the month calendar.
   Widget _buildMonthCalendar() {
     List<DateTime> fullMonth = _generateThisMonth();
+
     return Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
