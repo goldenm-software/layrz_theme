@@ -110,13 +110,9 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
       return SizedBox(
         height: height,
         width: widget.maxWidth,
-        child: ThemedTextInput(
-          value: widget.value,
+        child: Padding(
           padding: widget.inputPadding,
-          onChanged: widget.onSearch,
-          labelText: widget.labelText,
-          disabled: widget.disabled,
-          suffixIcon: MdiIcons.magnify,
+          child: _buildField(autofocus: false),
         ),
       );
     }
@@ -143,6 +139,29 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildField({required bool autofocus}) {
+    return TextField(
+      autofocus: autofocus,
+      onChanged: widget.onSearch,
+      controller: _controller,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+        hintText: widget.labelText,
+        labelStyle: Theme.of(context).textTheme.labelSmall,
+        prefixIcon: Icon(MdiIcons.magnify),
+        filled: true,
+        isDense: true,
+      ),
+      onSubmitted: (value) {
+        widget.onSearch.call(value);
+        _destroyOverlay();
+      },
     );
   }
 
@@ -241,26 +260,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                                   _destroyOverlay();
                                 }
                               },
-                              child: TextField(
-                                onChanged: widget.onSearch,
-                                autofocus: true,
-                                controller: _controller,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  hintText: widget.labelText,
-                                  labelStyle: Theme.of(context).textTheme.labelSmall,
-                                  prefixIcon: Icon(MdiIcons.magnify),
-                                  filled: true,
-                                  isDense: true,
-                                ),
-                                onSubmitted: (value) {
-                                  widget.onSearch.call(value);
-                                  _destroyOverlay();
-                                },
-                              ),
+                              child: _buildField(autofocus: true),
                             ),
                           ),
                         ),

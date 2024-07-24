@@ -533,9 +533,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       }
     }
 
-    double totalSize = sizes.values.reduce((value, element) => value + element);
-    debugPrint("usedSize: $usedSize, totalSize: $totalSize - size: ${constraints.maxWidth}");
-
     return {
       'hasHorizontalScroll': usedSize > constraints.maxWidth,
       'sizes': sizes,
