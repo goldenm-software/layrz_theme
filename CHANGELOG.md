@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.0.19
+- Add a flag to know if the User change `_itemsPerPage` in `ThemedTable`.
+
+## 5.0.18
+
+- Replaced `ThemedTextInput` for a native `TextField` to display the search input when `asField` is `true` en `ThemedSearchInput`.
+
 ## 5.0.17
 
 - Added `asField` and `inputPadding` props in `ThemedSearchInput` to change the display of the search input.

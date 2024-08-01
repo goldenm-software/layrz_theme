@@ -399,6 +399,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   /// [_actionsPadding] is the separator between the actions buttons.
   EdgeInsetsGeometry get _actionsPadding => const EdgeInsets.only(left: 5);
 
+  /// [_isUserChangeItemsPerPage] represents if the user changes the items per page.
+  bool _isUserChangeItemsPerPage = false;
+
   @override
   void initState() {
     super.initState();
@@ -437,7 +440,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     _sort();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _calculateRowsPerPage();
+      if (!_isUserChangeItemsPerPage) _calculateRowsPerPage();
     });
     WidgetsBinding.instance.addObserver(this);
   }
@@ -532,9 +535,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         sizes[index] = prevSize + size;
       }
     }
-
-    double totalSize = sizes.values.reduce((value, element) => value + element);
-    debugPrint("usedSize: $usedSize, totalSize: $totalSize - size: ${constraints.maxWidth}");
 
     return {
       'hasHorizontalScroll': usedSize > constraints.maxWidth,
@@ -946,9 +946,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           }),
         ],
         onChanged: (value) {
-          setState(() {
-            _itemsPerPage = value?.value ?? _calculatedItemsPerPage;
-          });
+          _setItemPerPage(value?.value);
         },
       ),
     ];
@@ -1137,9 +1135,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
             }),
           ],
           onChanged: (value) {
-            setState(() {
-              _itemsPerPage = value?.value ?? _calculatedItemsPerPage;
-            });
+            _setItemPerPage(value?.value);
           },
         ),
       ),
@@ -1265,6 +1261,13 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         ),
       ),
     );
+  }
+
+  /// This function is used to set the number of items per page in `_buildVerySmallPaginator` and `_buildWebPaginator`
+  _setItemPerPage(int? value) {
+    _itemsPerPage = value ?? _calculatedItemsPerPage;
+    _isUserChangeItemsPerPage = true;
+    setState(() {});
   }
 
   /// [_drawColumn] draws a column of the table.
