@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.0-preview1
+
+- Added support for preview version of `layrz_models` v`3.0.0-preview1`
+
 ## 5.0.19
 - Add a flag to know if the User change `_itemsPerPage` in `ThemedTable`.
 

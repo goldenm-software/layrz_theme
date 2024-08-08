@@ -257,7 +257,7 @@ packages:
     source: hosted
     version: "0.7.0"
   http:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: http
       sha256: "761a297c042deedc1ffbb156d6e2af13886bb305c2a343a4d972504cd67dd938"
@@ -300,17 +300,17 @@ packages:
     dependency: "direct main"
     description:
       name: layrz_models
-      sha256: "2fe6f9045b66d837e7f0d30410a8e86c6ce556b31ba90c37dbfeb61bfb895739"
+      sha256: "496b16b211f0369cb42df0bbc68f83c70ffbc9bd9eed9df49c7ef546d70328c1"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.84"
+    version: "3.0.0-preview1"
   layrz_theme:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "5.0.18"
+    version: "6.0.0-preview1"
   leak_tracker:
     dependency: transitive
     description:
@@ -512,13 +512,12 @@ packages:
     source: hosted
     version: "9.4.4"
   permission_handler_html:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: permission_handler_html
-      ref: main
-      resolved-ref: f17af950fdba75da509f7a3daca9230524c09e0b
-      url: "https://github.com/raldhafiri/flutter-permission-handler.git"
-    source: git
+      name: permission_handler_html
+      sha256: "6cac773d389e045a8d4f85418d07ad58ef9e42a56e063629ce14c4c26344de24"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.2"
   permission_handler_platform_interface:
     dependency: transitive
