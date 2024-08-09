@@ -204,6 +204,17 @@ class ThemedTable<T> extends StatefulWidget {
   /// This property only will work when `LayrzAppLocalizations` is null.
   final String refreshButtonLabelText;
 
+  /// [fixedColumnsCount] represents the number of fixed rows in the table.
+  /// By default, this value is 3 (multiselection, id and name)
+  final int fixedColumnsCount;
+
+  /// [disablePaginator] represents if the paginator should be disabled.
+  /// By default, this value is false, aka, the paginator is enabled.
+  ///
+  /// Disclaimer: This property is not recommended to use, because if you have a lot of items,
+  /// the performance of the view will be affected.
+  final bool disablePaginator;
+
   /// A standard table with a list of items, designed to be used in the scaffold.
   /// Helps to display a list of items in desktop and mobile mode without a lot of code. (I hope so)
   /// Please read the documentation of each property to understand how to use it.
@@ -260,6 +271,8 @@ class ThemedTable<T> extends StatefulWidget {
     this.tableTitleText = 'My items ({count})',
     this.addButtonLabelText = 'Add new item',
     this.refreshButtonLabelText = 'Reload list',
+    this.fixedColumnsCount = 3,
+    this.disablePaginator = false,
   })  : assert(columns.length > 0),
         assert(rowHeight > 0);
 
@@ -296,8 +309,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     return color;
   }
 
-  /// [actionsEnabled] predicts if the actions should be displayed.
-  bool get actionsEnabled {
+  /// [_actionsEnabled] predicts if the actions should be displayed.
+  bool get _actionsEnabled {
     return widget.onShow != null ||
         widget.onEdit != null ||
         widget.onDelete != null ||
@@ -345,43 +358,25 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_sortBy] represents the index of the column to sort.
   /// If this value is -1, the sort is by id.
-  int _sortBy = -2;
+  late int _sortBy;
 
   /// [_sortAsc] represents the direction of the sort.
   /// If this value is true, the sort is ascending.
   bool _sortAsc = true;
 
-  /// [_actionSize] represents the size of the actions individual buttons.
-  double get _actionSize => ThemedButton.defaultHeight;
-
   /// [_idWidth] represents the width of the id column.
   /// This is used to calculate the width of the table.
-  double get _idWidth {
-    if (!widget.idEnabled) {
-      return 0;
-    }
-
-    return 80;
-  }
-
-  /// [_idIndex] is the index of the id column.
-  int get _idIndex => -2;
+  double get _idWidth => 80;
 
   /// [_checkboxWidth] represents the width of the checkbox column.
   /// This is used to calculate the width of the table.
-  double get _checkboxWidth {
-    if (!widget.multiSelectionEnabled) {
-      return 0;
-    }
-
-    return 60;
-  }
+  double get _checkboxWidth => 40;
 
   /// [border] refers to the style of the border of the cells.
   BorderSide get border => BorderSide(
         // color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
         color: Theme.of(context).dividerColor,
-        width: 1.5,
+        width: 1,
       );
 
   /// [_selectedItems] represents the list of selected items.
@@ -390,17 +385,142 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   /// [_isAllSelected] represents if all the items are selected.
   bool get _isAllSelected => _selectedItems.length == _items.length;
 
+  late final SyncScrollControllerGroup _controllerGroup;
+
   /// [_horizontalScroll] represents the scroll controller of the table.
   final ScrollController _horizontalScroll = ScrollController();
 
   /// [_verticalScroll] represents the scroll controller of the table.
-  final ScrollController _verticalScroll = ScrollController();
+  late final ScrollController _verticalScroll;
 
-  /// [_actionsPadding] is the separator between the actions buttons.
-  EdgeInsetsGeometry get _actionsPadding => const EdgeInsets.only(left: 5);
+  /// [_verticalActionsScroll] represents the scroll controller of the actions.
+  late final ScrollController _verticalActionsScroll;
 
   /// [_isUserChangeItemsPerPage] represents if the user changes the items per page.
   bool _isUserChangeItemsPerPage = false;
+
+  /// [_actionSize] represents the size of the action buttons.
+  double get _actionSize => ThemedButton.defaultHeight;
+
+  /// [_actionsPadding] represents the padding of the action buttons.
+  EdgeInsets get _actionsPadding => const EdgeInsets.symmetric(horizontal: 5);
+
+  /// [_columns] represents the columns of the table.
+  List<ThemedColumn<T>> get _columns => [
+        if (widget.multiSelectionEnabled) ...[
+          ThemedColumn<T>(
+            isSortable: false,
+            label: Center(
+              // child: Checkbox(
+              //   fillColor: WidgetStateProperty.resolveWith((states) {
+              //     if (states.contains(WidgetState.disabled)) {
+              //       return Theme.of(context).disabledColor;
+              //     } else if (states.contains(WidgetState.selected)) {
+              //       return isDark ? Colors.white : Theme.of(context).primaryColor;
+              //     }
+
+              //     return Theme.of(context).scaffoldBackgroundColor;
+              //   }),
+              //   value: _isAllSelected,
+              //   onChanged: (value) {
+              //     if (value == null) return;
+              //     if (value) {
+              //       _selectedItems = [..._items];
+              //     } else {
+              //       _selectedItems = [];
+              //     }
+
+              //     _validateSelection();
+              //   },
+              // ),
+              child: ThemedAnimatedCheckbox(
+                value: _isAllSelected,
+                onChanged: (value) {
+                  if (value) {
+                    _selectedItems = [..._items];
+                  } else {
+                    _selectedItems = [];
+                  }
+
+                  _validateSelection();
+                },
+              ),
+            ),
+            valueBuilder: (context, item) => '',
+            widgetBuilder: (context, item) {
+              return Center(
+                // child: Checkbox(
+                //   fillColor: WidgetStateProperty.resolveWith((states) {
+                //     if (states.contains(WidgetState.disabled)) {
+                //       return Theme.of(context).disabledColor;
+                //     } else if (states.contains(WidgetState.selected)) {
+                //       return isDark ? Colors.white : Theme.of(context).primaryColor;
+                //     }
+
+                //     return Theme.of(context).scaffoldBackgroundColor;
+                //   }),
+                //   value: _selectedItems.contains(item),
+                //   onChanged: (value) {
+                //     if (value == null) return;
+                //     if (value) {
+                //       _selectedItems.add(item);
+                //     } else {
+                //       _selectedItems.remove(item);
+                //     }
+
+                //     _validateSelection();
+                //   },
+                // ),
+                child: ThemedAnimatedCheckbox(
+                  value: _selectedItems.contains(item),
+                  onChanged: (value) {
+                    if (value) {
+                      _selectedItems.add(item);
+                    } else {
+                      _selectedItems.remove(item);
+                    }
+
+                    _validateSelection();
+                  },
+                ),
+              );
+            },
+            width: _checkboxWidth,
+          ),
+        ],
+        if (widget.idEnabled) ...[
+          ThemedColumn<T>(
+            label: Text(widget.idLabel, style: _headerStyle),
+            valueBuilder: widget.idBuilder,
+            customSortingFunction: (a, b) {
+              int aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
+              int bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
+
+              return aValue.compareTo(bValue);
+            },
+            widgetBuilder: (context, item) {
+              return InkWell(
+                onTap: widget.onIdTap == null ? null : () => widget.onIdTap?.call(item),
+                child: Text(widget.idBuilder(context, item)),
+              );
+            },
+            width: _idWidth,
+          ),
+        ],
+        ...widget.columns,
+      ];
+
+  /// [_hoveredIndex] represents the index of the hovered item.
+  int? _hoveredIndex;
+
+  /// [_hoverColor] represents the color of the hovered item.
+  Color get _hoverColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+
+  /// [_stripColor] represents the color of the strip item.
+  Color get _stripColor => isDark ? Colors.grey.shade900 : Colors.grey.shade100;
+
+  /// [_selectedItemsPerPage] represents the selected items per page, the value selected in the paginator.
+  int? _selectedItemsPerPage;
 
   @override
   void initState() {
@@ -411,15 +531,28 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     );
     _searchText = widget.searchText;
 
-    if (!widget.idEnabled) {
-      _sortBy = 0;
+    _items = widget.items;
+    if (widget.idEnabled) {
+      if (widget.multiSelectionEnabled) {
+        _sortBy = 1;
+      } else {
+        _sortBy = 0;
+      }
+    } else {
+      if (widget.multiSelectionEnabled) {
+        _sortBy = 1;
+      } else {
+        _sortBy = 0;
+      }
     }
 
-    _items = widget.items;
-    _sort();
+    _controllerGroup = SyncScrollControllerGroup();
+    _verticalScroll = _controllerGroup.addAndGet();
+    _verticalActionsScroll = _controllerGroup.addAndGet();
 
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _sort();
       _calculateRowsPerPage();
     });
   }
@@ -450,24 +583,25 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     _calculateRowsPerPage();
   }
 
-  /// [_predictSizes] predicts the sizes of the columns.
-  Map<String, dynamic> _predictSizes({
-    required BoxConstraints constraints,
+  /// [_prictSizes] pricts the sizes of the columns.
+  _CalculatedThings<T> _predictSizes({
     required List<T> items,
     required bool multiSelectionEnabled,
   }) {
     Map<int, double> sizes = {
-      -3: _checkboxWidth,
-      _idIndex: _idWidth,
-      -1: 0,
+      -1: 0, // Actions
     };
 
-    if (!multiSelectionEnabled) {
-      sizes[-3] = 0;
+    double maxWidth;
+    RenderBox? box = _tableKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null) {
+      maxWidth = MediaQuery.sizeOf(context).width;
+    } else {
+      maxWidth = box.size.width;
     }
 
-    if (actionsEnabled) {
-      if (constraints.maxWidth < widget.mobileBreakpoint) {
+    if (_actionsEnabled) {
+      if (maxWidth < widget.mobileBreakpoint) {
         sizes[-1] = 60;
       } else {
         double width = 0;
@@ -500,56 +634,77 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       }
     }
 
-    List<double> usedSizes = [];
+    List<int> fixedIndexes = [];
 
-    for (final entry in widget.columns.asMap().entries) {
+    for (final entry in _columns.asMap().entries) {
       int index = entry.key;
       ThemedColumn<T> column = entry.value;
-
-      sizes[index] = column.predictedHeaderSize(context, _headerStyle).width + ThemedColumn.padding.horizontal;
-      usedSizes.add(sizes[index] ?? 0);
+      if (column.widgetBuilder != null) {
+        fixedIndexes.add(index);
+      }
+      sizes[index] = column.predictedHeaderSize(context, _headerStyle).width;
     }
 
     for (T item in items) {
-      for (final entry in widget.columns.asMap().entries) {
+      for (final entry in _columns.asMap().entries) {
         int index = entry.key;
         ThemedColumn<T> column = entry.value;
 
         sizes[index] = max(
           sizes[index] ?? 0,
-          column.predictedContentSize(context, item, _rowStyle).width + ThemedColumn.padding.horizontal,
+          column.predictedContentSize(context, item, _rowStyle).width,
         );
-
-        usedSizes[index] = sizes[index] ?? 0;
       }
     }
 
-    double usedSize = sizes.values.reduce((value, element) => value + element);
-    double emptySize = constraints.maxWidth - usedSize - (border.width * sizes.length);
+    double usedSize = 0;
+    for (final entry in sizes.entries) {
+      if (entry.key == -1) continue;
+      usedSize += entry.value;
+    }
+
+    int columnCount = 0;
+
+    for (final entry in sizes.entries) {
+      if (entry.key == -1) continue;
+      columnCount++;
+    }
+
+    /// Calculate the empty space
+    ///
+    /// The correction factor 6 is used to fix the horizontal scroll, idk why but it works.
+    double emptySize = maxWidth - usedSize - (sizes[-1] ?? 0);
 
     if (emptySize > 0) {
       // Distruibute the empty space between the columns
-      double size = emptySize / widget.columns.length;
-      for (int index = 0; index < widget.columns.length; index++) {
+      int movableColumns = columnCount - fixedIndexes.length;
+      double size = emptySize / movableColumns;
+
+      for (int index = 0; index < _columns.length; index++) {
+        if (fixedIndexes.contains(index)) {
+          continue;
+        }
         double prevSize = sizes[index] ?? 0;
         sizes[index] = prevSize + size;
       }
     }
 
-    return {
-      'hasHorizontalScroll': usedSize > constraints.maxWidth,
-      'sizes': sizes,
-    };
+    return _CalculatedThings(
+      items: [],
+      sizes: sizes,
+      hasHorizontalScroll: usedSize > maxWidth,
+    );
   }
 
   /// [_calculateRowsPerPage] calculates the number of rows per page.
   void _calculateRowsPerPage() {
     RenderBox? box = _tableKey.currentContext?.findRenderObject() as RenderBox?;
     if (box == null) {
-      _itemsPerPage = widget.rowsPerPage ?? (widget.rowHeight * 10).round();
+      _itemsPerPage = widget.rowsPerPage ?? (widget.rowHeight * 10).floor();
     } else {
-      _itemsPerPage = widget.rowsPerPage ?? (box.size.height / widget.rowHeight).floor();
+      _itemsPerPage = widget.rowsPerPage ?? ((box.size.height / widget.rowHeight).floor() - 1);
     }
+
     _calculatedItemsPerPage = _itemsPerPage;
   }
 
@@ -572,26 +727,22 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       dynamic aValue;
       dynamic bValue;
 
-      if (_sortBy == _idIndex) {
-        // deafult sort when there are no columns selected
-        aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
-        bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
-      } else {
-        ThemedColumn<T> column = widget.columns[_sortBy];
+      ThemedColumn<T> column = _columns[_sortBy];
 
-        if (column.customSortingFunction != null) {
-          // only if the column has a custom sorting function
-          if (_sortAsc) {
-            // if the sort is ascending
-            return column.customSortingFunction!.call(a, b);
-          } else {
-            // if the sort is descending
-            return column.customSortingFunction!.call(b, a);
-          }
+      if (column.customSortingFunction != null) {
+        // only if the column has a custom sorting function
+        if (_sortAsc) {
+          // if the sort is ascending
+          return column.customSortingFunction!.call(a, b);
+        } else {
+          // if the sort is descending
+          return column.customSortingFunction!.call(b, a);
         }
-        aValue = column.valueBuilder(context, a);
-        bValue = column.valueBuilder(context, b);
       }
+
+      aValue = column.valueBuilder(context, a);
+      bValue = column.valueBuilder(context, b);
+
       // default sort using the abstract class Comparable
       if (_sortAsc) {
         // if the sort is ascending
@@ -605,26 +756,30 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     setState(() {});
   }
 
+  _CalculatedThings<T> _calculateThings() {
+    List<T> items = widget.disablePaginator ? _items : _getRows(_currentPage * _itemsPerPage, _itemsPerPage);
+
+    // ignore: use_build_context_synchronously
+    double screenWidth = MediaQuery.sizeOf(context).width;
+
+    _CalculatedThings<T> data = _predictSizes(
+      items: items,
+      multiSelectionEnabled: screenWidth < widget.mobileBreakpoint ? false : widget.multiSelectionEnabled,
+    );
+
+    return data.copyWith(items: items);
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isMobile = constraints.maxWidth < widget.mobileBreakpoint;
         bool isVerySmall = constraints.maxWidth <= 210;
-        bool multiSelectionEnabled = widget.multiSelectionEnabled;
 
-        if (isMobile) {
-          multiSelectionEnabled = false;
-        }
-
-        final items = _getRows(_currentPage * _itemsPerPage, _itemsPerPage);
-        final prediction = _predictSizes(
-          constraints: constraints,
-          items: items,
-          multiSelectionEnabled: multiSelectionEnabled,
-        );
-
-        final sizes = prediction['sizes'] as Map<int, double>;
+        final calculatedData = _calculateThings();
+        final items = calculatedData.items;
+        final sizes = calculatedData.sizes;
 
         double searchLength = constraints.maxWidth * 0.3;
         if (searchLength > 300) searchLength = 300;
@@ -696,202 +851,229 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                 controller: _horizontalScroll,
                 trackVisibility: !isMobile,
                 thumbVisibility: !isMobile,
-                child: Scrollbar(
-                  controller: _verticalScroll,
-                  notificationPredicate: (notif) => notif.depth == 1,
-                  thumbVisibility: false,
-                  trackVisibility: false,
-                  child: SingleChildScrollView(
-                    controller: _horizontalScroll,
-                    scrollDirection: Axis.horizontal,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                thickness: 8,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: Container(
+                    key: _tableKey,
+                    child: Row(
                       children: [
-                        Row(
-                          children: [
-                            if (multiSelectionEnabled) ...[
-                              _drawColumn(
-                                index: -3,
-                                column: ThemedColumn(
-                                  labelText: '',
-                                  valueBuilder: (context, item) => '',
-                                  isSortable: false,
-                                ),
-                                content: ThemedAnimatedCheckbox(
-                                  value: _isAllSelected,
-                                  onChanged: (value) {
-                                    if (value) {
-                                      _selectedItems = List.from(_items);
-                                    } else {
-                                      _selectedItems = [];
-                                    }
-
-                                    _validateSelection();
-                                  },
-                                ),
-                                sizes: sizes,
-                              ),
-                            ],
-                            if (widget.idEnabled) ...[
-                              _drawColumn(
-                                index: _idIndex,
-                                column: ThemedColumn(
-                                  labelText: widget.idLabel,
-                                  valueBuilder: (context, item) => '',
-                                ),
-                                sizes: sizes,
-                              ),
-                            ],
-                            ...widget.columns.asMap().entries.map((entry) {
-                              int index = entry.key;
-                              ThemedColumn<T> column = entry.value;
-                              return _drawColumn(
-                                index: index,
-                                column: column,
-                                sizes: sizes,
-                              );
-                            }),
-                            if (actionsEnabled) ...[
-                              _drawColumn(
-                                index: -1,
-                                content: Icon(MdiIcons.toolbox, size: 20),
-                                column: ThemedColumn(
-                                  labelText: 'Actions',
-                                  alignment: Alignment.centerRight,
-                                  valueBuilder: (context, item) => '',
-                                  isSortable: false,
-                                ),
-                                sizes: sizes,
-                              ),
-                            ],
-                          ],
-                        ),
                         Expanded(
-                          child: Container(
-                            key: _tableKey,
-                            child: SingleChildScrollView(
-                              controller: _verticalScroll,
-                              child: Column(
-                                children: [
-                                  ...items.map((item) {
-                                    bool isSelected = _selectedItems.contains(item);
+                          child: TableView.builder(
+                            cacheExtent: 500,
+                            columnCount: _columns.length,
+                            rowCount: items.length + 1,
+                            pinnedRowCount: 1,
+                            pinnedColumnCount: widget.fixedColumnsCount,
+                            verticalDetails: ScrollableDetails.vertical(controller: _verticalScroll),
+                            horizontalDetails: ScrollableDetails.horizontal(controller: _horizontalScroll),
+                            columnBuilder: (index) {
+                              double size = sizes[index] ?? 10;
+                              return TableSpan(
+                                extent: FixedTableSpanExtent(size),
+                                foregroundDecoration: SpanDecoration(
+                                  border: SpanBorder(leading: border),
+                                ),
+                              );
+                            },
+                            rowBuilder: (index) {
+                              bool isHovering = _hoveredIndex == index && index != 0;
 
-                                    return SizedBox(
-                                      height: widget.rowHeight,
-                                      child: Row(
-                                        children: [
-                                          if (multiSelectionEnabled) ...[
-                                            _drawCell(
-                                              index: -3,
-                                              child: ThemedAnimatedCheckbox(
-                                                value: isSelected,
-                                                onChanged: (value) {
-                                                  if (value) {
-                                                    _selectedItems.add(item);
-                                                  } else {
-                                                    _selectedItems.remove(item);
-                                                  }
+                              Color? color = index == 0
+                                  ? null
+                                  : index.isEven
+                                      ? _stripColor
+                                      : null;
+                              return TableSpan(
+                                extent: FixedTableSpanExtent(widget.rowHeight),
+                                backgroundDecoration: SpanDecoration(
+                                  color: isHovering ? _hoverColor : color,
+                                  border: SpanBorder(
+                                    leading: index == 0 ? BorderSide.none : border,
+                                    trailing: index == items.length ? BorderSide.none : border,
+                                  ),
+                                ),
+                              );
+                            },
+                            cellBuilder: (context, vicinity) {
+                              final column = _columns[vicinity.column];
 
-                                                  _validateSelection();
-                                                },
-                                              ),
-                                              sizes: sizes,
-                                            ),
-                                          ],
-                                          if (widget.idEnabled) ...[
-                                            _drawCell(
-                                              index: _idIndex,
-                                              value: "#${widget.idBuilder(context, item)}",
-                                              sizes: sizes,
-                                              onTap: widget.onIdTap == null ? null : () => widget.onIdTap?.call(item),
-                                            ),
-                                          ],
-                                          ...widget.columns.asMap().entries.map((entry) {
-                                            int index = entry.key;
-                                            ThemedColumn<T> column = entry.value;
-                                            return _drawCell(
-                                              index: index,
-                                              child: column.widgetBuilder?.call(context, item),
-                                              value: column.valueBuilder(context, item),
-                                              sizes: sizes,
-                                              onTap: column.onTap == null ? null : () => column.onTap?.call(item),
-                                              cellColor: column.cellColor?.call(item),
-                                              cellTextColor: column.cellTextColor?.call(item),
-                                            );
-                                          }),
-                                          if (actionsEnabled) ...[
-                                            _drawCell(
-                                              index: -1,
-                                              alignment: Alignment.centerRight,
-                                              child: ThemedActionsButtons(
-                                                actionsLabel: t('helpers.actions'),
-                                                actionPadding: _actionsPadding,
-                                                actions: [
-                                                  ...widget.additionalActions?.call(context, item) ?? [],
-                                                  if (widget.onShow != null)
-                                                    ThemedActionButton.show(
-                                                      isMobile: true,
-                                                      tooltipPosition: ThemedTooltipPosition.left,
-                                                      labelText: t('helpers.buttons.show'),
-                                                      isLoading: widget.isLoading,
-                                                      isCooldown: widget.isCooldown,
-                                                      onCooldownFinish: widget.onCooldown,
-                                                      onTap: () => widget.onShow?.call(context, item),
-                                                    ),
-                                                  if (widget.onEdit != null && widget.canEdit.call(context, item))
-                                                    ThemedActionButton.edit(
-                                                      isMobile: true,
-                                                      tooltipPosition: ThemedTooltipPosition.left,
-                                                      labelText: t('helpers.buttons.edit'),
-                                                      isLoading: widget.isLoading,
-                                                      isCooldown: widget.isCooldown,
-                                                      onCooldownFinish: widget.onCooldown,
-                                                      onTap: () => widget.onEdit?.call(context, item),
-                                                    ),
-                                                  if (widget.onDelete != null && widget.canDelete.call(context, item))
-                                                    ThemedActionButton.delete(
-                                                      isMobile: true,
-                                                      tooltipPosition: ThemedTooltipPosition.left,
-                                                      labelText: t('helpers.buttons.delete'),
-                                                      isLoading: widget.isLoading,
-                                                      isCooldown: widget.isCooldown,
-                                                      onCooldownFinish: widget.onCooldown,
-                                                      onTap: () async {
-                                                        bool confirmation = await deleteConfirmationDialog(
-                                                          context: context,
-                                                          isCooldown: widget.isCooldown,
-                                                          isLoading: widget.isLoading,
-                                                          onCooldown: widget.onCooldown,
-                                                        );
-                                                        if (confirmation) {
-                                                          if (context.mounted) widget.onDelete?.call(context, item);
-                                                        }
-                                                      },
-                                                    ),
-                                                ],
-                                              ),
-                                              sizes: sizes,
-                                            ),
-                                          ],
-                                        ],
-                                      ),
+                              if (vicinity.row == 0) {
+                                Widget content = column.label ??
+                                    Text(
+                                      column.labelText ?? '',
+                                      style: _headerStyle,
                                     );
-                                  }),
-                                ],
-                              ),
-                            ),
+                                return TableViewCell(
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: column.isSortable
+                                          ? () {
+                                              if (_sortBy == vicinity.column) {
+                                                _sortAsc = !_sortAsc;
+                                              } else {
+                                                _sortBy = vicinity.column;
+                                                _sortAsc = true;
+                                              }
+                                              _sort();
+                                            }
+                                          : null,
+                                      child: Container(
+                                        alignment: column.alignment,
+                                        padding: ThemedColumn.padding,
+                                        child: column.isSortable
+                                            ? Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  if (_sortBy == vicinity.column) ...[
+                                                    Icon(
+                                                      _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
+                                                      size: ThemedColumn.sortIconSize,
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                  ],
+                                                  content,
+                                                ],
+                                              )
+                                            : content,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              final item = items[vicinity.row - 1];
+
+                              return TableViewCell(
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: column.onTap == null ? null : () => column.onTap?.call(item),
+                                    child: Container(
+                                      alignment: column.alignment,
+                                      padding: ThemedColumn.padding,
+                                      child: column.widgetBuilder?.call(context, item) ??
+                                          Text(column.valueBuilder.call(context, item)),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
+                        if (_actionsEnabled) ...[
+                          SizedBox(
+                            width: sizes[-1] ?? _actionSize,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: widget.rowHeight,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: border,
+                                      left: border,
+                                    ),
+                                  ),
+                                  alignment: Alignment.centerRight,
+                                  padding: ThemedColumn.padding,
+                                  child: Icon(MdiIcons.toolbox, size: 20),
+                                ),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: items.length,
+                                    controller: _verticalActionsScroll,
+                                    itemBuilder: (context, index) {
+                                      bool isHovering = _hoveredIndex == index && index != 0;
+                                      final item = items[index];
+
+                                      return Container(
+                                        height: widget.rowHeight,
+                                        decoration: BoxDecoration(
+                                          color: isHovering
+                                              ? _hoverColor
+                                              : index.isOdd
+                                                  ? _stripColor
+                                                  : null,
+                                          border: Border(
+                                            top: index == 0 ? BorderSide.none : border,
+                                            bottom: index == items.length ? BorderSide.none : border,
+                                            left: border,
+                                          ),
+                                        ),
+                                        alignment: Alignment.centerRight,
+                                        padding: ThemedColumn.padding,
+                                        child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: ThemedActionsButtons(
+                                            actionsLabel: t('helpers.actions'),
+                                            actionPadding: _actionsPadding,
+                                            actions: [
+                                              ...widget.additionalActions?.call(context, item) ?? [],
+                                              if (widget.onShow != null)
+                                                ThemedActionButton.show(
+                                                  isMobile: true,
+                                                  tooltipPosition: ThemedTooltipPosition.left,
+                                                  labelText: t('helpers.buttons.show'),
+                                                  isLoading: widget.isLoading,
+                                                  isCooldown: widget.isCooldown,
+                                                  onCooldownFinish: widget.onCooldown,
+                                                  onTap: () => widget.onShow?.call(context, item),
+                                                ),
+                                              if (widget.onEdit != null && widget.canEdit.call(context, item))
+                                                ThemedActionButton.edit(
+                                                  isMobile: true,
+                                                  tooltipPosition: ThemedTooltipPosition.left,
+                                                  labelText: t('helpers.buttons.edit'),
+                                                  isLoading: widget.isLoading,
+                                                  isCooldown: widget.isCooldown,
+                                                  onCooldownFinish: widget.onCooldown,
+                                                  onTap: () => widget.onEdit?.call(context, item),
+                                                ),
+                                              if (widget.onDelete != null && widget.canDelete.call(context, item))
+                                                ThemedActionButton.delete(
+                                                  isMobile: true,
+                                                  tooltipPosition: ThemedTooltipPosition.left,
+                                                  labelText: t('helpers.buttons.delete'),
+                                                  isLoading: widget.isLoading,
+                                                  isCooldown: widget.isCooldown,
+                                                  onCooldownFinish: widget.onCooldown,
+                                                  onTap: () async {
+                                                    bool confirmation = await deleteConfirmationDialog(
+                                                      context: context,
+                                                      isCooldown: widget.isCooldown,
+                                                      isLoading: widget.isLoading,
+                                                      onCooldown: widget.onCooldown,
+                                                    );
+                                                    if (confirmation) {
+                                                      if (context.mounted) widget.onDelete?.call(context, item);
+                                                    }
+                                                  },
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ]
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 5),
-            isVerySmall
-                ? _buildVerySmallPaginator(constraints: constraints, isDark: isDark)
-                : _buildWebPaginator(constraints: constraints, isMobile: isMobile, isDark: isDark),
+            if (!widget.disablePaginator) ...[
+              isVerySmall
+                  ? _buildVerySmallPaginator(constraints: constraints, isDark: isDark)
+                  : _buildWebPaginator(constraints: constraints, isMobile: isMobile, isDark: isDark),
+            ],
           ],
         );
       },
@@ -1134,6 +1316,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
               );
             }),
           ],
+          value: _selectedItemsPerPage,
           onChanged: (value) {
             _setItemPerPage(value?.value);
           },
@@ -1209,146 +1392,21 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     );
   }
 
-  /// [_drawCell] draws a cell of the table.
-  Widget _drawCell({
-    required int index,
-    Widget? child,
-    required Map<int, double> sizes,
-    String? value,
-    Alignment alignment = Alignment.centerLeft,
-    VoidCallback? onTap,
-    Color? cellColor,
-    Color? cellTextColor,
-  }) {
-    double width = sizes[index] ?? 50;
-
-    BorderSide borderLeft = border;
-
-    if (index == -3) {
-      borderLeft = BorderSide.none;
-    }
-
-    if (sizes[-3] == 0 && index == _idIndex) {
-      borderLeft = BorderSide.none;
-    } else if (sizes[-3] == 0 && index == 0 && !widget.idEnabled) {
-      borderLeft = BorderSide.none;
-    }
-
-    cellColor = cellColor ?? Theme.of(context).scaffoldBackgroundColor;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: cellColor,
-        border: Border(bottom: border, left: borderLeft),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            width: width,
-            height: widget.rowHeight,
-            padding: ThemedColumn.padding,
-            alignment: alignment,
-            child: child ??
-                Text(
-                  value ?? '',
-                  style: _rowStyle?.copyWith(
-                    color: cellTextColor ?? validateColor(color: cellColor),
-                  ),
-                ),
-          ),
-        ),
-      ),
-    );
-  }
-
   /// This function is used to set the number of items per page in `_buildVerySmallPaginator` and `_buildWebPaginator`
   _setItemPerPage(int? value) {
+    int? prevValue = _selectedItemsPerPage;
+
     _itemsPerPage = value ?? _calculatedItemsPerPage;
+    _selectedItemsPerPage = value;
     _isUserChangeItemsPerPage = true;
+
+    if (_selectedItemsPerPage != prevValue) {
+      _currentPage = 0;
+    }
     setState(() {});
   }
 
-  /// [_drawColumn] draws a column of the table.
-  /// If the index is -3, will not draw the border left
-  Widget _drawColumn({
-    required int index,
-    required ThemedColumn<T> column,
-    required Map<int, double> sizes,
-    Widget? content,
-    String? label,
-  }) {
-    Widget header = content ??
-        Text(
-          label ?? column.labelText ?? '',
-          style: _headerStyle,
-        );
-
-    double width = sizes[index] ?? 50;
-
-    BorderSide borderLeft = border;
-
-    if (index == -3) {
-      borderLeft = BorderSide.none;
-    }
-
-    if (sizes[-3] == 0 && index == _idIndex) {
-      borderLeft = BorderSide.none;
-    } else if (sizes[-3] == 0 && index == 0 && !widget.idEnabled) {
-      borderLeft = BorderSide.none;
-    }
-
-    Widget itm = Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: border.color,
-            width: 3,
-          ),
-          left: borderLeft,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: column.isSortable
-              ? () {
-                  if (_sortBy == index) {
-                    _sortAsc = !_sortAsc;
-                  } else {
-                    _sortBy = index;
-                    _sortAsc = true;
-                  }
-                  _sort();
-                }
-              : null,
-          child: Container(
-            width: width,
-            height: widget.rowHeight,
-            alignment: column.alignment,
-            padding: ThemedColumn.padding,
-            child: Row(
-              mainAxisAlignment: index == -1 ? MainAxisAlignment.end : MainAxisAlignment.start,
-              children: [
-                if (_sortBy == index) ...[
-                  Icon(
-                    _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
-                    size: ThemedColumn.sortIconSize,
-                  ),
-                  const SizedBox(width: 5),
-                ],
-                header,
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    return itm;
-  }
-
+  /// [_getRows] gets the rows to display.
   List<T> _getRows(int firstRowIndex, int rowsPerPage) {
     final List<T> result = [];
 
@@ -1444,12 +1502,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       return;
     }
 
-    double width = MediaQuery.of(context).size.width * 0.8;
+    double width = MediaQuery.sizeOf(context).width * 0.8;
     if (width > 500) {
       width = 500;
     }
-
-    ScrollController actionsController = ScrollController();
 
     _overlayEntry = OverlayEntry(
       builder: (context1) {
@@ -1517,7 +1573,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                 SizedBox(
                                   width: width,
                                   child: SingleChildScrollView(
-                                    controller: actionsController,
                                     reverse: true,
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
@@ -1633,5 +1688,29 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     if (key == 'helpers.refresh') return widget.refreshButtonLabelText;
 
     return key;
+  }
+}
+
+class _CalculatedThings<T> {
+  final bool hasHorizontalScroll;
+  final Map<int, double> sizes;
+  final List<T> items;
+
+  _CalculatedThings({
+    required this.hasHorizontalScroll,
+    required this.sizes,
+    required this.items,
+  });
+
+  _CalculatedThings<T> copyWith({
+    bool? hasHorizontalScroll,
+    Map<int, double>? sizes,
+    List<T>? items,
+  }) {
+    return _CalculatedThings<T>(
+      hasHorizontalScroll: hasHorizontalScroll ?? this.hasHorizontalScroll,
+      sizes: sizes ?? this.sizes,
+      items: items ?? this.items,
+    );
   }
 }

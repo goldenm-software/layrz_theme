@@ -11,6 +11,8 @@ import 'package:layrz_theme/src/scaffolds/scaffolds.dart';
 import 'package:layrz_theme/src/theme/theme.dart';
 import 'package:layrz_theme/src/tooltips/tooltips.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sync_scroll_controller/sync_scroll_controller.dart';
+import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 part 'src/table.dart';
 part 'src/column.dart';

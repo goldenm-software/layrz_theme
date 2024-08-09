@@ -55,6 +55,7 @@ Future<bool> deleteConfirmationDialog({
               ),
               const SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ThemedButton.cancel(
                     labelText: i18n?.t('actions.confirmation.dismiss') ?? 'Nevermind',

@@ -8,6 +8,7 @@ import 'package:layrz_theme_example/views/inputs/inputs.dart';
 import 'package:layrz_theme_example/views/landing.dart';
 import 'package:layrz_theme_example/views/layo.dart';
 import 'package:layrz_theme_example/views/map/map.dart';
+import 'package:layrz_theme_example/views/not_found.dart';
 import 'package:layrz_theme_example/views/table/table.dart';
 import 'package:layrz_theme_example/views/theme_generation.dart';
 
@@ -15,10 +16,10 @@ Page<void> customTransitionBuilder(BuildContext context, GoRouterState state, Wi
   return CustomTransitionPage(
     key: state.pageKey,
     child: child,
-    transitionDuration: kHoverDuration * 1.5,
+    transitionDuration: kPageTransitionDuration,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(
-        opacity: CurveTween(curve: Curves.linearToEaseOut).animate(animation),
+        opacity: animation,
         child: child,
       );
     },
@@ -111,6 +112,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/map/layer' : '/',
+  initialLocation: kDebugMode ? '/table/basic' : '/',
+  errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

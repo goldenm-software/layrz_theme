@@ -160,13 +160,6 @@ class _LayoutState extends State<Layout> {
       ],
       persistentItems: [
         ThemedNavigatorAction(
-          labelText: 'onTap action',
-          icon: MdiIcons.calendar,
-          onTap: () {
-            debugPrint('onTap action');
-          },
-        ),
-        ThemedNavigatorAction(
           labelText: "GitHub repository",
           icon: MdiIcons.github,
           onTap: () => launchUrlString(

@@ -34,7 +34,8 @@ class _ThemedAnimatedCheckboxState extends State<ThemedAnimatedCheckbox> with Ti
   late AnimationController _selectedController;
   late bool value;
 
-  Color get activeColor => widget.activeColor ?? Theme.of(context).primaryColor;
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get activeColor => widget.activeColor ?? (isDark ? Colors.white : Theme.of(context).primaryColor);
   Widget get _unselectedIcon => Icon(MdiIcons.checkboxBlankCircleOutline, color: Colors.grey, size: 20);
   Widget get _selectedIcon => Icon(MdiIcons.checkboxMarkedCircleOutline, color: activeColor, size: 20);
 
@@ -52,13 +53,15 @@ class _ThemedAnimatedCheckboxState extends State<ThemedAnimatedCheckbox> with Ti
 
     if (oldWidget.value != widget.value) {
       value = widget.value;
-      if (!widget.value) {
-        _unselectedController.forward();
-        _selectedController.reverse();
-      } else {
-        _unselectedController.reverse();
-        _selectedController.forward();
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!widget.value) {
+          _unselectedController.forward();
+          _selectedController.reverse();
+        } else {
+          _unselectedController.reverse();
+          _selectedController.forward();
+        }
+      });
     }
   }
 

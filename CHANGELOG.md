@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.0.0-preview2
+
+- Changed `ThemedTable` to use the package `two_dimensional_scrollables` to handle multiple scrollables in the table.
+- Added property `disablePaginator` to `ThemedTable` to disable the paginator.
+- Fixed Actions column on `ThemedTable` to show the actions correctly.
+- Fixed multi selection, id and the first column on `ThemedTable`, you can change it using the `fixedColumnsCount` property.
+- Fixed `MainAxisAligment.spaceBetween` on `deleteConfirmationDialog`. Now will show the buttons with the correct spacing.
+
 ## 6.0.0-preview1
 
 - Added support for preview version of `layrz_models` v`3.0.0-preview1`
