@@ -112,7 +112,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/table/basic' : '/',
+  initialLocation: kDebugMode ? '/inputs/checkboxes' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

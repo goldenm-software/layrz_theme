@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.0-preview5
+
+- Checkboxes' colors corrected to display white when the app is in dark mode, also changed the design of the switches
+
 ## 6.0.0-preview4
 
 - Fixed sorting of IDs in `ThemedTable`.

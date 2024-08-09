@@ -516,7 +516,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _sort();
+      _sort(isFirst: true);
       _calculateRowsPerPage();
     });
   }
@@ -682,7 +682,12 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_sort] sorts the items.
   /// and searches all the items with the [_searchText].
-  void _sort() {
+  void _sort({bool isFirst = false}) {
+    int sortIndex = _sortBy;
+    if (isFirst) {
+      sortIndex = _columns.indexWhere((column) => column.isSortable);
+    }
+
     _items = widget.items.where((T item) {
       if (_searchText.isEmpty) return true;
       bool c1 = "#${widget.idBuilder(context, item)}".contains(_searchText);
@@ -699,7 +704,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       dynamic aValue;
       dynamic bValue;
 
-      ThemedColumn<T> column = _columns[_sortBy];
+      ThemedColumn<T> column = _columns[sortIndex];
 
       if (column.customSortingFunction != null) {
         // only if the column has a custom sorting function

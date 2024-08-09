@@ -2,6 +2,7 @@ library table;
 
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/src/buttons/buttons.dart';

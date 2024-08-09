@@ -11,6 +11,8 @@ import 'package:layrz_theme/src/helpers/helpers.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math' as math;
 
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 part 'src/platform.dart';
 part 'src/light_theme.dart';
 part 'src/dark_theme.dart';
