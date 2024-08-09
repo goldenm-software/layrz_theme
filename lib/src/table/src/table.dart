@@ -455,7 +455,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
               int aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
               int bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
 
-              return aValue.compareTo(bValue);
+              if (aValue == bValue) return 0;
+              if (aValue > bValue) return 1;
+              return -1;
             },
             widgetBuilder: (context, item) {
               return InkWell(

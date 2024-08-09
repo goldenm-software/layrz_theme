@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.0-preview4
+
+- Fixed sorting of IDs in `ThemedTable`.
+
 ## 6.0.0-preview3
 
 - Fixes related to ID column width on `ThemedTable`.
