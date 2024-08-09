@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.0-preview3
+
+- Fixes related to ID column width on `ThemedTable`.
+
 ## 6.0.0-preview2
 
 - Changed `ThemedTable` to use the package `two_dimensional_scrollables` to handle multiple scrollables in the table.

@@ -206,6 +206,9 @@ class ThemedTable<T> extends StatefulWidget {
 
   /// [fixedColumnsCount] represents the number of fixed rows in the table.
   /// By default, this value is 3 (multiselection, id and name)
+  ///
+  /// Note: When the [mobileBreakpoint] is reached, the fixed columns will be disabled. In other terms,
+  /// this value will be overridden to `0`.
   final int fixedColumnsCount;
 
   /// [disablePaginator] represents if the paginator should be disabled.
@@ -366,7 +369,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_idWidth] represents the width of the id column.
   /// This is used to calculate the width of the table.
-  double get _idWidth => 80;
+  double get _idWidth => 50;
 
   /// [_checkboxWidth] represents the width of the checkbox column.
   /// This is used to calculate the width of the table.
@@ -407,32 +410,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_columns] represents the columns of the table.
   List<ThemedColumn<T>> get _columns => [
-        if (widget.multiSelectionEnabled) ...[
+        if (_multiSelectionEnabled) ...[
           ThemedColumn<T>(
             isSortable: false,
             label: Center(
-              // child: Checkbox(
-              //   fillColor: WidgetStateProperty.resolveWith((states) {
-              //     if (states.contains(WidgetState.disabled)) {
-              //       return Theme.of(context).disabledColor;
-              //     } else if (states.contains(WidgetState.selected)) {
-              //       return isDark ? Colors.white : Theme.of(context).primaryColor;
-              //     }
-
-              //     return Theme.of(context).scaffoldBackgroundColor;
-              //   }),
-              //   value: _isAllSelected,
-              //   onChanged: (value) {
-              //     if (value == null) return;
-              //     if (value) {
-              //       _selectedItems = [..._items];
-              //     } else {
-              //       _selectedItems = [];
-              //     }
-
-              //     _validateSelection();
-              //   },
-              // ),
               child: ThemedAnimatedCheckbox(
                 value: _isAllSelected,
                 onChanged: (value) {
@@ -449,28 +430,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
             valueBuilder: (context, item) => '',
             widgetBuilder: (context, item) {
               return Center(
-                // child: Checkbox(
-                //   fillColor: WidgetStateProperty.resolveWith((states) {
-                //     if (states.contains(WidgetState.disabled)) {
-                //       return Theme.of(context).disabledColor;
-                //     } else if (states.contains(WidgetState.selected)) {
-                //       return isDark ? Colors.white : Theme.of(context).primaryColor;
-                //     }
-
-                //     return Theme.of(context).scaffoldBackgroundColor;
-                //   }),
-                //   value: _selectedItems.contains(item),
-                //   onChanged: (value) {
-                //     if (value == null) return;
-                //     if (value) {
-                //       _selectedItems.add(item);
-                //     } else {
-                //       _selectedItems.remove(item);
-                //     }
-
-                //     _validateSelection();
-                //   },
-                // ),
                 child: ThemedAnimatedCheckbox(
                   value: _selectedItems.contains(item),
                   onChanged: (value) {
@@ -521,6 +480,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_selectedItemsPerPage] represents the selected items per page, the value selected in the paginator.
   int? _selectedItemsPerPage;
+
+  /// [_multiSelectionEnabled] represents if the multiple selection is enabled.
+  bool _multiSelectionEnabled = false;
 
   @override
   void initState() {
@@ -706,6 +668,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
 
     _calculatedItemsPerPage = _itemsPerPage;
+
+    _toggleMultiSelectionEnabled();
+  }
+
+  /// [_toggleMultiSelectionEnabled] toggles the multi selection enabled.
+  void _toggleMultiSelectionEnabled() {
+    double screenWidth = MediaQuery.sizeOf(context).width;
+    _multiSelectionEnabled = screenWidth < widget.mobileBreakpoint ? false : widget.multiSelectionEnabled;
   }
 
   /// [_sort] sorts the items.
@@ -759,12 +729,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   _CalculatedThings<T> _calculateThings() {
     List<T> items = widget.disablePaginator ? _items : _getRows(_currentPage * _itemsPerPage, _itemsPerPage);
 
-    // ignore: use_build_context_synchronously
-    double screenWidth = MediaQuery.sizeOf(context).width;
-
     _CalculatedThings<T> data = _predictSizes(
       items: items,
-      multiSelectionEnabled: screenWidth < widget.mobileBreakpoint ? false : widget.multiSelectionEnabled,
+      multiSelectionEnabled: _multiSelectionEnabled,
     );
 
     return data.copyWith(items: items);
@@ -864,7 +831,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                             columnCount: _columns.length,
                             rowCount: items.length + 1,
                             pinnedRowCount: 1,
-                            pinnedColumnCount: widget.fixedColumnsCount,
+                            pinnedColumnCount: isMobile ? 0 : widget.fixedColumnsCount,
                             verticalDetails: ScrollableDetails.vertical(controller: _verticalScroll),
                             horizontalDetails: ScrollableDetails.horizontal(controller: _horizontalScroll),
                             columnBuilder: (index) {

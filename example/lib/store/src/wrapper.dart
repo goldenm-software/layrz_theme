@@ -157,6 +157,19 @@ class _LayoutState extends State<Layout> {
             ),
           ],
         ),
+        ThemedNavigatorPage(
+          labelText: 'Table',
+          path: '/table',
+          icon: MdiIcons.table,
+          useDefaultRedirect: false,
+          children: [
+            ThemedNavigatorPage(
+              labelText: 'Standard Table',
+              path: '/table/basic',
+              icon: MdiIcons.tableBorder,
+            ),
+          ],
+        ),
       ],
       persistentItems: [
         ThemedNavigatorAction(
