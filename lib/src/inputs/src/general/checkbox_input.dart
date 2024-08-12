@@ -190,15 +190,6 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
                 ),
               ] else ...[
                 Checkbox(
-                  fillColor: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.disabled)) {
-                      return Theme.of(context).disabledColor;
-                    } else if (states.contains(WidgetState.selected)) {
-                      return Theme.of(context).primaryColor;
-                    }
-
-                    return Theme.of(context).scaffoldBackgroundColor;
-                  }),
                   value: _value,
                   onChanged: widget.disabled
                       ? null

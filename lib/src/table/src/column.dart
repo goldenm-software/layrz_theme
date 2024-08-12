@@ -91,7 +91,7 @@ class ThemedColumn<T> {
   Size predictedContentSize(BuildContext context, T item, TextStyle? style) {
     if (widgetBuilder != null) {
       return Size(
-        width + ThemedColumn.padding.horizontal + ThemedColumn.sortIconSize,
+        width + ThemedColumn.padding.horizontal + (isSortable ? ThemedColumn.sortIconSize : 0),
         0,
       );
     }
@@ -105,7 +105,7 @@ class ThemedColumn<T> {
     )..layout();
 
     return Size(
-      painter.size.width + ThemedColumn.padding.horizontal + ThemedColumn.sortIconSize,
+      painter.size.width + ThemedColumn.padding.horizontal + (isSortable ? ThemedColumn.sortIconSize : 0),
       painter.size.height,
     );
   }
@@ -115,7 +115,7 @@ class ThemedColumn<T> {
   Size predictedHeaderSize(BuildContext context, TextStyle? style) {
     if (label != null) {
       return Size(
-        width + ThemedColumn.padding.horizontal + ThemedColumn.sortIconSize,
+        width + ThemedColumn.padding.horizontal + (isSortable ? ThemedColumn.sortIconSize : 0),
         0,
       );
     }
@@ -129,7 +129,7 @@ class ThemedColumn<T> {
     )..layout();
 
     return Size(
-      painter.size.width + ThemedColumn.padding.horizontal + ThemedColumn.sortIconSize,
+      painter.size.width + ThemedColumn.padding.horizontal + (isSortable ? ThemedColumn.sortIconSize : 0),
       painter.size.height,
     );
   }

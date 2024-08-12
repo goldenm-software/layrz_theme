@@ -13,7 +13,9 @@
       "request": "launch",
       "type": "dart",
       "args": [
-        "--profile"
+        "--profile",
+        "--cache-sksl",
+        "--purge-persistent-cache"
       ]
     }
   ]

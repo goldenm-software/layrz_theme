@@ -77,130 +77,73 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
               shrinkWrap: true,
               padding: const EdgeInsets.only(left: 10),
               children: [
-                ListTile(
-                  leading: drawAvatar(
-                    context: context,
-                    size: 30,
-                    name: 'Example',
-                    dynamicAvatar: const Avatar(type: AvatarType.none),
-                  ),
-                  title: const Text("Type none"),
-                  trailing: ThemedButton(
-                    icon: MdiIcons.contentCopy,
-                    labelText: "Get the code",
-                    onTap: () {
-                      Clipboard.setData(const ClipboardData(
-                        text: "drawAvatar(context: context, size: 30, name: 'Example', "
-                            "dynamicAvatar: const Avatar(type: AvatarType.none))",
-                      ));
-                      // showThemedSnackbar(ThemedSnackbar(
-                      //   context: context,
-                      //   message: "Copied to clipboard",
-                      //   icon: MdiIcons.clipboardCheckOutline,
-                      //   color: Colors.green,
-                      // ));
-                    },
-                  ),
+                _buildExampleRow(
+                  avatar: const Avatar(type: AvatarType.none),
+                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', "
+                      "dynamicAvatar: const Avatar(type: AvatarType.none))",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
                 const SizedBox(height: 5),
-                ListTile(
-                  leading: drawAvatar(
-                    context: context,
-                    size: 30,
-                    name: 'Example',
-                    dynamicAvatar: const Avatar(
-                      type: AvatarType.url,
-                      url: 'https://cdn.layrz.com/resources/layo/layo2.png',
-                    ),
-                  ),
-                  title: const Text("Type url"),
-                  trailing: ThemedButton(
-                    icon: MdiIcons.contentCopy,
-                    labelText: "Get the code",
-                    onTap: () {
-                      Clipboard.setData(const ClipboardData(
-                        text: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
-                            "const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/"
-                            "layo2.png'))",
-                      ));
-                      // showThemedSnackbar(ThemedSnackbar(
-                      //   context: context,
-                      //   message: "Copied to clipboard",
-                      //   icon: MdiIcons.clipboardCheckOutline,
-                      //   color: Colors.green,
-                      // ));
-                    },
-                  ),
+                _buildExampleRow(
+                  avatar: const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/layo2.png'),
+                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
+                      "const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/"
+                      "layo2.png'))",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
                 const SizedBox(height: 5),
-                ListTile(
-                  leading: drawAvatar(
-                    context: context,
-                    size: 30,
-                    name: 'Example',
-                    dynamicAvatar: Avatar(
-                      type: AvatarType.icon,
-                      icon: MdiIcons.clipboard,
-                    ),
-                  ),
-                  title: const Text("Type icon"),
-                  trailing: ThemedButton(
-                    icon: MdiIcons.contentCopy,
-                    labelText: "Get the code",
-                    onTap: () {
-                      Clipboard.setData(const ClipboardData(
-                        text: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
-                            "Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard))",
-                      ));
-                      // showThemedSnackbar(ThemedSnackbar(
-                      //   context: context,
-                      //   message: "Copied to clipboard",
-                      //   icon: MdiIcons.clipboardCheckOutline,
-                      //   color: Colors.green,
-                      // ));
-                    },
-                  ),
+                _buildExampleRow(
+                  avatar: Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard),
+                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
+                      "Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard))",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
                 const SizedBox(height: 5),
-                ListTile(
-                  leading: drawAvatar(
-                    context: context,
-                    size: 30,
-                    name: 'Example',
-                    dynamicAvatar: const Avatar(
-                      type: AvatarType.emoji,
-                      emoji: '👍',
-                    ),
-                  ),
-                  title: const Text("Type emoji"),
-                  trailing: ThemedButton(
-                    icon: MdiIcons.contentCopy,
-                    labelText: "Get the code",
-                    onTap: () {
-                      Clipboard.setData(const ClipboardData(
-                        text: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
-                            "const Avatar(type: AvatarType.emoji, emoji: '👍'))",
-                      ));
-                      // showThemedSnackbar(ThemedSnackbar(
-                      //   context: context,
-                      //   message: "Copied to clipboard",
-                      //   icon: MdiIcons.clipboardCheckOutline,
-                      //   color: Colors.green,
-                      // ));
-                    },
-                  ),
+                _buildExampleRow(
+                  avatar: const Avatar(type: AvatarType.emoji, emoji: '👍'),
+                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
+                      "const Avatar(type: AvatarType.emoji, emoji: '👍'))",
                 ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildExampleRow({
+    required Avatar avatar,
+    required String codeExample,
+  }) {
+    return Row(
+      children: [
+        drawAvatar(
+          context: context,
+          size: 30,
+          name: 'Example',
+          dynamicAvatar: avatar,
+        ),
+        const SizedBox(width: 5),
+        Expanded(child: Text("Type ${avatar.type}")),
+        const SizedBox(width: 5),
+        ThemedButton(
+          icon: MdiIcons.contentCopy,
+          color: Colors.blue,
+          labelText: "Get the code",
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: codeExample));
+            ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
+              message: "Copied to clipboard",
+              icon: MdiIcons.clipboardCheckOutline,
+              color: Colors.green,
+            ));
+          },
+        )
+      ],
     );
   }
 }

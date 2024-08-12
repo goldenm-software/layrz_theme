@@ -57,27 +57,6 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   const Divider(),
-                  // ListTile(
-                  //   leading: drawAvatar(context: context, icon: MdiIcons.viewGrid, color: color, size: iconSize),
-                  //   title: Text(
-                  //     "Layout",
-                  //     style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "Contains 5 different widgets, each one is a part of the layout of the application. "
-                  //     "Also, contains a main widget to use all the widgets together and change the deisgn "
-                  //     "using a simple property.",
-                  //     style: Theme.of(context).textTheme.bodyMedium,
-                  //     maxLines: 5,
-                  //   ),
-                  //   trailing: ThemedButton(
-                  //     labelText: "Go!",
-                  //     icon: MdiIcons.rocketLaunch,
-                  //     color: Colors.green,
-                  //     onTap: () => context.go('/layout'),
-                  //   ),
-                  // ),
-                  // const Divider(),
                   ListTile(
                     leading: drawAvatar(context: context, icon: MdiIcons.text, color: color, size: iconSize),
                     title: Text(
@@ -98,66 +77,27 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   const Divider(),
-                  // ListTile(
-                  //   leading: drawAvatar(context: context, icon: MdiIcons.table, color: color, size: iconSize),
-                  //   title: Text(
-                  //     "Scaffold",
-                  //     style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "For us, scaffold refers to tables and details view to handle the CRUD operations.",
-                  //     style: Theme.of(context).textTheme.bodyMedium,
-                  //     maxLines: 5,
-                  //   ),
-                  //   trailing: ThemedButton(
-                  //     labelText: "Go!",
-                  //     icon: MdiIcons.rocketLaunch,
-                  //     color: Colors.green,
-                  //     onTap: () => context.go('/scaffold'),
-                  //   ),
-                  // ),
-                  // const Divider(),
-                  // ListTile(
-                  //   leading: drawAvatar(context: context, icon: MdiIcons.codeBraces, color: color, size: iconSize),
-                  //   title: Text(
-                  //     "Utility functions",
-                  //     style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "To simplify and/or override some properties of the default widgets, Layrz Theme "
-                  //     "provides some functions to generate the widgets with the default properties "
-                  //     "already set.",
-                  //     style: Theme.of(context).textTheme.bodyMedium,
-                  //     maxLines: 5,
-                  //   ),
-                  //   trailing: ThemedButton(
-                  //     labelText: "Go!",
-                  //     icon: MdiIcons.rocketLaunch,
-                  //     color: Colors.green,
-                  //     onTap: () => context.go('/utilities/functions'),
-                  //   ),
-                  // ),
-                  // const Divider(),
-                  // ListTile(
-                  //   leading: drawAvatar(context: context, icon: MdiIcons.toolbox, color: color, size: iconSize),
-                  //   title: Text(
-                  //     "Utility widgets",
-                  //     style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "Some widgets, like image handling, are not 'easy' to handle multiple paths and/or formats, "
-                  //     "so, to simplify this process, Layrz Theme provides some widgets to handle this.",
-                  //     style: Theme.of(context).textTheme.bodyMedium,
-                  //     maxLines: 5,
-                  //   ),
-                  //   trailing: ThemedButton(
-                  //     labelText: "Go!",
-                  //     icon: MdiIcons.rocketLaunch,
-                  //     color: Colors.green,
-                  //     onTap: () => context.go('/utilities/widgets'),
-                  //   ),
-                  // ),
-                  // const Divider(),
+                  ListTile(
+                    leading: drawAvatar(context: context, icon: MdiIcons.table, color: color, size: iconSize),
+                    title: Text(
+                      "Tables",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      "For us, tables are the core element on all of our scaffolds, so we provide a table "
+                      "optimized to handle hundreds of rows and columns. Of course you can customize it "
+                      "to fit your needs.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      maxLines: 5,
+                    ),
+                    trailing: ThemedButton(
+                      labelText: "Go!",
+                      icon: MdiIcons.rocketLaunch,
+                      color: Colors.green,
+                      onTap: () => context.go('/table'),
+                    ),
+                  ),
+                  const Divider(),
                   ListTile(
                     leading: drawAvatar(
                       context: context,
@@ -203,23 +143,6 @@ class _HomeViewState extends State<HomeView> {
                       icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/layo'),
-                    ),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: Layo(
-                      size: iconSize,
-                      emotion: LayoEmotions.mrLayo,
-                    ),
-                    title: Text(
-                      "And more! You can navigate using the dual navigation (or sidebar if you changed the design) "
-                      "to see all the components available on this example.",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      "And, enjoy your travel with Layrz Theme! Happy coding!",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      maxLines: 5,
                     ),
                   ),
                 ],

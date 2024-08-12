@@ -1,53 +1,75 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+  <head>
+    <base href="$FLUTTER_BASE_HREF">
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+    <title>Layrz Theme</title>
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
+    <link rel="shortcut icon" href="https://cdn.layrz.com/resources/layrz/appicon/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="https://cdn.layrz.com/resources/layrz/appicon/favicon.png" type="image/png">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+    <style>
+      body {
+        background-color: #fafafa;
+      }
 
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="example">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+      #loading-animation {
+        width: 100vw;
+        height: 100vh;
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-  <title>example</title>
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
+      #loading-animation .dotlottie-player {
+        width: 40%;
+        height: 40%;
 
-  <script>
-    {{flutter_js}}
-    {{flutter_build_config}}
+        max-width: 350px;
+        max-height: 350px;
+      }
+    </style>
+  </head>
+  <body style="overflow: hidden">
+    <div id="loading-animation">
+      <dotlottie-player
+        class="dotlottie-player"
+        src="assets/assets/loading_animation.lottie"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></dotlottie-player>
+    </div>
+    
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
 
-    _flutter.loader.load({
-      serviceWorkerSettings: {
-        serviceWorkerVersion: {{flutter_service_worker_version}},
-      },
-      onEntrypointLoaded: async function (engine) {
-        const app = await engine.initializeEngine();
+    <script>
+      {{flutter_js}}
+      {{flutter_build_config}}
 
-        await app.runApp();
-      },
-    });
-  </script>
-</body>
+      window.addEventListener('load', function (ev) {
+        _flutter.loader.load({
+          serviceWorkerSettings: {
+            serviceWorkerVersion: {{flutter_service_worker_version}},
+          },
+          onEntrypointLoaded: async function (engine) {
+            console.log('[Flutter] Starting engines...')
+            const app = await engine.initializeEngine();
+            console.log('[Flutter] Engines started');
+            
+            console.log('[Flutter] Running app...');
+            await app.runApp();
+            console.log('[Flutter] App started');
+          },
+        });
+      });
+    </script>
+  </body>
 </html>

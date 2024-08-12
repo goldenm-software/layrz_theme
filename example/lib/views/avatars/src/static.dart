@@ -89,91 +89,78 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
               shrinkWrap: true,
               padding: const EdgeInsets.only(left: 10),
               children: [
-                ListTile(
-                  leading: drawAvatar(
-                    context: context,
-                    size: 50,
-                    avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
-                  ),
-                  title: const Text("Using an image"),
-                  trailing: ThemedButton(
-                    icon: MdiIcons.contentCopy,
-                    labelText: "Get the code",
-                    onTap: () {
-                      Clipboard.setData(const ClipboardData(
-                        text: "drawAvatar(context: context, size: 50, avatar: "
-                            "'https://cdn.layrz.com/resources/layo/layo2.png')",
-                      ));
-                      // showThemedSnackbar(ThemedSnackbar(
-                      //   context: context,
-                      //   message: "Copied to clipboard",
-                      //   icon: MdiIcons.clipboardCheckOutline,
-                      //   color: Colors.green,
-                      // ));
-                    },
-                  ),
+                _buildExampleRow(
+                  name: 'Using an image',
+                  avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
+                  codeExample: "drawAvatar(context: context, size: 50, avatar: "
+                      "'https://cdn.layrz.com/resources/layo/layo2.png')",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
                 const SizedBox(height: 5),
-                ListTile(
-                  leading: drawAvatar(
-                    context: context,
-                    size: 50,
-                    icon: MdiIcons.account,
-                    color: Colors.green,
-                  ),
-                  title: const Text("Using an icon w/ a color"),
-                  trailing: ThemedButton(
-                    icon: MdiIcons.contentCopy,
-                    labelText: "Get the code",
-                    onTap: () {
-                      Clipboard.setData(const ClipboardData(
-                        text: "drawAvatar(context: context, size: 50, icon: MdiIcons.account, color: Colors.green)",
-                      ));
-                      // showThemedSnackbar(ThemedSnackbar(
-                      //   context: context,
-                      //   message: "Copied to clipboard",
-                      //   icon: MdiIcons.clipboardCheckOutline,
-                      //   color: Colors.green,
-                      // ));
-                    },
-                  ),
+                _buildExampleRow(
+                  name: 'Using an icon w/ a color',
+                  icon: MdiIcons.account,
+                  color: Colors.green,
+                  codeExample: "drawAvatar(context: context, size: 50, icon: MdiIcons.account, color: Colors.green)",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
                 const SizedBox(height: 5),
-                ListTile(
-                  leading: drawAvatar(
-                    context: context,
-                    size: 50,
-                    avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
-                    radius: 10,
-                    elevation: 3,
-                  ),
-                  title: const Text("Changing the border radius and elevation"),
-                  trailing: ThemedButton(
-                    icon: MdiIcons.contentCopy,
-                    labelText: "Get the code",
-                    onTap: () {
-                      Clipboard.setData(const ClipboardData(
-                        text: "drawAvatar(context: context, size: 50, avatar: "
-                            "'https://cdn.layrz.com/resources/layo/layo2.png', radius: 10, elevation: 3)",
-                      ));
-                      // showThemedSnackbar(ThemedSnackbar(
-                      //   context: context,
-                      //   message: "Copied to clipboard",
-                      //   icon: MdiIcons.clipboardCheckOutline,
-                      //   color: Colors.green,
-                      // ));
-                    },
-                  ),
+                _buildExampleRow(
+                  name: 'Changing the border radius and elevation',
+                  avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
+                  radius: 10,
+                  elevation: 3,
+                  codeExample: "drawAvatar(context: context, size: 50, avatar: "
+                      "'https://cdn.layrz.com/resources/layo/layo2.png', radius: 10, elevation: 3)",
                 ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildExampleRow({
+    required String name,
+    String? avatar,
+    IconData? icon,
+    required String codeExample,
+    Color? color,
+    double? radius,
+    double? elevation,
+  }) {
+    return Row(
+      children: [
+        drawAvatar(
+          context: context,
+          size: 30,
+          name: 'Example',
+          avatar: avatar,
+          icon: icon,
+          color: color,
+          radius: radius ?? 30,
+          elevation: elevation ?? 1,
+        ),
+        const SizedBox(width: 5),
+        Expanded(child: Text(name)),
+        const SizedBox(width: 5),
+        ThemedButton(
+          icon: MdiIcons.contentCopy,
+          color: Colors.blue,
+          labelText: "Get the code",
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: codeExample));
+            ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
+              message: "Copied to clipboard",
+              icon: MdiIcons.clipboardCheckOutline,
+              color: Colors.green,
+            ));
+          },
+        )
+      ],
     );
   }
 }

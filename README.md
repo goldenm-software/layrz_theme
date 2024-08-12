@@ -2,15 +2,9 @@
 
 Managed by <b>Golden M, Inc.</b> with authorization of <b>Layrz Limited</b>
 
-## Important notice about Flutter 3.22.0 support (2024-05-15)
-Due to a incompatibility with `permission_handler_html`, `layrz_theme` cannot compile in WASM, however, you can define this override in your package to avoid this issue:
-```yaml
-permission_handler_html: # Added this override to support WASM
-    git:
-      url: https://github.com/raldhafiri/flutter-permission-handler.git
-      ref: main
-      path: permission_handler_html
-```
+## Live demo
+
+You can see a live demo on [https://theme.layrz.com](https://theme.layrz.com) (Disclaimer, not all of the components of Layrz Theme are available in the demo)
 
 ## Description
 It's a set of tools, widgets and generators to help you to create an application easily, fast and with a good quality using the Layrz design standard. Works in the platforms that Flutter supports, also mostly of `layrz_theme` works in Embedded devices using [Flutter eLinux](https://github.com/sony/flutter-elinux) (Disclaimer, not fully tested).

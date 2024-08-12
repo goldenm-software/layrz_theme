@@ -4,6 +4,13 @@ on:
   push:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  repository-projects: read
+  packages: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -32,3 +39,34 @@ jobs:
         run: |
           dart pub token remove https://pub.dev
 
+  buils-site:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/goldenm-software/flutter-web-builder:flutter3.22.0-python3.11
+      options: --user root
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        id: setup_pages
+        uses: actions/configure-pages@v4.0.0
+
+      - name: Build
+        run: |
+          cd example
+          flutter build web --release --base-href=${{ steps.setup_pages.outputs.base_path }}/ --no-tree-shake-icons
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3.0.0
+        with:
+          # Upload entire repository
+          path: './example/build/web'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.3
