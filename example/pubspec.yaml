@@ -23,17 +23,7 @@ dependencies:
   layrz_theme:
     path: ../
 
-  layrz_models: ">=2.1.0 <3.0.0"
-
-dependency_overrides:
-  http: ^1.0.0
-  permission_handler_html:
-    git:
-      url: https://github.com/raldhafiri/flutter-permission-handler.git
-      ref: main
-      path: permission_handler_html
-  # layrz_models:
-  #   path: ../../layrz_models
+  layrz_models: ">=3.0.0-preview1 <4.0.0"
 
 dev_dependencies:
   flutter_test:

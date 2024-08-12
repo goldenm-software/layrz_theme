@@ -1,5 +1,16 @@
 # Changelog
 
+## 6.0.0
+
+- Checkboxes' colors corrected to display white when the app is in dark mode, also changed the design of the switches
+- Fixed sorting of IDs in `ThemedTable`.
+- Fixes related to ID column width on `ThemedTable`.
+- Changed `ThemedTable` to use the package `two_dimensional_scrollables` to handle multiple scrollables in the table.
+- Added property `disablePaginator` to `ThemedTable` to disable the paginator.
+- Fixed Actions column on `ThemedTable` to show the actions correctly.
+- Fixed multi selection, id and the first column on `ThemedTable`, you can change it using the `fixedColumnsCount` property.
+- Fixed `MainAxisAligment.spaceBetween` on `deleteConfirmationDialog`. Now will show the buttons with the correct spacing.
+
 ## 5.0.19
 - Add a flag to know if the User change `_itemsPerPage` in `ThemedTable`.
 

@@ -159,32 +159,37 @@ ThemeData generateDarkTheme({
 
     // Inputs
     checkboxTheme: CheckboxThemeData(
+      visualDensity: VisualDensity.compact,
       fillColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) {
-          return Colors.white;
-        }
-        return Colors.grey.shade700;
+        if (states.contains(WidgetState.selected)) return Colors.white;
+        return Colors.transparent;
       }),
       checkColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) {
-          return Colors.black;
-        }
+        if (states.contains(WidgetState.selected)) return Colors.white;
+        return Colors.transparent;
+      }),
+      overlayColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.hovered)) return Colors.grey.shade200;
         return Colors.transparent;
       }),
       mouseCursor: WidgetStateMouseCursor.clickable,
+      side: const BorderSide(color: Colors.grey, width: 2),
     ),
     switchTheme: SwitchThemeData(
+      thumbIcon: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return Icon(MdiIcons.check, color: color);
+        return Icon(MdiIcons.close, color: color);
+      }),
       trackColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) {
-          return Colors.white.withOpacity(0.7);
-        }
-        return Colors.grey.shade500;
+        return Colors.transparent;
       }),
       thumbColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) {
-          return Colors.white;
-        }
-        return Colors.grey.shade300;
+        if (states.contains(WidgetState.selected)) return Colors.white;
+        return Colors.grey;
+      }),
+      trackOutlineColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return Colors.white;
+        return Colors.grey;
       }),
     ),
     radioTheme: RadioThemeData(

@@ -15,7 +15,7 @@ class BasicTableView extends StatefulWidget {
 class _BasicTableViewState extends State<BasicTableView> {
   List<Asset> _items = [];
 
-  int get _it => 60;
+  int get _it => 100;
 
   @override
   void initState() {
@@ -46,9 +46,10 @@ class _BasicTableViewState extends State<BasicTableView> {
               idBuilder: (context, item) => item.id,
               enableMultiSelectDialog: true,
               multiSelectionEnabled: true,
-              idEnabled: false,
+              idEnabled: true,
+              disablePaginator: false,
               onIdTap: (item) {
-                debugPrint("Tapped on ${item.name}");
+                debugPrint("Tapped on ${item.id}");
               },
               items: _items,
               onShow: (context, item) async {
@@ -95,12 +96,12 @@ class _BasicTableViewState extends State<BasicTableView> {
                   labelText: 'VIN',
                   valueBuilder: (context, item) => item.vin ?? 'N/A',
                 ),
-                // ...List.generate(25, (i) {
-                //   return ThemedColumn(
-                //     labelText: 'VIN $i',
-                //     valueBuilder: (context, item) => item.vin ?? 'N/A',
-                //   );
-                // }),
+                ...List.generate(20, (i) {
+                  return ThemedColumn(
+                    labelText: 'VIN $i',
+                    valueBuilder: (context, item) => item.vin ?? 'N/A',
+                  );
+                }),
               ],
             ),
           ),

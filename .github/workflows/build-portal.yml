@@ -1,8 +1,8 @@
-name: Publish to pub.dev
+name: Build Portal
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "models-preview3.0.0" ]
 
 permissions:
   contents: read
@@ -12,33 +12,6 @@ permissions:
   packages: read
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/goldenm-software/flutter-web-builder:flutter3.22.0-python3.11
-      options: --user root
-      credentials:
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    env:
-      PUB_JSON: ${{ secrets.LAYRZ_PUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Authenticate
-        run: |
-          python3 authenticate.py
-      
-      - name: Publish
-        run: |
-          flutter pub publish --force
-      
-      - name: Cleanup
-        run: |
-          dart pub token remove https://pub.dev
-
   buils-site:
     runs-on: ubuntu-latest
     container:
