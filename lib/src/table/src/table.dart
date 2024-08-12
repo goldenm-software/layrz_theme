@@ -604,8 +604,15 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       int index = entry.key;
       ThemedColumn<T> column = entry.value;
       if (column.widgetBuilder != null) {
-        fixedIndexes.add(index);
+        if (widget.multiSelectionEnabled && index == 0) {
+          fixedIndexes.add(index);
+        } else if (widget.idEnabled && widget.multiSelectionEnabled && index == 1) {
+          fixedIndexes.add(index);
+        } else if (widget.idEnabled && !widget.multiSelectionEnabled && index == 0) {
+          fixedIndexes.add(index);
+        }
       }
+
       sizes[index] = column.predictedHeaderSize(context, _headerStyle).width;
     }
 
