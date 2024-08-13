@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.2
+
+- Fixes related to paginator and automatic fit detection
+
 ## 6.0.1
 
 - Fixed an issue with the fixed columns on `ThemedTable`
