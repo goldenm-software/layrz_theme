@@ -82,26 +82,28 @@ class _BasicTableViewState extends State<BasicTableView> {
                   // color: Colors.green,
                   textColor: Colors.blue,
                   valueBuilder: (context, item) => item.name,
+                  widgetBuilder: (context, item) => Text(item.name),
+                  width: 200,
                   // cellColor: (item) => Colors.yellow,
                   cellTextColor: (item) => Colors.red,
                   onTap: (item) {
                     debugPrint("Tapped on ${item.name}");
                   },
                 ),
-                ThemedColumn(
-                  labelText: 'Plate',
-                  valueBuilder: (context, item) => item.plate ?? 'N/A',
-                ),
-                ThemedColumn(
-                  labelText: 'VIN',
-                  valueBuilder: (context, item) => item.vin ?? 'N/A',
-                ),
-                ...List.generate(20, (i) {
-                  return ThemedColumn(
-                    labelText: 'VIN $i',
-                    valueBuilder: (context, item) => item.vin ?? 'N/A',
-                  );
-                }),
+                // ThemedColumn(
+                //   labelText: 'Plate',
+                //   valueBuilder: (context, item) => item.plate ?? 'N/A',
+                // ),
+                // ThemedColumn(
+                //   labelText: 'VIN',
+                //   valueBuilder: (context, item) => item.vin ?? 'N/A',
+                // ),
+                // ...List.generate(20, (i) {
+                //   return ThemedColumn(
+                //     labelText: 'VIN $i',
+                //     valueBuilder: (context, item) => item.vin ?? 'N/A',
+                //   );
+                // }),
               ],
             ),
           ),

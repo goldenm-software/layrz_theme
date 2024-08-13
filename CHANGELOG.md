@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.0.2
+
+- Fixes related to paginator and automatic fit detection
+
+## 6.0.1
+
+- Fixed an issue with the fixed columns on `ThemedTable`
+
 ## 6.0.0
 
 - Checkboxes' colors corrected to display white when the app is in dark mode, also changed the design of the switches

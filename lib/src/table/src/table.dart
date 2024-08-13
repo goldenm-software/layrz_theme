@@ -604,8 +604,15 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       int index = entry.key;
       ThemedColumn<T> column = entry.value;
       if (column.widgetBuilder != null) {
-        fixedIndexes.add(index);
+        if (widget.multiSelectionEnabled && index == 0) {
+          fixedIndexes.add(index);
+        } else if (widget.idEnabled && widget.multiSelectionEnabled && index == 1) {
+          fixedIndexes.add(index);
+        } else if (widget.idEnabled && !widget.multiSelectionEnabled && index == 0) {
+          fixedIndexes.add(index);
+        }
       }
+
       sizes[index] = column.predictedHeaderSize(context, _headerStyle).width;
     }
 
@@ -664,7 +671,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   void _calculateRowsPerPage() {
     RenderBox? box = _tableKey.currentContext?.findRenderObject() as RenderBox?;
     if (box == null) {
-      _itemsPerPage = widget.rowsPerPage ?? (widget.rowHeight * 10).floor();
+      double screenHeight = MediaQuery.sizeOf(context).height;
+      _itemsPerPage = widget.rowsPerPage ?? ((screenHeight / widget.rowHeight).floor() - 1);
     } else {
       _itemsPerPage = widget.rowsPerPage ?? ((box.size.height / widget.rowHeight).floor() - 1);
     }
@@ -678,6 +686,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   void _toggleMultiSelectionEnabled() {
     double screenWidth = MediaQuery.sizeOf(context).width;
     _multiSelectionEnabled = screenWidth < widget.mobileBreakpoint ? false : widget.multiSelectionEnabled;
+    setState(() {});
   }
 
   /// [_sort] sorts the items.
@@ -734,6 +743,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   }
 
   _CalculatedThings<T> _calculateThings() {
+    debugPrint("itemsperpage: $_itemsPerPage");
     List<T> items = widget.disablePaginator ? _items : _getRows(_currentPage * _itemsPerPage, _itemsPerPage);
 
     _CalculatedThings<T> data = _predictSizes(
@@ -838,7 +848,11 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                             columnCount: _columns.length,
                             rowCount: items.length + 1,
                             pinnedRowCount: 1,
-                            pinnedColumnCount: isMobile ? 0 : widget.fixedColumnsCount,
+                            pinnedColumnCount: isMobile
+                                ? 0
+                                : _columns.isEmpty
+                                    ? 0
+                                    : widget.fixedColumnsCount,
                             verticalDetails: ScrollableDetails.vertical(controller: _verticalScroll),
                             horizontalDetails: ScrollableDetails.horizontal(controller: _horizontalScroll),
                             columnBuilder: (index) {
@@ -972,8 +986,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                   ? _stripColor
                                                   : null,
                                           border: Border(
-                                            top: index == 0 ? BorderSide.none : border,
-                                            bottom: index == items.length ? BorderSide.none : border,
+                                            top: border,
+                                            bottom: index == items.length - 1 ? BorderSide.none : border,
                                             left: border,
                                           ),
                                         ),
@@ -1368,6 +1382,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// This function is used to set the number of items per page in `_buildVerySmallPaginator` and `_buildWebPaginator`
   _setItemPerPage(int? value) {
+    debugPrint('Setting items per page: $value');
     int? prevValue = _selectedItemsPerPage;
 
     _itemsPerPage = value ?? _calculatedItemsPerPage;
