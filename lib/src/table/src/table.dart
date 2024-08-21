@@ -1382,7 +1382,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// This function is used to set the number of items per page in `_buildVerySmallPaginator` and `_buildWebPaginator`
   _setItemPerPage(int? value) {
-    debugPrint('Setting items per page: $value');
     int? prevValue = _selectedItemsPerPage;
 
     _itemsPerPage = value ?? _calculatedItemsPerPage;
