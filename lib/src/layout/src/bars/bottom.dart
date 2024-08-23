@@ -225,6 +225,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ThemedAppBarAvatar(
+                      tooltipPosition: ThemedTooltipPosition.top,
                       asTaskBar: true,
                       appTitle: widget.appTitle,
                       logo: widget.logo,

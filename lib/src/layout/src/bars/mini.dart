@@ -163,6 +163,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                     _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
                     ThemedAppBarAvatar(
                       asTaskBar: false,
+                      tooltipPosition: ThemedTooltipPosition.right,
                       appTitle: widget.appTitle,
                       logo: widget.logo,
                       favicon: widget.favicon,
