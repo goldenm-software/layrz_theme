@@ -58,6 +58,8 @@ class ThemedAppBarAvatar extends StatefulWidget {
   /// By default is `Navigator.of(context).pop`
   final ThemdNavigatorPopFunction? onNavigatorPop;
 
+  final ThemedTooltipPosition tooltipPosition;
+
   /// Creates a [ThemedAppBarAvatar] widget.
   const ThemedAppBarAvatar({
     super.key,
@@ -78,6 +80,7 @@ class ThemedAppBarAvatar extends StatefulWidget {
     this.asTaskBar = false,
     this.onNavigatorPush,
     this.onNavigatorPop,
+    this.tooltipPosition = ThemedTooltipPosition.right,
   });
 
   @override
@@ -106,8 +109,9 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
     return InkWell(
       key: _userMenuKey,
       onTap: _createOverlay,
-      child: Tooltip(
+      child: ThemedTooltip(
         message: widget.userName,
+        position: widget.tooltipPosition,
         child: drawAvatar(
           context: context,
           size: 30,

@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.3
+
+- Fixed avatar tooltip orientation on the `ThemedMiniBar` and `ThemedBottomBar`
+
 ## 6.0.2
 
 - Fixes related to paginator and automatic fit detection
