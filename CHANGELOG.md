@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.0.5
+- Add `keyboardType` as a prop with default `TextInputType.number` inside `ThemedNumberInput`
+
 ## 6.0.4
 
 - Fixes related to some overflow on `ThemedColumn` rendering on `ThemedTable`.

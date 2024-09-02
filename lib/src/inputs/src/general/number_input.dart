@@ -55,6 +55,9 @@ class ThemedNumberInput extends StatefulWidget {
   /// [step] is the step of the input.
   final num? step;
 
+  /// [keyboardType] is the keyboard type of the input. Default is [TextInputType.number].
+  final TextInputType keyboardType;
+
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
@@ -77,6 +80,7 @@ class ThemedNumberInput extends StatefulWidget {
     this.minimum,
     this.maximum,
     this.step,
+    this.keyboardType = TextInputType.number,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -109,6 +113,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       padding: widget.padding,
       dense: widget.dense,
       isRequired: widget.isRequired,
+      keyboardType: widget.keyboardType,
       onChanged: (value) {
         widget.onChanged?.call(num.tryParse(value));
       },
