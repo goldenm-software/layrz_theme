@@ -318,7 +318,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "6.0.2"
+    version: "6.0.3"
   leak_tracker:
     dependency: transitive
     description:
