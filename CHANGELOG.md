@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.4
+
+- Fixes related to some overflow on `ThemedColumn` rendering on `ThemedTable`.
+
 ## 6.0.3
 
 - Fixed avatar tooltip orientation on the `ThemedMiniBar` and `ThemedBottomBar`

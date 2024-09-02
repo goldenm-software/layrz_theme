@@ -743,7 +743,6 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   }
 
   _CalculatedThings<T> _calculateThings() {
-    debugPrint("itemsperpage: $_itemsPerPage");
     List<T> items = widget.disablePaginator ? _items : _getRows(_currentPage * _itemsPerPage, _itemsPerPage);
 
     _CalculatedThings<T> data = _predictSizes(
@@ -892,6 +891,11 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                       column.labelText ?? '',
                                       style: _headerStyle,
                                     );
+
+                                if (column.isSortable) {
+                                  content = Expanded(child: content);
+                                }
+
                                 return TableViewCell(
                                   child: Material(
                                     color: Colors.transparent,
