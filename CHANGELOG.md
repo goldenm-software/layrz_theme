@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.7
+
+- Fixed spelling on `searchableAttributes`
+
 ## 6.0.6
 - Added `searchableAtributes` to `ThemedSelectItem`
 - Changes to improve `ThemedDualListInput` search and sorting

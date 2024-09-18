@@ -416,8 +416,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
           return true;
         }
         List<String> searchable = [];
-        if (element.searchableAtributes.isNotEmpty) {
-          searchable.addAll(element.searchableAtributes.map((el) => el.toLowerCase()));
+        if (element.searchableAttributes.isNotEmpty) {
+          searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
         }
         searchable.add(element.label.toLowerCase());
         return searchable.any((element) => element.contains(searchSelected.toLowerCase()));
@@ -428,8 +428,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
           return true;
         }
         List<String> searchable = [];
-        if (element.searchableAtributes.isNotEmpty) {
-          searchable.addAll(element.searchableAtributes.map((el) => el.toLowerCase()));
+        if (element.searchableAttributes.isNotEmpty) {
+          searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
         }
         searchable.add(element.label.toLowerCase());
         return searchable.any((element) => element.contains(searchAvailable.toLowerCase()));
