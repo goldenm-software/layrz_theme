@@ -25,6 +25,11 @@ class ThemedSelectItem<T> {
   /// [canDelete] is the flag to enable the delete button of the item.
   final bool canDelete;
 
+  /// [searchableAtributes] is the list of searchable attributes of the item.
+  /// Intended to be used on the inputs that have a search field.
+  /// Allowing that any other visible atributes may also be searchable.
+  final Set<String> searchableAtributes;
+
   /// [ThemedSelectItem] is the item of the [ThemedSelectInput], [ThemedMultiSelectInput] and [ThemedDualListInput].
   const ThemedSelectItem({
     required this.label,
@@ -34,6 +39,7 @@ class ThemedSelectItem<T> {
     this.onTap,
     this.content,
     this.canDelete = false,
+    this.searchableAtributes = const {},
   });
 
   @override

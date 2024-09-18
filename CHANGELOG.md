@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.6
+- Added `searchableAtributes` to `ThemedSelectItem`
+- Changes to improve `ThemedDualListInput` search and sorting
+
 ## 6.0.5
 - Add `keyboardType` as a prop with default `TextInputType.number` inside `ThemedNumberInput`
 
