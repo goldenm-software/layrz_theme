@@ -225,8 +225,10 @@ class _ThemedLayoutState extends State<ThemedLayout> {
   VoidCallback? get _onThemeSwitchTap {
     if (widget.onThemeSwitchTap == null) return null;
 
-    return () {
+    return () async {
       widget.onThemeSwitchTap!.call();
+
+      await Future.delayed(const Duration(milliseconds: 150));
       WidgetsBinding.instance.addPostFrameCallback((_) {
         overrideAppBarStyle(isDark: isDark);
       });

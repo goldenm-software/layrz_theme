@@ -193,91 +193,93 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
           ),
         ],
       ),
-      height: kBottomBarHeight * (_children.isNotEmpty ? 2 : 1),
       child: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              if (_children.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  color: activeColor.withOpacity(0.2),
-                  height: kBottomBarHeight,
-                  child: Center(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ..._children.map((item) => _buildItem(item, depth: 1)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: kBottomBarHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ThemedAppBarAvatar(
-                      tooltipPosition: ThemedTooltipPosition.top,
-                      asTaskBar: true,
-                      appTitle: widget.appTitle,
-                      logo: widget.logo,
-                      favicon: widget.favicon,
-                      version: widget.version,
-                      companyName: widget.companyName,
-                      userName: widget.userName,
-                      userDynamicAvatar: widget.userDynamicAvatar,
-                      enableAbout: widget.enableAbout,
-                      onSettingsTap: widget.onSettingsTap,
-                      onProfileTap: widget.onProfileTap,
-                      onLogoutTap: widget.onLogoutTap,
-                      onNavigatorPush: onNavigatorPush,
-                      onNavigatorPop: onNavigatorPop,
-                      additionalActions: widget.additionalActions,
-                      backgroundColor: widget.backgroundColor,
-                      onThemeSwitchTap: widget.onThemeSwitchTap,
-                    ),
-                    _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots), removePadding: true),
-                    Expanded(
-                      child: Center(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (widget.items.isNotEmpty) ...widget.items.map((item) => _buildItem(item)),
-                              if (widget.persistentItems.isNotEmpty)
-                                ...widget.persistentItems.map((item) => _buildItem(item)),
-                            ],
-                          ),
+        child: SizedBox(
+          height: kBottomBarHeight * (_children.isNotEmpty ? 2 : 1),
+          child: Center(
+            child: Column(
+              children: [
+                if (_children.isNotEmpty) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    color: activeColor.withOpacity(0.2),
+                    height: kBottomBarHeight,
+                    child: Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ..._children.map((item) => _buildItem(item, depth: 1)),
+                          ],
                         ),
                       ),
                     ),
-                    if (widget.enableNotifications) ...[
-                      const SizedBox(height: 10),
-                      _buildItem(ThemedNavigatorSeparator(), removePadding: true),
-                      ThemedNotificationIcon(
-                        dense: true,
-                        notifications: widget.notifications,
-                        backgroundColor: backgroundColor,
-                        location: ThemedNotificationLocation.bottomBar,
-                        expandToLeft: false,
-                        forceFullSize: true,
+                  ),
+                ],
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  height: kBottomBarHeight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ThemedAppBarAvatar(
+                        tooltipPosition: ThemedTooltipPosition.top,
+                        asTaskBar: true,
+                        appTitle: widget.appTitle,
+                        logo: widget.logo,
+                        favicon: widget.favicon,
+                        version: widget.version,
+                        companyName: widget.companyName,
+                        userName: widget.userName,
+                        userDynamicAvatar: widget.userDynamicAvatar,
+                        enableAbout: widget.enableAbout,
+                        onSettingsTap: widget.onSettingsTap,
+                        onProfileTap: widget.onProfileTap,
+                        onLogoutTap: widget.onLogoutTap,
+                        onNavigatorPush: onNavigatorPush,
+                        onNavigatorPop: onNavigatorPop,
+                        additionalActions: widget.additionalActions,
+                        backgroundColor: widget.backgroundColor,
+                        onThemeSwitchTap: widget.onThemeSwitchTap,
                       ),
+                      _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots), removePadding: true),
+                      Expanded(
+                        child: Center(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (widget.items.isNotEmpty) ...widget.items.map((item) => _buildItem(item)),
+                                if (widget.persistentItems.isNotEmpty)
+                                  ...widget.persistentItems.map((item) => _buildItem(item)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (widget.enableNotifications) ...[
+                        const SizedBox(height: 10),
+                        _buildItem(ThemedNavigatorSeparator(), removePadding: true),
+                        ThemedNotificationIcon(
+                          dense: true,
+                          notifications: widget.notifications,
+                          backgroundColor: backgroundColor,
+                          location: ThemedNotificationLocation.bottomBar,
+                          expandToLeft: false,
+                          forceFullSize: true,
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

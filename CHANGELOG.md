@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.8
+
+- Fixed issues with `ThemedTable` on Mobile mode
+- Fixed issue with app bar style (Notification tray) when the theme is changed.
+- Fixed an issue related to the `ThemedBottomBar` on iOS, the `SafeArea` generates an overflow on the bottom bar.
+
 ## 6.0.7
 
 - Fixed spelling on `searchableAttributes`
