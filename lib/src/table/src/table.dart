@@ -670,11 +670,18 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   /// [_calculateRowsPerPage] calculates the number of rows per page.
   void _calculateRowsPerPage() {
     RenderBox? box = _tableKey.currentContext?.findRenderObject() as RenderBox?;
+    Size windowSize = MediaQuery.sizeOf(context);
     if (box == null) {
-      double screenHeight = MediaQuery.sizeOf(context).height;
+      double screenHeight = windowSize.height;
       _itemsPerPage = widget.rowsPerPage ?? ((screenHeight / widget.rowHeight).floor() - 1);
     } else {
-      _itemsPerPage = widget.rowsPerPage ?? ((box.size.height / widget.rowHeight).floor() - 1);
+      double height = box.size.height;
+
+      if (windowSize.width < widget.mobileBreakpoint) {
+        height -= 50;
+      }
+
+      _itemsPerPage = widget.rowsPerPage ?? ((height / widget.rowHeight).floor() - 1);
     }
 
     _calculatedItemsPerPage = _itemsPerPage;

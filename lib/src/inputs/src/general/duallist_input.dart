@@ -230,8 +230,6 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
                           selected.add(available[availableGlobal]);
                           available.removeAt(availableGlobal);
-                          available.sort((a, b) => a.label.compareTo(b.label));
-                          selected.sort((a, b) => a.label.compareTo(b.label));
                           widget.onChanged?.call(selected);
                           availableFiltered = getAvailableFiltered();
                           selectedFiltered = getSelectedFiltered();
@@ -298,8 +296,6 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
                           available.add(selected[selectedGlobal]);
                           selected.removeAt(selectedGlobal);
-                          available.sort((a, b) => a.label.compareTo(b.label));
-                          selected.sort((a, b) => a.label.compareTo(b.label));
                           widget.onChanged?.call(selected);
                           availableFiltered = getAvailableFiltered();
                           selectedFiltered = getSelectedFiltered();
@@ -419,15 +415,24 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         if (searchSelected.isEmpty) {
           return true;
         }
-        return element.label.toLowerCase().contains(searchSelected.toLowerCase());
+        List<String> searchable = [];
+        if (element.searchableAttributes.isNotEmpty) {
+          searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
+        }
+        searchable.add(element.label.toLowerCase());
+        return searchable.any((element) => element.contains(searchSelected.toLowerCase()));
       }).toList();
 
   List<ThemedSelectItem<T>> getAvailableFiltered() => available.where((element) {
         if (searchAvailable.isEmpty) {
           return true;
         }
-
-        return element.label.toLowerCase().contains(searchAvailable.toLowerCase());
+        List<String> searchable = [];
+        if (element.searchableAttributes.isNotEmpty) {
+          searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
+        }
+        searchable.add(element.label.toLowerCase());
+        return searchable.any((element) => element.contains(searchAvailable.toLowerCase()));
       }).toList();
 
   void toggleAllToSelected() {
@@ -440,7 +445,6 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
       selected.addAll(available);
       available.clear();
     }
-    selected.sort((a, b) => a.label.compareTo(b.label));
     widget.onChanged?.call(selected);
     searchAvailable = "";
     searchSelected = "";
@@ -459,8 +463,6 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
       available.addAll(selected);
       selected.clear();
     }
-
-    available.sort((a, b) => a.label.compareTo(b.label));
     widget.onChanged?.call(selected);
     searchAvailable = "";
     searchSelected = "";
