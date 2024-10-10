@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.0.0
+- web package threshold changed to `web: ^1.0.0`
+
 ## 6.0.8
 
 - Fixed issues with `ThemedTable` on Mobile mode
