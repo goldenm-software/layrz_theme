@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.0.1
+
+- Upgraded `flutter_map` and their dependencies to `v7`
+- Added number format to `ThemedNumberInput` to format the number visually in the input field
+- Disabled Google Street View on `ThemedTileLayer` due to issues with the `flutter_map` package
+
 ## 7.0.0
 - web package threshold changed to `web: ^1.0.0`
 

@@ -14,6 +14,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highlight/highlight.dart';
+import 'package:intl/intl.dart';
 import 'package:layrz_models/layrz_models.dart';
 
 import 'package:layrz_theme/src/buttons/buttons.dart';
@@ -40,6 +41,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 export 'package:emojis/emoji.dart' show Emoji, EmojiGroup;
 export 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;
+export 'package:intl/intl.dart' show NumberFormat;
 
 // General inputs
 part 'src/general/checkbox_input.dart';
