@@ -23,7 +23,6 @@ part 'src/layers/toolbar.dart';
 part 'src/button.dart';
 part 'src/helpers.dart';
 part 'src/constants.dart';
-part 'src/dialogs/street_view.dart';
 part 'src/projection.dart';
 
 // Events

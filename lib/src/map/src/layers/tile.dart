@@ -346,14 +346,14 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
     );
   }
 
-  bool get _canStreetView => layer.source == MapSource.google && widget.controller != null;
+  // bool get _canStreetView => layer.source == MapSource.google && widget.controller != null;
 
   bool _googleStreetView = false;
 
   @override
   void initState() {
     super.initState();
-    widget.controller?.addListener(_eventListener);
+    // widget.controller?.addListener(_eventListener);
   }
 
   @override
@@ -361,24 +361,24 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.controller != widget.controller) {
-      oldWidget.controller?.removeListener(_eventListener);
-      widget.controller?.addListener(_eventListener);
+      // oldWidget.controller?.removeListener(_eventListener);
+      // widget.controller?.addListener(_eventListener);
     }
   }
 
   @override
   void dispose() {
-    widget.controller?.removeListener(_eventListener);
+    // widget.controller?.removeListener(_eventListener);
     super.dispose();
   }
 
-  void _eventListener(ThemedMapEvent event) {
-    if (event is StartGoogleStreetView && _canStreetView) {
-      setState(() => _googleStreetView = true);
-    } else if (event is StopGoogleStreetView && _canStreetView) {
-      setState(() => _googleStreetView = false);
-    }
-  }
+  // void _eventListener(ThemedMapEvent event) {
+  //   if (event is StartGoogleStreetView && _canStreetView) {
+  //     setState(() => _googleStreetView = true);
+  //   } else if (event is StopGoogleStreetView && _canStreetView) {
+  //     setState(() => _googleStreetView = false);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -515,9 +515,9 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         'layerTypes': _convertGoogleTypes(style),
       };
 
-      if (_canStreetView && _googleStreetView) {
-        (params['layerTypes'] as List<String>).add('layerStreetview');
-      }
+      // if (_canStreetView && _googleStreetView) {
+      //   (params['layerTypes'] as List<String>).add('layerStreetview');
+      // }
 
       debugPrint('layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): Request $params');
       final response = await http.post(

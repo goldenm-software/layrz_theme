@@ -58,6 +58,10 @@ class ThemedNumberInput extends StatefulWidget {
   /// [keyboardType] is the keyboard type of the input. Default is [TextInputType.number].
   final TextInputType keyboardType;
 
+  /// [format] is the format of the input. Uses the `NumberFormat.decimalPattern()` by default and
+  /// the class comes from `intl` package (Exported by the `layrz_theme` package).
+  final NumberFormat? format;
+
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
@@ -81,6 +85,7 @@ class ThemedNumberInput extends StatefulWidget {
     this.maximum,
     this.step,
     this.keyboardType = TextInputType.number,
+    this.format,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -90,16 +95,12 @@ class ThemedNumberInput extends StatefulWidget {
 class _ThemedNumberInputState extends State<ThemedNumberInput> {
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  NumberFormat get format => widget.format ?? NumberFormat.decimalPattern();
 
   @override
   Widget build(BuildContext context) {
     return ThemedTextInput(
-      value: widget.value?.toString(),
+      value: widget.value == null ? null : format.format(widget.value),
       labelText: widget.labelText,
       label: widget.label,
       disabled: widget.disabled,
@@ -114,6 +115,10 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       dense: widget.dense,
       isRequired: widget.isRequired,
       keyboardType: widget.keyboardType,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+        ...widget.inputFormatters,
+      ],
       onChanged: (value) {
         widget.onChanged?.call(num.tryParse(value));
       },
