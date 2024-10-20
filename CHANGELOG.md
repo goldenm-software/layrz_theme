@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.0.3
+
+- Added a swipe gestur for `ThemedSnackbar` to dismiss the snackbar
+- Updated the `ThemedSnackbar` display mode, on mobile devies in portrait, will display the snackbar full width and at the bottom of the screen.
+
 ## 7.0.2
 
 - Changed `ThemedBottomBar` background color on `Theme.of(context).brightness == Brightness.dark`, now the color of the component will be `Theme.of(context).scaffoldBackgroundColor` instead of `Theme.of(context).primaryColor`.
