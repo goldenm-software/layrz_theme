@@ -135,6 +135,15 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
           color: color,
           radius: radius ?? 30,
           elevation: elevation ?? 1,
+          onTap: () {
+            debugPrint("Tapped on $name");
+          },
+          onLongTap: () {
+            debugPrint("Long tapped on $name");
+          },
+          onSecondaryTap: () {
+            debugPrint("Secondary tapped on $name");
+          },
         ),
         const SizedBox(width: 5),
         Expanded(child: Text(name)),

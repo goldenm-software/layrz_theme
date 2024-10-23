@@ -125,6 +125,15 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
           size: 30,
           name: 'Example',
           dynamicAvatar: avatar,
+          onTap: () {
+            debugPrint("Tapped on ${avatar.type}");
+          },
+          onLongTap: () {
+            debugPrint("Long tapped on ${avatar.type}");
+          },
+          onSecondaryTap: () {
+            debugPrint("Secondary tapped on ${avatar.type}");
+          },
         ),
         const SizedBox(width: 5),
         Expanded(child: Text("Type ${avatar.type}")),
