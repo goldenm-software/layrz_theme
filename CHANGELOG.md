@@ -1,5 +1,26 @@
 # Changelog
 
+## 7.0.4
+
+- Changed `generateContainerElevation` to receive `elevation` as a `double` instead of `int`
+- New component `ThemedAvatar` as replacement of the utility function `drawAvatar`
+- Deprecated `drawAvatar` utility function in favor of `ThemedAvatar`
+- Deprecated `getImage` in favor of `ThemedImage`
+
+## 7.0.3
+
+- Added a swipe gestur for `ThemedSnackbar` to dismiss the snackbar
+- Updated the `ThemedSnackbar` display mode, on mobile devies in portrait, will display the snackbar full width and at the bottom of the screen.
+
+## 7.0.2
+
+- Changed `ThemedBottomBar` background color on `Theme.of(context).brightness == Brightness.dark`, now the color of the component will be `Theme.of(context).scaffoldBackgroundColor` instead of `Theme.of(context).primaryColor`.
+- Changed many utility functions to use `ThemedPlatform.is*` instead of `Platform.is*` to avoid issues with complex conditions.
+- Added `ThemedPlatform.is*` that is a shortcut of `kThemedPlatform == ThemedPlatform.*`.
+- Added `ThemedPlatform.isWebWasm` to check if the platform is built in WebAssembly.
+- Applied same correction of `ThemedBottomBar` on `ThemedSidebar`.
+- New utility function `overrideAppBarStyleWithColor` to override the app bar style with a specific color instead of use the `Theme.of(context).brightness` to determine if is dark mode or light mode and override the app bar style.
+
 ## 7.0.1
 
 - Upgraded `flutter_map` and their dependencies to `v7`

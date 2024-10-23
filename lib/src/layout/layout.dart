@@ -1,10 +1,7 @@
 library layout;
 
 import 'dart:async';
-import 'dart:io';
-
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:layrz_models/layrz_models.dart';
@@ -63,14 +60,33 @@ void overrideAppBarStyle({
   /// [isDark] is a boolean that indicates if the theme is dark.
   required bool isDark,
 }) {
-  if (kIsWeb) return;
-  // isDark = !isDark; // Idk why, but when this algorithm is called, is inverted.
+  if (ThemedPlatform.isWeb) return;
 
   if (isDark) {
     SystemChrome.setSystemUIOverlayStyle(kDarkSystemUiOverlayStyle);
   } else {
     SystemChrome.setSystemUIOverlayStyle(kLightSystemUiOverlayStyle);
   }
+}
+
+/// [overrideAppBarStyleWithColor] overrides the app bar style with a custom color.
+/// Works exactly the same as [overrideAppBarStyle], but with a custom color.
+/// This should be used only when the theme changes from light to dark or vice versa.
+///
+/// If you want to consider the [isDark] parameter, use [overrideAppBarStyle] instead.
+void overrideAppBarStyleWithColor({
+  /// [color] is the color to be used in the app bar.
+  required Color color,
+}) {
+  Brightness brightness = useBlack(color: color) ? Brightness.dark : Brightness.light;
+
+  SystemChrome.setSystemUIOverlayStyle(kDarkSystemUiOverlayStyle.copyWith(
+    statusBarColor: color,
+    systemNavigationBarColor: color,
+    systemNavigationBarDividerColor: color,
+    statusBarIconBrightness: brightness,
+    statusBarBrightness: brightness,
+  ));
 }
 
 class ThemedLayout extends StatefulWidget {
@@ -222,19 +238,6 @@ class ThemedLayout extends StatefulWidget {
 class _ThemedLayoutState extends State<ThemedLayout> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
-  VoidCallback? get _onThemeSwitchTap {
-    if (widget.onThemeSwitchTap == null) return null;
-
-    return () async {
-      widget.onThemeSwitchTap!.call();
-
-      await Future.delayed(const Duration(milliseconds: 150));
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        overrideAppBarStyle(isDark: isDark);
-      });
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -289,7 +292,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           onSettingsTap: widget.onSettingsTap,
           onProfileTap: widget.onProfileTap,
           onLogoutTap: widget.onLogoutTap,
-          onThemeSwitchTap: _onThemeSwitchTap,
+          onThemeSwitchTap: widget.onThemeSwitchTap,
           additionalActions: widget.additionalActions,
           mobileBreakpoint: widget.mobileBreakpoint,
           onNavigatorPush: widget.onNavigatorPush,
@@ -316,7 +319,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         onSettingsTap: widget.onSettingsTap,
         onProfileTap: widget.onProfileTap,
         onLogoutTap: widget.onLogoutTap,
-        onThemeSwitchTap: _onThemeSwitchTap,
+        onThemeSwitchTap: widget.onThemeSwitchTap,
         additionalActions: widget.additionalActions,
         mobileBreakpoint: widget.mobileBreakpoint,
         onNavigatorPush: widget.onNavigatorPush,
@@ -357,7 +360,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             onSettingsTap: widget.onSettingsTap,
             onProfileTap: widget.onProfileTap,
             onLogoutTap: widget.onLogoutTap,
-            onThemeSwitchTap: _onThemeSwitchTap,
+            onThemeSwitchTap: widget.onThemeSwitchTap,
             additionalActions: widget.additionalActions,
             mobileBreakpoint: widget.mobileBreakpoint,
             onNavigatorPush: widget.onNavigatorPush,
@@ -455,7 +458,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             onNavigatorPop: widget.onNavigatorPop,
             onNavigatorPush: widget.onNavigatorPush,
             currentPath: widget.currentPath,
-            onThemeSwitchTap: _onThemeSwitchTap,
+            onThemeSwitchTap: widget.onThemeSwitchTap,
             enableNotifications: widget.enableNotifications,
             notifications: widget.notifications,
           ),
@@ -561,7 +564,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       notifications: widget.notifications,
       mobileBreakpoint: widget.mobileBreakpoint,
       enableNotifications: widget.enableNotifications,
-      onThemeSwitchTap: _onThemeSwitchTap,
+      onThemeSwitchTap: widget.onThemeSwitchTap,
       onNavigatorPush: widget.onNavigatorPush,
       isBackEnabled: widget.isBackEnabled,
       currentPath: widget.currentPath,

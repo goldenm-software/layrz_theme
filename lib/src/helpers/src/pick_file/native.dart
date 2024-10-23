@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/src/file.dart';
+import 'package:layrz_theme/src/theme/theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// [pickFile] is a helper function to pick a file from the device.
@@ -34,7 +35,7 @@ Future<List<ThemedFile>?> pickFile({
 }) async {
   String dialogTitle = pickDialogTitle ?? i18n?.t('layrz.file.pick') ?? "Pick a file";
 
-  if (Platform.isAndroid) {
+  if (ThemedPlatform.isAndroid) {
     final result = await FilePicker.platform.pickFiles(
       dialogTitle: dialogTitle,
       allowMultiple: allowMultiple,
@@ -57,7 +58,7 @@ Future<List<ThemedFile>?> pickFile({
     return null;
   }
 
-  if (Platform.isWindows) {
+  if (ThemedPlatform.isWindows) {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       status = await Permission.storage.request();
@@ -89,7 +90,7 @@ Future<List<ThemedFile>?> pickFile({
     return null;
   }
 
-  if (Platform.isIOS) {
+  if (ThemedPlatform.isIOS) {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       status = await Permission.storage.request();
@@ -127,7 +128,7 @@ Future<List<ThemedFile>?> pickFile({
     return null;
   }
 
-  if (Platform.isMacOS) {
+  if (ThemedPlatform.isMacOS) {
     FilePickerResult? result;
     try {
       result = await FilePicker.platform.pickFiles(
@@ -156,7 +157,7 @@ Future<List<ThemedFile>?> pickFile({
     return null;
   }
 
-  if (Platform.isLinux) {
+  if (ThemedPlatform.isLinux) {
     FilePickerResult? result;
     try {
       result = await FilePicker.platform.pickFiles(

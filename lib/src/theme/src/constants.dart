@@ -36,7 +36,7 @@ const kPageTransitionDuration = Duration(milliseconds: 250);
 /// [kListViewPadding] is the suggested padding of the [ListView] widget.
 /// Corrects the padding for iOS
 EdgeInsets? get kListViewPadding {
-  if (kIsWeb) return null;
+  if (ThemedPlatform.isWeb) return null;
   return EdgeInsets.zero;
 }
 

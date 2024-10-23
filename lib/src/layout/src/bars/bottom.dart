@@ -129,11 +129,12 @@ class ThemedBottomBar extends StatefulWidget {
 class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderStateMixin {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-  Color get backgroundColor =>
-      isDark ? Theme.of(context).scaffoldBackgroundColor : widget.backgroundColor ?? Theme.of(context).primaryColor;
+  Color get backgroundColor => isDark
+      ? Theme.of(context).scaffoldBackgroundColor
+      : widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
   String get favicon => useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white;
   String get currentPath => widget.currentPath ?? '';
-  Color get activeColor => validateColor(color: backgroundColor);
+  Color get activeColor => isDark ? validateColor(color: backgroundColor) : Theme.of(context).primaryColor;
   double get actionSize => 40;
 
   List<ThemedNavigatorItem> _children = [];
@@ -187,8 +188,8 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
         color: backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor,
-            blurRadius: 10,
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5,
             offset: const Offset(0, -5),
           ),
         ],
@@ -350,9 +351,9 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                       highlightTop ? MdiIcons.menuUp : (item.icon ?? MdiIcons.help),
                       size: highlightTop ? 22 : 18,
                       color: highlightTop
-                          ? validateColor(color: backgroundColor)
+                          ? validateColor(color: activeColor)
                           : highlight
-                              ? backgroundColor
+                              ? validateColor(color: activeColor)
                               : validateColor(color: backgroundColor),
                     ),
                   ),

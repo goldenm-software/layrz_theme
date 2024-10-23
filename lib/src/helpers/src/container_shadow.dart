@@ -14,7 +14,7 @@ part of '../helpers.dart';
 /// The [reverse] is the boolean to reverse shadow of the `BoxDecoration`, by default it is false.
 BoxDecoration generateContainerElevation({
   required BuildContext context,
-  int elevation = 1,
+  double elevation = 1,
   double radius = 10,
   Color? color,
   Color? shadowColor,

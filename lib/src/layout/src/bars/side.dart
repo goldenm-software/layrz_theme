@@ -124,15 +124,27 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
           : widget.fromScaffold
               ? kLightBackgroundColor
               : Theme.of(context).primaryColor);
-  Color get activeColor => validateColor(color: backgroundColor);
+
+  Color get activeColor {
+    if (isDark) {
+      return validateColor(color: backgroundColor);
+    }
+
+    if (isMobile) {
+      return isDark ? validateColor(color: backgroundColor) : Theme.of(context).primaryColor;
+    }
+
+    return validateColor(color: backgroundColor);
+  }
+
   dynamic get appTitle => widget.appTitle;
   String get companyName => widget.companyName;
   String? get version => widget.version;
   bool get displayActions =>
       widget.onSettingsTap != null || widget.onProfileTap != null || widget.onLogoutTap != null || widget.enableAbout;
 
-  bool get isMobile => !kIsWeb && (Platform.isIOS || Platform.isAndroid);
-  bool get isMacOS => !kIsWeb && Platform.isMacOS;
+  bool get isMobile => ThemedPlatform.isIOS || ThemedPlatform.isAndroid;
+  bool get isMacOS => ThemedPlatform.isMacOS;
 
   bool actionsExpanded = false;
   bool isExpanded = false;
@@ -253,9 +265,9 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                   Expanded(
                     child: ThemedImage(
                       path: useBlack(color: backgroundColor) ? widget.logo.normal : widget.logo.white,
-                      width: 30 * kLogoAspectRatio,
-                      height: 30,
-                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      height: 20,
+                      alignment: isMobile ? Alignment.center : Alignment.centerLeft,
                     ),
                   ),
                   if (widget.enableNotifications) ...[
@@ -469,7 +481,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                             Icon(
                               isExpanded ? MdiIcons.chevronUp : MdiIcons.chevronDown,
                               size: 20,
-                              color: validateColor(color: backgroundColor),
+                              color: highlight ? activeColor : validateColor(color: backgroundColor),
                             ),
                           ],
                         ],

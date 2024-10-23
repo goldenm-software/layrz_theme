@@ -38,7 +38,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const ThemedCodeSnippet(
-              code: "drawAvatar(context: context, size: 30)",
+              code: "ThemedAvatar(size: 30)",
             ),
             const SizedBox(height: 10),
             Text(
@@ -48,17 +48,14 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                   ),
             ),
             const SizedBox(height: 10),
-            drawAvatar(
-              context: context,
-              size: 30,
-            ),
+            const ThemedAvatar(size: 30),
             const SizedBox(height: 10),
             Text(
               "You can also change the color of the avatar using the argument color:",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const ThemedCodeSnippet(
-              code: "drawAvatar(context: context, size: 30, color: Colors.red)",
+              code: "ThemedAvatar(size: 30, color: Colors.red)",
             ),
             const SizedBox(height: 10),
             Text(
@@ -68,11 +65,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                   ),
             ),
             const SizedBox(height: 10),
-            drawAvatar(
-              context: context,
-              size: 30,
-              color: Colors.red,
-            ),
+            const ThemedAvatar(size: 30, color: Colors.red),
             const SizedBox(height: 10),
             Text(
               "Look this other examples:",
@@ -92,7 +85,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                 _buildExampleRow(
                   name: 'Using an image',
                   avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
-                  codeExample: "drawAvatar(context: context, size: 50, avatar: "
+                  codeExample: "ThemedAvatar(size: 50, avatar: "
                       "'https://cdn.layrz.com/resources/layo/layo2.png')",
                 ),
                 const SizedBox(height: 5),
@@ -102,7 +95,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                   name: 'Using an icon w/ a color',
                   icon: MdiIcons.account,
                   color: Colors.green,
-                  codeExample: "drawAvatar(context: context, size: 50, icon: MdiIcons.account, color: Colors.green)",
+                  codeExample: "ThemedAvatar(size: 50, icon: MdiIcons.account, color: Colors.green)",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
@@ -112,7 +105,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                   avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
                   radius: 10,
                   elevation: 3,
-                  codeExample: "drawAvatar(context: context, size: 50, avatar: "
+                  codeExample: "ThemedAvatar(size: 50, avatar: "
                       "'https://cdn.layrz.com/resources/layo/layo2.png', radius: 10, elevation: 3)",
                 ),
               ],
@@ -134,8 +127,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
   }) {
     return Row(
       children: [
-        drawAvatar(
-          context: context,
+        ThemedAvatar(
           size: 30,
           name: 'Example',
           avatar: avatar,

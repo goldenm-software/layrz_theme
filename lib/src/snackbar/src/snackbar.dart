@@ -49,6 +49,17 @@ class ThemedSnackbar extends StatefulWidget {
 }
 
 class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStateMixin {
+  /// [shouldDisplayComplete] indicates that the snackbar should be displayed at the bottom of the screen
+  /// and max width. The condition of that is `ThemedPlatform.isIOS` or `ThemedPlatform.isAndroid` and orientation
+  /// in portrait mode
+  bool get shouldDisplayComplete {
+    if (ThemedPlatform.isIOS || ThemedPlatform.isAndroid) {
+      return MediaQuery.of(context).orientation == Orientation.portrait;
+    }
+
+    return false;
+  }
+
   /// [width] is the width of the snackbar
   /// Uses the a prediction of the width of the snackbar
   /// based on the text length and the max lines
@@ -58,11 +69,26 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
 
     double screenWidth = MediaQuery.of(context).size.width;
 
+    if (shouldDisplayComplete) {
+      return screenWidth - 20;
+    }
+
     return min(screenWidth * 0.8, 400);
   }
 
-  /// [defaultPosition] defines the default top and right position of the snackbar
-  double get defaultPosition => 10;
+  /// [defaultPosition] defines the default top and right position of the snackbar.
+  ///
+  /// When [shouldDisplayComplete] is true, the default position will be 10 but in the bottom of the screen
+  double get defaultPosition {
+    if (shouldDisplayComplete) {
+      return MediaQuery.of(context).padding.bottom + 10;
+    }
+
+    return 10;
+  }
+
+  double get defaultRight => shouldDisplayComplete ? MediaQuery.of(context).padding.left + 10 : 10;
+  double? get defaultLeft => shouldDisplayComplete ? MediaQuery.of(context).padding.left + 10 : null;
 
   /// [top] refers to the position in the screen, that position depends of the number of snackbars
   /// that are currently visible
@@ -79,6 +105,22 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
     }
 
     return padding.top + top;
+  }
+
+  /// [bottom] do the same thing as [top], but changing the direction to the bottom
+  double bottom(List<Map<String, dynamic>> heights) {
+    EdgeInsets padding = MediaQuery.of(context).padding;
+    double bottom = defaultPosition;
+
+    for (final entry in heights) {
+      final height = entry['height'] as double;
+      final index = entry['key'] as Key;
+
+      if (index == widget.key) break;
+      bottom += height + spacing;
+    }
+
+    return padding.bottom + bottom;
   }
 
   /// [titleStyle] helps to build the title style
@@ -186,6 +228,8 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
   /// [completeDurationMs] is the complete duration of the snackbar in milliseconds
   double get completeDurationMs => completeDuration.inMilliseconds.toDouble();
 
+  double swipeOffset = 0;
+
   @override
   void initState() {
     super.initState();
@@ -227,12 +271,15 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
     super.dispose();
   }
 
+  double abs(double value) => value < 0 ? -value : value;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
       duration: kHoverDuration,
-      top: top(widget.state.heights),
-      right: defaultPosition,
+      top: shouldDisplayComplete ? null : top(widget.state.heights),
+      bottom: shouldDisplayComplete ? bottom(widget.state.heights) : null,
+      right: swipeOffset != 0 ? swipeOffset : defaultRight,
       child: TweenAnimationBuilder(
         duration: widget.duration,
         tween: Tween<double>(begin: 0, end: completeDurationMs),
@@ -251,91 +298,112 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
             child: child,
           );
         },
-        child: Container(
-          width: width,
-          height: height,
-          margin: EdgeInsets.only(bottom: spacing),
-          decoration: generateContainerElevation(
-            context: context,
-            color: backgroundColor,
-            shadowColor: backgroundColor,
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: padding,
-                  child: Row(
-                    children: [
-                      if (widget.icon != null) ...[
-                        Icon(
-                          widget.icon,
-                          color: validateColor(color: backgroundColor),
-                          size: iconSize,
-                        ),
-                        SizedBox(width: elementsSpacing),
-                      ],
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (widget.title != null) ...[
+        child: GestureDetector(
+          onHorizontalDragUpdate: (swipe) {
+            setState(() => swipeOffset -= swipe.primaryDelta!);
+            debugPrint('swipe.primaryDelta: ${swipe.primaryDelta} - swipeOffset: $swipeOffset');
+            // if (swipe.primaryDelta! > ) {
+            //   _timer.cancel();
+            //   widget.state.removeSnackbar(widget.key!);
+            // }
+          },
+          onHorizontalDragEnd: (_) {
+            if (abs(swipeOffset) > 230) {
+              _timer.cancel();
+
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                widget.state.removeSnackbar(widget.key!);
+              });
+            } else {
+              setState(() => swipeOffset = 0);
+            }
+          },
+          child: Container(
+            width: width,
+            height: height,
+            margin: EdgeInsets.only(bottom: spacing),
+            decoration: generateContainerElevation(
+              context: context,
+              color: backgroundColor,
+              shadowColor: backgroundColor,
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: padding,
+                    child: Row(
+                      children: [
+                        if (widget.icon != null) ...[
+                          Icon(
+                            widget.icon,
+                            color: validateColor(color: backgroundColor),
+                            size: iconSize,
+                          ),
+                          SizedBox(width: elementsSpacing),
+                        ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (widget.title != null) ...[
+                                Text(
+                                  widget.title!,
+                                  style: titleStyle?.copyWith(
+                                    color: validateColor(color: backgroundColor),
+                                  ),
+                                  maxLines: widget.maxLines,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                               Text(
-                                widget.title!,
-                                style: titleStyle?.copyWith(
-                                  color: validateColor(color: backgroundColor),
+                                widget.message,
+                                style: messageStyle?.copyWith(
+                                  color: validateColor(color: backgroundColor).withOpacity(
+                                    widget.title == null ? 1 : 0.8,
+                                  ),
                                 ),
                                 maxLines: widget.maxLines,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
-                            Text(
-                              widget.message,
-                              style: messageStyle?.copyWith(
-                                color: validateColor(color: backgroundColor).withOpacity(
-                                  widget.title == null ? 1 : 0.8,
-                                ),
-                              ),
-                              maxLines: widget.maxLines,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                      if (widget.isDismissible) ...[
-                        SizedBox(width: elementsSpacing),
-                        ThemedButton(
-                          style: ThemedButtonStyle.fab,
-                          tooltipEnabled: false,
-                          labelText: 'Close',
-                          icon: MdiIcons.close,
-                          color: validateColor(color: backgroundColor),
-                          onTap: () {
-                            _timer.cancel();
-                            widget.state.removeSnackbar(widget.key!);
-                          },
-                        ),
+                        if (widget.isDismissible) ...[
+                          SizedBox(width: elementsSpacing),
+                          ThemedButton(
+                            style: ThemedButtonStyle.fab,
+                            tooltipEnabled: false,
+                            labelText: 'Close',
+                            icon: MdiIcons.close,
+                            color: validateColor(color: backgroundColor),
+                            onTap: () {
+                              _timer.cancel();
+                              widget.state.removeSnackbar(widget.key!);
+                            },
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: elementsSpacing),
-              TweenAnimationBuilder(
-                duration: widget.duration,
-                tween: Tween<double>(begin: 0, end: widget.duration.inMilliseconds.toDouble()),
-                builder: (context, value, child) {
-                  return LinearProgressIndicator(
-                    minHeight: progressHeight,
-                    value: value / widget.duration.inMilliseconds,
-                    color: validateColor(color: backgroundColor),
-                    backgroundColor: validateColor(color: backgroundColor).withOpacity(0.5),
-                  );
-                },
-              ),
-            ],
+                SizedBox(height: elementsSpacing),
+                TweenAnimationBuilder(
+                  duration: widget.duration,
+                  tween: Tween<double>(begin: 0, end: widget.duration.inMilliseconds.toDouble()),
+                  builder: (context, value, child) {
+                    return LinearProgressIndicator(
+                      minHeight: progressHeight,
+                      value: value / widget.duration.inMilliseconds,
+                      color: validateColor(color: backgroundColor),
+                      backgroundColor: validateColor(color: backgroundColor).withOpacity(0.5),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

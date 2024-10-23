@@ -135,7 +135,7 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.hideAvatar = false,
   });
 
-  static bool get isMacOS => !kIsWeb && Platform.isMacOS;
+  static bool get isMacOS => ThemedPlatform.isMacOS;
 
   static Size get size => Size.fromHeight(isMacOS ? 50 : 55);
 
@@ -161,7 +161,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   String get currentPath => widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
   bool get isHome => currentPath == widget.homePath;
 
-  bool get isMacOS => !kIsWeb && Platform.isMacOS;
+  bool get isMacOS => ThemedPlatform.isMacOS;
 
   ThemedNavigatorPushFunction get onNavigatorPush =>
       widget.onNavigatorPush ?? (path) => Navigator.of(context).pushNamed(path);

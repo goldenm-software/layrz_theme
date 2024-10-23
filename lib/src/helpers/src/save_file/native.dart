@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/src/file.dart';
+import 'package:layrz_theme/src/theme/theme.dart';
 import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -35,7 +36,7 @@ Future<ThemedFile?> saveFile({
 }) async {
   String dialogTitle = saveDialogTitle ?? i18n?.t('layrz.file.save') ?? "Save file";
 
-  if (Platform.isAndroid) {
+  if (ThemedPlatform.isAndroid) {
     final parentDirectory = await getApplicationDocumentsDirectory();
     final directory = await FilePicker.platform.getDirectoryPath(
       dialogTitle: dialogTitle,
@@ -55,7 +56,7 @@ Future<ThemedFile?> saveFile({
     return null;
   }
 
-  if (Platform.isWindows) {
+  if (ThemedPlatform.isWindows) {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       status = await Permission.storage.request();
@@ -104,7 +105,7 @@ Future<ThemedFile?> saveFile({
     return null;
   }
 
-  if (Platform.isIOS) {
+  if (ThemedPlatform.isIOS) {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       status = await Permission.storage.request();
@@ -133,7 +134,7 @@ Future<ThemedFile?> saveFile({
     return null;
   }
 
-  if (Platform.isMacOS) {
+  if (ThemedPlatform.isMacOS) {
     final parentDirectory = await getApplicationDocumentsDirectory();
     final directory = await FilePicker.platform.getDirectoryPath(
       dialogTitle: dialogTitle,
@@ -153,7 +154,7 @@ Future<ThemedFile?> saveFile({
     return null;
   }
 
-  if (Platform.isLinux) {
+  if (ThemedPlatform.isLinux) {
     final parentDirectory = await getApplicationDocumentsDirectory();
     final directory = await FilePicker.platform.getDirectoryPath(
       dialogTitle: dialogTitle,
