@@ -16,6 +16,10 @@ part of '../helpers.dart';
 /// If you want to use a custom image provider, you can pass it here.
 /// It's important to note that if you pass a custom provider, the [path] will be ignored.
 /// [key] is the key of the image. By default, it is `null`.
+@Deprecated(
+  'This utility function will be deleted at version 8.0.0 and will be replaced by the widget `ThemedImage` - '
+  'Use the widget `ThemedImage` instead',
+)
 Widget getImage(
   String path, {
   double height = 30,

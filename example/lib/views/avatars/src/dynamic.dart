@@ -42,7 +42,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const ThemedCodeSnippet(
-              code: "drawAvatar(context: context, size: 30, dynamicAvatar: Avatar(type: AvatarType.url, "
+              code: "ThemedAvatar(size: 30, dynamicAvatar: Avatar(type: AvatarType.url, "
                   "url: 'https://cdn.layrz.com/resources/layo/layo2.png'))",
             ),
             const SizedBox(height: 10),
@@ -53,10 +53,10 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                   ),
             ),
             const SizedBox(height: 10),
-            drawAvatar(
-              context: context,
+            const ThemedAvatar(
               size: 30,
-              dynamicAvatar: const Avatar(
+              name: 'Example',
+              dynamicAvatar: Avatar(
                 type: AvatarType.url,
                 url: 'https://cdn.layrz.com/resources/layo/layo2.png',
               ),
@@ -79,7 +79,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
               children: [
                 _buildExampleRow(
                   avatar: const Avatar(type: AvatarType.none),
-                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', "
+                  codeExample: "ThemedAvatar(size: 30, name: 'Example', "
                       "dynamicAvatar: const Avatar(type: AvatarType.none))",
                 ),
                 const SizedBox(height: 5),
@@ -87,7 +87,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   avatar: const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/layo2.png'),
-                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
+                  codeExample: "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
                       "const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/"
                       "layo2.png'))",
                 ),
@@ -96,7 +96,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   avatar: Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard),
-                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
+                  codeExample: "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
                       "Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard))",
                 ),
                 const SizedBox(height: 5),
@@ -104,7 +104,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   avatar: const Avatar(type: AvatarType.emoji, emoji: '👍'),
-                  codeExample: "drawAvatar(context: context, size: 30, name: 'Example', dynamicAvatar: "
+                  codeExample: "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
                       "const Avatar(type: AvatarType.emoji, emoji: '👍'))",
                 ),
               ],
@@ -121,8 +121,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
   }) {
     return Row(
       children: [
-        drawAvatar(
-          context: context,
+        ThemedAvatar(
           size: 30,
           name: 'Example',
           dynamicAvatar: avatar,

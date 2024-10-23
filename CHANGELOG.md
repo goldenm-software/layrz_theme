@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.4
+
+- Changed `generateContainerElevation` to receive `elevation` as a `double` instead of `int`
+- New component `ThemedAvatar` as replacement of the utility function `drawAvatar`
+- Deprecated `drawAvatar` utility function in favor of `ThemedAvatar`
+- Deprecated `getImage` in favor of `ThemedImage`
+
 ## 7.0.3
 
 - Added a swipe gestur for `ThemedSnackbar` to dismiss the snackbar

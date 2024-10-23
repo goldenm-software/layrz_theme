@@ -11,7 +11,7 @@ class Layo extends StatelessWidget {
   final LayoEmotions emotion;
 
   /// [elevation] is the elevation of the layo.
-  final int elevation;
+  final double elevation;
 
   /// The [shadowColor] is the color of the [BoxShadow], by default it is [Theme.of(context).dividerColor].
   final Color? shadowColor;
