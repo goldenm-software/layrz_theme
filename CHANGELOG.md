@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.5
+
+- Added `onTap`, `onLongTap` and `onSecondaryTap` to `ThemedAvatar` to handle tap gestures on the avatar.
+
 ## 7.0.4
 
 - Changed `generateContainerElevation` to receive `elevation` as a `double` instead of `int`

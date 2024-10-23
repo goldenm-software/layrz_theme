@@ -71,6 +71,9 @@ class ThemedAvatar extends StatelessWidget {
   final double elevation;
   final Color? shadowColor;
   final bool reverse;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongTap;
+  final VoidCallback? onSecondaryTap;
 
   const ThemedAvatar({
     super.key,
@@ -118,6 +121,21 @@ class ThemedAvatar extends StatelessWidget {
 
     /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
     this.reverse = false,
+
+    /// [onTap] is the callback to be executed when the avatar is tapped.
+    ///
+    /// Note: The tap effect is only available when is not rendering an image.
+    this.onTap,
+
+    /// [onLongTap] is the callback to be executed when the avatar is long tapped.
+    ///
+    /// Note: The tap effect is only available when is not rendering an image.
+    this.onLongTap,
+
+    /// [onSecondaryTap] is the callback to be executed when the avatar is secondary tapped.
+    ///
+    /// Note: The tap effect is only available when is not rendering an image.
+    this.onSecondaryTap,
   })  : assert(elevation <= 5, 'The elevation must be less than or equal to 5'),
         assert(elevation >= 0, 'The elevation must be greater than or equal to 0'),
         assert(radius >= 0, 'The radius must be greater than or equal to 0');
@@ -129,6 +147,9 @@ class ThemedAvatar extends StatelessWidget {
 
     if (dynamicAvatar != null) {
       return _renderDynamicAvatar(
+        onTap: onTap,
+        onLongTap: onLongTap,
+        onSecondaryTap: onSecondaryTap,
         avatar: dynamicAvatar!,
         context: context,
         name: name ?? 'N/A',
@@ -143,6 +164,9 @@ class ThemedAvatar extends StatelessWidget {
 
     if (avatar?.isNotEmpty ?? false) {
       return _renderImage(
+        onTap: onTap,
+        onLongTap: onLongTap,
+        onSecondaryTap: onSecondaryTap,
         image: avatar!,
         context: context,
         name: name ?? 'N/A',
@@ -157,6 +181,9 @@ class ThemedAvatar extends StatelessWidget {
 
     if (icon != null) {
       return _renderIcon(
+        onTap: onTap,
+        onLongTap: onLongTap,
+        onSecondaryTap: onSecondaryTap,
         icon: icon!,
         context: context,
         name: name ?? 'N/A',
@@ -170,6 +197,9 @@ class ThemedAvatar extends StatelessWidget {
     }
 
     return _generateDeafult(
+      onTap: onTap,
+      onLongTap: onLongTap,
+      onSecondaryTap: onSecondaryTap,
       context: context,
       name: name ?? 'N/A',
       elevation: elevation,
@@ -178,25 +208,6 @@ class ThemedAvatar extends StatelessWidget {
       size: size,
       radius: radius,
       color: baseColor,
-    );
-  }
-
-  Widget loadingProgressIndicator(BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-    if (loadingProgress == null) return child;
-    return Container(
-      width: size,
-      height: size,
-      padding: const EdgeInsets.all(5),
-      child: Center(
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: Theme.of(context).dividerColor,
-          backgroundColor: Colors.transparent,
-          value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-              : null,
-        ),
-      ),
     );
   }
 
@@ -210,9 +221,15 @@ class ThemedAvatar extends StatelessWidget {
     required double size,
     required double radius,
     required Color color,
+    VoidCallback? onTap,
+    VoidCallback? onLongTap,
+    VoidCallback? onSecondaryTap,
   }) {
     if (image.isEmpty) {
       return _generateDeafult(
+        onTap: onTap,
+        onLongTap: onLongTap,
+        onSecondaryTap: onSecondaryTap,
         context: context,
         elevation: elevation,
         shadowColor: shadowColor,
@@ -225,6 +242,9 @@ class ThemedAvatar extends StatelessWidget {
     }
 
     return _generateCircle(
+      onTap: onTap,
+      onLongTap: onLongTap,
+      onSecondaryTap: onSecondaryTap,
       context: context,
       elevation: elevation,
       shadowColor: shadowColor,
@@ -251,8 +271,14 @@ class ThemedAvatar extends StatelessWidget {
     required double size,
     required double radius,
     required Color color,
+    VoidCallback? onTap,
+    VoidCallback? onLongTap,
+    VoidCallback? onSecondaryTap,
   }) {
     return _generateCircle(
+      onTap: onTap,
+      onLongTap: onLongTap,
+      onSecondaryTap: onSecondaryTap,
       context: context,
       elevation: elevation,
       shadowColor: shadowColor,
@@ -278,10 +304,16 @@ class ThemedAvatar extends StatelessWidget {
     required double size,
     required double radius,
     required Color color,
+    VoidCallback? onTap,
+    VoidCallback? onLongTap,
+    VoidCallback? onSecondaryTap,
   }) {
     switch (avatar.type) {
       case AvatarType.emoji:
         return _generateCircle(
+          onTap: onTap,
+          onLongTap: onLongTap,
+          onSecondaryTap: onSecondaryTap,
           context: context,
           elevation: elevation,
           shadowColor: shadowColor,
@@ -296,6 +328,9 @@ class ThemedAvatar extends StatelessWidget {
         );
       case AvatarType.icon:
         return _renderIcon(
+          onTap: onTap,
+          onLongTap: onLongTap,
+          onSecondaryTap: onSecondaryTap,
           icon: avatar.icon ?? Icons.person,
           context: context,
           name: name,
@@ -309,6 +344,9 @@ class ThemedAvatar extends StatelessWidget {
 
       case AvatarType.base64:
         return _renderImage(
+          onTap: onTap,
+          onLongTap: onLongTap,
+          onSecondaryTap: onSecondaryTap,
           image: avatar.base64 ?? '',
           context: context,
           name: name,
@@ -322,6 +360,9 @@ class ThemedAvatar extends StatelessWidget {
 
       case AvatarType.url:
         return _renderImage(
+          onTap: onTap,
+          onLongTap: onLongTap,
+          onSecondaryTap: onSecondaryTap,
           image: avatar.url ?? '',
           context: context,
           name: name,
@@ -335,6 +376,9 @@ class ThemedAvatar extends StatelessWidget {
 
       default:
         return _generateDeafult(
+          onTap: onTap,
+          onLongTap: onLongTap,
+          onSecondaryTap: onSecondaryTap,
           context: context,
           elevation: elevation,
           shadowColor: shadowColor,
@@ -356,8 +400,14 @@ class ThemedAvatar extends StatelessWidget {
     required double size,
     required double radius,
     required Color color,
+    VoidCallback? onTap,
+    VoidCallback? onLongTap,
+    VoidCallback? onSecondaryTap,
   }) {
     return _generateCircle(
+      onTap: onTap,
+      onLongTap: onLongTap,
+      onSecondaryTap: onSecondaryTap,
       context: context,
       elevation: elevation,
       shadowColor: shadowColor,
@@ -386,6 +436,9 @@ class ThemedAvatar extends StatelessWidget {
     required double size,
     required double radius,
     required Color color,
+    VoidCallback? onTap,
+    VoidCallback? onLongTap,
+    VoidCallback? onSecondaryTap,
   }) {
     return Container(
       width: size,
@@ -400,7 +453,20 @@ class ThemedAvatar extends StatelessWidget {
       ),
       alignment: Alignment.center,
       clipBehavior: Clip.antiAlias,
-      child: child,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          onLongPress: onLongTap,
+          onSecondaryTap: onSecondaryTap,
+          child: Container(
+            width: size,
+            height: size,
+            alignment: Alignment.center,
+            child: child,
+          ),
+        ),
+      ),
     );
   }
 
