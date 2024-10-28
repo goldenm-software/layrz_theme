@@ -105,7 +105,11 @@ class _TextInputViewState extends State<TextInputView> {
             ThemedNumberInput(
               labelText: "Example label",
               value: _value,
-              onChanged: (value) => setState(() => _value = value),
+              decimalSeparator: ThemedDecimalSeparator.dot,
+              onChanged: (value) {
+                debugPrint("Value: $value");
+                setState(() => _value = value);
+              },
             ),
             const SizedBox(height: 10),
             Text(

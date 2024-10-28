@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.5
+
+- Added `decimalSeparator` and `inputRegExp` on `ThemedNumberInput` to support Brazilian decimal format.
+
 ## 7.0.4
 
 - Changed `generateContainerElevation` to receive `elevation` as a `double` instead of `int`
