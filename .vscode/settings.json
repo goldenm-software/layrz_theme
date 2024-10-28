@@ -12,5 +12,6 @@
     "editor.wordBasedSuggestions": "off"
   },
   "dart.lineLength": 120,
-  "dart.flutterSdkPath": ".fvm/versions/3.24.3"
+  "dart.flutterSdkPath": ".fvm/versions/3.24.3",
+  "cmake.sourceDirectory": "C:/Users/kenny/Projects-Windows/layrz_theme/example/windows"
 }

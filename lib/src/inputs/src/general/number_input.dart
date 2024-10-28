@@ -62,6 +62,16 @@ class ThemedNumberInput extends StatefulWidget {
   /// the class comes from `intl` package (Exported by the `layrz_theme` package).
   final NumberFormat? format;
 
+  /// [ThemedDecimalSeparator] is the decimal separator of the input.
+  ///
+  /// When the [format] is not null, you must provide the [inputRegExp] to filter the input.
+  final ThemedDecimalSeparator decimalSeparator;
+
+  /// [inputRegExp] is the regular expression of the input.
+  ///
+  /// When the [format] is not null, you must provide the [inputRegExp] to filter the input.
+  final RegExp? inputRegExp;
+
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
@@ -86,20 +96,58 @@ class ThemedNumberInput extends StatefulWidget {
     this.step,
     this.keyboardType = TextInputType.number,
     this.format,
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+    this.decimalSeparator = ThemedDecimalSeparator.dot,
+    this.inputRegExp,
+  })  : assert(
+          (label == null && labelText != null) || (label != null && labelText == null),
+          'You must provide either a labelText or a label, but not both.',
+        ),
+        assert(
+          (format != null && inputRegExp != null) || (format == null),
+          'When the format is not null, you must provide the inputRegExp to filter the input.',
+        );
 
   @override
   State<ThemedNumberInput> createState() => _ThemedNumberInputState();
 }
 
 class _ThemedNumberInputState extends State<ThemedNumberInput> {
+  RegExp get _regex => RegExp(r'[0-9\,.]');
+  final _controller = TextEditingController();
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
-  NumberFormat get format => widget.format ?? NumberFormat.decimalPattern();
+  NumberFormat get format {
+    if (widget.format != null) return widget.format!;
+
+    if (widget.decimalSeparator == ThemedDecimalSeparator.comma) {
+      return NumberFormat.decimalPattern('pt');
+    }
+
+    return NumberFormat.decimalPattern();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.value == null ? '' : format.format(widget.value);
+    _controller.selection = TextSelection.fromPosition(TextPosition(offset: _controller.text.length));
+  }
+
+  @override
+  void didUpdateWidget(ThemedNumberInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.value != oldWidget.value) {
+        _controller.text = widget.value == null ? '' : format.format(widget.value);
+        _controller.selection = TextSelection.fromPosition(TextPosition(offset: _controller.text.length));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ThemedTextInput(
+      controller: _controller,
       value: widget.value == null ? null : format.format(widget.value),
       labelText: widget.labelText,
       label: widget.label,
@@ -116,13 +164,20 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       isRequired: widget.isRequired,
       keyboardType: widget.keyboardType,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+        FilteringTextInputFormatter.allow(_regex),
         ...widget.inputFormatters,
       ],
       onChanged: (value) {
-        widget.onChanged?.call(num.tryParse(value));
+        if (value.isEmpty) return widget.onChanged?.call(null);
+        final castedValue = format.tryParse(value);
+        widget.onChanged?.call(castedValue);
       },
       onSubmitted: widget.onSubmitted,
     );
   }
+}
+
+enum ThemedDecimalSeparator {
+  dot,
+  comma,
 }
