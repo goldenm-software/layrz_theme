@@ -258,12 +258,16 @@ class ThemedButton extends StatefulWidget {
 
   /// [disabledColor] is used to know the color of the disabled button.
   static Color getDisabledColor(bool isDark, ThemedButtonStyle style) {
-    if (style == ThemedButtonStyle.filledTonal ||
-        style == ThemedButtonStyle.filledTonalFab ||
-        style == ThemedButtonStyle.text ||
-        style == ThemedButtonStyle.fab ||
-        style == ThemedButtonStyle.outlined ||
-        style == ThemedButtonStyle.outlinedFab) {
+    if ([
+      ThemedButtonStyle.filledTonal,
+      ThemedButtonStyle.filledTonalFab,
+      ThemedButtonStyle.text,
+      ThemedButtonStyle.fab,
+      ThemedButtonStyle.outlined,
+      ThemedButtonStyle.outlinedFab,
+      ThemedButtonStyle.outlinedTonal,
+      ThemedButtonStyle.outlinedTonalFab,
+    ].contains(style)) {
       return isDark ? Colors.grey.shade600 : Colors.grey.shade500;
     }
     return isDark ? Colors.grey.shade800 : Colors.grey.shade200;
@@ -318,6 +322,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         ThemedButtonStyle.filledFab,
         ThemedButtonStyle.filledTonalFab,
         ThemedButtonStyle.elevatedFab,
+        ThemedButtonStyle.outlinedTonalFab,
       ].contains(style);
 
   /// [onTap] is called when the button is tapped.
@@ -345,6 +350,13 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [kHoverOpacity] defines the opacity of the button when is hovered.
   double get kHoverOpacity => 0.2;
+
+  /// [kOutlinedTonalOpacity] defines the opacity only for [ThemedButtonStyle.outlinedTonal] and
+  /// [ThemedButtonStyle.outlinedTonalFab].
+  double get kOutlinedTonalOpacity => 0.15;
+
+  /// [kBorderWidth] defines the border width of the button.
+  double get kBorderWidth => 1.5;
 
   /// [defaultColor] defines the default color of the button.
   Color get defaultColor => isDark ? Colors.white : Theme.of(context).primaryColor;
@@ -450,7 +462,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       case ThemedButtonStyle.filledTonal:
         return _handleHint(child: _buildFilledTonal());
       case ThemedButtonStyle.filledTonalFab:
-        return _builFilledTonalFab();
+        return _buildFilledTonalFab();
       case ThemedButtonStyle.text:
         return _handleHint(child: _buildText());
       case ThemedButtonStyle.fab:
@@ -467,6 +479,10 @@ class _ThemedButtonState extends State<ThemedButton> {
         return _handleHint(child: _buildElevated());
       case ThemedButtonStyle.elevatedFab:
         return _builElevatedFab();
+      case ThemedButtonStyle.outlinedTonal:
+        return _handleHint(child: _buildOutlinedTonal());
+      case ThemedButtonStyle.outlinedTonalFab:
+        return _buildOutlinedTonalFab();
       default:
         return Text("Unsupported $style");
     }
@@ -550,12 +566,96 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [_buildFilledTonalFab] is used to build a filled tonal FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
-  Widget _builFilledTonalFab() {
+  Widget _buildFilledTonalFab() {
     return _handleTooltip(
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: colorOverride ?? contentColor.withOpacity(kHoverOpacity),
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isDisabled ? null : onTap,
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: Padding(
+                padding: padding,
+                child: _buildLoadingOrChild(
+                  child: Center(
+                    child: Icon(
+                      icon ?? MdiIcons.help,
+                      color: contentColor,
+                      size: iconSize,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [_buildOutlinedTonal] is used to build a filled tonal button.
+  /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
+  Widget _buildOutlinedTonal() {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: colorOverride ?? contentColor.withOpacity(kOutlinedTonalOpacity),
+        border: Border.all(color: contentColor, width: kBorderWidth),
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : onTap,
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: Padding(
+              padding: padding,
+              child: _buildLoadingOrChild(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        color: contentColor,
+                        size: iconSize,
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                    label ??
+                        Text(
+                          labelText ?? "",
+                          style: textStyle?.copyWith(color: contentColor),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// [_buildOutlinedTonalFab] is used to build a filled tonal FAB button.
+  /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
+  Widget _buildOutlinedTonalFab() {
+    return _handleTooltip(
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: colorOverride ?? contentColor.withOpacity(kOutlinedTonalOpacity),
+          border: Border.all(color: contentColor, width: kBorderWidth),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
@@ -674,10 +774,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       decoration: BoxDecoration(
         color: colorOverride ?? Colors.transparent,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: contentColor,
-          width: 1,
-        ),
+        border: Border.all(color: contentColor, width: kBorderWidth),
       ),
       child: Material(
         color: Colors.transparent,
@@ -724,10 +821,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          border: Border.all(
-            color: contentColor,
-            width: 1,
-          ),
+          border: Border.all(color: contentColor, width: kBorderWidth),
           color: colorOverride ?? Colors.transparent,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
@@ -1056,4 +1150,12 @@ enum ThemedButtonStyle {
 
   /// [ThemedButtonStyle.fab] refers to a button with a transparent background.
   fab,
+
+  /// [ThemedButtonStyle.outlinedTonal] refers to a button with a outlined border with an constant
+  /// opacity of `0.2`.
+  outlinedTonal,
+
+  /// [ThemedButtonStyle.outlinedTonalFab] refers to a button with a outlined border with an constant
+  /// opacity of `0.2`.
+  outlinedTonalFab,
 }

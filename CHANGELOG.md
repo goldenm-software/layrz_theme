@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.6
+
+- New button styles `ThemedButtonStyle.outlinedTonal` and `ThemedButtonStyle.outlinedTonalFab`
+
 ## 7.0.5
 
 - Added `decimalSeparator` and `inputRegExp` on `ThemedNumberInput` to support Brazilian decimal format.

@@ -276,6 +276,65 @@ class _ButtonsViewState extends State<ButtonsView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
+                        "A combination of Outlined and Filled tonal? No problem!",
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Style outlinedTonal",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                                const SizedBox(height: 5),
+                                _factorButton(
+                                  style: ThemedButtonStyle.outlinedTonal,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 30,
+                            height: 50,
+                            child: VerticalDivider(),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Style outlinedTonalFab",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                                const SizedBox(height: 5),
+                                _factorButton(
+                                  style: ThemedButtonStyle.outlinedTonalFab,
+                                  tooltipPosition: ThemedTooltipPosition.bottom,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                    child: Divider(),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
                         "Do you don't like the styles avobe? You can use the plain styles:",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
