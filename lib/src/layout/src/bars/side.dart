@@ -82,6 +82,14 @@ class ThemedSidebar extends StatefulWidget {
   /// [notifications] is the list of notifications to be displayed in the drawer.
   final List<ThemedNotificationItem> notifications;
 
+  /// [avatarRadius] is the radius of the avatar.
+  /// By default is `5`.
+  final double avatarRadius;
+
+  /// [hideAvatar] is the flag to hide the avatar.
+  /// By default is `false`.
+  final bool hideAvatar;
+
   /// [ThemedSidebar] is the custom native [Drawer]
   const ThemedSidebar({
     super.key,
@@ -109,6 +117,8 @@ class ThemedSidebar extends StatefulWidget {
     this.currentPath,
     this.enableNotifications = true,
     this.notifications = const [],
+    this.avatarRadius = 5,
+    this.hideAvatar = false,
   });
 
   @override
@@ -266,7 +276,8 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                     child: ThemedImage(
                       path: useBlack(color: backgroundColor) ? widget.logo.normal : widget.logo.white,
                       width: double.infinity,
-                      height: 20,
+                      height: 30,
+                      fit: BoxFit.contain,
                       alignment: isMobile ? Alignment.center : Alignment.centerLeft,
                     ),
                   ),
@@ -285,78 +296,80 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
             ),
             const SizedBox(height: 10),
             _buildItem(ThemedNavigatorSeparator(), removePadding: true),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5),
-                decoration: BoxDecoration(
-                  color: isExpanded ? activeColor.withOpacity(0.2) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      setState(() => isExpanded = !isExpanded);
-                      if (isExpanded) {
-                        _actionsAnimation.forward();
-                      } else {
-                        _actionsAnimation.reverse();
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          drawAvatar(
-                            context: context,
-                            name: widget.userName,
-                            avatar: widget.userAvatar,
-                            dynamicAvatar: widget.userDynamicAvatar,
-                            color: backgroundColor,
-                            shadowColor: Colors.black.withOpacity(0.2),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              widget.userName,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: sidebarTextColor,
-                                  ),
+            if (!widget.hideAvatar) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: isExpanded ? activeColor.withOpacity(0.2) : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() => isExpanded = !isExpanded);
+                        if (isExpanded) {
+                          _actionsAnimation.forward();
+                        } else {
+                          _actionsAnimation.reverse();
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ThemedAvatar(
+                              radius: widget.avatarRadius,
+                              name: widget.userName,
+                              avatar: widget.userAvatar,
+                              dynamicAvatar: widget.userDynamicAvatar,
+                              color: backgroundColor,
+                              shadowColor: Colors.black.withOpacity(0.2),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          Icon(
-                            isExpanded ? MdiIcons.chevronUp : MdiIcons.chevronDown,
-                            color: sidebarTextColor,
-                            size: 20,
-                          ),
-                        ],
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                widget.userName,
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      color: sidebarTextColor,
+                                    ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Icon(
+                              isExpanded ? MdiIcons.chevronUp : MdiIcons.chevronDown,
+                              color: sidebarTextColor,
+                              size: 20,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizeTransition(
-              sizeFactor: CurvedAnimation(parent: _actionsAnimation, curve: Curves.easeInOut),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: actions.length,
-                  itemBuilder: (context, index) {
-                    return _buildItem(
-                      actions[index],
-                      depth: 1,
-                    );
-                  },
+              SizeTransition(
+                sizeFactor: CurvedAnimation(parent: _actionsAnimation, curve: Curves.easeInOut),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: actions.length,
+                    itemBuilder: (context, index) {
+                      return _buildItem(
+                        actions[index],
+                        depth: 1,
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            _buildItem(ThemedNavigatorSeparator(), removePadding: true),
+              _buildItem(ThemedNavigatorSeparator(), removePadding: true),
+            ],
             const SizedBox(height: 10),
             Expanded(
               child: ScrollConfiguration(

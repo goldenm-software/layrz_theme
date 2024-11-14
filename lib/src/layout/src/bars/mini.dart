@@ -84,6 +84,10 @@ class ThemedMiniBar extends StatefulWidget {
   /// By default is `0.15`.
   final double depthColorFactor;
 
+  /// [avatarRadius] is the radius of the avatar.
+  /// By default is `5`.
+  final double avatarRadius;
+
   /// [ThemedMiniBar] is the custom native [Drawer]
   const ThemedMiniBar({
     super.key,
@@ -112,6 +116,7 @@ class ThemedMiniBar extends StatefulWidget {
     this.notifications = const [],
     this.homePath = '/home',
     this.depthColorFactor = 0.15,
+    this.avatarRadius = 5,
   });
 
   @override
@@ -180,6 +185,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                       additionalActions: widget.additionalActions,
                       backgroundColor: widget.backgroundColor,
                       onThemeSwitchTap: widget.onThemeSwitchTap,
+                      avatarRadius: widget.avatarRadius,
                     ),
                     if (widget.persistentItems.isNotEmpty) ...[
                       _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),

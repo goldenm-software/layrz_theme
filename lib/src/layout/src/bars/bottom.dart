@@ -7,46 +7,6 @@ class ThemedBottomBar extends StatefulWidget {
   /// [persistentItems] is the list of buttons to be displayed
   final List<ThemedNavigatorItem> persistentItems;
 
-  /// [enableAbout] is a boolean that enables the about button.
-  final bool enableAbout;
-
-  /// [onSettingsTap] is the callback to be executed when the settings button
-  final VoidCallback? onSettingsTap;
-
-  /// [onProfileTap] is the callback to be executed when the profile button
-  final VoidCallback? onProfileTap;
-
-  /// [onLogoutTap] is the callback to be executed when the logout button
-  final VoidCallback? onLogoutTap;
-
-  /// [onThemeSwitchTap] is a callback that is called when the theme switch
-  /// button is tapped.
-  final VoidCallback? onThemeSwitchTap;
-
-  /// [appTitle] is the title of the app.
-  final String appTitle;
-
-  /// [companyName] is the name of the company.
-  final String companyName;
-
-  /// [logo] is the logo of the app. Can be a path or a url.
-  final AppThemedAsset logo;
-
-  /// [favicon] is the favicon of the app. Can be a path or a url.
-  final AppThemedAsset favicon;
-
-  /// [userName] is the name of the user.
-  final String userName;
-
-  /// [userAvatar] is the avatar of the user. Can be a path or a url.
-  final String? userAvatar;
-
-  /// [userDynamicAvatar] is the dynamic avatar of the user.
-  final Avatar? userDynamicAvatar;
-
-  /// [version] is the version of the app.
-  final String? version;
-
   /// [additionalActions] is the list of additional actions to be displayed in the drawer.
   /// This actions will be displayed before the about, settings, profile and logout buttons.
   final List<ThemedNavigatorItem> additionalActions;
@@ -71,18 +31,16 @@ class ThemedBottomBar extends StatefulWidget {
   /// By default, we get the current path from `ModalRoute.of(context)?.settings.name`.
   final String? currentPath;
 
-  /// [enableNotifications] is a boolean that enables the notifications button and page.
-  final bool enableNotifications;
-
-  /// [notifications] is the list of notifications to be displayed in the drawer.
-  final List<ThemedNotificationItem> notifications;
-
   /// [homePath] is the path of the home page.
   final String homePath;
 
   /// [depthColorFactor] is the factor to be used to calculate the color of the depth.
   /// By default is `0.15`.
   final double depthColorFactor;
+
+  /// [avatarRadius] is the radius of the avatar.
+  /// By default is `5`.
+  final double avatarRadius;
 
   /// [ThemedBottomBar] is a brand-new bottom bar for your app.
   ///
@@ -97,29 +55,15 @@ class ThemedBottomBar extends StatefulWidget {
     super.key,
     this.items = const [],
     this.persistentItems = const [],
-    this.enableAbout = true,
-    this.onSettingsTap,
-    this.onProfileTap,
-    this.onLogoutTap,
-    this.onThemeSwitchTap,
-    required this.appTitle,
-    this.companyName = 'Golden M, Inc',
-    required this.logo,
-    required this.favicon,
-    this.userName = "Golden M",
-    this.userAvatar,
-    this.userDynamicAvatar,
-    this.version,
     this.additionalActions = const [],
     this.mobileBreakpoint = kMediumGrid,
     this.backgroundColor,
     this.onNavigatorPush,
     this.onNavigatorPop,
     this.currentPath,
-    this.enableNotifications = true,
-    this.notifications = const [],
     this.homePath = '/home',
     this.depthColorFactor = 0.15,
+    this.avatarRadius = 5,
   });
 
   @override
@@ -132,7 +76,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
   Color get backgroundColor => isDark
       ? Theme.of(context).scaffoldBackgroundColor
       : widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
-  String get favicon => useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white;
+
   String get currentPath => widget.currentPath ?? '';
   Color get activeColor => isDark ? validateColor(color: backgroundColor) : Theme.of(context).primaryColor;
   double get actionSize => 40;
@@ -226,27 +170,6 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      ThemedAppBarAvatar(
-                        tooltipPosition: ThemedTooltipPosition.top,
-                        asTaskBar: true,
-                        appTitle: widget.appTitle,
-                        logo: widget.logo,
-                        favicon: widget.favicon,
-                        version: widget.version,
-                        companyName: widget.companyName,
-                        userName: widget.userName,
-                        userDynamicAvatar: widget.userDynamicAvatar,
-                        enableAbout: widget.enableAbout,
-                        onSettingsTap: widget.onSettingsTap,
-                        onProfileTap: widget.onProfileTap,
-                        onLogoutTap: widget.onLogoutTap,
-                        onNavigatorPush: onNavigatorPush,
-                        onNavigatorPop: onNavigatorPop,
-                        additionalActions: widget.additionalActions,
-                        backgroundColor: widget.backgroundColor,
-                        onThemeSwitchTap: widget.onThemeSwitchTap,
-                      ),
-                      _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots), removePadding: true),
                       Expanded(
                         child: Center(
                           child: SingleChildScrollView(
@@ -264,18 +187,6 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                           ),
                         ),
                       ),
-                      if (widget.enableNotifications) ...[
-                        const SizedBox(height: 10),
-                        _buildItem(ThemedNavigatorSeparator(), removePadding: true),
-                        ThemedNotificationIcon(
-                          dense: true,
-                          notifications: widget.notifications,
-                          backgroundColor: backgroundColor,
-                          location: ThemedNotificationLocation.bottomBar,
-                          expandToLeft: false,
-                          forceFullSize: true,
-                        ),
-                      ],
                     ],
                   ),
                 ),
@@ -287,7 +198,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
     );
   }
 
-  Widget _buildItem(ThemedNavigatorItem item, {int depth = 0, bool removePadding = false}) {
+  Widget _buildItem(ThemedNavigatorItem item, {int depth = 0}) {
     if (item is ThemedNavigatorLabel) {
       return ThemedTooltip(
         position: ThemedTooltipPosition.top,

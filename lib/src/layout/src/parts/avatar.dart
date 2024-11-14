@@ -58,7 +58,12 @@ class ThemedAppBarAvatar extends StatefulWidget {
   /// By default is `Navigator.of(context).pop`
   final ThemdNavigatorPopFunction? onNavigatorPop;
 
+  /// [tooltipPosition] is the position of the tooltip.
   final ThemedTooltipPosition tooltipPosition;
+
+  /// [avatarRadius] is the radius of the avatar.
+  /// By default is `5`.
+  final double avatarRadius;
 
   /// Creates a [ThemedAppBarAvatar] widget.
   const ThemedAppBarAvatar({
@@ -81,6 +86,7 @@ class ThemedAppBarAvatar extends StatefulWidget {
     this.onNavigatorPush,
     this.onNavigatorPop,
     this.tooltipPosition = ThemedTooltipPosition.right,
+    this.avatarRadius = 5,
   });
 
   @override
@@ -112,10 +118,9 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       child: ThemedTooltip(
         message: widget.userName,
         position: widget.tooltipPosition,
-        child: drawAvatar(
-          context: context,
+        child: ThemedAvatar(
           size: 30,
-          radius: widget.asTaskBar ? 5 : 30,
+          radius: widget.avatarRadius,
           name: widget.userName,
           dynamicAvatar: widget.userDynamicAvatar,
           elevation: 3,

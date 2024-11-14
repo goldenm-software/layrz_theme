@@ -9,12 +9,15 @@ import 'package:layrz_theme/layrz_theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 // Layout parts
-part 'src/appbar.dart';
+part 'src/appbar/desktop.dart';
+part 'src/appbar/mobile.dart';
+
 part 'src/bars/dual.dart';
 part 'src/bars/side.dart';
-part 'src/models.dart';
 part 'src/bars/mini.dart';
 part 'src/bars/bottom.dart';
+
+part 'src/models.dart';
 
 // Parts
 part 'src/parts/notification.dart';
@@ -196,6 +199,10 @@ class ThemedLayout extends StatefulWidget {
   /// [enableNotifications] is a boolean that enables the notifications button.
   final bool enableNotifications;
 
+  /// [avatarRadius] is the radius of the avatar.
+  /// By default is `5`.
+  final double avatarRadius;
+
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
     super.key,
@@ -229,6 +236,7 @@ class ThemedLayout extends StatefulWidget {
     this.isBackEnabled = true,
     this.currentPath,
     this.enableNotifications = true,
+    this.avatarRadius = 5,
   });
 
   @override
@@ -276,10 +284,11 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
     if (widget.mobileStyle == ThemedMobileLayoutStyle.appBar) {
       return Scaffold(
-        appBar: _buildAppBar(hideAvatar: true),
+        appBar: _buildAppBar(isMobile: true),
         body: child,
         drawer: ThemedSidebar(
           fromScaffold: true,
+          hideAvatar: true,
           items: widget.items,
           appTitle: widget.appTitle,
           companyName: widget.companyName,
@@ -305,9 +314,9 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: ThemedBottomBar(
-        items: widget.items,
-        persistentItems: widget.persistentItems,
+      appBar: ThemedMobileAppBar(
+        isBackEnabled: widget.isBackEnabled,
+        items: widget.persistentItems,
         appTitle: widget.appTitle,
         companyName: widget.companyName,
         logo: widget.logo,
@@ -321,12 +330,20 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         onLogoutTap: widget.onLogoutTap,
         onThemeSwitchTap: widget.onThemeSwitchTap,
         additionalActions: widget.additionalActions,
-        mobileBreakpoint: widget.mobileBreakpoint,
         onNavigatorPush: widget.onNavigatorPush,
         onNavigatorPop: widget.onNavigatorPop,
         currentPath: widget.currentPath,
         enableNotifications: widget.enableNotifications,
         notifications: widget.notifications,
+        avatarRadius: widget.avatarRadius,
+      ),
+      bottomNavigationBar: ThemedBottomBar(
+        items: widget.items,
+        additionalActions: widget.additionalActions,
+        mobileBreakpoint: widget.mobileBreakpoint,
+        onNavigatorPush: widget.onNavigatorPush,
+        onNavigatorPop: widget.onNavigatorPop,
+        currentPath: widget.currentPath,
       ),
     );
   }
@@ -368,6 +385,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             currentPath: widget.currentPath,
             enableNotifications: widget.enableNotifications,
             notifications: widget.notifications,
+            avatarRadius: widget.avatarRadius,
           ),
           Expanded(child: child),
         ],
@@ -461,6 +479,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             onThemeSwitchTap: widget.onThemeSwitchTap,
             enableNotifications: widget.enableNotifications,
             notifications: widget.notifications,
+            avatarRadius: widget.avatarRadius,
           ),
           Expanded(
             child: SafeArea(
@@ -525,7 +544,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     }
 
     return Scaffold(
-      appBar: _buildAppBar(hideAvatar: false),
+      appBar: _buildAppBar(isMobile: false),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -543,7 +562,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar({bool hideAvatar = false}) {
+  PreferredSizeWidget _buildAppBar({bool isMobile = false}) {
     return ThemedAppBar(
       items: widget.items,
       homePath: widget.homePath,
@@ -568,7 +587,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       onNavigatorPush: widget.onNavigatorPush,
       isBackEnabled: widget.isBackEnabled,
       currentPath: widget.currentPath,
-      hideAvatar: hideAvatar,
+      isMobile: isMobile,
+      avatarRadius: widget.avatarRadius,
     );
   }
 }
