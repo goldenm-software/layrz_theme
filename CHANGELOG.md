@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.0.7
+
+- Design adjustments of `ThemedLayout` and sub-widgets.
+- Some small fixes related to the `ThemedTable`.
+
 ## 7.0.6
 
 - New button styles `ThemedButtonStyle.outlinedTonal` and `ThemedButtonStyle.outlinedTonalFab`

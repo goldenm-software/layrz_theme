@@ -1,4 +1,4 @@
-part of '../layout.dart';
+part of '../../layout.dart';
 
 class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// [buttons] is the list of buttons to be displayed in the drawer.
@@ -103,6 +103,13 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// By default is `false`.
   final bool hideAvatar;
 
+  /// [avatarRadius] is the radius of the avatar.
+  /// By default is `5`.
+  final double avatarRadius;
+
+  /// [isMobile] is the flag to know if the app is in mobile mode.
+  final bool? isMobile;
+
   /// [ThemedAppBar] is the app bar of the app.
   const ThemedAppBar({
     super.key,
@@ -133,6 +140,8 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.isBackEnabled = true,
     this.currentPath,
     this.hideAvatar = false,
+    this.avatarRadius = 5,
+    this.isMobile,
   });
 
   static bool get isMacOS => ThemedPlatform.isMacOS;
@@ -156,7 +165,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
 
   Color get backgroundColor => widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
   double get width => MediaQuery.of(context).size.width;
-  bool get isMobile => width < widget.mobileBreakpoint;
+  bool get isMobile => widget.isMobile ?? width < widget.mobileBreakpoint;
 
   String get currentPath => widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
   bool get isHome => currentPath == widget.homePath;
@@ -380,46 +389,38 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                         ),
                       ),
                     ),
-                    if (widget.enableNotifications) ...[
-                      const SizedBox(width: 10),
-                      ThemedNotificationIcon(
-                        notifications: widget.notifications,
-                        backgroundColor: backgroundColor,
-                        location: ThemedNotificationLocation.appBar,
-                      ),
-                    ],
-                    if (!widget.hideAvatar) ...[
-                      const SizedBox(width: 10),
-                      ThemedAppBarAvatar(
-                        appTitle: widget.appTitle,
-                        logo: widget.logo,
-                        favicon: widget.favicon,
-                        version: widget.version,
-                        companyName: widget.companyName,
-                        userName: widget.userName,
-                        userDynamicAvatar: widget.userDynamicAvatar,
-                        enableAbout: widget.enableAbout,
-                        onSettingsTap: widget.onSettingsTap,
-                        onProfileTap: widget.onProfileTap,
-                        onLogoutTap: widget.onLogoutTap,
-                        onNavigatorPush: onNavigatorPush,
-                        onNavigatorPop: onNavigatorPop,
-                        additionalActions: widget.additionalActions,
-                        backgroundColor: widget.backgroundColor,
-                        onThemeSwitchTap: widget.onThemeSwitchTap,
-                      ),
-                    ],
                   ] else ...[
                     const Spacer(),
-                    if (widget.enableNotifications) ...[
-                      ThemedNotificationIcon(
-                        notifications: widget.notifications,
-                        backgroundColor: backgroundColor,
-                        location: ThemedNotificationLocation.appBar,
-                        forceFullSize: width < kSmallGrid,
-                      ),
-                    ],
+                  ],
+                  if (widget.enableNotifications) ...[
                     const SizedBox(width: 10),
+                    ThemedNotificationIcon(
+                      notifications: widget.notifications,
+                      backgroundColor: backgroundColor,
+                      location: ThemedNotificationLocation.appBar,
+                    ),
+                  ],
+                  if (!widget.hideAvatar) ...[
+                    const SizedBox(width: 10),
+                    ThemedAppBarAvatar(
+                      appTitle: widget.appTitle,
+                      logo: widget.logo,
+                      favicon: widget.favicon,
+                      version: widget.version,
+                      companyName: widget.companyName,
+                      userName: widget.userName,
+                      userDynamicAvatar: widget.userDynamicAvatar,
+                      enableAbout: widget.enableAbout,
+                      onSettingsTap: widget.onSettingsTap,
+                      onProfileTap: widget.onProfileTap,
+                      onLogoutTap: widget.onLogoutTap,
+                      onNavigatorPush: onNavigatorPush,
+                      onNavigatorPop: onNavigatorPop,
+                      additionalActions: widget.additionalActions,
+                      backgroundColor: widget.backgroundColor,
+                      onThemeSwitchTap: widget.onThemeSwitchTap,
+                      avatarRadius: widget.avatarRadius,
+                    ),
                   ],
                 ],
               ),
