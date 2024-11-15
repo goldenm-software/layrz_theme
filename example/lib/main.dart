@@ -54,8 +54,24 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return VxBuilder<AppStore>(
-      mutations: const {SetTheme},
+    return VxConsumer<AppStore>(
+      mutations: const {},
+      notifications: {
+        SetTheme: (context, mutation, {status}) {
+          if (status == VxStatus.success) {
+            setState(() {});
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final mut = mutation as SetTheme;
+              bool isDark = mut.themeMode == ThemeMode.dark;
+              if (mut.themeMode == ThemeMode.system) {
+                isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+              }
+
+              overrideAppBarStyle(isDark: isDark);
+            });
+          }
+        },
+      },
       builder: (context, store, status) {
         return MaterialApp.router(
           title: 'Layrz Theme Example',

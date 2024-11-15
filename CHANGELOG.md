@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.8
+
+- Adjustments on `ThemedLayoutStyle.mini`, now the content will be with a `SafeArea`.
+
 ## 7.0.7
 
 - Design adjustments of `ThemedLayout` and sub-widgets.
