@@ -148,83 +148,85 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
         elevation: 2,
         color: backgroundColor,
       ),
-      child: Column(
-        children: [
-          const SizedBox(height: 5),
-          InkWell(
-            onTap: () => onNavigatorPush.call(widget.homePath),
-            child: ThemedImage(
-              path: favicon,
-              width: faviconSize,
-              height: faviconSize,
+      child: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 5),
+            InkWell(
+              onTap: () => onNavigatorPush.call(widget.homePath),
+              child: ThemedImage(
+                path: favicon,
+                width: faviconSize,
+                height: faviconSize,
+              ),
             ),
-          ),
-          Expanded(
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
-                    ThemedAppBarAvatar(
-                      asTaskBar: false,
-                      tooltipPosition: ThemedTooltipPosition.right,
-                      appTitle: widget.appTitle,
-                      logo: widget.logo,
-                      favicon: widget.favicon,
-                      version: widget.version,
-                      companyName: widget.companyName,
-                      userName: widget.userName,
-                      userDynamicAvatar: widget.userDynamicAvatar,
-                      enableAbout: widget.enableAbout,
-                      onSettingsTap: widget.onSettingsTap,
-                      onProfileTap: widget.onProfileTap,
-                      onLogoutTap: widget.onLogoutTap,
-                      onNavigatorPush: onNavigatorPush,
-                      onNavigatorPop: onNavigatorPop,
-                      additionalActions: widget.additionalActions,
-                      backgroundColor: widget.backgroundColor,
-                      onThemeSwitchTap: widget.onThemeSwitchTap,
-                      avatarRadius: widget.avatarRadius,
-                    ),
-                    if (widget.persistentItems.isNotEmpty) ...[
+            Expanded(
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
                       _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: widget.persistentItems.length,
-                        itemBuilder: (context, index) {
-                          return _buildItem(widget.persistentItems[index]);
-                        },
+                      ThemedAppBarAvatar(
+                        asTaskBar: false,
+                        tooltipPosition: ThemedTooltipPosition.right,
+                        appTitle: widget.appTitle,
+                        logo: widget.logo,
+                        favicon: widget.favicon,
+                        version: widget.version,
+                        companyName: widget.companyName,
+                        userName: widget.userName,
+                        userDynamicAvatar: widget.userDynamicAvatar,
+                        enableAbout: widget.enableAbout,
+                        onSettingsTap: widget.onSettingsTap,
+                        onProfileTap: widget.onProfileTap,
+                        onLogoutTap: widget.onLogoutTap,
+                        onNavigatorPush: onNavigatorPush,
+                        onNavigatorPop: onNavigatorPop,
+                        additionalActions: widget.additionalActions,
+                        backgroundColor: widget.backgroundColor,
+                        onThemeSwitchTap: widget.onThemeSwitchTap,
+                        avatarRadius: widget.avatarRadius,
                       ),
+                      if (widget.persistentItems.isNotEmpty) ...[
+                        _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: widget.persistentItems.length,
+                          itemBuilder: (context, index) {
+                            return _buildItem(widget.persistentItems[index]);
+                          },
+                        ),
+                      ],
+                      if (widget.items.isNotEmpty) ...[
+                        _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: widget.items.length,
+                          itemBuilder: (context, index) {
+                            return _buildItem(widget.items[index]);
+                          },
+                        ),
+                      ],
                     ],
-                    if (widget.items.isNotEmpty) ...[
-                      _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: widget.items.length,
-                        itemBuilder: (context, index) {
-                          return _buildItem(widget.items[index]);
-                        },
-                      ),
-                    ],
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-          if (widget.enableNotifications) ...[
-            const SizedBox(height: 10),
-            _buildItem(ThemedNavigatorSeparator()),
-            ThemedNotificationIcon(
-              dense: true,
-              notifications: widget.notifications,
-              backgroundColor: backgroundColor,
-              location: ThemedNotificationLocation.miniBar,
-              expandToLeft: false,
-              forceFullSize: false,
-            ),
+            if (widget.enableNotifications) ...[
+              const SizedBox(height: 10),
+              _buildItem(ThemedNavigatorSeparator()),
+              ThemedNotificationIcon(
+                dense: true,
+                notifications: widget.notifications,
+                backgroundColor: backgroundColor,
+                location: ThemedNotificationLocation.miniBar,
+                expandToLeft: false,
+                forceFullSize: false,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
