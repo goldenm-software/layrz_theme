@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.9
+
+- Fixed `ThemedSnackbar` not visible on apps when keyboard is open
+
 ## 7.0.8
 
 - Adjustments on `ThemedLayoutStyle.mini`, now the content will be with a `SafeArea`.
