@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.10
+
+- Fixed `ThemedNumberInput` `maximum` and `minimum` values to react on the add and minus buttons
+
 ## 7.0.9
 
 - Fixed `ThemedSnackbar` not visible on apps when keyboard is open

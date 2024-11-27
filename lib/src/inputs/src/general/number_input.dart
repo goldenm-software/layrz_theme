@@ -154,9 +154,21 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       disabled: widget.disabled,
       placeholder: widget.placeholder,
       prefixIcon: MdiIcons.minusCircle,
-      onPrefixTap: () => widget.onChanged?.call((widget.value ?? 0) - (widget.step ?? 1)),
+      onPrefixTap: () {
+        num newValue = (widget.value ?? 0) - (widget.step ?? 1);
+        if (newValue < (widget.minimum ?? double.negativeInfinity)) {
+          return;
+        }
+        widget.onChanged?.call(newValue);
+      },
       suffixIcon: MdiIcons.plusCircle,
-      onSuffixTap: () => widget.onChanged?.call((widget.value ?? 0) + (widget.step ?? 1)),
+      onSuffixTap: () {
+        num newValue = (widget.value ?? 0) + (widget.step ?? 1);
+        if (newValue > (widget.maximum ?? double.infinity)) {
+          return;
+        }
+        widget.onChanged?.call(newValue);
+      },
       hideDetails: widget.hideDetails,
       errors: widget.errors,
       padding: widget.padding,
