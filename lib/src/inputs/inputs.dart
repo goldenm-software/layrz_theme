@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highlight/highlight.dart';
 import 'package:intl/intl.dart';
+import 'package:layrz_icons/layrz_icons.dart';
 import 'package:layrz_models/layrz_models.dart';
 
 import 'package:layrz_theme/src/buttons/buttons.dart';
@@ -28,7 +29,6 @@ import 'package:layrz_theme/src/theme/theme.dart';
 import 'package:layrz_theme/src/tooltips/tooltips.dart';
 import 'package:layrz_theme/src/utilities/utilities.dart';
 import 'package:layrz_theme/src/widgets/widgets.dart';
-import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 // Code editor

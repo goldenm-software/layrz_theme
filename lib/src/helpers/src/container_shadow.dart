@@ -23,16 +23,13 @@ BoxDecoration generateContainerElevation({
   assert(elevation <= 5, 'The elevation must be less than or equal to 5');
   assert(elevation >= 0, 'The elevation must be greater than or equal to 0');
   assert(radius >= 0, 'The radius must be greater than or equal to 0');
-
   return BoxDecoration(
     color: color ?? Theme.of(context).cardColor,
     borderRadius: BorderRadius.circular(radius),
-    border: elevation == 0
-        ? Border.all(
-            color: shadowColor ?? Theme.of(context).shadowColor,
-            width: 1,
-          )
-        : null,
+    border: Border.all(
+      color: shadowColor ?? Theme.of(context).shadowColor,
+      width: elevation == 0 ? 1 : 0,
+    ),
     boxShadow: elevation > 0
         ? [
             BoxShadow(

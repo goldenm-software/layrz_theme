@@ -36,7 +36,11 @@ class _HomeViewState extends State<HomeView> {
                 padding: const EdgeInsets.only(left: 10),
                 children: [
                   ListTile(
-                    leading: drawAvatar(context: context, icon: MdiIcons.themeLightDark, color: color, size: iconSize),
+                    leading: ThemedAvatar(
+                      icon: MdiIcons.themeLightDark,
+                      color: color,
+                      size: iconSize,
+                    ),
                     title: Text(
                       "Theme generation",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -58,7 +62,11 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   const Divider(),
                   ListTile(
-                    leading: drawAvatar(context: context, icon: MdiIcons.text, color: color, size: iconSize),
+                    leading: ThemedAvatar(
+                      icon: MdiIcons.text,
+                      color: color,
+                      size: iconSize,
+                    ),
                     title: Text(
                       "Inputs",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -78,7 +86,11 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   const Divider(),
                   ListTile(
-                    leading: drawAvatar(context: context, icon: MdiIcons.table, color: color, size: iconSize),
+                    leading: ThemedAvatar(
+                      icon: MdiIcons.table,
+                      color: color,
+                      size: iconSize,
+                    ),
                     title: Text(
                       "Tables",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -99,8 +111,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   const Divider(),
                   ListTile(
-                    leading: drawAvatar(
-                      context: context,
+                    leading: ThemedAvatar(
                       icon: MdiIcons.accountCircleOutline,
                       color: color,
                       size: iconSize,

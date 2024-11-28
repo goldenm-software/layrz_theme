@@ -158,7 +158,7 @@ class ThemedAvatar extends StatelessWidget {
         reverse: reverse,
         size: size,
         radius: radius,
-        color: baseColor,
+        color: color ?? baseColor,
       );
     }
 
@@ -196,7 +196,7 @@ class ThemedAvatar extends StatelessWidget {
       );
     }
 
-    return _generateDeafult(
+    return _generateDefault(
       onTap: onTap,
       onLongTap: onLongTap,
       onSecondaryTap: onSecondaryTap,
@@ -226,7 +226,7 @@ class ThemedAvatar extends StatelessWidget {
     VoidCallback? onSecondaryTap,
   }) {
     if (image.isEmpty) {
-      return _generateDeafult(
+      return _generateDefault(
         onTap: onTap,
         onLongTap: onLongTap,
         onSecondaryTap: onSecondaryTap,
@@ -331,7 +331,7 @@ class ThemedAvatar extends StatelessWidget {
           onTap: onTap,
           onLongTap: onLongTap,
           onSecondaryTap: onSecondaryTap,
-          icon: avatar.icon ?? Icons.person,
+          icon: avatar.icon?.iconData ?? Icons.person,
           context: context,
           name: name,
           elevation: elevation,
@@ -375,7 +375,7 @@ class ThemedAvatar extends StatelessWidget {
         );
 
       default:
-        return _generateDeafult(
+        return _generateDefault(
           onTap: onTap,
           onLongTap: onLongTap,
           onSecondaryTap: onSecondaryTap,
@@ -391,7 +391,7 @@ class ThemedAvatar extends StatelessWidget {
     }
   }
 
-  Widget _generateDeafult({
+  Widget _generateDefault({
     required BuildContext context,
     required String name,
     required double elevation,
@@ -460,8 +460,6 @@ class ThemedAvatar extends StatelessWidget {
           onLongPress: onLongTap,
           onSecondaryTap: onSecondaryTap,
           child: Container(
-            width: size,
-            height: size,
             alignment: Alignment.center,
             child: child,
           ),

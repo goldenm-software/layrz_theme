@@ -48,21 +48,21 @@ class ThemedFontHandler {
   }) {
     final defaultTextTheme = (isDark ? ThemeData.dark() : ThemeData.light()).textTheme;
 
-    String titleFontName = titleFont?.name ?? 'Cabin';
+    String titleFontName = titleFont?.name ?? 'Ubuntu';
     if (titleFont?.source == FontSource.google) {
       try {
         titleFontName = GoogleFonts.getFont(titleFontName).fontFamily!;
       } catch (e) {
-        titleFontName = 'Cabin';
+        titleFontName = 'Ubuntu';
       }
     }
 
-    String bodyFontName = bodyFont?.name ?? 'Fira Sans Condensed';
+    String bodyFontName = bodyFont?.name ?? 'Ubuntu';
     if (bodyFont?.source == FontSource.google) {
       try {
         bodyFontName = GoogleFonts.getFont(bodyFontName).fontFamily!;
       } catch (e) {
-        bodyFontName = 'Fira Sans Condensed';
+        bodyFontName = 'Ubuntu';
       }
     }
 

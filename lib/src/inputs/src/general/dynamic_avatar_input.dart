@@ -108,8 +108,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
               ),
               child: Row(
                 children: [
-                  drawAvatar(
-                    context: context,
+                  ThemedAvatar(
                     size: 50,
                     radius: 25,
                     dynamicAvatar: Avatar.fromJson(_value.toJson()),

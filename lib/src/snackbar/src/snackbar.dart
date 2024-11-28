@@ -110,6 +110,10 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
   /// [bottom] do the same thing as [top], but changing the direction to the bottom
   double bottom(List<Map<String, dynamic>> heights) {
     EdgeInsets padding = MediaQuery.of(context).padding;
+
+    /// Height of the keyboard on Android and iOS
+    /// to allow the snackbar to be above the keyboard
+    final double bottomViewInsets = MediaQuery.viewInsetsOf(context).bottom;
     double bottom = defaultPosition;
 
     for (final entry in heights) {
@@ -120,7 +124,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
       bottom += height + spacing;
     }
 
-    return padding.bottom + bottom;
+    return padding.bottom + bottom + bottomViewInsets;
   }
 
   /// [titleStyle] helps to build the title style

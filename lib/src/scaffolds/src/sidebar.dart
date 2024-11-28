@@ -208,8 +208,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child: Row(
                       children: [
-                        drawAvatar(
-                          context: context,
+                        ThemedAvatar(
                           name: avatar.label,
                           avatar: avatar.avatar,
                           icon: avatar.icon,

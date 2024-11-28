@@ -1,5 +1,22 @@
 # Changelog
 
+## 7.1.0
+
+- Changed icon library from `material_design_icons_flutter` to `layrz_icons`
+- Changed `drawAvatar()` in favor to `ThemedAvatar` on multiple utilities on `layrz_theme`
+- Updated `mime` dependency to `2.0.0`
+- Changed dependencies to use the `^` format instead of the constraint `>=` and `<=`
+- Testings on Flutter 3.24.5
+- Moved the cursor movement declared on `ThemedTextInput` used on the `ThemedNumberInput` to the right component to prevent issues with non-roman writing systems (Like Korean, Japanese, Chinese, etc.).
+
+## 7.0.10
+
+- Fixed `ThemedNumberInput` `maximum` and `minimum` values to react on the add and minus buttons
+
+## 7.0.9
+
+- Fixed `ThemedSnackbar` not visible on apps when keyboard is open
+
 ## 7.0.8
 
 - Adjustments on `ThemedLayoutStyle.mini`, now the content will be with a `SafeArea`.

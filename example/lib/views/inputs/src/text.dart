@@ -9,6 +9,7 @@ class TextInputView extends StatefulWidget {
 
 class _TextInputViewState extends State<TextInputView> {
   num? _value = 0;
+  String? _text;
   Duration? _dur = const Duration();
   @override
   Widget build(BuildContext context) {
@@ -24,8 +25,13 @@ class _TextInputViewState extends State<TextInputView> {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            const ThemedTextInput(
+            ThemedTextInput(
               labelText: "Example label",
+              value: _text,
+              onChanged: (value) {
+                debugPrint("Value: $value");
+                setState(() => _text = value);
+              },
             ),
             const SizedBox(height: 10),
             Text(

@@ -7,15 +7,8 @@ import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
 import 'package:vxstate/vxstate.dart';
 
-const titleFont = AppFont(
-  source: FontSource.google,
-  name: 'Cabin',
-);
-
-const bodyFont = AppFont(
-  source: FontSource.google,
-  name: 'Ubuntu',
-);
+const titleFont = AppFont(source: FontSource.google, name: 'Ubuntu');
+const bodyFont = AppFont(source: FontSource.google, name: 'Ubuntu');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

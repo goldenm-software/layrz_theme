@@ -119,8 +119,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         children: [
-                          drawAvatar(
-                            context: context,
+                          ThemedAvatar(
                             name: (index + 1).toString().padLeft(2, '0'),
                             size: 25,
                           ),
