@@ -35,7 +35,7 @@ dependencies:
   latlong2: ^0.9.1
   shared_preferences: ^2.3.3
   http: ^1.2.1
-  layrz_models: ^3.2.0
+  layrz_models: ^3.3.0
   pointer_interceptor: ^0.10.1+2
   two_dimensional_scrollables: ^0.3.3
   sync_scroll_controller: ^1.0.1
@@ -46,16 +46,12 @@ dependencies:
   highlight: ^0.7.0
   code_text_field: ^1.1.0
   url_launcher: ^6.3.1
-  layrz_icons: ^1.0.1
+  layrz_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-
-dependency_overrides:
-  layrz_models:
-    path: ../layrz_models
 
 flutter:
   uses-material-design: true
