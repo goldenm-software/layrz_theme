@@ -8,10 +8,10 @@ class ThemedIconPicker extends StatefulWidget {
   final Widget? label;
 
   /// [onChanged] is the callback function when the icon picker is changed.
-  final void Function(IconData)? onChanged;
+  final void Function(LayrzIcon)? onChanged;
 
   /// [value] is the value of the icon picker.
-  final IconData? value;
+  final LayrzIcon? value;
 
   /// [disabled] is the disabled state of the icon picker.
   final bool disabled;
@@ -48,7 +48,7 @@ class ThemedIconPicker extends StatefulWidget {
 
   /// [allowedIcons] is the list of allowed icons to select from.
   /// If this property is not submitted, all icons will be allowed.
-  final List<IconData> allowedIcons;
+  final List<LayrzIcon> allowedIcons;
 
   /// [customChild] is the custom child of the icon picker.
   /// If it is submitted, the icon picker will be ignored.
@@ -110,9 +110,9 @@ class ThemedIconPicker extends StatefulWidget {
 
 class _ThemedIconPickerState extends State<ThemedIconPicker> {
   final TextEditingController _textController = TextEditingController();
-  IconData? _value;
+  LayrzIcon? _value;
 
-  List<IconData>? selectedGroup;
+  List<LayrzIcon>? selectedGroup;
   EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
@@ -156,7 +156,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
       prefixWidget: Padding(
         padding: const EdgeInsets.all(10),
         child: ThemedAvatar(
-          icon: _value,
+          icon: _value?.iconData,
           size: isDense ? 20 : 30,
         ),
       ),
@@ -174,7 +174,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
 
   void _showPicker() async {
     if (widget.disabled) return;
-    IconData? result = await showDialog(
+    LayrzIcon? result = await showDialog(
       context: context,
       builder: (context) {
         IconData? icon;
@@ -261,11 +261,9 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
   }
 }
 
-typedef IconDataTapCallback = void Function(IconData icon);
-
 class _IconGrid extends StatefulWidget {
-  final IconDataTapCallback? onTap;
-  final IconData? selected;
+  final ValueChanged<LayrzIcon>? onTap;
+  final LayrzIcon? selected;
   final BoxConstraints constraints;
   final List<IconData> allowedIcons;
 
@@ -291,30 +289,16 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
   BoxConstraints get constraints => widget.constraints;
   double get _iconHeight => 50;
 
-  List<NamedIcon> _icons = [];
+  List<LayrzIcon> _icons = [];
 
-  List<NamedIcon> get _filteredIcons {
+  List<LayrzIcon> get _filteredIcons {
     if (search.isEmpty) return _icons;
 
     return _icons.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).toList();
   }
 
   void _populateIcons() {
-    _icons = [];
-
-    for (var icon in iconMap.values) {
-      if (widget.allowedIcons.isNotEmpty && !widget.allowedIcons.contains(icon)) continue;
-
-      String name = _getName(icon);
-      if (search.isNotEmpty && !name.toLowerCase().contains(search.toLowerCase())) continue;
-
-      _icons.add(NamedIcon(
-        name: name,
-        icon: icon,
-      ));
-    }
-
-    _icons.sort((a, b) => a.name.compareTo(b.name));
+    _icons = iconMapping.values.toList()..sort((a, b) => a.name.compareTo(b.name));
 
     setState(() {});
   }
@@ -343,7 +327,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
   void _relocateScroll() {
     if (widget.selected == null) return;
 
-    final index = _icons.indexWhere((element) => element.icon == widget.selected);
+    final index = _icons.indexWhere((element) => element == widget.selected);
     if (index == -1) return;
 
     final offset = index * _iconHeight;
@@ -374,7 +358,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
               itemExtent: _iconHeight,
               itemBuilder: (context, index) {
                 final icon = _filteredIcons[index];
-                bool isSelected = widget.selected == icon.icon;
+                bool isSelected = widget.selected == icon;
 
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 5),
@@ -387,7 +371,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(5),
                       onTap: () {
-                        widget.onTap?.call(icon.icon);
+                        widget.onTap?.call(icon);
 
                         search = '';
                         _relocateScroll();
@@ -398,7 +382,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
                         child: Row(
                           children: [
                             Icon(
-                              icon.icon,
+                              icon.iconData,
                               size: 20,
                             ),
                             const SizedBox(width: 10),
@@ -417,10 +401,6 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
           ),
       ],
     );
-  }
-
-  String _getName(IconData icon) {
-    return const IconOrNullConverter().toJson(icon) ?? '';
   }
 }
 

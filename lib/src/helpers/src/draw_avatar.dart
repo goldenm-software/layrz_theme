@@ -331,7 +331,7 @@ class ThemedAvatar extends StatelessWidget {
           onTap: onTap,
           onLongTap: onLongTap,
           onSecondaryTap: onSecondaryTap,
-          icon: avatar.icon ?? Icons.person,
+          icon: avatar.icon?.iconData ?? Icons.person,
           context: context,
           name: name,
           elevation: elevation,

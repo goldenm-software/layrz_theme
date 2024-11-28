@@ -136,12 +136,27 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
   @override
   void didUpdateWidget(ThemedNumberInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.value != oldWidget.value) {
-        _controller.text = widget.value == null ? '' : format.format(widget.value);
-        _controller.selection = TextSelection.fromPosition(TextPosition(offset: _controller.text.length));
+    if (widget.value == null) {
+      _controller.text = '';
+      return;
+    }
+
+    if (oldWidget.value != widget.value) {
+      // save the current cursor offset
+      int previousCursorOffset = _controller.selection.extentOffset;
+
+      final newValue = format.format(widget.value);
+      // update the current value in the controller
+      _controller.text = newValue;
+
+      // check that the cursor offset is not greater than the length of the value
+      if (newValue.length <= previousCursorOffset) {
+        previousCursorOffset = newValue.length;
       }
-    });
+
+      // update the cursor offset
+      _controller.selection = TextSelection.fromPosition(TextPosition(offset: previousCursorOffset));
+    }
   }
 
   @override
