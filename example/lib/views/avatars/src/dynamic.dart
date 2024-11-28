@@ -95,9 +95,9 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const Divider(),
                 const SizedBox(height: 5),
                 _buildExampleRow(
-                  avatar: Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard),
+                  avatar: Avatar(type: AvatarType.icon, icon: LayrzIconsClasses.mdiClipboard),
                   codeExample: "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
-                      "Avatar(type: AvatarType.icon, icon: MdiIcons.clipboard))",
+                      "Avatar(type: AvatarType.icon, icon: LayrzIconsClasses.mdiClipboard))",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),

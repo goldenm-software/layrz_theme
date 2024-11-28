@@ -20,20 +20,16 @@ dependencies:
   flutter_dotenv: ^5.1.0
   flutter_map: any
   flutter_map_animations: any
-  solar_icons: any
+  layrz_icons: any
   layrz_theme:
     path: ../
 
-  layrz_models: ">=3.0.0-preview1 <4.0.0"
+  layrz_models: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.2
-
-dependency_overrides:
-  layrz_models:
-    path: ../../layrz_models
 
 flutter:
   uses-material-design: true
