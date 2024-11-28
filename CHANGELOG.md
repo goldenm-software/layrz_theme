@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.11
+
+- Changed `drawAvatar()` in favor to `ThemedAvatar` on multiple utilities on `layrz_theme`
+- Updated `mime` dependency to `2.0.0`
+- Changed dependencies to use the `^` format instead of the constraint `>=` and `<=`
+- Testings on Flutter 3.24.5
+
 ## 7.0.10
 
 - Fixed `ThemedNumberInput` `maximum` and `minimum` values to react on the add and minus buttons

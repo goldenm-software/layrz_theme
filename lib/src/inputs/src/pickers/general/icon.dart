@@ -155,8 +155,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
       key: key,
       prefixWidget: Padding(
         padding: const EdgeInsets.all(10),
-        child: drawAvatar(
-          context: context,
+        child: ThemedAvatar(
           icon: _value,
           size: isDense ? 20 : 30,
         ),

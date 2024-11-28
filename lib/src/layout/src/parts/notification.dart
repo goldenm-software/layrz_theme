@@ -308,8 +308,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          drawAvatar(
-                                            context: context,
+                                          ThemedAvatar(
                                             icon: item.icon ?? MdiIcons.bell,
                                             color: item.color ?? Theme.of(context).primaryColor,
                                           ),

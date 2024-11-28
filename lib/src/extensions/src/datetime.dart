@@ -315,13 +315,13 @@ extension DateTimeExtension on DateTime {
       if (translationOverrides.containsKey(key)) {
         result = translationOverrides[key]!;
       } else if (i18n?.hasTranslation(key) ?? false) {
-        result = i18n!.translate(key);
+        result = i18n!.t(key);
       } else {
         result = "Translation missing $key";
       }
     } else {
       if (i18n?.hasTranslation(key) ?? false) {
-        result = i18n!.translate(key);
+        result = i18n!.t(key);
       } else if (translationOverrides.containsKey(key)) {
         result = translationOverrides[key]!;
       } else {

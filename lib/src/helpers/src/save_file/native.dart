@@ -81,7 +81,9 @@ Future<ThemedFile?> saveFile({
         type = FileType.audio;
       } else {
         type = FileType.custom;
-        allowedExtensions = [extensionFromMime(mime)];
+        final ext = extensionFromMime(mime);
+        if (ext == null) return null;
+        allowedExtensions = [ext];
       }
     }
 
