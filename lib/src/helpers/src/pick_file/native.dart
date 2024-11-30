@@ -13,7 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 /// To implement this function multiplatform, follow this example
 /// ```dart
 /// import 'package:layrz_theme/src/helpers/pick_file/native.dart'
-///   if (dart.library.html) 'package:layrz_theme/src/helpers/pick_file/web.dart';
+///   if (dart.library.js_interop) 'package:layrz_theme/src/helpers/pick_file/web.dart';
 /// // ...
 /// pickFile() // <- this function
 /// ```

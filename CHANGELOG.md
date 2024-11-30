@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.2
+
+- Changed `dart.library.html` to `dart.library.js_interop` to fully support WASM SharedArrayBuffer
+
 ## 7.1.1
 
 - Changed most of `MdiIcons.*` to `LayrzIcons.*` to use the new icon library `layrz_icons`.

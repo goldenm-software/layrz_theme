@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
-export 'src/save_file/native.dart' if (dart.library.html) 'src/save_file/web.dart';
-export 'src/pick_file/native.dart' if (dart.library.html) 'src/pick_file/web.dart';
+export 'src/save_file/native.dart' if (dart.library.js_interop) 'src/save_file/web.dart';
+export 'src/pick_file/native.dart' if (dart.library.js_interop) 'src/pick_file/web.dart';
 
 part 'src/about_dialog.dart';
 part 'src/colors.dart';
