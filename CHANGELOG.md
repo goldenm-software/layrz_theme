@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.3
+
+- Fixed an issue with `saveFile` on Web, `dart:html` was fully removed and replaced with `package:js` to handle the file saving on Web.
+
 ## 7.1.2
 
 - Changed `dart.library.html` to `dart.library.js_interop` to fully support WASM SharedArrayBuffer
