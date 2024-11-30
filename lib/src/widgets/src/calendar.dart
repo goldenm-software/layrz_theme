@@ -279,7 +279,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                 customChild: ThemedTooltip(
                   message: t('layrz.calendar.pickMonth'),
                   child: Icon(
-                    MdiIcons.calendarMonth,
+                    LayrzIcons.solarOutlineCalendar,
                     size: 20,
                   ),
                 ),
@@ -314,14 +314,14 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
               ThemedButton(
                 labelText: _backLabel,
                 style: ThemedButtonStyle.fab,
-                icon: MdiIcons.chevronLeft,
+                icon: LayrzIcons.solarOutlineAltArrowLeft,
                 onTap: _back,
               ),
               if (widget.todayButton) ...[
                 ThemedButton(
                   labelText: t('layrz.calendar.today'),
                   style: ThemedButtonStyle.fab,
-                  icon: MdiIcons.calendarToday,
+                  icon: LayrzIcons.solarOutlineCalendar,
                   onTap: () {
                     setState(() => _focusDay = DateTime.now());
                     widget.onDayTap?.call(DateTime.now());
@@ -331,7 +331,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
               ThemedButton(
                 labelText: _forwardLabel,
                 style: ThemedButtonStyle.fab,
-                icon: MdiIcons.chevronRight,
+                icon: LayrzIcons.solarOutlineAltArrowRight,
                 onTap: _forward,
               ),
               ...widget.aditionalButtons.map((button) => button),
@@ -702,7 +702,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                     child: Opacity(
                                       opacity: 0.3,
                                       child: Icon(
-                                        MdiIcons.calendarBlankOutline,
+                                        LayrzIcons.solarOutlineCalendar,
                                         size: 20,
                                         color: validateColor(color: containerColor),
                                       ),

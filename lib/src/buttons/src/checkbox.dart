@@ -36,8 +36,8 @@ class _ThemedAnimatedCheckboxState extends State<ThemedAnimatedCheckbox> with Ti
 
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get activeColor => widget.activeColor ?? (isDark ? Colors.white : Theme.of(context).primaryColor);
-  Widget get _unselectedIcon => Icon(MdiIcons.checkboxBlankCircleOutline, color: Colors.grey, size: 20);
-  Widget get _selectedIcon => Icon(MdiIcons.checkboxMarkedCircleOutline, color: activeColor, size: 20);
+  Widget get _unselectedIcon => Icon(LayrzIcons.mdiCheckboxBlankCircleOutline, color: Colors.grey, size: 20);
+  Widget get _selectedIcon => Icon(LayrzIcons.mdiCheckboxMarkedCircleOutline, color: activeColor, size: 20);
 
   @override
   void initState() {

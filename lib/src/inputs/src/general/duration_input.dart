@@ -203,7 +203,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                         ),
                         ThemedButton(
                           style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
-                          icon: MdiIcons.refresh,
+                          icon: LayrzIcons.solarOutlineRefreshSquare,
                           color: Colors.orange,
                           labelText: i18n?.t('actions.reset') ?? 'Reset',
                           onTap: () {

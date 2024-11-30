@@ -156,7 +156,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
         ),
       ),
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: MdiIcons.palette,
+      suffixIcon: LayrzIcons.solarOutlinePalette2,
       disabled: widget.disabled,
       onTap: widget.disabled ? null : _showPicker,
       dense: widget.dense,

@@ -140,7 +140,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       if (widget.enableAbout)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.about') ?? 'About',
-          icon: MdiIcons.informationOutline,
+          icon: LayrzIcons.solarOutlineInfoSquare,
           onTap: () => showThemedAboutDialog(
             context: context,
             companyName: widget.companyName,
@@ -151,25 +151,25 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       if (widget.onThemeSwitchTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.toggleTheme') ?? 'Toggle theme',
-          icon: MdiIcons.themeLightDark,
+          icon: LayrzIcons.solarOutlineMoonFog,
           onTap: widget.onThemeSwitchTap!,
         ),
       if (widget.onSettingsTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.settings') ?? 'Settings',
-          icon: MdiIcons.cogOutline,
+          icon: LayrzIcons.solarOutlineTuning4,
           onTap: widget.onSettingsTap!,
         ),
       if (widget.onProfileTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.profile') ?? 'Edit profile',
-          icon: MdiIcons.accountCircleOutline,
+          icon: LayrzIcons.solarOutlineUser,
           onTap: widget.onProfileTap!,
         ),
       if (widget.onLogoutTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.signOut') ?? 'Logout',
-          icon: MdiIcons.logoutVariant,
+          icon: LayrzIcons.solarOutlineLogout2,
           onTap: widget.onLogoutTap!,
         ),
     ];
@@ -264,7 +264,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                         children: [
                                           if (item.icon != null) ...[
                                             Icon(
-                                              item.icon ?? MdiIcons.help,
+                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                                               size: 15,
                                             ),
                                             const SizedBox(width: 5),
@@ -294,7 +294,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                         children: [
                                           if (item.icon != null) ...[
                                             Icon(
-                                              item.icon ?? MdiIcons.help,
+                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                                               size: 15,
                                             ),
                                             const SizedBox(width: 5),

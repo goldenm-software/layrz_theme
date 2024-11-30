@@ -165,7 +165,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
             largeSize: 10,
             child: widget.child ??
                 Icon(
-                  widget.icon ?? MdiIcons.bell,
+                  widget.icon ?? LayrzIcons.solarOutlineBellBing,
                   color: notificationIconColor,
                   size: widget.dense ? 15 : 18,
                 ),
@@ -309,7 +309,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           ThemedAvatar(
-                                            icon: item.icon ?? MdiIcons.bell,
+                                            icon: item.icon ?? LayrzIcons.solarOutlineBellBing,
                                             color: item.color ?? Theme.of(context).primaryColor,
                                           ),
                                           const SizedBox(width: 10),

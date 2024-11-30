@@ -134,7 +134,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.contentSave,
+      icon: LayrzIcons.solarOutlineInboxIn,
       style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
       color: Colors.green,
     );
@@ -156,7 +156,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.closeCircle,
+      icon: LayrzIcons.solarOutlineCloseSquare,
       style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
       color: Colors.red,
     );
@@ -178,7 +178,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.informationOutline,
+      icon: LayrzIcons.solarOutlineInfoSquare,
       style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
       color: Colors.blue,
     );
@@ -200,7 +200,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.magnifyScan,
+      icon: LayrzIcons.solarOutlineEyeScan,
       style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
       color: Colors.blue,
     );
@@ -222,7 +222,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.squareEditOutline,
+      icon: LayrzIcons.solarOutlinePenNewSquare,
       style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
       color: Colors.orange,
     );
@@ -244,7 +244,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.trashCan,
+      icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
       style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
       color: Colors.red,
     );
@@ -586,7 +586,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                 child: _buildLoadingOrChild(
                   child: Center(
                     child: Icon(
-                      icon ?? MdiIcons.help,
+                      icon ?? LayrzIcons.mdiHelp,
                       color: contentColor,
                       size: iconSize,
                     ),
@@ -670,7 +670,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                 child: _buildLoadingOrChild(
                   child: Center(
                     child: Icon(
-                      icon ?? MdiIcons.help,
+                      icon ?? LayrzIcons.mdiHelp,
                       color: contentColor,
                       size: iconSize,
                     ),
@@ -752,7 +752,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                 child: _buildLoadingOrChild(
                   child: Center(
                     child: Icon(
-                      icon ?? MdiIcons.help,
+                      icon ?? LayrzIcons.mdiHelp,
                       color: contentColor,
                       size: iconSize,
                     ),
@@ -837,7 +837,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                 child: _buildLoadingOrChild(
                   child: Center(
                     child: Icon(
-                      icon ?? MdiIcons.help,
+                      icon ?? LayrzIcons.mdiHelp,
                       color: contentColor,
                       size: iconSize,
                     ),
@@ -921,7 +921,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                 child: _buildLoadingOrChild(
                   child: Center(
                     child: Icon(
-                      icon ?? MdiIcons.help,
+                      icon ?? LayrzIcons.mdiHelp,
                       color: validateColor(color: contentColor),
                       size: iconSize,
                     ),
@@ -1021,7 +1021,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                 child: _buildLoadingOrChild(
                   child: Center(
                     child: Icon(
-                      icon ?? MdiIcons.help,
+                      icon ?? LayrzIcons.mdiHelp,
                       color: validateColor(color: contentColor),
                       size: iconSize,
                     ),

@@ -284,9 +284,8 @@ class ThemedTable<T> extends StatefulWidget {
 }
 
 class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStateMixin, WidgetsBindingObserver {
-  /// [_overlayEntry] represents the overlay entry of the dialog.
-  /// This is used to display the dialog when the user selects multiple items.
-  OverlayEntry? _overlayEntry;
+  /// [_overlay] controls the overlay tool of the table.
+  final OverlayPortalController _overlay = OverlayPortalController();
 
   /// [_animation] represents the animation controller of the dialog.
   /// This is used to animate the dialog when the user selects multiple items.
@@ -449,8 +448,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         ],
         if (widget.idEnabled) ...[
           ThemedColumn<T>(
-            label: Text(widget.idLabel, style: _headerStyle),
+            labelText: widget.idLabel,
             valueBuilder: widget.idBuilder,
+            onTap: widget.onIdTap == null ? null : (item) => widget.onIdTap?.call(item),
             customSortingFunction: (a, b) {
               int aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
               int bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
@@ -459,13 +459,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
               if (aValue > bValue) return 1;
               return -1;
             },
-            widgetBuilder: (context, item) {
-              return InkWell(
-                onTap: widget.onIdTap == null ? null : () => widget.onIdTap?.call(item),
-                child: Text(widget.idBuilder(context, item)),
-              );
-            },
             width: _idWidth,
+            widgetBuilder: (context, item) {
+              return Text(widget.idBuilder(context, item));
+            },
           ),
         ],
         ...widget.columns,
@@ -491,7 +488,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     super.initState();
     _animation = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 250),
     );
     _searchText = widget.searchText;
 
@@ -763,320 +760,478 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        bool isMobile = constraints.maxWidth < widget.mobileBreakpoint;
-        bool isVerySmall = constraints.maxWidth <= 210;
+    return OverlayPortal(
+      controller: _overlay,
+      overlayChildBuilder: (context) {
+        double width = MediaQuery.sizeOf(context).width * 0.8;
+        if (width > 500) {
+          width = 500;
+        }
 
-        final calculatedData = _calculateThings();
-        final items = calculatedData.items;
-        final sizes = calculatedData.sizes;
-
-        double searchLength = constraints.maxWidth * 0.3;
-        if (searchLength > 300) searchLength = 300;
-
-        return Column(
+        return Stack(
           children: [
-            Row(
-              children: [
-                // Title
-                Expanded(
-                  child: widget.title ??
-                      Text(
-                        widget.customTitleText ?? t('$module.title.list', {'count': widget.items.length}),
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            Positioned(
+              top: 10,
+              left: (MediaQuery.of(context).size.width - width) / 2,
+              width: width,
+              child: Material(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    FadeTransition(
+                      opacity: CurvedAnimation(
+                        parent: _animation,
+                        curve: Curves.easeInOut,
                       ),
-                ),
-
-                /// Search bar
-                //
-
-                ThemedSearchInput(
-                  asField: !isMobile,
-                  maxWidth: isMobile ? 300 : searchLength,
-                  value: _searchText,
-                  inputPadding: const EdgeInsets.symmetric(vertical: 2),
-                  labelText: t('helpers.search'),
-                  onSearch: (value) {
-                    _searchText = value;
-                    _currentPage = 0;
-                    setState(() {});
-                    _sort();
-                  },
-                ),
-                const SizedBox(width: 5),
-
-                // Actions
-                ...widget.additionalButtons,
-                if (widget.onAdd != null) ...[
-                  const SizedBox(width: 5),
-                  ThemedButton(
-                    labelText: t('$module.title.new'),
-                    icon: MdiIcons.plus,
-                    style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
-                    color: primaryColor,
-                    onTap: widget.onAdd,
-                    isLoading: widget.isLoading,
-                    isCooldown: widget.isCooldown,
-                    onCooldownFinish: widget.onCooldown,
-                  ),
-                ],
-                if (widget.onRefresh != null) ...[
-                  const SizedBox(width: 5),
-                  ThemedButton(
-                    labelText: t('helpers.refresh'),
-                    icon: MdiIcons.refresh,
-                    style: ThemedButtonStyle.filledTonalFab,
-                    color: primaryColor,
-                    onTap: widget.onRefresh,
-                    isLoading: widget.isLoading,
-                    isCooldown: widget.isCooldown,
-                    onCooldownFinish: widget.onCooldown,
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 5),
-            Expanded(
-              child: Scrollbar(
-                controller: _horizontalScroll,
-                trackVisibility: !isMobile,
-                thumbVisibility: !isMobile,
-                thickness: 8,
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: Container(
-                    key: _tableKey,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TableView.builder(
-                            cacheExtent: 500,
-                            columnCount: _columns.length,
-                            rowCount: items.length + 1,
-                            pinnedRowCount: 1,
-                            pinnedColumnCount: isMobile
-                                ? 0
-                                : _columns.isEmpty
-                                    ? 0
-                                    : widget.fixedColumnsCount,
-                            verticalDetails: ScrollableDetails.vertical(controller: _verticalScroll),
-                            horizontalDetails: ScrollableDetails.horizontal(controller: _horizontalScroll),
-                            columnBuilder: (index) {
-                              double size = sizes[index] ?? 10;
-                              return TableSpan(
-                                extent: FixedTableSpanExtent(size),
-                                foregroundDecoration: SpanDecoration(
-                                  border: SpanBorder(leading: border),
+                      // alignment: Alignment.topCenter,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        width: width,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).inputDecorationTheme.fillColor,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: StatefulBuilder(
+                          builder: (BuildContext context2, setLocalState) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        t('helpers.multipleSelection.title'),
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    ThemedButton.cancel(
+                                      isMobile: true,
+                                      labelText: t('helpers.multipleSelection.actions.cancel'),
+                                      isLoading: widget.isLoading,
+                                      isCooldown: widget.isCooldown,
+                                      onCooldownFinish: widget.onCooldown,
+                                      onTap: () {
+                                        _destroyOverlay(callback: () {
+                                          setState(() => _selectedItems = []);
+                                        });
+                                      },
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                            rowBuilder: (index) {
-                              bool isHovering = _hoveredIndex == index && index != 0;
+                                Text(
+                                  t('helpers.multipleSelection.caption'),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width: width,
+                                  child: SingleChildScrollView(
+                                    reverse: true,
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        const SizedBox(width: 5),
+                                        for (final action in widget.multiSelectionActions) ...[
+                                          ThemedButton(
+                                            color: action.color,
+                                            label: action.label,
+                                            labelText: action.labelText,
+                                            isLoading: widget.isLoading,
+                                            isCooldown: widget.isCooldown,
+                                            onCooldownFinish: widget.onCooldown,
+                                            onTap: () {
+                                              _destroyOverlay(callback: () {
+                                                bool result = action.onTap.call(_selectedItems);
+                                                if (result) {
+                                                  setState(() => _selectedItems = []);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(width: 5),
+                                        ],
+                                        if (widget.onMultiDelete != null)
+                                          ThemedButton(
+                                            style: ThemedButtonStyle.outlinedTonal,
+                                            color: Colors.red,
+                                            icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+                                            labelText: t('helpers.multipleSelection.actions.delete'),
+                                            isLoading: widget.isLoading,
+                                            isCooldown: widget.isCooldown,
+                                            onCooldownFinish: widget.onCooldown,
+                                            onTap: () {
+                                              _destroyOverlay(
+                                                callback: () async {
+                                                  bool confirmation = await deleteConfirmationDialog(
+                                                    context: context,
+                                                    isMultiple: true,
+                                                    isCooldown: widget.isCooldown,
+                                                    isLoading: widget.isLoading,
+                                                    onCooldown: widget.onCooldown,
+                                                  );
 
-                              Color? color = index == 0
-                                  ? null
-                                  : index.isEven
-                                      ? _stripColor
-                                      : null;
-                              return TableSpan(
-                                extent: FixedTableSpanExtent(widget.rowHeight),
-                                backgroundDecoration: SpanDecoration(
-                                  color: isHovering ? _hoverColor : color,
-                                  border: SpanBorder(
-                                    leading: index == 0 ? BorderSide.none : border,
-                                    trailing: index == items.length ? BorderSide.none : border,
+                                                  if (confirmation && context.mounted) {
+                                                    bool result = await widget.onMultiDelete?.call(
+                                                          context,
+                                                          _selectedItems,
+                                                        ) ??
+                                                        false;
+                                                    if (result) {
+                                                      setState(() => _selectedItems = []);
+                                                    }
+                                                  } else {
+                                                    setState(() => _selectedItems = []);
+                                                  }
+                                                },
+                                              );
+                                            },
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                            cellBuilder: (context, vicinity) {
-                              final column = _columns[vicinity.column];
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isMobile = constraints.maxWidth < widget.mobileBreakpoint;
+          bool isVerySmall = constraints.maxWidth <= 210;
 
-                              if (vicinity.row == 0) {
-                                Widget content = column.label ??
-                                    Text(
-                                      column.labelText ?? '',
-                                      style: _headerStyle,
-                                    );
+          final calculatedData = _calculateThings();
+          final items = calculatedData.items;
+          final sizes = calculatedData.sizes;
 
-                                if (column.isSortable) {
-                                  content = Expanded(child: content);
+          double searchLength = constraints.maxWidth * 0.3;
+          if (searchLength > 300) searchLength = 300;
+
+          return Column(
+            children: [
+              Row(
+                children: [
+                  // Title
+                  Expanded(
+                    child: widget.title ??
+                        Text(
+                          widget.customTitleText ?? t('$module.title.list', {'count': widget.items.length}),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                  ),
+
+                  /// Search bar
+                  //
+
+                  ThemedSearchInput(
+                    asField: !isMobile,
+                    maxWidth: isMobile ? 300 : searchLength,
+                    value: _searchText,
+                    inputPadding: const EdgeInsets.symmetric(vertical: 2),
+                    labelText: t('helpers.search'),
+                    onSearch: (value) {
+                      _searchText = value;
+                      _currentPage = 0;
+                      setState(() {});
+                      _sort();
+                    },
+                  ),
+                  const SizedBox(width: 5),
+
+                  // Actions
+                  ...widget.additionalButtons,
+                  if (widget.onAdd != null) ...[
+                    const SizedBox(width: 5),
+                    ThemedButton(
+                      labelText: t('$module.title.new'),
+                      icon: LayrzIcons.solarOutlineAddSquare,
+                      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+                      color: primaryColor,
+                      onTap: widget.onAdd,
+                      isLoading: widget.isLoading,
+                      isCooldown: widget.isCooldown,
+                      onCooldownFinish: widget.onCooldown,
+                    ),
+                  ],
+                  if (widget.onRefresh != null) ...[
+                    const SizedBox(width: 5),
+                    ThemedButton(
+                      labelText: t('helpers.refresh'),
+                      icon: LayrzIcons.solarOutlineRefreshSquare,
+                      style: ThemedButtonStyle.filledTonalFab,
+                      color: primaryColor,
+                      onTap: widget.onRefresh,
+                      isLoading: widget.isLoading,
+                      isCooldown: widget.isCooldown,
+                      onCooldownFinish: widget.onCooldown,
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 5),
+              Expanded(
+                child: Scrollbar(
+                  controller: _horizontalScroll,
+                  trackVisibility: !isMobile,
+                  thumbVisibility: !isMobile,
+                  thickness: 8,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: Container(
+                      key: _tableKey,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TableView.builder(
+                              cacheExtent: 500,
+                              columnCount: _columns.length,
+                              rowCount: items.length + 1,
+                              pinnedRowCount: 1,
+                              pinnedColumnCount: isMobile
+                                  ? 0
+                                  : _columns.isEmpty
+                                      ? 0
+                                      : widget.fixedColumnsCount,
+                              verticalDetails: ScrollableDetails.vertical(controller: _verticalScroll),
+                              horizontalDetails: ScrollableDetails.horizontal(controller: _horizontalScroll),
+                              columnBuilder: (index) {
+                                double size = sizes[index] ?? 10;
+                                return TableSpan(
+                                  extent: FixedTableSpanExtent(size),
+                                  foregroundDecoration: SpanDecoration(
+                                    border: SpanBorder(leading: border),
+                                  ),
+                                );
+                              },
+                              rowBuilder: (index) {
+                                bool isHovering = _hoveredIndex == index && index != 0;
+
+                                Color? color = index == 0
+                                    ? null
+                                    : index.isEven
+                                        ? _stripColor
+                                        : null;
+                                return TableSpan(
+                                  extent: FixedTableSpanExtent(widget.rowHeight),
+                                  backgroundDecoration: SpanDecoration(
+                                    color: isHovering ? _hoverColor : color,
+                                    border: SpanBorder(
+                                      leading: index == 0 ? BorderSide.none : border,
+                                      trailing: index == items.length ? BorderSide.none : border,
+                                    ),
+                                  ),
+                                );
+                              },
+                              cellBuilder: (context, vicinity) {
+                                final column = _columns[vicinity.column];
+
+                                if (vicinity.row == 0) {
+                                  Widget content = column.label ??
+                                      Text(
+                                        column.labelText ?? '',
+                                        style: _headerStyle,
+                                      );
+
+                                  if (column.isSortable) {
+                                    content = Expanded(child: content);
+                                  }
+
+                                  return TableViewCell(
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: column.isSortable
+                                            ? () {
+                                                if (_sortBy == vicinity.column) {
+                                                  _sortAsc = !_sortAsc;
+                                                } else {
+                                                  _sortBy = vicinity.column;
+                                                  _sortAsc = true;
+                                                }
+                                                _sort();
+                                              }
+                                            : null,
+                                        child: Container(
+                                          alignment: column.alignment,
+                                          padding: ThemedColumn.padding,
+                                          child: column.isSortable
+                                              ? Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    if (_sortBy == vicinity.column) ...[
+                                                      Icon(
+                                                        _sortAsc
+                                                            ? LayrzIcons.solarOutlineSortFromTopToBottom
+                                                            : LayrzIcons.solarOutlineSortFromBottomToTop,
+                                                        size: ThemedColumn.sortIconSize,
+                                                      ),
+                                                      const SizedBox(width: 5),
+                                                    ],
+                                                    content,
+                                                  ],
+                                                )
+                                              : content,
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 }
+
+                                final item = items[vicinity.row - 1];
 
                                 return TableViewCell(
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: column.isSortable
-                                          ? () {
-                                              if (_sortBy == vicinity.column) {
-                                                _sortAsc = !_sortAsc;
-                                              } else {
-                                                _sortBy = vicinity.column;
-                                                _sortAsc = true;
-                                              }
-                                              _sort();
-                                            }
-                                          : null,
+                                      onTap: column.onTap == null ? null : () => column.onTap?.call(item),
                                       child: Container(
                                         alignment: column.alignment,
                                         padding: ThemedColumn.padding,
-                                        child: column.isSortable
-                                            ? Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  if (_sortBy == vicinity.column) ...[
-                                                    Icon(
-                                                      _sortAsc ? MdiIcons.sortAscending : MdiIcons.sortDescending,
-                                                      size: ThemedColumn.sortIconSize,
-                                                    ),
-                                                    const SizedBox(width: 5),
-                                                  ],
-                                                  content,
-                                                ],
-                                              )
-                                            : content,
+                                        child: column.widgetBuilder?.call(context, item) ??
+                                            Text(column.valueBuilder.call(context, item)),
                                       ),
                                     ),
                                   ),
                                 );
-                              }
-
-                              final item = items[vicinity.row - 1];
-
-                              return TableViewCell(
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: column.onTap == null ? null : () => column.onTap?.call(item),
-                                    child: Container(
-                                      alignment: column.alignment,
-                                      padding: ThemedColumn.padding,
-                                      child: column.widgetBuilder?.call(context, item) ??
-                                          Text(column.valueBuilder.call(context, item)),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        if (_actionsEnabled) ...[
-                          SizedBox(
-                            width: sizes[-1] ?? _actionSize,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: widget.rowHeight,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: border,
-                                      left: border,
-                                    ),
-                                  ),
-                                  alignment: Alignment.centerRight,
-                                  padding: ThemedColumn.padding,
-                                  child: Icon(MdiIcons.toolbox, size: 20),
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: items.length,
-                                    controller: _verticalActionsScroll,
-                                    itemBuilder: (context, index) {
-                                      bool isHovering = _hoveredIndex == index && index != 0;
-                                      final item = items[index];
-
-                                      return Container(
-                                        height: widget.rowHeight,
-                                        decoration: BoxDecoration(
-                                          color: isHovering
-                                              ? _hoverColor
-                                              : index.isOdd
-                                                  ? _stripColor
-                                                  : null,
-                                          border: Border(
-                                            top: border,
-                                            bottom: index == items.length - 1 ? BorderSide.none : border,
-                                            left: border,
-                                          ),
-                                        ),
-                                        alignment: Alignment.centerRight,
-                                        padding: ThemedColumn.padding,
-                                        child: Container(
-                                          alignment: Alignment.centerRight,
-                                          child: ThemedActionsButtons(
-                                            actionsLabel: t('helpers.actions'),
-                                            actionPadding: _actionsPadding,
-                                            actions: [
-                                              ...widget.additionalActions?.call(context, item) ?? [],
-                                              if (widget.onShow != null)
-                                                ThemedActionButton.show(
-                                                  isMobile: true,
-                                                  tooltipPosition: ThemedTooltipPosition.left,
-                                                  labelText: t('helpers.buttons.show'),
-                                                  isLoading: widget.isLoading,
-                                                  isCooldown: widget.isCooldown,
-                                                  onCooldownFinish: widget.onCooldown,
-                                                  onTap: () => widget.onShow?.call(context, item),
-                                                ),
-                                              if (widget.onEdit != null && widget.canEdit.call(context, item))
-                                                ThemedActionButton.edit(
-                                                  isMobile: true,
-                                                  tooltipPosition: ThemedTooltipPosition.left,
-                                                  labelText: t('helpers.buttons.edit'),
-                                                  isLoading: widget.isLoading,
-                                                  isCooldown: widget.isCooldown,
-                                                  onCooldownFinish: widget.onCooldown,
-                                                  onTap: () => widget.onEdit?.call(context, item),
-                                                ),
-                                              if (widget.onDelete != null && widget.canDelete.call(context, item))
-                                                ThemedActionButton.delete(
-                                                  isMobile: true,
-                                                  tooltipPosition: ThemedTooltipPosition.left,
-                                                  labelText: t('helpers.buttons.delete'),
-                                                  isLoading: widget.isLoading,
-                                                  isCooldown: widget.isCooldown,
-                                                  onCooldownFinish: widget.onCooldown,
-                                                  onTap: () async {
-                                                    bool confirmation = await deleteConfirmationDialog(
-                                                      context: context,
-                                                      isCooldown: widget.isCooldown,
-                                                      isLoading: widget.isLoading,
-                                                      onCooldown: widget.onCooldown,
-                                                    );
-                                                    if (confirmation) {
-                                                      if (context.mounted) widget.onDelete?.call(context, item);
-                                                    }
-                                                  },
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
+                              },
                             ),
                           ),
-                        ]
-                      ],
+                          if (_actionsEnabled) ...[
+                            SizedBox(
+                              width: sizes[-1] ?? _actionSize,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: widget.rowHeight,
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: border,
+                                        left: border,
+                                      ),
+                                    ),
+                                    alignment: Alignment.centerRight,
+                                    padding: ThemedColumn.padding,
+                                    child: Icon(LayrzIcons.solarOutlineTuning4, size: 20),
+                                  ),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: items.length,
+                                      controller: _verticalActionsScroll,
+                                      itemBuilder: (context, index) {
+                                        bool isHovering = _hoveredIndex == index && index != 0;
+                                        final item = items[index];
+
+                                        return Container(
+                                          height: widget.rowHeight,
+                                          decoration: BoxDecoration(
+                                            color: isHovering
+                                                ? _hoverColor
+                                                : index.isOdd
+                                                    ? _stripColor
+                                                    : null,
+                                            border: Border(
+                                              top: border,
+                                              bottom: index == items.length - 1 ? BorderSide.none : border,
+                                              left: border,
+                                            ),
+                                          ),
+                                          alignment: Alignment.centerRight,
+                                          padding: ThemedColumn.padding,
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: ThemedActionsButtons(
+                                              actionsLabel: t('helpers.actions'),
+                                              actionPadding: _actionsPadding,
+                                              actions: [
+                                                ...widget.additionalActions?.call(context, item) ?? [],
+                                                if (widget.onShow != null)
+                                                  ThemedActionButton.show(
+                                                    isMobile: true,
+                                                    tooltipPosition: ThemedTooltipPosition.left,
+                                                    labelText: t('helpers.buttons.show'),
+                                                    isLoading: widget.isLoading,
+                                                    isCooldown: widget.isCooldown,
+                                                    onCooldownFinish: widget.onCooldown,
+                                                    onTap: () => widget.onShow?.call(context, item),
+                                                  ),
+                                                if (widget.onEdit != null && widget.canEdit.call(context, item))
+                                                  ThemedActionButton.edit(
+                                                    isMobile: true,
+                                                    tooltipPosition: ThemedTooltipPosition.left,
+                                                    labelText: t('helpers.buttons.edit'),
+                                                    isLoading: widget.isLoading,
+                                                    isCooldown: widget.isCooldown,
+                                                    onCooldownFinish: widget.onCooldown,
+                                                    onTap: () => widget.onEdit?.call(context, item),
+                                                  ),
+                                                if (widget.onDelete != null && widget.canDelete.call(context, item))
+                                                  ThemedActionButton.delete(
+                                                    isMobile: true,
+                                                    tooltipPosition: ThemedTooltipPosition.left,
+                                                    labelText: t('helpers.buttons.delete'),
+                                                    isLoading: widget.isLoading,
+                                                    isCooldown: widget.isCooldown,
+                                                    onCooldownFinish: widget.onCooldown,
+                                                    onTap: () async {
+                                                      bool confirmation = await deleteConfirmationDialog(
+                                                        context: context,
+                                                        isCooldown: widget.isCooldown,
+                                                        isLoading: widget.isLoading,
+                                                        onCooldown: widget.onCooldown,
+                                                      );
+                                                      if (confirmation) {
+                                                        if (context.mounted) widget.onDelete?.call(context, item);
+                                                      }
+                                                    },
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ]
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            if (!widget.disablePaginator) ...[
-              isVerySmall
-                  ? _buildVerySmallPaginator(constraints: constraints, isDark: isDark)
-                  : _buildWebPaginator(constraints: constraints, isMobile: isMobile, isDark: isDark),
+              if (!widget.disablePaginator) ...[
+                isVerySmall
+                    ? _buildVerySmallPaginator(constraints: constraints, isDark: isDark)
+                    : _buildWebPaginator(constraints: constraints, isMobile: isMobile, isDark: isDark),
+              ],
             ],
-          ],
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -1107,7 +1262,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(MdiIcons.filter, color: isDark ? Colors.white : Colors.black.withOpacity(0.6)),
+              Icon(
+                LayrzIcons.solarOutlineFilter,
+                color: isDark ? Colors.white : Colors.black.withOpacity(0.6),
+              ),
               Text(
                 pageInfoStr,
                 style: pageInfoStyle,
@@ -1168,7 +1326,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.start'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronDoubleLeft,
+        icon: LayrzIcons.solarOutlineDoubleAltArrowLeft,
         onTap: () => setState(() => _currentPage = 0),
       ),
 
@@ -1177,7 +1335,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.previous'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronLeft,
+        icon: LayrzIcons.solarOutlineAltArrowLeft,
         isDisabled: _currentPage == 0,
         onTap: () {
           if (_currentPage > 0) {
@@ -1196,7 +1354,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.next'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronRight,
+        icon: LayrzIcons.solarOutlineAltArrowRight,
         isDisabled: _currentPage == maxPages,
         onTap: () {
           if (_currentPage < maxPages) {
@@ -1210,7 +1368,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.end'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronDoubleRight,
+        icon: LayrzIcons.solarOutlineDoubleAltArrowRight,
         onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
       ),
     ];
@@ -1295,7 +1453,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(MdiIcons.filter, color: isDark ? Colors.white : Colors.black.withOpacity(0.6)),
+                      Icon(
+                        LayrzIcons.solarOutlineFilter,
+                        color: isDark ? Colors.white : Colors.black.withOpacity(0.6),
+                      ),
                       Text(
                         _itemsPerPage.toString(),
                         style: pageInfoStyle,
@@ -1327,14 +1488,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.start'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronDoubleLeft,
+        icon: LayrzIcons.solarOutlineDoubleAltArrowLeft,
         onTap: () => setState(() => _currentPage = 0),
       ),
       ThemedButton(
         labelText: t('layrz.table.paginator.previous'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronLeft,
+        icon: LayrzIcons.solarOutlineAltArrowLeft,
         isDisabled: _currentPage == 0,
         onTap: () {
           if (_currentPage > 0) {
@@ -1349,7 +1510,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.next'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronRight,
+        icon: LayrzIcons.solarOutlineAltArrowRight,
         isDisabled: _currentPage == maxPages,
         onTap: () {
           if (_currentPage < maxPages) {
@@ -1361,7 +1522,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.end'),
         color: paginatorColor,
         style: ThemedButtonStyle.fab,
-        icon: MdiIcons.chevronDoubleRight,
+        icon: LayrzIcons.solarOutlineDoubleAltArrowRight,
         onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
       ),
     ];
@@ -1494,174 +1655,21 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     }
   }
 
-  /// Builds the overlay using the [overlayEntry] property
-  /// If the [overlayEntry] is not null, the method will return without doing anything
-  /// Otherwise, the overlay will be built
+  /// [_buildOverlay] builds the overlay dialog
   void _buildOverlay() {
-    if (_overlayEntry != null) {
-      return;
-    }
+    if (_overlay.isShowing) return;
 
-    double width = MediaQuery.sizeOf(context).width * 0.8;
-    if (width > 500) {
-      width = 500;
-    }
-
-    _overlayEntry = OverlayEntry(
-      builder: (context1) {
-        return Stack(
-          children: [
-            Positioned(
-              top: 10,
-              left: (MediaQuery.of(context).size.width - width) / 2,
-              width: width,
-              child: Material(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    ScaleTransition(
-                      scale: Tween<double>(begin: 0.3, end: 1).animate(
-                        CurvedAnimation(
-                          parent: _animation,
-                          curve: Curves.easeInOut,
-                        ),
-                      ),
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        width: width,
-                        decoration: generateContainerElevation(context: context),
-                        child: StatefulBuilder(
-                          builder: (BuildContext context2, setLocalState) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        t('helpers.multipleSelection.title'),
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    ThemedButton(
-                                      style: ThemedButtonStyle.filledTonalFab,
-                                      icon: MdiIcons.close,
-                                      color: isDark ? Colors.white : Colors.black,
-                                      labelText: t('helpers.multipleSelection.actions.cancel'),
-                                      isLoading: widget.isLoading,
-                                      isCooldown: widget.isCooldown,
-                                      onCooldownFinish: widget.onCooldown,
-                                      onTap: () {
-                                        _destroyOverlay(callback: () {
-                                          setState(() => _selectedItems = []);
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  t('helpers.multipleSelection.caption'),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  width: width,
-                                  child: SingleChildScrollView(
-                                    reverse: true,
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        const SizedBox(width: 5),
-                                        for (final action in widget.multiSelectionActions) ...[
-                                          ThemedButton(
-                                            color: action.color,
-                                            label: action.label,
-                                            labelText: action.labelText,
-                                            isLoading: widget.isLoading,
-                                            isCooldown: widget.isCooldown,
-                                            onCooldownFinish: widget.onCooldown,
-                                            onTap: () {
-                                              _destroyOverlay(callback: () {
-                                                bool result = action.onTap.call(_selectedItems);
-                                                if (result) {
-                                                  setState(() => _selectedItems = []);
-                                                }
-                                              });
-                                            },
-                                          ),
-                                          const SizedBox(width: 5),
-                                        ],
-                                        if (widget.onMultiDelete != null)
-                                          ThemedButton(
-                                            style: ThemedButtonStyle.filled,
-                                            color: Colors.red,
-                                            icon: MdiIcons.trashCan,
-                                            labelText: t('helpers.multipleSelection.actions.delete'),
-                                            isLoading: widget.isLoading,
-                                            isCooldown: widget.isCooldown,
-                                            onCooldownFinish: widget.onCooldown,
-                                            onTap: () {
-                                              _destroyOverlay(
-                                                callback: () async {
-                                                  bool confirmation = await deleteConfirmationDialog(
-                                                    context: context,
-                                                    isMultiple: true,
-                                                    isCooldown: widget.isCooldown,
-                                                    isLoading: widget.isLoading,
-                                                    onCooldown: widget.onCooldown,
-                                                  );
-
-                                                  if (confirmation && mounted) {
-                                                    bool result = await widget.onMultiDelete?.call(
-                                                          context,
-                                                          _selectedItems,
-                                                        ) ??
-                                                        false;
-                                                    if (result) {
-                                                      setState(() => _selectedItems = []);
-                                                    }
-                                                  } else {
-                                                    setState(() => _selectedItems = []);
-                                                  }
-                                                },
-                                              );
-                                            },
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
+    _overlay.show();
     _animation.forward();
   }
 
-  /// Destroys the overlay using the [_overlayEntry] property
+  /// [_destroyOverlay] destroys the overlay dialog
   void _destroyOverlay({VoidCallback? callback}) async {
-    await _animation.reverse();
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-    callback?.call();
+    if (_overlay.isShowing) {
+      await _animation.reverse();
+      _overlay.hide();
+      callback?.call();
+    }
   }
 
   /// [_getEquivalence] gets the equivalence value of a translation key using the different

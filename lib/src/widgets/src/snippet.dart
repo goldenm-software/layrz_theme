@@ -52,12 +52,12 @@ class ThemedCodeSnippet extends StatelessWidget {
                 Clipboard.setData(ClipboardData(text: code));
                 ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(ThemedSnackbar(
                   message: copyToClipboardText,
-                  icon: MdiIcons.clipboardCheckOutline,
+                  icon: LayrzIcons.solarOutlineClipboardCheck,
                   color: Colors.green,
                 ));
               },
               child: Icon(
-                MdiIcons.contentCopy,
+                LayrzIcons.solarOutlineCopy,
                 size: 20,
               ),
             ),

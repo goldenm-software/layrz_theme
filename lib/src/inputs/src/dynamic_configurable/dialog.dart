@@ -70,7 +70,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                 setState(() {});
               },
               dense: true,
-              prefixIcon: MdiIcons.magnify,
+              prefixIcon: LayrzIcons.solarOutlineMagnifier,
             ),
             if (_shouldAdd) ...[
               const SizedBox(height: 10),
@@ -91,7 +91,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                     child: Row(
                       children: [
                         Icon(
-                          MdiIcons.plusCircle,
+                          LayrzIcons.solarOutlineAddSquare,
                           size: 18,
                         ),
                         const SizedBox(width: 5),
@@ -130,7 +130,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                           const SizedBox(width: 10),
                           ThemedButton(
                             style: ThemedButtonStyle.filledTonalFab,
-                            icon: MdiIcons.trashCanOutline,
+                            icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
                             labelText: i18n.t('requiredFields.choices.remove'),
                             color: Colors.red,
                             onTap: () {
@@ -152,7 +152,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
               children: [
                 ThemedButton(
                   style: ThemedButtonStyle.filledTonalFab,
-                  icon: MdiIcons.cancel,
+                  icon: LayrzIcons.solarOutlineCloseSquare,
                   labelText: i18n.t('requiredFields.choices.discard'),
                   color: Colors.red,
                   onTap: () {
@@ -161,7 +161,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                 ),
                 ThemedButton(
                   style: ThemedButtonStyle.filledTonalFab,
-                  icon: MdiIcons.contentSave,
+                  icon: LayrzIcons.solarOutlineInboxIn,
                   labelText: i18n.t('requiredFields.choices.save'),
                   color: Colors.green,
                   onTap: () {

@@ -306,7 +306,7 @@ class ThemedLicensesViewState extends State<ThemedLicensesView> {
                   SizedBox(
                     width: double.infinity,
                     child: ThemedButton(
-                      icon: MdiIcons.chevronLeft,
+                      icon: LayrzIcons.solarOutlineAltArrowLeft,
                       labelText: i18n?.t('actions.back') ?? "Back",
                       color: Colors.red,
                       onTap: () => Navigator.of(context).pop(),

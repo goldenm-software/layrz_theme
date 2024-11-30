@@ -209,7 +209,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
           height: actionSize,
           child: Center(
             child: Icon(
-              MdiIcons.label,
+              LayrzIcons.solarOutlineTagHorizontal,
               color: validateColor(color: backgroundColor),
               size: 20,
             ),
@@ -259,7 +259,9 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                   hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
                   child: Center(
                     child: Icon(
-                      highlightTop ? MdiIcons.menuUp : (item.icon ?? MdiIcons.help),
+                      highlightTop
+                          ? LayrzIcons.solarOutlineAltArrowUp
+                          : (item.icon ?? LayrzIcons.solarOutlineQuestionSquare),
                       size: highlightTop ? 22 : 18,
                       color: highlightTop
                           ? validateColor(color: activeColor)
@@ -298,7 +300,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
               onTap: item.onTap,
               child: Center(
                 child: Icon(
-                  item.icon ?? MdiIcons.help,
+                  item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                   color: validateColor(color: backgroundColor),
                   size: 20,
                 ),

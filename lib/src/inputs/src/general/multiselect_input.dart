@@ -222,7 +222,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
       prefixIcon: widget.prefixIcon,
       prefixText: widget.prefixText,
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: MdiIcons.chevronDown,
+      suffixIcon: LayrzIcons.solarOutlineAltArrowDown,
       disabled: widget.disabled,
       dense: widget.dense,
       errors: widget.errors,
@@ -290,8 +290,8 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                         padding: EdgeInsets.zero,
                                         labelText: t('layrz.select.search'),
                                         onChanged: (value) => setState(() => searchText = value),
-                                        prefixIcon: MdiIcons.magnify,
-                                        suffixIcon: searchText.isNotEmpty ? MdiIcons.close : null,
+                                        prefixIcon: LayrzIcons.solarOutlineMagnifier,
+                                        suffixIcon: searchText.isNotEmpty ? LayrzIcons.solarOutlineCloseSquare : null,
                                         onSuffixTap:
                                             searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
                                         hideDetails: true,
@@ -364,8 +364,8 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                 ThemedButton(
                                   style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
                                   icon: temp.length == items.length
-                                      ? MdiIcons.checkboxMarked
-                                      : MdiIcons.checkboxBlankOutline,
+                                      ? LayrzIcons.solarOutlineCheckSquare
+                                      : LayrzIcons.solarBoldMinusSquare,
                                   labelText:
                                       t('layrz.select.${temp.length == items.length ? 'unselect' : 'select'}All'),
                                   color: Colors.orange,

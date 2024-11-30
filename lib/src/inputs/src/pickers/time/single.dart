@@ -162,7 +162,7 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
       prefixIcon: widget.prefixIcon,
       prefixWidget: widget.prefixWidget,
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: MdiIcons.clockOutline,
+      suffixIcon: LayrzIcons.solarOutlineClockSquare,
       disabled: widget.disabled,
       readonly: true,
       onTap: widget.disabled ? null : _showPicker,

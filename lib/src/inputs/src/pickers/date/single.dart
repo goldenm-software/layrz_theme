@@ -157,7 +157,7 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
       prefixIcon: widget.prefixIcon,
       prefixWidget: widget.prefixWidget,
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: MdiIcons.calendar,
+      suffixIcon: LayrzIcons.solarOutlineCalendar,
       disabled: widget.disabled,
       readonly: true,
       onTap: widget.disabled ? null : _showPicker,

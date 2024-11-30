@@ -165,7 +165,7 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Icon(
-                  item.icon ?? MdiIcons.help,
+                  item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                   size: 15,
                   color: validateColor(color: backgroundColor),
                 ),
@@ -197,7 +197,7 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Icon(
-                  item.icon ?? MdiIcons.help,
+                  item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                   size: 15,
                   color: validateColor(color: backgroundColor),
                 ),

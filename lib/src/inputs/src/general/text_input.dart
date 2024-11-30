@@ -262,7 +262,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     Widget? suffix;
 
     if (widget.disabled) {
-      suffix = Icon(MdiIcons.lockOutline, size: 18);
+      suffix = Icon(LayrzIcons.solarOutlineLockKeyhole, size: 18);
     } else if (widget.suffixWidget != null) {
       suffix = InkWell(
         onTap: widget.onSuffixTap,

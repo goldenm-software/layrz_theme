@@ -328,7 +328,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
               ThemedTextInput(
                 labelText: i18n?.t('helpers.dynamicAvatar.types.URL.url') ?? "URL",
                 value: _value.url,
-                prefixIcon: MdiIcons.link,
+                prefixIcon: LayrzIcons.solarOutlineLinkMinimalistic2,
                 onChanged: (value) {
                   setState(() {
                     _value.icon = null;
@@ -401,15 +401,15 @@ extension on AvatarType {
   IconData? get icon {
     switch (this) {
       case AvatarType.none:
-        return MdiIcons.imageOff;
+        return LayrzIcons.solarOutlineCloseSquare;
       case AvatarType.url:
-        return MdiIcons.link;
+        return LayrzIcons.solarOutlineLinkMinimalistic2;
       case AvatarType.base64:
-        return MdiIcons.imageFilterHdr;
+        return LayrzIcons.solarOutlineGallery;
       case AvatarType.icon:
-        return MdiIcons.emoticon;
+        return LayrzIcons.solarOutlineEmojiFunnySquare;
       case AvatarType.emoji:
-        return MdiIcons.emoticon;
+        return LayrzIcons.solarOutlineEmojiFunnySquare;
       default:
         return null;
     }
