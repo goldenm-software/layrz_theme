@@ -197,7 +197,7 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                 labelText: i18n?.t('about.search') ?? 'Search package',
                 dense: true,
                 padding: EdgeInsets.zero,
-                prefixIcon: MdiIcons.magnify,
+                prefixIcon: LayrzIcons.solarOutlineMagnifier,
                 onChanged: (value) => setState(() => _searchText = value),
               ),
               const SizedBox(height: 10),

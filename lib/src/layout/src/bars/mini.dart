@@ -242,7 +242,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
           height: actionSize - 10,
           child: Center(
             child: Icon(
-              MdiIcons.label,
+              LayrzIcons.solarOutlineTagHorizontal,
               color: validateColor(color: backgroundColor),
               size: 20,
             ),
@@ -300,7 +300,9 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                   hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
                   child: Center(
                     child: Icon(
-                      highlightTop ? MdiIcons.menuDown : (item.icon ?? MdiIcons.help),
+                      highlightTop
+                          ? LayrzIcons.solarOutlineAltArrowDown
+                          : (item.icon ?? LayrzIcons.solarOutlineQuestionSquare),
                       size: highlightTop ? 22 : 18,
                       color: highlightTop
                           ? validateColor(color: backgroundColor)
@@ -374,7 +376,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
               onTap: item.onTap,
               child: Center(
                 child: Icon(
-                  item.icon ?? MdiIcons.help,
+                  item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                   color: validateColor(color: backgroundColor),
                   size: 20,
                 ),

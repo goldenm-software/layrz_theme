@@ -142,14 +142,14 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        IconData allToSelected = MdiIcons.chevronDoubleRight;
-        IconData allToAvailable = MdiIcons.chevronDoubleLeft;
+        IconData allToSelected = LayrzIcons.solarOutlineDoubleAltArrowRight;
+        IconData allToAvailable = LayrzIcons.solarOutlineDoubleAltArrowLeft;
         bool displayVertical = false;
         Color actionButtonColor = isDark ? Colors.white : Theme.of(context).primaryColor;
 
         if (constraints.maxWidth <= kExtraSmallGrid) {
-          allToSelected = MdiIcons.chevronDoubleDown;
-          allToAvailable = MdiIcons.chevronDoubleUp;
+          allToSelected = LayrzIcons.solarOutlineDoubleAltArrowDown;
+          allToAvailable = LayrzIcons.solarOutlineDoubleAltArrowUp;
           displayVertical = true;
         }
 

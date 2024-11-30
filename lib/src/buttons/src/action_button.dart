@@ -73,7 +73,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
     if (isMobile || widget.forceMobileMode) {
       return ThemedButton(
         key: _key,
-        icon: MdiIcons.dotsVertical,
+        icon: LayrzIcons.solarOutlineMenuDots,
         labelText: widget.actionsLabel,
         style: ThemedButtonStyle.fab,
         color: Colors.grey.shade500,
@@ -313,7 +313,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.contentSave,
+      icon: LayrzIcons.solarOutlineInboxIn,
       color: Colors.green,
     );
   }
@@ -336,7 +336,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.closeCircle,
+      icon: LayrzIcons.solarOutlineCloseSquare,
       onlyIcon: isMobile,
       color: Colors.red,
     );
@@ -360,7 +360,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.informationOutline,
+      icon: LayrzIcons.solarOutlineInfoSquare,
       onlyIcon: isMobile,
       color: Colors.blue,
     );
@@ -384,7 +384,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.magnifyScan,
+      icon: LayrzIcons.solarOutlineEyeScan,
       onlyIcon: isMobile,
       color: Colors.blue,
     );
@@ -408,7 +408,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.squareEditOutline,
+      icon: LayrzIcons.solarOutlinePenNewSquare,
       onlyIcon: isMobile,
       color: Colors.orange,
     );
@@ -432,7 +432,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: MdiIcons.trashCan,
+      icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
       onlyIcon: isMobile,
       color: Colors.red,
     );

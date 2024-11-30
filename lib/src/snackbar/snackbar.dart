@@ -5,7 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:layrz_theme/layrz_theme.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:layrz_icons/layrz_icons.dart';
 
 part 'src/snackbar.dart';
 part 'src/messenger.dart';

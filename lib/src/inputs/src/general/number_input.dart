@@ -168,7 +168,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       label: widget.label,
       disabled: widget.disabled,
       placeholder: widget.placeholder,
-      prefixIcon: MdiIcons.minusCircle,
+      prefixIcon: LayrzIcons.solarOutlineMinusSquare,
       onPrefixTap: () {
         num newValue = (widget.value ?? 0) - (widget.step ?? 1);
         if (newValue < (widget.minimum ?? double.negativeInfinity)) {
@@ -176,7 +176,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
         }
         widget.onChanged?.call(newValue);
       },
-      suffixIcon: MdiIcons.plusCircle,
+      suffixIcon: LayrzIcons.solarOutlineAddSquare,
       onSuffixTap: () {
         num newValue = (widget.value ?? 0) + (widget.step ?? 1);
         if (newValue > (widget.maximum ?? double.infinity)) {

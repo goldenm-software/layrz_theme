@@ -29,7 +29,6 @@ import 'package:layrz_theme/src/theme/theme.dart';
 import 'package:layrz_theme/src/tooltips/tooltips.dart';
 import 'package:layrz_theme/src/utilities/utilities.dart';
 import 'package:layrz_theme/src/widgets/widgets.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 // Code editor
 import 'package:layrz_theme/src/languages/lcl/lcl.dart' as lcl;

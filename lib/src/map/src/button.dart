@@ -106,7 +106,7 @@ class _ThemedMapDragButtonState extends State<ThemedMapDragButton> {
   late OverlayPortalController _controller;
   bool get _isDisabled => widget.isDisabled;
   Color get color => _isDisabled ? Colors.grey : (widget.color ?? Theme.of(context).primaryColor);
-  IconData get icon => _isDragging ? MdiIcons.dragVariant : widget.icon;
+  IconData get icon => _isDragging ? LayrzIcons.solarOutlineHamburgerMenu : widget.icon;
   IconData get dragIcon => widget.dragIcon ?? widget.icon;
 
   bool _isDragging = false;

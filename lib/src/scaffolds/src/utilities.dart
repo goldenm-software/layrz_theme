@@ -48,10 +48,13 @@ Future<bool> deleteConfirmationDialog({
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                maxLines: 10,
+                textAlign: TextAlign.justify,
               ),
               Text(
                 content,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.justify,
+                maxLines: 10,
               ),
               const SizedBox(height: 20),
               Row(

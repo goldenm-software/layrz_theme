@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.1
+
+- Changed most of `MdiIcons.*` to `LayrzIcons.*` to use the new icon library `layrz_icons`.
+
 ## 7.1.0
 
 - Changed icon library from `material_design_icons_flutter` to `layrz_icons`

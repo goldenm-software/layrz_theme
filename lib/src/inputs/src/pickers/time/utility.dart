@@ -170,7 +170,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
-                                MdiIcons.minus,
+                                LayrzIcons.solarOutlineMinusSquare,
                                 color: Theme.of(context).inputDecorationTheme.prefixIconColor,
                               ),
                             ),
@@ -188,7 +188,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
-                                MdiIcons.plus,
+                                LayrzIcons.solarOutlineAddSquare,
                                 color: Theme.of(context).inputDecorationTheme.prefixIconColor,
                               ),
                             ),
@@ -223,8 +223,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(MdiIcons.circleSmall, size: 30),
-                    Icon(MdiIcons.circleSmall, size: 30),
+                    Icon(LayrzIcons.mdiCircleSmall, size: 30),
+                    Icon(LayrzIcons.mdiCircleSmall, size: 30),
                   ],
                 ),
               ),
@@ -259,7 +259,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
-                                MdiIcons.minus,
+                                LayrzIcons.solarOutlineMinusSquare,
                                 color: Theme.of(context).inputDecorationTheme.prefixIconColor,
                               ),
                             ),
@@ -277,7 +277,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
-                                MdiIcons.plus,
+                                LayrzIcons.solarOutlineAddSquare,
                                 color: Theme.of(context).inputDecorationTheme.prefixIconColor,
                               ),
                             ),

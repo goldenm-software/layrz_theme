@@ -11,7 +11,7 @@ import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_ti
 import 'package:latlong2/latlong.dart';
 import 'package:layrz_models/layrz_models.dart' hide Point;
 import 'package:layrz_theme/layrz_theme.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:layrz_icons/layrz_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 

@@ -157,6 +157,9 @@ ThemeData generateLightTheme({
     // Inputs
     checkboxTheme: CheckboxThemeData(
       visualDensity: VisualDensity.compact,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
       fillColor: WidgetStateColor.resolveWith((states) {
         if (states.contains(WidgetState.selected)) return color;
         return Colors.transparent;
@@ -177,9 +180,10 @@ ThemeData generateLightTheme({
     ),
     switchTheme: SwitchThemeData(
       thumbIcon: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Icon(MdiIcons.check);
-        return Icon(MdiIcons.close);
+        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckCircle);
+        return Icon(LayrzIcons.solarOutlineCloseCircle);
       }),
+      trackOutlineWidth: const WidgetStatePropertyAll(1),
       trackColor: WidgetStateColor.resolveWith((states) {
         return Colors.transparent;
       }),

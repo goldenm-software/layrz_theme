@@ -177,8 +177,8 @@ ThemeData generateDarkTheme({
     ),
     switchTheme: SwitchThemeData(
       thumbIcon: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Icon(MdiIcons.check, color: color);
-        return Icon(MdiIcons.close, color: color);
+        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckSquare, color: color);
+        return Icon(LayrzIcons.solarOutlineCloseSquare, color: color);
       }),
       trackColor: WidgetStateColor.resolveWith((states) {
         return Colors.transparent;

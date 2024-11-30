@@ -160,7 +160,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
           size: isDense ? 20 : 30,
         ),
       ),
-      suffixIcon: widget.disabled ? MdiIcons.lockOutline : MdiIcons.selectGroup,
+      suffixIcon: widget.disabled ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineAlbum,
       labelText: widget.labelText,
       label: widget.label,
       controller: _textController,
@@ -348,7 +348,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
           labelText: i18n?.t('helpers.search') ?? 'Search an icon',
           value: search,
           onChanged: (value) => setState(() => search = value),
-          prefixIcon: MdiIcons.magnify,
+          prefixIcon: LayrzIcons.solarOutlineMagnifier,
         ),
         if (mounted)
           Expanded(

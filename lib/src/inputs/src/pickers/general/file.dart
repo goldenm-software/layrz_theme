@@ -118,8 +118,8 @@ class _ThemedFilePickerState extends State<ThemedFilePicker> with SingleTickerPr
       value: _value,
       label: widget.label,
       labelText: widget.labelText,
-      prefixIcon: MdiIcons.file,
-      suffixIcon: _value.isNotEmpty ? MdiIcons.paperclipOff : MdiIcons.paperclip,
+      prefixIcon: LayrzIcons.solarOutlineFile,
+      suffixIcon: _value.isNotEmpty ? LayrzIcons.solarOutlineEraserSquare : LayrzIcons.solarOutlinePaperclip2,
       disabled: widget.disabled,
       readonly: true,
       onChanged: (String value) {

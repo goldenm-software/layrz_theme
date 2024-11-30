@@ -10,7 +10,7 @@ class WorkInProgressView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(MdiIcons.accountHardHat, size: 60),
+        Icon(LayrzIcons.solarOutlineShockAbsorber, size: 60),
         Text(
           'Work in progress',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(

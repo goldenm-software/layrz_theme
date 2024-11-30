@@ -143,7 +143,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
       child: InkWell(
         borderRadius: border,
         onTap: onTap,
-        child: Center(child: Icon(isUp ? MdiIcons.chevronUp : MdiIcons.chevronDown)),
+        child: Center(child: Icon(isUp ? LayrzIcons.solarOutlineAltArrowUp : LayrzIcons.solarOutlineAltArrowDown)),
       ),
     );
   }
@@ -223,7 +223,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
                               Row(
                                 children: [
                                   if (isSelected) ...[
-                                    Icon(MdiIcons.starBoxOutline, size: 14, color: Colors.grey),
+                                    Icon(LayrzIcons.solarOutlineStart1, size: 14, color: Colors.grey),
                                     const SizedBox(width: 5),
                                   ] else if (prefixIcon != null) ...[
                                     Icon(

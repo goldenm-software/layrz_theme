@@ -381,7 +381,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
                             style: ThemedButtonStyle.fab,
                             tooltipEnabled: false,
                             labelText: 'Close',
-                            icon: MdiIcons.close,
+                            icon: LayrzIcons.solarOutlineCloseSquare,
                             color: validateColor(color: backgroundColor),
                             onTap: () {
                               _timer.cancel();
