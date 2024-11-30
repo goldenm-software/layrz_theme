@@ -11,7 +11,7 @@ import 'package:layrz_theme/src/file.dart';
 /// To implement this function multiplatform, follow this example
 /// ```dart
 /// import 'package:layrz_theme/src/helpers/save_file/native.dart'
-///   if (dart.library.html) 'package:layrz_theme/src/helpers/save_file/web.dart';
+///   if (dart.library.js_interop) 'package:layrz_theme/src/helpers/save_file/web.dart';
 /// // ...
 /// saveFile() // <- this function
 /// ```
