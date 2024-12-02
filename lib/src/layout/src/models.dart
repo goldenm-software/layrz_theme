@@ -43,10 +43,22 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
   /// [useDefaultRedirect] indicates if the view should redirect to the first child when is tapped.
   final bool useDefaultRedirect;
 
+  /// [enableBreadcumb] indicates if the header should be displayed in sidebar mode.
+  /// By default is true.
+  ///
+  /// This bool does not apply when is in other Layout styles, or has children items.
+  ///
+  /// Before fully removal, we'll apply an or operator between enableBreadcumb and showHeaderInSidebarMode
+  /// to keep the backward compatibility.
+  final bool enableBreadcumb;
+
   /// [showHeaderInSidebarMode] indicates if the header should be displayed in sidebar mode.
   /// By default is true.
   ///
   /// This bool does not apply when is in other Layout styles, or has children items.
+  @Deprecated(
+    'Use enableBreadcumb instead and will be deleted at version 8.0.0',
+  )
   final bool showHeaderInSidebarMode;
 
   /// [ThemedNavigatorPage] is a helper class to handle the view and their children.
@@ -57,6 +69,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     required this.path,
     this.children = const [],
     this.useDefaultRedirect = true,
+    this.enableBreadcumb = true,
     this.showHeaderInSidebarMode = true,
   }) : assert(label != null || labelText != null);
 

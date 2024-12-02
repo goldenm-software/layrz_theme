@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.1.4
+
+- Added `enableBreadcumb` property on `ThemedLayout` to disable globally the breadcumb on the layout
+- New property `enableBreadcumb` to replace `showHeaderInSidebarMode` on `ThemedNavigatorPage` to disable the breadcumb on the page
+- Marked as deprecated and scheduled to removal on version 8.0.0 the property `showHeaderInSidebarMode` on `ThemedNavigatorPage`
+
 ## 7.1.3
 
 - Fixed an issue with `saveFile` on Web, `dart:html` was fully removed and replaced with `package:js` to handle the file saving on Web.

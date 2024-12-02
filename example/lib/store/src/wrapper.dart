@@ -83,7 +83,7 @@ class _LayoutState extends State<Layout> {
           labelText: 'Theme generation',
           path: '/theme',
           icon: MdiIcons.themeLightDark,
-          showHeaderInSidebarMode: false,
+          enableBreadcumb: false,
         ),
         ThemedNavigatorPage(
           labelText: 'Inputs',
