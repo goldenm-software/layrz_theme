@@ -208,6 +208,10 @@ class ThemedLayout extends StatefulWidget {
   /// on the [ThemedNavigatorPage] documentation.
   final bool enableBreadcumb;
 
+  /// [breadcumbPadding] is the padding of the breadcrumb.
+  /// By default is `EdgeInsets.only(left: 10, top: 10, right: 10)`.
+  final EdgeInsetsGeometry breadcumbPadding;
+
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
     super.key,
@@ -243,6 +247,7 @@ class ThemedLayout extends StatefulWidget {
     this.enableNotifications = true,
     this.avatarRadius = 5,
     this.enableBreadcumb = true,
+    this.breadcumbPadding = const EdgeInsets.only(left: 10, top: 10, right: 10),
   });
 
   @override
@@ -251,6 +256,8 @@ class ThemedLayout extends StatefulWidget {
 
 class _ThemedLayoutState extends State<ThemedLayout> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
+
+  EdgeInsetsGeometry get breadcumbPadding => widget.breadcumbPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -555,8 +562,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       child: match == null || !match.displayHeader
           ? const SizedBox.shrink()
           : Container(
-              height: ThemedAppBar.size.height,
-              padding: const EdgeInsets.all(10),
+              padding: breadcumbPadding,
               child: RichText(text: match.name),
             ),
     );
