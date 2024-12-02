@@ -127,6 +127,7 @@ class ThemedMonthPicker extends StatefulWidget {
 }
 
 class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
+  final TextEditingController _controller = TextEditingController();
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   late int _focusYear;
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
@@ -145,12 +146,21 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
   void initState() {
     super.initState();
     _overrideFocusMonth(isInit: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    });
   }
 
   @override
   void didUpdateWidget(ThemedMonthPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     _overrideFocusMonth();
+
+    if (widget.value != oldWidget.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _controller.text = _parsedName ?? '';
+      });
+    }
   }
 
   void _overrideFocusMonth({bool isInit = false}) {
@@ -181,6 +191,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
     }
 
     return ThemedTextInput(
+      controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
       label: widget.label,

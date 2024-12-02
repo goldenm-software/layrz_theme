@@ -190,7 +190,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
   }
 
   /// [elementsSpacing] helps to build the spacing between the elements of the snackbar
-  double get elementsSpacing => 5;
+  double get elementsSpacing => 10;
 
   /// [backgroundColor] helps to build the background color of the snackbar
   /// In case the color is null, will use the primary color of the current theme
@@ -305,11 +305,6 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
         child: GestureDetector(
           onHorizontalDragUpdate: (swipe) {
             setState(() => swipeOffset -= swipe.primaryDelta!);
-            debugPrint('swipe.primaryDelta: ${swipe.primaryDelta} - swipeOffset: $swipeOffset');
-            // if (swipe.primaryDelta! > ) {
-            //   _timer.cancel();
-            //   widget.state.removeSnackbar(widget.key!);
-            // }
           },
           onHorizontalDragEnd: (_) {
             if (abs(swipeOffset) > 230) {
@@ -358,6 +353,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
                                   style: titleStyle?.copyWith(
                                     color: validateColor(color: backgroundColor),
                                   ),
+                                  textAlign: TextAlign.justify,
                                   maxLines: widget.maxLines,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -369,6 +365,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
                                     widget.title == null ? 1 : 0.8,
                                   ),
                                 ),
+                                textAlign: TextAlign.justify,
                                 maxLines: widget.maxLines,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -393,7 +390,6 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
                     ),
                   ),
                 ),
-                SizedBox(height: elementsSpacing),
                 TweenAnimationBuilder(
                   duration: widget.duration,
                   tween: Tween<double>(begin: 0, end: widget.duration.inMilliseconds.toDouble()),

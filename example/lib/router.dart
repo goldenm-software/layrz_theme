@@ -11,6 +11,7 @@ import 'package:layrz_theme_example/views/map/map.dart';
 import 'package:layrz_theme_example/views/not_found.dart';
 import 'package:layrz_theme_example/views/table/table.dart';
 import 'package:layrz_theme_example/views/theme_generation.dart';
+import 'package:layrz_theme_example/views/snackbars/snackbars.dart';
 
 Page<void> customTransitionBuilder(BuildContext context, GoRouterState state, Widget child) {
   return CustomTransitionPage(
@@ -91,6 +92,8 @@ final goRoutes = [
     path: '/inputs/code',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const CodeInputView()),
   ),
+
+  // Table
   GoRoute(
     path: '/table',
     redirect: (context, state) => '/table/basic',
@@ -98,6 +101,16 @@ final goRoutes = [
   GoRoute(
     path: '/table/basic',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const BasicTableView()),
+  ),
+
+  // Tooltip
+  GoRoute(
+    path: '/snackbar',
+    redirect: (context, state) => '/snackbar/basic',
+  ),
+  GoRoute(
+    path: '/snackbar/basic',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const BasicSnackbarView()),
   ),
 
   // Map
@@ -112,7 +125,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/inputs/buttons' : '/',
+  initialLocation: kDebugMode ? '/inputs/selectors/datetime' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

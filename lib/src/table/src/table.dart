@@ -1109,8 +1109,15 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                       child: Container(
                                         alignment: column.alignment,
                                         padding: ThemedColumn.padding,
-                                        child: column.widgetBuilder?.call(context, item) ??
-                                            Text(column.valueBuilder.call(context, item)),
+                                        child: column.richTextBuilder != null
+                                            ? RichText(
+                                                text: TextSpan(
+                                                  children: column.richTextBuilder!.call(context, item),
+                                                  style: _rowStyle,
+                                                ),
+                                              )
+                                            : column.widgetBuilder?.call(context, item) ??
+                                                Text(column.valueBuilder.call(context, item)),
                                       ),
                                     ),
                                   ),

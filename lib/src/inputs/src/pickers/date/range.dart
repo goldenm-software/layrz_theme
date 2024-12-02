@@ -120,6 +120,7 @@ class ThemedDateRangePicker extends StatefulWidget {
 }
 
 class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
+  final TextEditingController _controller = TextEditingController();
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
@@ -129,6 +130,24 @@ class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
     }
 
     return widget.value.map((e) => e.format(pattern: widget.pattern, i18n: i18n)).join(' - ');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant ThemedDateRangePicker oldWidget) {
+    if (widget.value != oldWidget.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _controller.text = _parsedName ?? '';
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -146,6 +165,7 @@ class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
     }
 
     return ThemedTextInput(
+      controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
       label: widget.label,

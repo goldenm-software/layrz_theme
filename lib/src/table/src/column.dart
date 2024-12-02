@@ -63,6 +63,10 @@ class ThemedColumn<T> {
   /// [cellTextColor] overrides the text color of the cell.
   final CellColor<T>? cellTextColor;
 
+  /// [richTextBuilder] is the builder of the rich text of the column.
+  /// Avoid using this property when you use [widgetBuilder] property.
+  final List<InlineSpan> Function(BuildContext context, T item)? richTextBuilder;
+
   /// A column in a table. This is used to define the columns in a table and search properties.
   ThemedColumn({
     this.label,
@@ -78,6 +82,7 @@ class ThemedColumn<T> {
     this.textColor,
     this.cellColor,
     this.cellTextColor,
+    this.richTextBuilder,
   }) : assert(label != null || labelText != null);
 
   /// [padding] is the padding of the column.
@@ -96,9 +101,13 @@ class ThemedColumn<T> {
       );
     }
 
+    List<InlineSpan> children = richTextBuilder?.call(context, item) ?? [];
+    children = children.whereType<TextSpan>().toList();
+
     TextPainter painter = TextPainter(
       text: TextSpan(
-        text: valueBuilder.call(context, item),
+        children: children.isEmpty ? null : children,
+        text: children.isEmpty ? valueBuilder.call(context, item) : null,
         style: style,
       ),
       textDirection: TextDirection.ltr,

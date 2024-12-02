@@ -160,6 +160,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
 }
 
 class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with SingleTickerProviderStateMixin {
+  final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
   String searchText = "";
@@ -176,36 +177,42 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
   @override
   void initState() {
     super.initState();
-    _handleUpdate(force: true, autoselect: widget.autoSelectFirst);
+    _handleUpdate(force: true, newValue: widget.value);
   }
 
   @override
   void didUpdateWidget(ThemedSelectInput<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
     if (oldWidget.value != widget.value) {
-      _handleUpdate();
+      _handleUpdate(newValue: widget.value, previousValue: oldWidget.value);
     }
+    super.didUpdateWidget(oldWidget);
   }
 
-  void _handleUpdate({bool force = false, bool autoselect = false}) {
-    if (selected?.value == widget.value && !force) return;
+  void _handleUpdate({bool force = false, T? newValue, T? previousValue}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (previousValue == newValue && !force) {
+        return;
+      }
 
-    if (widget.items.isNotEmpty) {
-      try {
+      if (widget.items.isNotEmpty) {
         ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
         setState(() => selected = value);
-      } on StateError catch (_) {
-        setState(() => selected = null);
-      }
 
-      if (autoselect && selected == null) {
-        setState(() => selected = widget.items.first);
-      }
+        if (widget.autoSelectFirst && selected == null) {
+          setState(() => selected = widget.items.first);
+        }
 
-      Future.delayed(Duration.zero, () {
+        if (mounted) _controller.text = selected?.label ?? "";
+
         widget.onChanged?.call(selected);
-      });
-    }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -218,6 +225,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     }
 
     return ThemedTextInput(
+      controller: _controller,
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
       labelText: widget.labelText,

@@ -156,6 +156,7 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
 }
 
 class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> with SingleTickerProviderStateMixin {
+  final TextEditingController _controller = TextEditingController();
   late TabController _tabController;
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
@@ -177,11 +178,20 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    });
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void didUpdateWidget(covariant ThemedDateTimeRangePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        debugPrint('mounted: $mounted');
+        if (mounted) _controller.text = _parsedName ?? '';
+      });
+    }
   }
 
   @override
@@ -205,6 +215,7 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
     }
 
     return ThemedTextInput(
+      controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
       label: widget.label,
