@@ -2,6 +2,7 @@ library store;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:layrz_icons/layrz_icons.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';

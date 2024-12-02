@@ -123,6 +123,7 @@ class ThemedDatePicker extends StatefulWidget {
 }
 
 class _ThemedDatePickerState extends State<ThemedDatePicker> {
+  final TextEditingController _controller = TextEditingController();
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
@@ -132,6 +133,20 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
     }
 
     return widget.value!.format(pattern: widget.pattern, i18n: i18n);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) _controller.text = _parsedName ?? '';
+  }
+
+  @override
+  void didUpdateWidget(covariant ThemedDatePicker oldWidget) {
+    if (widget.value != oldWidget.value) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -149,6 +164,7 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
     }
 
     return ThemedTextInput(
+      controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
       label: widget.label,

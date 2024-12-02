@@ -128,6 +128,7 @@ class ThemedTimePicker extends StatefulWidget {
 }
 
 class _ThemedTimePickerState extends State<ThemedTimePicker> {
+  final TextEditingController _controller = TextEditingController();
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   String get pattern => widget.pattern ?? (widget.use24HourFormat ? '%H:%M' : '%I:%M %p');
 
@@ -137,6 +138,24 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
     }
 
     return DateTime(0, 0, 0, widget.value!.hour, widget.value!.minute, 0).format(pattern: pattern, i18n: i18n);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant ThemedTimePicker oldWidget) {
+    if (widget.value != oldWidget.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _controller.text = _parsedName ?? '';
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -154,6 +173,7 @@ class _ThemedTimePickerState extends State<ThemedTimePicker> {
     }
 
     return ThemedTextInput(
+      controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
       label: widget.label,

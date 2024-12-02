@@ -59,7 +59,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
   @Deprecated(
     'Use enableBreadcumb instead and will be deleted at version 8.0.0',
   )
-  final bool showHeaderInSidebarMode;
+  final bool? showHeaderInSidebarMode;
 
   /// [ThemedNavigatorPage] is a helper class to handle the view and their children.
   ThemedNavigatorPage({
@@ -70,7 +70,7 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     this.children = const [],
     this.useDefaultRedirect = true,
     this.enableBreadcumb = true,
-    this.showHeaderInSidebarMode = true,
+    this.showHeaderInSidebarMode,
   }) : assert(label != null || labelText != null);
 
   void Function(ThemedNavigatorPushFunction) get onTap => (onPush) {

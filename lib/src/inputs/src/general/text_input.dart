@@ -192,8 +192,6 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   @override
   void initState() {
     super.initState();
-
-    debugPrint("InitState");
     _animationController = AnimationController(vsync: this, duration: kHoverDuration);
     _value = widget.value ?? "";
     _controller = widget.controller ?? TextEditingController(text: _value);

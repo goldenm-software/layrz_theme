@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.6
+
+- Bug fixes on multiple selects' widgets, now will display correctly the selected value.
+
 ## 7.1.5
 
 - Added `richTextBuilder` to `ThemedColumn` to allow to build a `RichText` widget instead of a `Text` or `Widget`.

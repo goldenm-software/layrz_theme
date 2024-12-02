@@ -76,99 +76,96 @@ class _LayoutState extends State<Layout> {
         ThemedNavigatorPage(
           labelText: 'Home',
           path: '/home',
-          icon: MdiIcons.homeVariant,
+          icon: LayrzIcons.solarOutlineHomeAngle,
           // showHeaderInSidebarMode: false,
         ),
         ThemedNavigatorPage(
           labelText: 'Theme generation',
           path: '/theme',
-          icon: MdiIcons.themeLightDark,
+          icon: LayrzIcons.solarOutlineMoonFog,
           enableBreadcumb: false,
         ),
         ThemedNavigatorPage(
           labelText: 'Inputs',
           path: '/inputs',
-          icon: MdiIcons.text,
+          icon: LayrzIcons.solarOutlineTextFieldFocus,
           children: [
             ThemedNavigatorPage(
               labelText: 'Text fields',
               path: '/inputs/text',
-              icon: MdiIcons.text,
+              icon: LayrzIcons.solarOutlineTextFieldFocus,
             ),
             ThemedNavigatorPage(
               labelText: 'Buttons',
               path: '/inputs/buttons',
-              icon: MdiIcons.buttonCursor,
+              icon: LayrzIcons.solarOutlineCursorSquare,
             ),
             ThemedNavigatorPage(
               labelText: 'Checkboxes',
               path: '/inputs/checkboxes',
-              icon: MdiIcons.checkboxBlank,
+              icon: LayrzIcons.solarOutlineCheckSquare,
             ),
             ThemedNavigatorPage(
               labelText: 'Radio buttons',
               path: '/inputs/radiobuttons',
-              icon: MdiIcons.radioboxMarked,
+              icon: LayrzIcons.solarOutlinePinCircle,
             ),
             ThemedNavigatorPage(
               labelText: 'Selectors',
               path: '/inputs/selectors',
-              icon: MdiIcons.listBox,
+              icon: LayrzIcons.solarOutlineChecklistMinimalistic,
               children: [
                 ThemedNavigatorPage(
                   labelText: 'General selectors',
                   path: '/inputs/selectors/general',
-                  icon: MdiIcons.calendarClock,
+                  icon: LayrzIcons.solarOutlinePostsCarouselVertical,
                 ),
                 ThemedNavigatorPage(
                   labelText: 'Date & Time selectors',
                   path: '/inputs/selectors/datetime',
-                  icon: MdiIcons.calendarClock,
+                  icon: LayrzIcons.solarOutlineCalendarSearch,
                 ),
               ],
             ),
             ThemedNavigatorPage(
               labelText: 'Calendar',
               path: '/inputs/calendar',
-              icon: MdiIcons.calendar,
+              icon: LayrzIcons.solarOutlineCalendar,
             ),
           ],
         ),
         ThemedNavigatorPage(
           labelText: 'Layo',
           path: '/layo',
-          icon: MdiIcons.robotOutline,
+          icon: LayrzIcons.solarOutlineFaceScanSquare,
         ),
         ThemedNavigatorPage(
           labelText: 'Avatars',
           path: '/avatars',
-          icon: MdiIcons.accountCircleOutline,
+          icon: LayrzIcons.solarOutlineUser,
           useDefaultRedirect: false,
           children: [
             ThemedNavigatorPage(
               labelText: 'Static avatars',
               path: '/avatars/static',
-              icon: MdiIcons.accountCircle,
+              icon: LayrzIcons.solarOutlineUserId,
             ),
             ThemedNavigatorPage(
               labelText: 'Dynamic avatars',
               path: '/avatars/dynamic',
-              icon: MdiIcons.accountCircleOutline,
+              icon: LayrzIcons.solarOutlineUserPlus,
             ),
           ],
         ),
         ThemedNavigatorPage(
           labelText: 'Table',
-          path: '/table',
-          icon: MdiIcons.table,
-          useDefaultRedirect: false,
-          children: [
-            ThemedNavigatorPage(
-              labelText: 'Standard Table',
-              path: '/table/basic',
-              icon: MdiIcons.tableBorder,
-            ),
-          ],
+          path: '/table/basic',
+          icon: LayrzIcons.solarOutlineSliderMinimalisticHorizontal,
+        ),
+        ThemedNavigatorPage(
+          labelText: 'Snackbars',
+          path: '/snackbar/basic',
+          icon: LayrzIcons.solarOutlineTagHorizontal,
         ),
       ],
       persistentItems: [
@@ -180,26 +177,8 @@ class _LayoutState extends State<Layout> {
             mode: LaunchMode.externalApplication,
           ),
         ),
-        ThemedNavigatorAction(
-          labelText: "Our discord",
-          icon: MdiIcons.messageBadgeOutline,
-          onTap: () => launchUrlString(
-            'https://discord.gg/tv56VVDYqf',
-            mode: LaunchMode.externalApplication,
-          ),
-        ),
       ],
-      additionalActions: [
-        ThemedNavigatorPage(
-          labelText: 'Layo',
-          path: '/layo',
-          icon: MdiIcons.robotOutline,
-        ),
-        ThemedNavigatorLabel(labelText: 'Test'),
-        ThemedNavigatorSeparator(),
-        ThemedNavigatorLabel(labelText: 'Test'),
-        ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
-      ],
+
       userDynamicAvatar: const Avatar(
         type: AvatarType.url,
         url: 'https://cdn.layrz.com/resources/layo/layo2.png',

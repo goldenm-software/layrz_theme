@@ -593,7 +593,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       }
 
       // ignore: deprecated_member_use_from_same_package
-      displayHeader = match.enableBreadcumb || match.showHeaderInSidebarMode;
+      displayHeader = match.showHeaderInSidebarMode ?? match.enableBreadcumb;
 
       if (match.labelText != null) {
         pageName.add(TextSpan(text: match.labelText));
@@ -610,7 +610,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
         if (submatch != null) {
           // ignore: deprecated_member_use_from_same_package
-          displayHeader = submatch.enableBreadcumb || match.showHeaderInSidebarMode;
+          displayHeader = match.showHeaderInSidebarMode ?? submatch.enableBreadcumb;
           pageName.add(WidgetSpan(
             child: Icon(
               LayrzIcons.solarOutlineAltArrowRight,

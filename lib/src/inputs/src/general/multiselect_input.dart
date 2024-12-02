@@ -151,6 +151,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
 }
 
 class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> with SingleTickerProviderStateMixin {
+  final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
   List<ThemedSelectItem<T>> selected = [];
@@ -168,42 +169,50 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
   @override
   void initState() {
     super.initState();
-    _handleUpdate(force: true);
+    _handleUpdate(force: true, newValues: widget.value ?? []);
   }
 
   @override
   void didUpdateWidget(ThemedMultiSelectInput<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value) {
-      _handleUpdate();
+    final eq = const ListEquality().equals;
+    if (!eq(oldWidget.value, widget.value)) {
+      _handleUpdate(previousValues: oldWidget.value ?? [], newValues: widget.value ?? []);
     }
   }
 
-  void _handleUpdate({bool force = false}) {
-    if ((widget.value?.isEmpty ?? true) && force) {
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleUpdate({bool force = false, List<T> previousValues = const [], List<T> newValues = const []}) {
+    if (newValues.isEmpty && force) {
       if (widget.autoselectFirst && widget.items.isNotEmpty) {
         selected = [widget.items.first];
-        Future.delayed(Duration.zero, () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           widget.onChanged?.call(selected);
         });
       }
-      return;
-    }
-    Function eq = const ListEquality().equals;
-    if (eq(widget.value, selected)) return;
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (widget.items.isNotEmpty) {
+          final values = widget.items.where((item) => newValues.contains(item.value)).toList();
+          setState(() => selected = values);
 
-    if (widget.items.isNotEmpty) {
-      final values = widget.items.where((item) => (widget.value ?? []).contains(item.value)).toList();
-      setState(() {
-        selected = values;
+          if (force) {
+            widget.onChanged?.call(selected);
+          }
+        }
       });
-
-      if (force) {
-        Future.delayed(Duration.zero, () {
-          widget.onChanged?.call(selected);
-        });
-      }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _controller.text = selected.isEmpty ? t('layrz.select.empty') : selected.map((e) => e.label).join(', ');
+      }
+    });
   }
 
   @override
@@ -216,6 +225,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
     }
 
     return ThemedTextInput(
+      controller: _controller,
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
       labelText: widget.labelText,

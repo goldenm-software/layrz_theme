@@ -154,6 +154,7 @@ class ThemedDateTimePicker extends StatefulWidget {
 }
 
 class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with SingleTickerProviderStateMixin {
+  final TextEditingController _controller = TextEditingController();
   late TabController _tabController;
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
@@ -171,13 +172,21 @@ class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with Single
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    });
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void didUpdateWidget(ThemedDateTimePicker oldWidget) {
+    if (widget.value != oldWidget.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _controller.text = _parsedName ?? '';
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -201,6 +210,7 @@ class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with Single
     }
 
     return ThemedTextInput(
+      controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
       label: widget.label,

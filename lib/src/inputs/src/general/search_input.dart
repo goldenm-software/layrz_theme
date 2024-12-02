@@ -68,7 +68,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
     super.initState();
     animation = AnimationController(vsync: this, duration: kHoverDuration);
 
-    _controller.text = widget.value;
+    if (mounted) _controller.text = widget.value;
     _controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.value.length));
   }
 

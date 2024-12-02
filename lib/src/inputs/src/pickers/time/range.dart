@@ -132,6 +132,7 @@ class ThemedTimeRangePicker extends StatefulWidget {
 }
 
 class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
+  final TextEditingController _controller = TextEditingController();
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   String get pattern => widget.pattern ?? (widget.use24HourFormat ? '%H:%M' : '%I:%M %p');
 
@@ -143,6 +144,25 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
     return widget.value.map((t) {
       return DateTime(0, 0, 0, t.hour, t.minute, 0).format(pattern: pattern, i18n: i18n);
     }).join(' - ');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant ThemedTimeRangePicker oldWidget) {
+    final eq = const ListEquality().equals;
+    if (!eq(widget.value, oldWidget.value)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _controller.text = _parsedName ?? '';
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -160,6 +180,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
     }
 
     return ThemedTextInput(
+      controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
       label: widget.label,
