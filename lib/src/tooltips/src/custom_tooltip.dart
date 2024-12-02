@@ -65,6 +65,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
 
     final bool hasMouseDetected = RendererBinding.instance.mouseTracker.mouseIsConnected;
     if (hasMouseDetected != _hasMouseDetected) {
+      if (!mounted) return;
       setState(() => _hasMouseDetected = hasMouseDetected);
     }
   }

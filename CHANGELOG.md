@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.5
+
+- Added `richTextBuilder` to `ThemedColumn` to allow to build a `RichText` widget instead of a `Text` or `Widget`.
+
 ## 7.1.4
 
 - Added `enableBreadcumb` property on `ThemedLayout` to disable globally the breadcumb on the layout
