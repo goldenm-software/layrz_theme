@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
 
-import 'dart:html';
+import 'dart:js_interop';
+import 'package:web/web.dart';
 import 'package:flutter/foundation.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/src/file.dart';
@@ -30,13 +31,15 @@ Future<ThemedFile?> saveFile({
   String? saveDialogTitle,
   LayrzAppLocalizations? i18n,
 }) async {
-  final blob = Blob([bytes]);
-  final url = Url.createObjectUrlFromBlob(blob);
-  final anchor = document.createElement('a') as AnchorElement
-    ..href = url
-    ..download = filename;
-  document.body!.append(anchor);
+  final blob = Blob(List<JSAny>.from([bytes.jsify()]).toJS);
+  final url = URL.createObjectURL(blob);
+  final anchor = document.createElement('a') as HTMLAnchorElement;
+  anchor.href = url;
+  anchor.download = filename;
+  document.body!.appendChild(anchor);
   anchor.click();
-  Url.revokeObjectUrl(url);
+  document.body!.removeChild(anchor);
+  URL.revokeObjectURL(url);
+
   return ThemedFile(name: filename, bytes: bytes);
 }

@@ -203,6 +203,11 @@ class ThemedLayout extends StatefulWidget {
   /// By default is `5`.
   final double avatarRadius;
 
+  /// [enableBreadcrumb] is a boolean that disables the breadcrumb.
+  /// By default is `true`, also you can disable it individually in each page, read more about this
+  /// on the [ThemedNavigatorPage] documentation.
+  final bool enableBreadcumb;
+
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
     super.key,
@@ -237,6 +242,7 @@ class ThemedLayout extends StatefulWidget {
     this.currentPath,
     this.enableNotifications = true,
     this.avatarRadius = 5,
+    this.enableBreadcumb = true,
   });
 
   @override
@@ -349,6 +355,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
   }
 
   Widget _buildMiniLayout({required BoxConstraints constraints}) {
+    final match = _getMatch();
+
     Widget child = Container(
       padding: widget.padding,
       height: constraints.maxHeight,
@@ -362,6 +370,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     return Scaffold(
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ThemedMiniBar(
             items: widget.items,
@@ -387,52 +396,21 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             notifications: widget.notifications,
             avatarRadius: widget.avatarRadius,
           ),
-          Expanded(child: child),
+          Expanded(
+            child: Column(
+              children: [
+                if (widget.enableBreadcumb) _composeHeader(match: match),
+                Expanded(child: child),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSidebarLayout({required BoxConstraints constraints}) {
-    String? pageName;
-    IconData? pageIcon;
-    bool displayHeader = true;
-
-    String currentPath = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
-
-    final match = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
-      return currentPath.startsWith(page.path);
-    });
-
-    if (match != null) {
-      pageName = match.labelText;
-      pageIcon = match.icon;
-      displayHeader = match.showHeaderInSidebarMode;
-
-      if (match.label is Text) {
-        pageName = (match.label as Text).data;
-      }
-
-      if (match.children.isNotEmpty) {
-        final submatch = match.children.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
-          return currentPath.startsWith(page.path);
-        });
-
-        if (submatch != null) {
-          String? subpageName = submatch.labelText;
-          pageIcon = submatch.icon;
-          displayHeader = match.showHeaderInSidebarMode;
-
-          if (submatch.label is Text) {
-            subpageName = (submatch.label as Text).data;
-          }
-
-          if (subpageName != null) {
-            pageName = '$pageName - $subpageName';
-          }
-        }
-      }
-    }
+    final match = _getMatch();
 
     Widget child;
 
@@ -485,35 +463,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             child: SafeArea(
               child: Column(
                 children: [
-                  if (pageName != null && displayHeader) ...[
-                    Container(
-                      height: ThemedAppBar.size.height,
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          if (pageIcon != null) ...[
-                            Icon(
-                              pageIcon,
-                              color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 5),
-                          ],
-                          Expanded(
-                            child: Text(
-                              pageName,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: isDark ? Colors.white : Theme.of(context).primaryColor,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  if (widget.enableBreadcumb) _composeHeader(match: match),
                   Expanded(
                     child: child,
                   ),
@@ -527,6 +477,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
   }
 
   Widget _buildDualLayout({required BoxConstraints constraints}) {
+    final match = _getMatch();
     Widget child;
 
     if (widget.disableSafeArea) {
@@ -547,6 +498,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       appBar: _buildAppBar(isMobile: false),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ThemedDualBar(
             onNavigatorPush: widget.onNavigatorPush,
@@ -555,7 +507,12 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             items: widget.items,
           ),
           Expanded(
-            child: child,
+            child: Column(
+              children: [
+                if (widget.enableBreadcumb) _composeHeader(match: match),
+                Expanded(child: child),
+              ],
+            ),
           ),
         ],
       ),
@@ -591,4 +548,122 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       avatarRadius: widget.avatarRadius,
     );
   }
+
+  Widget _composeHeader({required ThemedRouteMatch? match}) {
+    return SizedBox(
+      width: double.infinity,
+      child: match == null || !match.displayHeader
+          ? const SizedBox.shrink()
+          : Container(
+              height: ThemedAppBar.size.height,
+              padding: const EdgeInsets.all(10),
+              child: RichText(text: match.name),
+            ),
+    );
+  }
+
+  ThemedRouteMatch? _getMatch() {
+    Color color = isDark ? Colors.white : Theme.of(context).primaryColor;
+    final style = Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: color);
+
+    List<InlineSpan> pageName = [];
+    bool displayHeader = true;
+
+    String currentPath = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
+
+    final match = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
+      return currentPath.startsWith(page.path);
+    });
+
+    if (match != null) {
+      if (match.icon != null) {
+        pageName.add(WidgetSpan(
+          child: Icon(
+            match.icon,
+            color: color,
+            size: 18,
+          ),
+        ));
+      }
+
+      // ignore: deprecated_member_use_from_same_package
+      displayHeader = match.enableBreadcumb || match.showHeaderInSidebarMode;
+
+      if (match.labelText != null) {
+        pageName.add(TextSpan(text: match.labelText));
+      } else if (match.label is Text) {
+        pageName.add(TextSpan(text: (match.label as Text).data));
+      } else {
+        pageName.add(TextSpan(text: currentPath));
+      }
+
+      if (match.children.isNotEmpty) {
+        final submatch = match.children.whereType<ThemedNavigatorPage>().firstWhereOrNull((page) {
+          return currentPath.startsWith(page.path);
+        });
+
+        if (submatch != null) {
+          // ignore: deprecated_member_use_from_same_package
+          displayHeader = submatch.enableBreadcumb || match.showHeaderInSidebarMode;
+          pageName.add(WidgetSpan(
+            child: Icon(
+              LayrzIcons.solarOutlineAltArrowRight,
+              color: color,
+              size: 18,
+            ),
+          ));
+
+          if (submatch.icon != null) {
+            pageName.add(WidgetSpan(
+              child: Icon(
+                submatch.icon,
+                color: color,
+                size: 18,
+              ),
+            ));
+          }
+
+          if (submatch.labelText != null) {
+            pageName.add(TextSpan(text: submatch.labelText));
+          } else if (submatch.label is Text) {
+            pageName.add(TextSpan(text: (submatch.label as Text).data));
+          } else {
+            pageName.add(TextSpan(text: currentPath));
+          }
+        }
+      }
+    }
+
+    if (pageName.isNotEmpty) {
+      List<InlineSpan> content = [];
+      for (int i = 0; i < pageName.length; i++) {
+        content.add(pageName[i]);
+        if (i < pageName.length - 1) {
+          content.add(const WidgetSpan(child: SizedBox(width: 5)));
+        }
+      }
+      return ThemedRouteMatch(
+        name: TextSpan(
+          children: content,
+          style: style,
+        ),
+        path: currentPath,
+        displayHeader: displayHeader,
+      );
+    }
+
+    return null;
+  }
+}
+
+class ThemedRouteMatch {
+  final String path;
+  final InlineSpan name;
+  final bool displayHeader;
+
+  ThemedRouteMatch({
+    required this.path,
+    required this.name,
+    this.displayHeader = true,
+  });
 }
