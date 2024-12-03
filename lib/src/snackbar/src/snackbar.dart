@@ -34,7 +34,7 @@ class ThemedSnackbar extends StatefulWidget {
     required this.message,
     this.icon,
     this.color,
-    this.duration = const Duration(seconds: 3),
+    this.duration = const Duration(seconds: 5),
     this.width,
     this.maxLines = 2,
     this.isDismissible = true,
@@ -141,14 +141,15 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
     double effectiveWidth = width;
 
     if (widget.icon != null) {
-      effectiveWidth -= iconSize + elementsSpacing;
+      effectiveWidth -= buttonSize + (elementsSpacing * 2);
     }
 
     if (widget.isDismissible) {
-      effectiveWidth -= 35 + elementsSpacing;
+      effectiveWidth -= buttonSize + (elementsSpacing * 2);
     }
 
     effectiveWidth -= padding.horizontal;
+    effectiveWidth -= 10;
 
     return effectiveWidth;
   }
@@ -170,9 +171,6 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
     return textPainter.size;
   }
 
-  /// [iconSize] helps to build the size of the icon
-  double get iconSize => 20;
-
   /// [predictedMessageSize] predicts the size of the message based on the text length and the max lines
   /// It is used to predict the height of the snackbar
   /// It uses the current theme to build the style
@@ -190,26 +188,25 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
   }
 
   /// [elementsSpacing] helps to build the spacing between the elements of the snackbar
-  double get elementsSpacing => 10;
+  double get elementsSpacing => 5;
 
   /// [backgroundColor] helps to build the background color of the snackbar
   /// In case the color is null, will use the primary color of the current theme
-  Color get backgroundColor => widget.color ?? Theme.of(context).primaryColor;
+  Color get backgroundColor => widget.color ?? Colors.blue;
 
   /// [spacing] helps to build the spacing between snackbars
-  double get spacing => 5;
+  double get spacing => 10;
 
   /// [padding] helps to build the padding of the snackbar
   /// It uses the current theme to build the style
-  EdgeInsets get padding => const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
+  EdgeInsets get padding => const EdgeInsets.all(5);
 
   /// [height] predicts the height of the snackbar based on the text length and the max lines
   double get height {
     double effectiveHeight = predictedTitleSize.height + predictedMessageSize.height;
-    effectiveHeight = max(effectiveHeight, ThemedButton.defaultHeight);
+    effectiveHeight = max(effectiveHeight, buttonSize);
     effectiveHeight += padding.vertical;
-    effectiveHeight += elementsSpacing;
-    effectiveHeight += progressHeight;
+    effectiveHeight += elementsSpacing * 2;
 
     return effectiveHeight;
   }
@@ -222,8 +219,8 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
   /// when it is shown and when it is removed
   late AnimationController _animationController;
 
-  /// [progressHeight] is the height to be used to fix the height in the progress bar
-  double get progressHeight => 5;
+  /// [buttonSize] is the size of the cancel button
+  double get buttonSize => 30;
 
   /// [completeDuration] is the complete duration of the snackbar, this
   /// includes the duration itself and the animation duration
@@ -233,6 +230,9 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
   double get completeDurationMs => completeDuration.inMilliseconds.toDouble();
 
   double swipeOffset = 0;
+
+  double get radius => 10;
+  double get progressSpacer => 5;
 
   @override
   void initState() {
@@ -321,86 +321,114 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
             width: width,
             height: height,
             margin: EdgeInsets.only(bottom: spacing),
-            decoration: generateContainerElevation(
-              context: context,
+            decoration: BoxDecoration(
               color: backgroundColor,
-              shadowColor: backgroundColor,
+              borderRadius: BorderRadius.circular(progressSpacer + radius),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
             clipBehavior: Clip.antiAlias,
-            child: Column(
+            child: Stack(
               children: [
-                Expanded(
-                  child: Padding(
+                Positioned.fill(
+                  child: TweenAnimationBuilder(
+                    duration: widget.duration,
+                    tween: Tween<double>(begin: 0, end: widget.duration.inMilliseconds.toDouble()),
+                    builder: (context, value, child) {
+                      return LinearProgressIndicator(
+                        value: value / widget.duration.inMilliseconds,
+                        color: validateColor(color: backgroundColor),
+                        backgroundColor: validateColor(color: backgroundColor).withOpacity(0.5),
+                      );
+                    },
+                  ),
+                ),
+                Positioned(
+                  top: progressSpacer,
+                  bottom: progressSpacer,
+                  left: progressSpacer,
+                  right: progressSpacer,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: backgroundColor,
+                      borderRadius: BorderRadius.circular(radius),
+                    ),
                     padding: padding,
                     child: Row(
                       children: [
-                        if (widget.icon != null) ...[
-                          Icon(
-                            widget.icon,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: elementsSpacing),
+                          child: Icon(
+                            widget.icon ?? LayrzIcons.solarOutlineInfoCircle,
                             color: validateColor(color: backgroundColor),
-                            size: iconSize,
+                            size: buttonSize * 0.8,
                           ),
-                          SizedBox(width: elementsSpacing),
-                        ],
+                        ),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (widget.title != null) ...[
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (widget.title != null) ...[
+                                  Text(
+                                    widget.title!,
+                                    style: titleStyle?.copyWith(
+                                      color: validateColor(color: backgroundColor),
+                                    ),
+                                    textAlign: TextAlign.justify,
+                                    maxLines: widget.maxLines,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                                 Text(
-                                  widget.title!,
-                                  style: titleStyle?.copyWith(
-                                    color: validateColor(color: backgroundColor),
+                                  widget.message,
+                                  style: messageStyle?.copyWith(
+                                    color: validateColor(color: backgroundColor).withOpacity(
+                                      widget.title == null ? 1 : 0.8,
+                                    ),
                                   ),
                                   textAlign: TextAlign.justify,
                                   maxLines: widget.maxLines,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
-                              Text(
-                                widget.message,
-                                style: messageStyle?.copyWith(
-                                  color: validateColor(color: backgroundColor).withOpacity(
-                                    widget.title == null ? 1 : 0.8,
-                                  ),
-                                ),
-                                textAlign: TextAlign.justify,
-                                maxLines: widget.maxLines,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                         if (widget.isDismissible) ...[
-                          SizedBox(width: elementsSpacing),
-                          ThemedButton(
-                            style: ThemedButtonStyle.fab,
-                            tooltipEnabled: false,
-                            labelText: 'Close',
-                            icon: LayrzIcons.solarOutlineCloseSquare,
-                            color: validateColor(color: backgroundColor),
-                            onTap: () {
-                              _timer.cancel();
-                              widget.state.removeSnackbar(widget.key!);
-                            },
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: elementsSpacing),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(20),
+                                onTap: () {
+                                  _timer.cancel();
+                                  widget.state.removeSnackbar(widget.key!);
+                                },
+                                child: SizedBox(
+                                  width: buttonSize,
+                                  height: buttonSize,
+                                  child: Icon(
+                                    LayrzIcons.solarOutlineCloseSquare,
+                                    color: validateColor(color: backgroundColor),
+                                    size: buttonSize * 0.8,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ],
                     ),
                   ),
-                ),
-                TweenAnimationBuilder(
-                  duration: widget.duration,
-                  tween: Tween<double>(begin: 0, end: widget.duration.inMilliseconds.toDouble()),
-                  builder: (context, value, child) {
-                    return LinearProgressIndicator(
-                      minHeight: progressHeight,
-                      value: value / widget.duration.inMilliseconds,
-                      color: validateColor(color: backgroundColor),
-                      backgroundColor: validateColor(color: backgroundColor).withOpacity(0.5),
-                    );
-                  },
                 ),
               ],
             ),

@@ -7,14 +7,13 @@ import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
 import 'package:vxstate/vxstate.dart';
 
-const titleFont = AppFont(source: FontSource.google, name: 'Ubuntu');
-const bodyFont = AppFont(source: FontSource.google, name: 'Ubuntu');
+const font = AppFont(source: FontSource.google, name: 'Ubuntu');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await ThemedFontHandler.preloadFont(titleFont);
-  await ThemedFontHandler.preloadFont(bodyFont);
+  await ThemedFontHandler.preloadFont(font);
+  await ThemedFontHandler.preloadFont(font);
 
   String? mapboxToken;
   String? googleToken;
@@ -69,8 +68,8 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp.router(
           title: 'Layrz Theme Example',
           themeMode: store.themeMode,
-          theme: generateLightTheme(titleFont: titleFont, bodyFont: bodyFont),
-          darkTheme: generateDarkTheme(titleFont: titleFont, bodyFont: bodyFont),
+          theme: generateLightTheme(titleFont: font, bodyFont: font),
+          darkTheme: generateDarkTheme(titleFont: font, bodyFont: font),
           debugShowCheckedModeBanner: false,
           routerConfig: router,
           builder: (context, child) {
