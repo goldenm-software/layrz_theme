@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.7
+
+- New `ThemedSnackbar` design.
+
 ## 7.1.6
 
 - Bug fixes on multiple selects' widgets, now will display correctly the selected value.

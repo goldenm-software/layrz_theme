@@ -95,6 +95,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
                   message: 'This is a snackbar with an icon',
                   color: Colors.green,
                   icon: LayrzIcons.solarOutlineTagHorizontal,
+                  duration: const Duration(seconds: 10),
                 ));
               },
             ),
