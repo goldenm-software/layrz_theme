@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.8
+
+- Fixed displayed value on `ThemedDurationInput`
+
 ## 7.1.7
 
 - New `ThemedSnackbar` design.

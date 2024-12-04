@@ -59,6 +59,8 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   Duration? get value => widget.value;
 
+  final _controller = TextEditingController();
+
   List<ThemedUnits> get visibleValues => widget.visibleValues;
 
   OverlayEntry? overlayEntry;
@@ -78,13 +80,14 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
   Widget build(BuildContext context) {
     return ThemedTextInput(
       key: key,
+      controller: _controller,
       labelText: widget.labelText,
       label: widget.label,
       suffixIcon: widget.suffixIcon,
       prefixIcon: widget.prefixIcon,
       padding: widget.padding,
       errors: widget.errors,
-      value: _formatedDuration,
+      value: _getFormattedDuration(value),
       disabled: widget.disabled,
       readonly: true,
       onTap: widget.disabled ? null : _handleTap,
@@ -240,13 +243,16 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
 
     if (result != null) {
       widget.onChanged?.call(result);
+      setState(() {
+        _controller.text = _getFormattedDuration(result);
+      });
     }
   }
 
-  String get _formatedDuration {
-    if (value == null) return '';
+  String _getFormattedDuration(Duration? durationValue) {
+    if (durationValue == null) return '';
 
-    return value!.humanize(
+    return durationValue.humanize(
       options: ThemedHumanizeOptions(
         units: visibleValues,
         spacer: ' ',
