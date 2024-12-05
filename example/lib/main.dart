@@ -56,7 +56,8 @@ class _MyAppState extends State<MyApp> {
               final mut = mutation as SetTheme;
               bool isDark = mut.themeMode == ThemeMode.dark;
               if (mut.themeMode == ThemeMode.system) {
-                isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+                isDark = MediaQuery.of(context).platformBrightness ==
+                    Brightness.dark;
               }
 
               overrideAppBarStyle(isDark: isDark);

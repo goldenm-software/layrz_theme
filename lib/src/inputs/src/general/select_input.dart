@@ -210,12 +210,6 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
   }
 
   @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (widget.customChild != null) {
       return InkWell(

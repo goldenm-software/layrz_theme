@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.1.9
+
+- Fixes related to `_focusNode.dispose()` on `ThemedSelectInput` and `ThemedMultiSelectInput` widgets.
+
+## 7.1.8
+
+- Fixed displayed value on `ThemedDurationInput`
+
 ## 7.1.7
 
 - New `ThemedSnackbar` design.
