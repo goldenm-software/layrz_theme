@@ -181,12 +181,6 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
     }
   }
 
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
   void _handleUpdate({bool force = false, List<T> previousValues = const [], List<T> newValues = const []}) {
     if (newValues.isEmpty && force) {
       if (widget.autoselectFirst && widget.items.isNotEmpty) {
