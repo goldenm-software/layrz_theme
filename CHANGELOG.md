@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.10
+
+- Updated README.md
+
 ## 7.1.9
 
 - Fixes related to `_focusNode.dispose()` on `ThemedSelectInput` and `ThemedMultiSelectInput` widgets.
