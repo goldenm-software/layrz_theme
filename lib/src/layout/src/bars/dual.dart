@@ -161,7 +161,7 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () => item.onTap(onNavigatorPush),
-              hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+              hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Icon(
@@ -193,7 +193,7 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
             color: Colors.transparent,
             child: InkWell(
               onTap: item.onTap,
-              hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+              hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Icon(
@@ -209,7 +209,7 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
     }
 
     if (item is ThemedNavigatorSeparator) {
-      Color dividerColor = validateColor(color: backgroundColor).withOpacity(0.2);
+      Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
       if (item.type == ThemedSeparatorType.line) {
         return Divider(
           indent: 5,

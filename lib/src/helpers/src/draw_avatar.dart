@@ -1,65 +1,5 @@
 part of '../helpers.dart';
 
-/// [drawAvatar] is a helper function to generate a [CircleAvatar] using the avatar and the name
-/// (as failover) of the entity.
-///
-/// The priority order of each property is:
-/// 1. [dynamicAvatar]
-/// 2. [avatar]
-/// 3. [icon]
-/// 4. [name]
-///
-/// [dynamicAvatar] is the new avatar engine, can be nullable.
-/// Prevent submit [avatar] and [icon] if you are using this.
-/// Nothing will happend but is less code to you :)
-/// [avatar] is the avatar of the user. Can be nullable
-/// [icon] is the icon of the user. Can be nullable
-/// [name] is the name of the user. Can be nullable
-/// [size] is the size of the avatar.
-/// By default, it is 30.
-/// You can control the radius using [radius] property
-/// By default, it is 30. (The same as the [size])
-/// [color] is the color of the avatar. By default, it is [Theme.of(context).primaryColor].
-/// Only when [dynamicAvatar] is not null, the default value of the color is based on the different types of avatars.
-/// For [AvatarType.emoji], the default color is [Colors.grey.shade900].
-/// For [AvatarType.icon], the default color is [Theme.of(context).primaryColor].
-/// For [AvatarType.base64] and [AvatarType.url], the default color is [Colors.transparent].
-/// For [AvatarType.none], the default color is [Theme.of(context).primaryColor].
-/// [elevation] is the elevation of the avatar. By default, it is 1.
-/// The [shadowColor] is the color of the [BoxShadow], by default it is [Colors.black.withOpacity(0.2)].
-/// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
-/// [context] is the context of the widget.
-@Deprecated(
-  'This utility function will be deleted at version 8.0.0 and will be replaced by the widget `ThemedAvatar` - '
-  'Use the widget `ThemedAvatar` instead',
-)
-Widget drawAvatar({
-  Avatar? dynamicAvatar,
-  String? avatar,
-  IconData? icon,
-  String? name,
-  double size = 30,
-  double radius = 30,
-  Color? color,
-  double elevation = 1,
-  Color? shadowColor,
-  bool reverse = false,
-  required BuildContext context,
-}) {
-  return ThemedAvatar(
-    dynamicAvatar: dynamicAvatar,
-    avatar: avatar,
-    icon: icon,
-    name: name,
-    size: size,
-    radius: radius,
-    color: color,
-    elevation: elevation,
-    shadowColor: shadowColor,
-    reverse: reverse,
-  );
-}
-
 class ThemedAvatar extends StatelessWidget {
   final Avatar? dynamicAvatar;
   final String? avatar;
@@ -116,7 +56,7 @@ class ThemedAvatar extends StatelessWidget {
     /// [elevation] is the elevation of the avatar. By default, it is 1.
     this.elevation = 1,
 
-    /// The [shadowColor] is the color of the [BoxShadow], by default it is [Colors.black.withOpacity(0.2)].
+    /// The [shadowColor] is the color of the [BoxShadow], by default it is [Colors.black.withValues(alpha:0.2)].
     this.shadowColor,
 
     /// The [reverse] is the boolean to reverse shadow of the [BoxDecoration], by default it is false.
@@ -143,7 +83,7 @@ class ThemedAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color baseColor = color ?? Theme.of(context).primaryColor;
-    Color baseShadow = shadowColor ?? Colors.black.withOpacity(0.2);
+    Color baseShadow = shadowColor ?? Colors.black.withValues(alpha: 0.2);
 
     if (dynamicAvatar != null) {
       return _renderDynamicAvatar(

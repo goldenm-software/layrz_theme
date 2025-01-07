@@ -52,15 +52,6 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
   /// to keep the backward compatibility.
   final bool enableBreadcumb;
 
-  /// [showHeaderInSidebarMode] indicates if the header should be displayed in sidebar mode.
-  /// By default is true.
-  ///
-  /// This bool does not apply when is in other Layout styles, or has children items.
-  @Deprecated(
-    'Use enableBreadcumb instead and will be deleted at version 8.0.0',
-  )
-  final bool? showHeaderInSidebarMode;
-
   /// [ThemedNavigatorPage] is a helper class to handle the view and their children.
   ThemedNavigatorPage({
     super.label,
@@ -70,7 +61,6 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
     this.children = const [],
     this.useDefaultRedirect = true,
     this.enableBreadcumb = true,
-    this.showHeaderInSidebarMode,
   }) : assert(label != null || labelText != null);
 
   void Function(ThemedNavigatorPushFunction) get onTap => (onPush) {

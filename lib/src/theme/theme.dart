@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/src/helpers/helpers.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'dart:math' as math;
 
 import 'package:layrz_icons/layrz_icons.dart';

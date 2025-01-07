@@ -148,8 +148,6 @@ class _ThemedHumanizePiece {
         return language.month(unitCount);
       case ThemedUnits.week:
         return language.week(unitCount);
-      default:
-        throw Exception('Unknown unit name: $unitName');
     }
   }
 

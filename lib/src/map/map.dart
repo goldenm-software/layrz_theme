@@ -13,7 +13,7 @@ import 'package:layrz_models/layrz_models.dart' hide Point;
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_icons/layrz_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 // Layers
 part 'src/layers/tile.dart';

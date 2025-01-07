@@ -278,7 +278,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
               height: actionSize - 10,
               decoration: BoxDecoration(
                 color: highlightTop
-                    ? activeColor.withOpacity(0.2)
+                    ? activeColor.withValues(alpha: 0.2)
                     : highlight
                         ? activeColor
                         : Colors.transparent,
@@ -298,7 +298,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                       }
                     }
                   },
-                  hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+                  hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
                   child: Center(
                     child: Icon(
                       highlightTop
@@ -329,14 +329,14 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
           width: actionSize - 10,
           height: actionSize - 10,
           decoration: BoxDecoration(
-            // color: validateColor(color: backgroundColor).withOpacity(0.2),
+            // color: validateColor(color: backgroundColor).withValues(alpha:0.2),
             borderRadius: BorderRadius.circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(actionSize),
-              hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+              hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Center(
                 child: Icon(
