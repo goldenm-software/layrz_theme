@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.2.0
+
+- Flutter 3.27 update
+- Final removal of @Deprecated warnings
+- Removed `ThemedLicensesView` in favor of `showThemedAboutDialog` and `ThemedAboutDialog`
+
 ## 7.1.10
 
 - Updated README.md

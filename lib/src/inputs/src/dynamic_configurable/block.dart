@@ -434,7 +434,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                               value: object.onlyChoices,
                               errors: context.getErrors(key: '${widget.errorsKey}.${widget.index}.onlyChoices'),
                               onChanged: (items) {
-                                List<String> choices = items.map((item) => item.value).whereNotNull().toList();
+                                List<String> choices = items.map((item) => item.value).nonNulls.toList();
                                 setState(() => object.onlyChoices = choices);
                                 widget.onChanged.call(object);
                               },

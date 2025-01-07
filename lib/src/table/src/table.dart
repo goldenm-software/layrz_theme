@@ -792,7 +792,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(0, 5),
                             ),
@@ -1271,7 +1271,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
             children: [
               Icon(
                 LayrzIcons.solarOutlineFilter,
-                color: isDark ? Colors.white : Colors.black.withOpacity(0.6),
+                color: isDark ? Colors.white : Colors.black.withValues(alpha: 0.6),
               ),
               Text(
                 pageInfoStr,
@@ -1462,7 +1462,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     children: [
                       Icon(
                         LayrzIcons.solarOutlineFilter,
-                        color: isDark ? Colors.white : Colors.black.withOpacity(0.6),
+                        color: isDark ? Colors.white : Colors.black.withValues(alpha: 0.6),
                       ),
                       Text(
                         _itemsPerPage.toString(),

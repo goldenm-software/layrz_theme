@@ -65,6 +65,30 @@ enum ThemedPlatform {
   /// [isWebWasm] is `true` if the platform is web built with WebAssembly.
   /// This getter is a shortcut to `kThemedPlatform == ThemedPlatform.webWasm`.
   static bool get isWebWasm => kThemedPlatform == ThemedPlatform.webWasm;
+
+  @override
+  String toString() {
+    switch (this) {
+      case ThemedPlatform.web:
+        return 'Web compiled on CanvasKit';
+      case ThemedPlatform.android:
+        return 'Google Android';
+      case ThemedPlatform.iOS:
+        return 'Apple iOS';
+      case ThemedPlatform.macOS:
+        return 'Apple macOS';
+      case ThemedPlatform.windows:
+        return 'Microsoft Windows';
+      case ThemedPlatform.linux:
+        return 'GNU/Linux';
+      case ThemedPlatform.fuchsia:
+        return 'Google Fuchsia';
+      case ThemedPlatform.webWasm:
+        return 'Web compiled on WASM';
+      default:
+        return 'Unknown $name';
+    }
+  }
 }
 
 /// [kThemedPlatform] is the platform of the app.

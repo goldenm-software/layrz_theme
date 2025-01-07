@@ -59,7 +59,7 @@ ThemeData generateDarkTheme({
     dialogBackgroundColor: kDarkBackgroundColor,
     primaryColor: color,
     canvasColor: kDarkBackgroundColor,
-    shadowColor: Colors.black.withOpacity(0.3),
+    shadowColor: Colors.black.withValues(alpha: 0.3),
 
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
@@ -67,7 +67,7 @@ ThemeData generateDarkTheme({
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 5,
             offset: const Offset(0, 3),
           ),
@@ -150,7 +150,7 @@ ThemeData generateDarkTheme({
       trackVisibility: WidgetStateProperty.all(true),
       thumbVisibility: WidgetStateProperty.all(true),
       thumbColor: WidgetStateColor.resolveWith((states) {
-        return Colors.grey.shade500.withOpacity(0.4);
+        return Colors.grey.shade500.withValues(alpha: 0.4);
       }),
       trackColor: WidgetStateProperty.all(Colors.transparent),
       trackBorderColor: WidgetStateProperty.all(Colors.transparent),
@@ -207,7 +207,7 @@ ThemeData generateDarkTheme({
       ),
     ),
     listTileTheme: ListTileThemeData(
-      selectedTileColor: color.withOpacity(0.3),
+      selectedTileColor: color.withValues(alpha: 0.3),
       selectedColor: color,
     ),
     cardTheme: const CardTheme(

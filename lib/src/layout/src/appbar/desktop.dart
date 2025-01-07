@@ -295,7 +295,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                                 return Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 2.5),
                                   decoration: BoxDecoration(
-                                    color: highlight ? activeColor.withOpacity(0.2) : Colors.transparent,
+                                    color: highlight ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   clipBehavior: Clip.antiAlias,

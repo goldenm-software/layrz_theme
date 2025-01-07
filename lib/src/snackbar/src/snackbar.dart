@@ -326,7 +326,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
               borderRadius: BorderRadius.circular(progressSpacer + radius),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -343,7 +343,7 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
                       return LinearProgressIndicator(
                         value: value / widget.duration.inMilliseconds,
                         color: validateColor(color: backgroundColor),
-                        backgroundColor: validateColor(color: backgroundColor).withOpacity(0.5),
+                        backgroundColor: validateColor(color: backgroundColor).withValues(alpha: 0.5),
                       );
                     },
                   ),
@@ -390,8 +390,8 @@ class _ThemedSnackbarState extends State<ThemedSnackbar> with TickerProviderStat
                                 Text(
                                   widget.message,
                                   style: messageStyle?.copyWith(
-                                    color: validateColor(color: backgroundColor).withOpacity(
-                                      widget.title == null ? 1 : 0.8,
+                                    color: validateColor(color: backgroundColor).withValues(
+                                      alpha: widget.title == null ? 1 : 0.8,
                                     ),
                                   ),
                                   textAlign: TextAlign.justify,
