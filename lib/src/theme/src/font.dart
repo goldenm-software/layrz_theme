@@ -66,8 +66,6 @@ class ThemedFontHandler {
       }
     }
 
-    debugPrint("titleFontName: $titleFontName");
-
     return TextTheme(
       displayLarge: defaultTextTheme.displayLarge?.copyWith(
         color: isDark ? Colors.white : titleTextColor,

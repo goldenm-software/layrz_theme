@@ -22,7 +22,6 @@ extension ColorToJson on Color {
     String red = (255 * r).round().toRadixString(16);
     String green = (255 * g).round().toRadixString(16);
     String blue = (255 * b).round().toRadixString(16);
-    debugPrint("A: $a - ${(255 * a).round()}");
     String alpha = (255 * a).round().toRadixString(16);
 
     return "#${alpha.padLeft(2, '0')}"
