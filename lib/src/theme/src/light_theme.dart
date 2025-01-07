@@ -58,7 +58,7 @@ ThemeData generateLightTheme({
     dialogBackgroundColor: kLightBackgroundColor,
     primaryColor: color,
     canvasColor: kLightBackgroundColor,
-    shadowColor: Colors.black.withOpacity(0.3),
+    shadowColor: Colors.black.withValues(alpha: 0.3),
 
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
@@ -66,7 +66,7 @@ ThemeData generateLightTheme({
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 5,
             offset: const Offset(0, 3),
           ),
@@ -135,9 +135,9 @@ ThemeData generateLightTheme({
     ),
 
     // Divider
-    dividerColor: Colors.black.withOpacity(0.1),
+    dividerColor: Colors.black.withValues(alpha: 0.1),
     dividerTheme: DividerThemeData(
-      color: Colors.black.withOpacity(0.1),
+      color: Colors.black.withValues(alpha: 0.1),
       thickness: 1,
       space: 3,
       indent: 0,
@@ -147,7 +147,7 @@ ThemeData generateLightTheme({
       trackVisibility: WidgetStateProperty.all(true),
       thumbVisibility: WidgetStateProperty.all(true),
       thumbColor: WidgetStateColor.resolveWith((states) {
-        return Colors.black.withOpacity(0.4);
+        return Colors.black.withValues(alpha: 0.4);
       }),
       trackColor: WidgetStateProperty.all(Colors.transparent),
       trackBorderColor: WidgetStateProperty.all(Colors.transparent),
@@ -211,7 +211,7 @@ ThemeData generateLightTheme({
       ),
     ),
     listTileTheme: ListTileThemeData(
-      selectedTileColor: color.withOpacity(0.3),
+      selectedTileColor: color.withValues(alpha: 0.3),
       selectedColor: color,
     ),
     cardTheme: const CardTheme(

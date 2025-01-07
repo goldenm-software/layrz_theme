@@ -395,7 +395,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                 child: LinearProgressIndicator(
                   value: _isLoading ? null : 0,
                   minHeight: 1,
-                  backgroundColor: textColor.withOpacity(0.2),
+                  backgroundColor: textColor.withValues(alpha: 0.2),
                   color: textColor,
                 ),
               ),
@@ -413,7 +413,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                         return TextSpan(
                           text: '$lineNumber',
                           style: style?.copyWith(
-                            color: hasError ? Colors.red : textColor.withOpacity(0.5),
+                            color: hasError ? Colors.red : textColor.withValues(alpha: 0.5),
                             fontWeight: FontWeight.bold,
                           ),
                         );
@@ -422,7 +422,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                       expands: true,
                       textSelectionTheme: TextSelectionThemeData(
                         cursorColor: textColor,
-                        selectionColor: textColor.withOpacity(0.1),
+                        selectionColor: textColor.withValues(alpha: 0.1),
                         selectionHandleColor: textColor,
                       ),
                       onChanged: (value) {
@@ -590,7 +590,7 @@ class _ThemedCodeSuggestions extends StatelessWidget {
               onTap: () => onTap(options[index]),
               onLongPress: basePath == null ? null : () => _launchSite(options[index]),
               onSecondaryTap: basePath == null ? null : () => _launchSite(options[index]),
-              hoverColor: Colors.white.withOpacity(0.1),
+              hoverColor: Colors.white.withValues(alpha: 0.1),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
                 child: Text(

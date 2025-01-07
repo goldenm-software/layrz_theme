@@ -7,9 +7,9 @@ extension ColorToJson on Color {
 
   /// [toHex] is an extension to convert a [Color] to a hex string without transparency.
   String toHex() {
-    String red = this.red.toRadixString(16);
-    String green = this.green.toRadixString(16);
-    String blue = this.blue.toRadixString(16);
+    String red = (255 * r).round().toRadixString(16);
+    String green = (255 * g).round().toRadixString(16);
+    String blue = (255 * b).round().toRadixString(16);
 
     return "#${red.padLeft(2, '0')}"
             "${green.padLeft(2, '0')}"
@@ -19,16 +19,21 @@ extension ColorToJson on Color {
 
   /// [toHexWithAlpha] is an extension to convert a [Color] to a hex string with transparency.
   String toHexWithAlpha() {
-    String red = this.red.toRadixString(16);
-    String green = this.green.toRadixString(16);
-    String blue = this.blue.toRadixString(16);
-    String alpha = this.alpha.toRadixString(16);
+    String red = (255 * r).round().toRadixString(16);
+    String green = (255 * g).round().toRadixString(16);
+    String blue = (255 * b).round().toRadixString(16);
+    String alpha = (255 * a).round().toRadixString(16);
 
     return "#${alpha.padLeft(2, '0')}"
             "${red.padLeft(2, '0')}"
             "${green.padLeft(2, '0')}"
             "${blue.padLeft(2, '0')}"
         .toUpperCase();
+  }
+
+  /// [toInt] is an extension to convert a [Color] to an integer.
+  int toInt() {
+    return _floatToInt8(a) << 24 | _floatToInt8(r) << 16 | _floatToInt8(g) << 8 | _floatToInt8(b);
   }
 
   /// [fromJson] is an extension to convert a [Color] from a JSON string using [fromHex] function.
@@ -61,5 +66,9 @@ extension ColorToJson on Color {
       int.parse(green, radix: 16),
       int.parse(blue, radix: 16),
     );
+  }
+
+  static int _floatToInt8(double x) {
+    return (x * 255.0).round() & 0xff;
   }
 }

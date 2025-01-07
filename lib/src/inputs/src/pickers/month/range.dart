@@ -158,7 +158,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
           }
           return "${DateTime(2023, e.month.index + 1, 1).format(pattern: '%B', i18n: i18n)} ${e.year}";
         })
-        .whereNotNull()
+        .nonNulls
         .join(', ');
   }
 

@@ -138,7 +138,7 @@ enum LayoEmotions {
         return 'assets/layo/404.svg';
       case LayoEmotions.mrLayo:
       case LayoEmotions.standard:
-      default:
+        // default:
         return 'assets/layo/mr-layo.svg';
     }
   }
@@ -167,7 +167,7 @@ enum LayoEmotions {
       case LayoEmotions.happy:
       case LayoEmotions.mrLayo:
       case LayoEmotions.standard:
-      default:
+        // default:
         return const Color.fromARGB(255, 0, 15, 45);
     }
   }
@@ -196,7 +196,7 @@ enum LayoEmotions {
       case LayoEmotions.happy:
       case LayoEmotions.mrLayo:
       case LayoEmotions.standard:
-      default:
+        // default:
         return kPrimaryColor;
     }
   }

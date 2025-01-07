@@ -275,7 +275,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
               height: actionSize - 10,
               decoration: BoxDecoration(
                 color: highlightTop
-                    ? activeColor.withOpacity(0.2)
+                    ? activeColor.withValues(alpha: 0.2)
                     : highlight
                         ? activeColor
                         : Colors.transparent,
@@ -297,7 +297,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                       }
                     }
                   },
-                  hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+                  hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
                   child: Center(
                     child: Icon(
                       highlightTop
@@ -325,7 +325,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
               AnimatedContainer(
                 duration: kHoverDuration,
                 decoration: BoxDecoration(
-                  color: activeColor.withOpacity(display ? widget.depthColorFactor : 0),
+                  color: activeColor.withValues(alpha: display ? widget.depthColorFactor : 0),
                   borderRadius: BorderRadius.circular(actionSize),
                 ),
                 child: Column(
@@ -365,14 +365,14 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
           width: actionSize - 10,
           height: actionSize - 10,
           decoration: BoxDecoration(
-            // color: validateColor(color: backgroundColor).withOpacity(0.2),
+            // color: validateColor(color: backgroundColor).withValues(alpha:0.2),
             borderRadius: BorderRadius.circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(actionSize),
-              hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+              hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Center(
                 child: Icon(
@@ -388,7 +388,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
     }
 
     if (item is ThemedNavigatorSeparator) {
-      Color dividerColor = validateColor(color: backgroundColor).withOpacity(0.2);
+      Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
       if (item.type == ThemedSeparatorType.line) {
         return Padding(
           padding: const EdgeInsets.all(5),

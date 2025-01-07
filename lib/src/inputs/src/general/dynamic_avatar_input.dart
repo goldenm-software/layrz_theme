@@ -368,7 +368,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
           ),
         );
         break;
-      case AvatarType.none:
+
       default:
         content = Padding(
           padding: const EdgeInsets.all(20),
@@ -410,8 +410,6 @@ extension on AvatarType {
         return LayrzIcons.solarOutlineEmojiFunnySquare;
       case AvatarType.emoji:
         return LayrzIcons.solarOutlineEmojiFunnySquare;
-      default:
-        return null;
     }
   }
 
@@ -427,8 +425,6 @@ extension on AvatarType {
         return "Layrz Icon";
       case AvatarType.emoji:
         return "Emoji";
-      default:
-        return "";
     }
   }
 }
