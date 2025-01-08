@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.1
+
+- Downgraded intl version due to a flutter_localizations incompatibility
+
 ## 7.2.0
 
 - Flutter 3.27 update
