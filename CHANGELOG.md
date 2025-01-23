@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.2.2
+- add `WidgetsBinding` inside `ThemedDatePicker`
+
 ## 7.2.1
 
 - Downgraded intl version due to a flutter_localizations incompatibility
