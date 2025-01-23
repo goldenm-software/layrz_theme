@@ -138,7 +138,9 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
   @override
   void initState() {
     super.initState();
-    if (mounted) _controller.text = _parsedName ?? '';
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.text = _parsedName ?? '';
+    });
   }
 
   @override
