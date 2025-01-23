@@ -132,7 +132,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
         color: backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 5,
             offset: const Offset(0, -5),
           ),
@@ -147,7 +147,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                 if (_children.isNotEmpty) ...[
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    color: activeColor.withOpacity(0.2),
+                    color: activeColor.withValues(alpha: 0.2),
                     height: kBottomBarHeight,
                     child: Center(
                       child: SingleChildScrollView(
@@ -240,7 +240,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
               height: actionSize + (highlightTop ? 5 : 0),
               decoration: BoxDecoration(
                 color: highlightTop
-                    ? activeColor.withOpacity(0.2)
+                    ? activeColor.withValues(alpha: 0.2)
                     : highlight
                         ? activeColor
                         : Colors.transparent,
@@ -256,7 +256,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () => item.onTap.call(onNavigatorPush),
-                  hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+                  hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
                   child: Center(
                     child: Icon(
                       highlightTop
@@ -289,14 +289,14 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
           width: actionSize,
           height: actionSize,
           decoration: BoxDecoration(
-            // color: validateColor(color: backgroundColor).withOpacity(0.2),
+            // color: validateColor(color: backgroundColor).withValues(alpha:0.2),
             borderRadius: BorderRadius.circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(actionSize),
-              hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+              hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Center(
                 child: Icon(
@@ -312,7 +312,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
     }
 
     if (item is ThemedNavigatorSeparator) {
-      Color dividerColor = validateColor(color: backgroundColor).withOpacity(0.2);
+      Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
       if (item.type == ThemedSeparatorType.line) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),

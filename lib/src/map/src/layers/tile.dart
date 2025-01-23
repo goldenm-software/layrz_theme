@@ -121,7 +121,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         }
         break;
       case MapboxStyle.streets:
-      default:
         username = 'mapbox';
         styleId = 'streets-v11';
         break;
@@ -176,7 +175,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         styleId = 'logistics.day';
         break;
       case HereStyle.explore:
-      default:
         styleId = isDark ? 'explore.night' : 'explore.day';
         break;
     }
@@ -217,7 +215,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         break;
       case MapboxStyle.custom:
       case MapboxStyle.streets:
-      default:
         attribution = _mapboxAttributionLight;
     }
 
@@ -254,7 +251,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         break;
       case HereStyle.explore:
       case HereStyle.lite:
-      default:
         attribution = isDark ? _hereAttributionDark : _hereAttributionLight;
         break;
     }
@@ -480,9 +476,9 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
       };
 
       debugPrint('layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): Request $params');
-      final response = await http.post(
-        Uri.parse('https://tile.googleapis.com/v1/createSession?key=$googleMapsKey'),
-        body: jsonEncode(params),
+      final response = await Dio().post(
+        'https://tile.googleapis.com/v1/createSession?key=$googleMapsKey',
+        data: params,
       );
       if (response.statusCode != 200) {
         debugPrint('layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): '
@@ -490,7 +486,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         return null;
       }
 
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(response.data);
 
       prefs.setString('google.maps.${layer.id}.token', data['session']);
       prefs.setInt('google.maps.${layer.id}.expiration', int.parse(data['expiry']));
@@ -513,8 +509,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         return 'terrain';
       case GoogleMapLayer.hybrid:
         return 'satellite';
-      default:
-        return 'roadmap';
     }
   }
 
@@ -525,7 +519,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         return ['layerRoadmap'];
       case GoogleMapLayer.satellite:
       case GoogleMapLayer.roadmap:
-      default:
         return [];
     }
   }

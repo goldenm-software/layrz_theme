@@ -8,11 +8,9 @@ import 'package:layrz_theme_example/store/store.dart';
 import 'package:vxstate/vxstate.dart';
 
 const font = AppFont(source: FontSource.google, name: 'Ubuntu');
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await ThemedFontHandler.preloadFont(font);
   await ThemedFontHandler.preloadFont(font);
 
   String? mapboxToken;
@@ -56,8 +54,7 @@ class _MyAppState extends State<MyApp> {
               final mut = mutation as SetTheme;
               bool isDark = mut.themeMode == ThemeMode.dark;
               if (mut.themeMode == ThemeMode.system) {
-                isDark = MediaQuery.of(context).platformBrightness ==
-                    Brightness.dark;
+                isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
               }
 
               overrideAppBarStyle(isDark: isDark);

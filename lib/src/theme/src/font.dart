@@ -12,10 +12,10 @@ class ThemedFontHandler {
     debugPrint("layrz_theme/ThemedFontHandler.preloadFont(): Preloading font ${font.name}");
 
     if (font.source == FontSource.uri && font.uri != null) {
-      final response = await http.get(Uri.parse(font.uri!));
+      final response = await Dio().get(font.uri!, options: Options(responseType: ResponseType.bytes));
       if (response.statusCode == 200) {
         final loader = FontLoader(font.name);
-        loader.addFont(Future.value(response.bodyBytes.buffer.asByteData()));
+        loader.addFont(Future.value(response.data.buffer.asByteData()));
         await loader.load();
         return;
       }
@@ -25,7 +25,7 @@ class ThemedFontHandler {
     try {
       google = GoogleFonts.getFont(font.name);
     } catch (_) {
-      google = GoogleFonts.cabin();
+      google = GoogleFonts.ubuntu();
     }
 
     await GoogleFonts.pendingFonts([google]);
@@ -71,7 +71,7 @@ class ThemedFontHandler {
         color: isDark ? Colors.white : titleTextColor,
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -80,7 +80,7 @@ class ThemedFontHandler {
         color: isDark ? Colors.white : titleTextColor,
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -89,7 +89,7 @@ class ThemedFontHandler {
         color: isDark ? Colors.white : titleTextColor,
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -98,7 +98,7 @@ class ThemedFontHandler {
         color: isDark ? Colors.white : titleTextColor,
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -107,7 +107,7 @@ class ThemedFontHandler {
         color: isDark ? Colors.white : titleTextColor,
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -116,7 +116,7 @@ class ThemedFontHandler {
         color: isDark ? Colors.white : titleTextColor,
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -124,7 +124,7 @@ class ThemedFontHandler {
       titleLarge: defaultTextTheme.titleLarge?.copyWith(
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -132,7 +132,7 @@ class ThemedFontHandler {
       titleMedium: defaultTextTheme.titleMedium?.copyWith(
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -140,7 +140,7 @@ class ThemedFontHandler {
       titleSmall: defaultTextTheme.titleSmall?.copyWith(
         fontFamily: titleFontName,
         fontFamilyFallback: [
-          GoogleFonts.cabin().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -148,7 +148,7 @@ class ThemedFontHandler {
       bodyLarge: defaultTextTheme.bodyLarge?.copyWith(
         fontFamily: bodyFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -156,7 +156,7 @@ class ThemedFontHandler {
       bodyMedium: defaultTextTheme.bodyMedium?.copyWith(
         fontFamily: bodyFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -164,7 +164,7 @@ class ThemedFontHandler {
       bodySmall: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -172,7 +172,7 @@ class ThemedFontHandler {
       labelLarge: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -180,7 +180,7 @@ class ThemedFontHandler {
       labelMedium: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,
@@ -188,7 +188,7 @@ class ThemedFontHandler {
       labelSmall: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
         fontFamilyFallback: [
-          GoogleFonts.firaSansCondensed().fontFamily!,
+          GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
         overflow: TextOverflow.ellipsis,

@@ -188,7 +188,6 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        debugPrint('mounted: $mounted');
         if (mounted) _controller.text = _parsedName ?? '';
       });
     }

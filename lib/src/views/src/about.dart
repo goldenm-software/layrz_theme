@@ -63,6 +63,8 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
   List<String> get _publicLayrzPackages => [
         'layrz_theme',
         'layrz_models',
+        'layrz_icons',
+        'layrz_logging',
       ];
 
   @override
@@ -85,9 +87,9 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
     _parsedLicenses = [];
 
     final sortedPackages = packages.toList()
-      ..sort(
-        (String a, String b) => a.toLowerCase().compareTo(b.toLowerCase()),
-      );
+      ..sort((a, b) {
+        return a.toLowerCase().compareTo(b.toLowerCase());
+      });
 
     for (final package in sortedPackages) {
       if (package.startsWith('layrz') && !_publicLayrzPackages.contains(package)) {
@@ -160,22 +162,47 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "© ${DateTime.now().year} ${widget.companyName}",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 10),
             ThemedImage(
               path: _logoUri,
               width: 200,
               height: 40,
             ),
             const SizedBox(height: 10),
-            Text(
-              i18n?.t('copyright.powered.by') ?? "Powered by Layrz",
-              style: Theme.of(context).textTheme.bodySmall,
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "© ${DateTime.now().year} ${widget.companyName}",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const WidgetSpan(
+                    child: SizedBox(width: 5),
+                  ),
+                  TextSpan(
+                    text: i18n?.t('copyright.powered.by') ?? "Powered by Layrz",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "${i18n?.t('copyright.platform.os') ?? "Platform"}: ",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  TextSpan(
+                    text: kThemedPlatform.toString(),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
             if (widget.version != null)
               Text(

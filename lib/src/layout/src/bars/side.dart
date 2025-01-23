@@ -252,7 +252,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
         boxShadow: widget.fromScaffold
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   blurRadius: 30,
                   spreadRadius: 10,
                 )
@@ -302,7 +302,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5),
                   decoration: BoxDecoration(
-                    color: isExpanded ? activeColor.withOpacity(0.2) : Colors.transparent,
+                    color: isExpanded ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   clipBehavior: Clip.antiAlias,
@@ -328,7 +328,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                               avatar: widget.userAvatar,
                               dynamicAvatar: widget.userDynamicAvatar,
                               color: backgroundColor,
-                              shadowColor: Colors.black.withOpacity(0.2),
+                              shadowColor: Colors.black.withValues(alpha: 0.2),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
@@ -450,7 +450,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                   left: 10 * depth.toDouble(),
                 )),
                 decoration: BoxDecoration(
-                  color: highlight ? activeColor.withOpacity(0.2) : Colors.transparent,
+                  color: highlight ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -467,7 +467,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                               animation.reverse();
                             }
                           },
-                    hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+                    hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -535,7 +535,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
           color: Colors.transparent,
           child: InkWell(
             onTap: () => handleOnTap(item.onTap),
-            hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+            hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
@@ -567,7 +567,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
     }
 
     if (item is ThemedNavigatorSeparator) {
-      Color dividerColor = validateColor(color: backgroundColor).withOpacity(0.2);
+      Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
       if (item.type == ThemedSeparatorType.line) {
         return Padding(
           padding: removePadding ? EdgeInsets.zero : const EdgeInsets.symmetric(vertical: 5),

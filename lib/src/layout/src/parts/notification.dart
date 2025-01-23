@@ -132,7 +132,9 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
   Color get backgroundColor => widget.backgroundColor;
   List<ThemedNotificationItem> get notifications => widget.notifications;
 
-  Color get notificationIconColor => validateColor(color: backgroundColor).withOpacity(notifications.isEmpty ? 0.5 : 1);
+  Color get notificationIconColor => validateColor(color: backgroundColor).withValues(
+        alpha: (notifications.isEmpty ? 0.5 : 1),
+      );
 
   late AnimationController _controller;
   OverlayEntry? _overlay;
@@ -151,7 +153,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(30),
-        hoverColor: validateColor(color: backgroundColor).withOpacity(0.1),
+        hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
         key: _key,
         onTap: _buildOverlay,
         child: Padding(
@@ -241,8 +243,6 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
         width = screenSize.width * 0.5;
         if (width > 400) width = 400;
         break;
-      default:
-        return;
     }
 
     _overlay = OverlayEntry(
@@ -337,7 +337,7 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                         color: validateColor(
                                                           color: Theme.of(context).scaffoldBackgroundColor,
-                                                        ).withOpacity(0.5),
+                                                        ).withValues(alpha: 0.5),
                                                       ),
                                                 ),
                                               ],

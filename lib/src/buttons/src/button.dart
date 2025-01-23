@@ -483,8 +483,6 @@ class _ThemedButtonState extends State<ThemedButton> {
         return _handleHint(child: _buildOutlinedTonal());
       case ThemedButtonStyle.outlinedTonalFab:
         return _buildOutlinedTonalFab();
-      default:
-        return Text("Unsupported $style");
     }
   }
 
@@ -524,7 +522,7 @@ class _ThemedButtonState extends State<ThemedButton> {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorOverride ?? contentColor.withOpacity(kHoverOpacity),
+        color: colorOverride ?? contentColor.withValues(alpha: kHoverOpacity),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(
@@ -571,7 +569,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: colorOverride ?? contentColor.withOpacity(kHoverOpacity),
+          color: colorOverride ?? contentColor.withValues(alpha: kHoverOpacity),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
@@ -606,7 +604,7 @@ class _ThemedButtonState extends State<ThemedButton> {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorOverride ?? contentColor.withOpacity(kOutlinedTonalOpacity),
+        color: colorOverride ?? contentColor.withValues(alpha: kOutlinedTonalOpacity),
         border: Border.all(color: contentColor, width: kBorderWidth),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
@@ -654,7 +652,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: colorOverride ?? contentColor.withOpacity(kOutlinedTonalOpacity),
+          color: colorOverride ?? contentColor.withValues(alpha: kOutlinedTonalOpacity),
           border: Border.all(color: contentColor, width: kBorderWidth),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
@@ -780,7 +778,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onTap,
-          hoverColor: contentColor.withOpacity(kHoverOpacity),
+          hoverColor: contentColor.withValues(alpha: kHoverOpacity),
           child: SizedBox(
             height: height,
             width: width,
@@ -945,7 +943,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             offset: const Offset(0, 1),
             blurRadius: 4,
             spreadRadius: 2,
@@ -1002,7 +1000,7 @@ class _ThemedButtonState extends State<ThemedButton> {
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               offset: const Offset(0, 1),
               blurRadius: 4,
               spreadRadius: 2,

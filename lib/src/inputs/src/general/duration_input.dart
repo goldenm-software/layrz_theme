@@ -70,7 +70,9 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
   @override
   void initState() {
     super.initState();
-    _controller.text = _getFormattedDuration(value);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.text = _getFormattedDuration(value);
+    });
   }
 
   @override
