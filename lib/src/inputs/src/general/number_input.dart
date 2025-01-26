@@ -112,7 +112,7 @@ class ThemedNumberInput extends StatefulWidget {
 }
 
 class _ThemedNumberInputState extends State<ThemedNumberInput> {
-  RegExp get _regex => RegExp(r'[0-9\,.]');
+  RegExp get _regex => RegExp(r'[-0-9\,.]');
   final _controller = TextEditingController();
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
@@ -196,6 +196,8 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       ],
       onChanged: (value) {
         if (value.isEmpty) return widget.onChanged?.call(null);
+        if (value == '-') return;
+
         final castedValue = format.tryParse(value);
         widget.onChanged?.call(castedValue);
       },

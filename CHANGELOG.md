@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.3
+
+- Fixed on `ThemedNumberInput` to support negative values when writing.
+
 ## 7.2.2
 - add `WidgetsBinding` inside `ThemedDatePicker`
 
