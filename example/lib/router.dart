@@ -125,7 +125,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/snackbar/basic' : '/',
+  initialLocation: kDebugMode ? '/inputs/text' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );
