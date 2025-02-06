@@ -486,7 +486,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         return null;
       }
 
-      final data = jsonDecode(response.data);
+      final data = Map<String, dynamic>.from(response.data);
 
       prefs.setString('google.maps.${layer.id}.token', data['session']);
       prefs.setInt('google.maps.${layer.id}.expiration', int.parse(data['expiry']));

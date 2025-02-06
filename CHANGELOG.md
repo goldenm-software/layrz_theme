@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.4
+
+- Fixes Dio() response handling on `ThemedTileLayer`
+
 ## 7.2.3
 
 - Fixed on `ThemedNumberInput` to support negative values when writing.
