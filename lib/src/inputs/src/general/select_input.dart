@@ -183,9 +183,25 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
   @override
   void didUpdateWidget(ThemedSelectInput<T> oldWidget) {
     if (oldWidget.value != widget.value) {
-      _handleUpdate(newValue: widget.value, previousValue: oldWidget.value);
+      _handleDidUpdateWidget();
     }
     super.didUpdateWidget(oldWidget);
+  }
+
+  String get displayedValue => selected?.label ?? t('layrz.select.empty');
+
+  /// Handle external updates to the widget
+  /// if the selected value state is changed by another widget
+  /// @LuisReyes98 says:
+  /// IT IS FORBIDDEN FOR THIS METHOD TO CALL `widget.onChanged`
+  /// BECAUSE IT WILL CAUSE A LOOP 👁️👁️
+  void _handleDidUpdateWidget() {
+    if (widget.items.isNotEmpty) {
+      ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
+      selected = value;
+      // if (mounted) _controller.text = displayedValue;
+      setState(() {}); // Force rebuild
+    }
   }
 
   void _handleUpdate({bool force = false, T? newValue, T? previousValue}) {
@@ -202,7 +218,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
           setState(() => selected = widget.items.first);
         }
 
-        if (mounted) _controller.text = selected?.label ?? "";
+        if (mounted) _controller.text = displayedValue;
 
         widget.onChanged?.call(selected);
       }
@@ -219,7 +235,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     }
 
     return ThemedTextInput(
-      controller: _controller,
+      // controller: _controller,
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
       labelText: widget.labelText,
@@ -232,7 +248,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
       errors: widget.errors,
       padding: widget.padding,
       hideDetails: widget.hideDetails,
-      value: selected?.label ?? t('layrz.select.empty'),
+      value: displayedValue,
       focusNode: _focusNode,
       readonly: true,
     );
@@ -252,7 +268,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
           canPop: widget.hideButtons || temp != null,
           child: Dialog(
             child: StatefulBuilder(
-              builder: (context, setState) {
+              builder: (context, setState2) {
                 return Container(
                   constraints: widget.dialogContraints,
                   decoration: generateContainerElevation(
@@ -289,7 +305,9 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                                       child: ThemedTextInput(
                                         labelText: t('layrz.select.search'),
                                         padding: EdgeInsets.zero,
-                                        onChanged: (value) => setState(() => searchText = value),
+                                        onChanged: (value) {
+                                          setState2(() => searchText = value);
+                                        },
                                         prefixIcon: LayrzIcons.solarOutlineMagnifier,
                                         suffixIcon: searchText.isNotEmpty ? LayrzIcons.solarOutlineCloseSquare : null,
                                         onSuffixTap:
@@ -379,8 +397,8 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
       widget.onChanged?.call(null);
       setState(() => selected = result);
     } else if (result != null) {
-      widget.onChanged?.call(result);
       setState(() => selected = result);
+      widget.onChanged?.call(result);
     }
   }
 
