@@ -199,7 +199,8 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     if (widget.items.isNotEmpty) {
       ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
       selected = value;
-      if (mounted) _controller.text = displayedValue;
+      // if (mounted) _controller.text = displayedValue;
+      setState(() {}); // Force rebuild
     }
   }
 
@@ -234,7 +235,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     }
 
     return ThemedTextInput(
-      controller: _controller,
+      // controller: _controller,
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
       labelText: widget.labelText,
