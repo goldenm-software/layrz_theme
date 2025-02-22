@@ -69,11 +69,31 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("Select input"),
+                    Text('Select input Current value: $selectedSingle'),
                     ThemedSelectInput<int>(
                       labelText: "Example label",
                       items: _choices,
                       value: selectedSingle,
-                      onChanged: (v) => setState(() => selectedSingle = v?.value),
+                      onChanged: (v) {
+                        setState(() => selectedSingle = v?.value);
+                      },
+                    ),
+                    ThemedSelectInput<int>(
+                      labelText: "2nd Example label",
+                      autoclose: false,
+                      returnNullOnClose: true,
+                      items: _choices,
+                      value: selectedSingle,
+                      onChanged: (v) {
+                        setState(() => selectedSingle = v?.value);
+                      },
+                    ),
+                    ThemedSelectInput<int>(
+                      labelText: "3rd Example label without onChanged",
+                      autoclose: false,
+                      returnNullOnClose: true,
+                      items: _choices,
+                      value: selectedSingle,
                     ),
                   ],
                 ),

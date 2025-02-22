@@ -25,8 +25,22 @@ class _TextInputViewState extends State<TextInputView> {
                     fontWeight: FontWeight.bold,
                   ),
             ),
+            ThemedButton(
+              labelText: "Set value to 123456",
+              onTap: () {
+                setState(() => _text = "123456");
+              },
+            ),
             ThemedTextInput(
               labelText: "Example label",
+              value: _text,
+              onChanged: (value) {
+                debugPrint("Value: $value");
+                setState(() => _text = value);
+              },
+            ),
+            ThemedTextInput(
+              labelText: "2nd Example label showing shared state",
               value: _text,
               onChanged: (value) {
                 debugPrint("Value: $value");

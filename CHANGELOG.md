@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.5
+- Fixed `ThemedSelectInput` use of `didUpdateWidget` causing it to call the onchanged callback twice
+- Fixed `ThemedTextInput` handling of `didUpdateWidget` causing the change of value to not be reflected in the widget
+
 ## 7.2.4
 
 - Fixes Dio() response handling on `ThemedTileLayer`

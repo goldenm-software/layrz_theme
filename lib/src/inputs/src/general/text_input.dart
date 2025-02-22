@@ -211,10 +211,38 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   void didUpdateWidget(ThemedTextInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     // check if the current value is different from the previous value
-
+    if (oldWidget.value != widget.value) {
+      _handlingDidUpdateValue();
+    }
     if (widget.choices != oldWidget.choices) {
       _streamController.add(widget.choices);
     }
+  }
+
+  /// this is to allow the textfield to update
+  /// the value when the value is updated by
+  /// another widget or a parent widget
+  /// @LuisReyes98 says:
+  /// ASK ME BEFORE REMOVING THIS AGAIN 👁️👁️
+  void _handlingDidUpdateValue() {
+    // save the current cursor offset
+    int previousCursorOffset = _controller.selection.extentOffset;
+
+    // update the current value in the value
+    _value = widget.value ?? "";
+    // update the current value in the controller
+    _controller.text = _value;
+    // check that the cursor offset is not greater than the length of the value
+    if (_value.length <= previousCursorOffset) {
+      previousCursorOffset = _value.length;
+    }
+
+    // update the cursor offset
+    _controller.selection = TextSelection.fromPosition(
+      TextPosition(
+        offset: previousCursorOffset,
+      ),
+    );
   }
 
   @override
