@@ -75,6 +75,7 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                       items: _choices,
                       value: selectedSingle,
                       onChanged: (v) {
+                        print("Select input value: $v");
                         setState(() => selectedSingle = v?.value);
                       },
                     ),

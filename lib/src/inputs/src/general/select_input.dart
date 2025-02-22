@@ -200,7 +200,6 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
       ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
       selected = value;
       if (mounted) _controller.text = displayedValue;
-      setState(() {});
     }
   }
 

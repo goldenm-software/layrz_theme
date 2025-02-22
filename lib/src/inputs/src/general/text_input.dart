@@ -225,6 +225,10 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   /// @LuisReyes98 says:
   /// ASK ME BEFORE REMOVING THIS AGAIN 👁️👁️
   void _handlingDidUpdateValue() {
+    if (widget.controller != null) {
+      return;
+    }
+
     // save the current cursor offset
     int previousCursorOffset = _controller.selection.extentOffset;
 
