@@ -1,7 +1,6 @@
-library map;
+library;
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';

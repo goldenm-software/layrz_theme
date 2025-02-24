@@ -1,4 +1,4 @@
-library lml;
+library;
 
 import 'package:flutter/painting.dart';
 import 'package:layrz_theme/src/inputs/inputs.dart';

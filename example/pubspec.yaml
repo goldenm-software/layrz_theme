@@ -10,9 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  material_design_icons_flutter: ^7.0.7296
 
+  collection: any
   go_router: ^12.1.1
   vxstate: ^2.3.0
   shared_preferences: ^2.2.0
@@ -21,18 +20,20 @@ dependencies:
   flutter_map: any
   flutter_map_animations: any
   layrz_icons: any
+  layrz_models: any
   layrz_theme:
     path: ../
 
-  layrz_models: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.2
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/
+    - assets/image-test.jpg
+    - assets/loading_animation.lottie
+    - assets/color_palette.png

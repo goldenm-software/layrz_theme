@@ -1,4 +1,4 @@
-library theme;
+library;
 
 import 'dart:io';
 

@@ -424,7 +424,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonal,
                         labelText: "Toggle loading state",
-                        icon: MdiIcons.loading,
+                        icon: LayrzIcons.mdiLoading,
                         color: Colors.orange,
                         hintText: 'Toggles the loading state of the buttons',
                         tooltipPosition: ThemedTooltipPosition.top,
@@ -434,7 +434,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonal,
                         labelText: "Toggle cooldown state",
-                        icon: MdiIcons.timerSandEmpty,
+                        icon: LayrzIcons.mdiTimerSandEmpty,
                         color: Colors.red,
                         hintText: 'Toggles the cooldown state of the buttons, '
                             'when the cooldown is active, the button will be disabled and '
@@ -446,7 +446,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonal,
                         labelText: "Toggle disabled state",
-                        icon: MdiIcons.closeCircleOutline,
+                        icon: LayrzIcons.mdiCloseCircleOutline,
                         color: Colors.grey,
                         hintText: 'Toggles the disabled state of the buttons',
                         tooltipPosition: ThemedTooltipPosition.top,
@@ -468,7 +468,7 @@ class _ButtonsViewState extends State<ButtonsView> {
     ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.right,
   }) {
     return ThemedButton(
-      icon: MdiIcons.accessPoint,
+      icon: LayrzIcons.mdiAccessPoint,
       cooldownDuration: const Duration(seconds: 4),
       labelText: "Button",
       style: style,
@@ -482,7 +482,7 @@ class _ButtonsViewState extends State<ButtonsView> {
       onTap: () {
         // context.go('/inputs/text');
         ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
-          icon: MdiIcons.accessPoint,
+          icon: LayrzIcons.mdiAccessPoint,
           width: 700,
           maxLines: 4,
           color: Colors.red,

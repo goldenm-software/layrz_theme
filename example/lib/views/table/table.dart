@@ -1,4 +1,4 @@
-library table;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:layrz_models/layrz_models.dart';

@@ -1,7 +1,6 @@
 # Layrz Theme
 
 [![Pub version](https://img.shields.io/pub/v/layrz_theme?logo=flutter)](https://pub.dev/packages/layrz_theme)
-[![popularity](https://img.shields.io/pub/popularity/layrz_theme?logo=flutter)](https://pub.dev/packages/layrz_theme/score)
 [![likes](https://img.shields.io/pub/likes/layrz_theme?logo=flutter)](https://pub.dev/packages/layrz_theme/score)
 [![GitHub license](https://img.shields.io/github/license/goldenm-software/layrz_theme?logo=github)](https://github.com/goldenm-software/layrz_theme)
 

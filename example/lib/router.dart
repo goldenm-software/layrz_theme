@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/views/avatars/avatars.dart';
+import 'package:layrz_theme_example/views/colorblindness.dart';
 import 'package:layrz_theme_example/views/home.dart';
 import 'package:layrz_theme_example/views/inputs/inputs.dart';
 import 'package:layrz_theme_example/views/landing.dart';
@@ -122,10 +123,16 @@ final goRoutes = [
     path: '/map/layer',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const MapLayerView()),
   ),
+
+  // Colorblind mode
+  GoRoute(
+    path: '/colorblind',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const ColorblindnessView()),
+  ),
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/inputs/text' : '/',
+  initialLocation: kDebugMode ? '/colorblind' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

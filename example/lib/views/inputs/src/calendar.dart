@@ -44,7 +44,7 @@ class _CalendarViewState extends State<CalendarView> {
                   title: "Evento 1",
                   caption: "Evento 1 caption",
                   color: Colors.red,
-                  icon: MdiIcons.calendar,
+                  icon: LayrzIcons.mdiCalendar,
                   onTap: () {
                     debugPrint("Evento 1 tapped");
                   },
@@ -55,7 +55,7 @@ class _CalendarViewState extends State<CalendarView> {
                   title: "Evento 2",
                   caption: "Evento 2 caption",
                   color: Colors.green,
-                  icon: MdiIcons.calendar,
+                  icon: LayrzIcons.mdiCalendar,
                 ),
                 ThemedCalendarEntry(
                   textAlign: TextAlign.right,
@@ -63,7 +63,7 @@ class _CalendarViewState extends State<CalendarView> {
                   title: "Evento 3",
                   caption: "Evento 3 caption",
                   color: Colors.blue,
-                  icon: MdiIcons.calendar,
+                  icon: LayrzIcons.mdiCalendar,
                   onTap: () {
                     debugPrint("Evento 3 tapped");
                   },
@@ -73,7 +73,7 @@ class _CalendarViewState extends State<CalendarView> {
                   title: "Evento 1",
                   caption: "Evento 3 caption",
                   color: Colors.pink,
-                  icon: MdiIcons.calendar,
+                  icon: LayrzIcons.mdiCalendar,
                   onTap: () {
                     debugPrint("Evento 3 tapped");
                   },
@@ -87,7 +87,7 @@ class _CalendarViewState extends State<CalendarView> {
                   title: "Evento 1 de rango",
                   caption: "Evento 1 caption",
                   color: Colors.purple,
-                  icon: MdiIcons.calendar,
+                  icon: LayrzIcons.mdiCalendar,
                   onTap: () {
                     debugPrint("Evento 1 de rango tapped");
                   },

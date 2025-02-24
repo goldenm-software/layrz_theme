@@ -1,7 +1,9 @@
-library layrz_theme;
+library;
 
 // Library exports
 export 'package:file_picker/file_picker.dart' show FileType;
+export 'package:layrz_models/layrz_models.dart'
+    show AppThemedAsset, LayrzAppLocalizations, Avatar, AvatarInput, ColorblindMode;
 
 // Direct exports
 export 'src/file.dart';
@@ -24,3 +26,4 @@ export 'src/grid/grid.dart';
 export 'src/table/table.dart';
 export 'src/utilities/utilities.dart';
 export 'src/map/map.dart';
+export 'src/colorblindness/colorblindness.dart';

@@ -1,4 +1,4 @@
-part of avatars;
+part of '../avatars.dart';
 
 class StaticAvatarsView extends StatefulWidget {
   const StaticAvatarsView({super.key});
@@ -93,9 +93,9 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   name: 'Using an icon w/ a color',
-                  icon: MdiIcons.account,
+                  icon: LayrzIcons.mdiAccount,
                   color: Colors.green,
-                  codeExample: "ThemedAvatar(size: 50, icon: MdiIcons.account, color: Colors.green)",
+                  codeExample: "ThemedAvatar(size: 50, icon: LayrzIcons.mdiAccount, color: Colors.green)",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
@@ -149,14 +149,14 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
         Expanded(child: Text(name)),
         const SizedBox(width: 5),
         ThemedButton(
-          icon: MdiIcons.contentCopy,
+          icon: LayrzIcons.mdiContentCopy,
           color: Colors.blue,
           labelText: "Get the code",
           onTap: () {
             Clipboard.setData(ClipboardData(text: codeExample));
             ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
               message: "Copied to clipboard",
-              icon: MdiIcons.clipboardCheckOutline,
+              icon: LayrzIcons.mdiClipboardCheckOutline,
               color: Colors.green,
             ));
           },

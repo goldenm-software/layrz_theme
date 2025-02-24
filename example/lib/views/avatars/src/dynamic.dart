@@ -1,4 +1,4 @@
-part of avatars;
+part of '../avatars.dart';
 
 class DynamicAvatarsView extends StatefulWidget {
   const DynamicAvatarsView({super.key});
@@ -139,14 +139,14 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
         Expanded(child: Text("Type ${avatar.type}")),
         const SizedBox(width: 5),
         ThemedButton(
-          icon: MdiIcons.contentCopy,
+          icon: LayrzIcons.mdiContentCopy,
           color: Colors.blue,
           labelText: "Get the code",
           onTap: () {
             Clipboard.setData(ClipboardData(text: codeExample));
             ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
               message: "Copied to clipboard",
-              icon: MdiIcons.clipboardCheckOutline,
+              icon: LayrzIcons.mdiClipboardCheckOutline,
               color: Colors.green,
             ));
           },

@@ -1,4 +1,4 @@
-library snackbar;
+library;
 
 import 'dart:async';
 import 'dart:math';

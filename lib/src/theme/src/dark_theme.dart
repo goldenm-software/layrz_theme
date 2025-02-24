@@ -157,6 +157,25 @@ ThemeData generateDarkTheme({
       thickness: WidgetStateProperty.all(7),
     ),
 
+    // Slider
+    sliderTheme: SliderThemeData(
+      activeTrackColor: Colors.white,
+      inactiveTrackColor: Colors.grey.shade300,
+      thumbColor: Colors.white,
+      overlayColor: Colors.white.withValues(alpha: 0.3),
+      valueIndicatorColor: Colors.white,
+      valueIndicatorTextStyle: textTheme.bodySmall?.copyWith(
+        color: kLightBackgroundColor,
+      ),
+      trackHeight: 2,
+      thumbShape: const RoundSliderThumbShape(
+        enabledThumbRadius: 10,
+      ),
+      overlayShape: const RoundSliderOverlayShape(
+        overlayRadius: 20,
+      ),
+    ),
+
     // Inputs
     checkboxTheme: CheckboxThemeData(
       visualDensity: VisualDensity.compact,
