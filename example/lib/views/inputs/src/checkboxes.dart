@@ -40,38 +40,35 @@ class _CheckboxesViewState extends State<CheckboxesView> {
             ListView(
               shrinkWrap: true,
               children: [
-                ...ThemedCheckboxInputStyle.values
-                    .map((style) {
-                      return [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Style ${style.name}"),
-                            ThemedCheckboxInput(
-                              value: _value,
-                              labelText: "Style ${style.name}",
-                              style: style,
-                              hideDetails: true,
-                              onChanged: (val) => setState(() => _value = val),
-                            ),
-                          ],
+                ...ThemedCheckboxInputStyle.values.map((style) {
+                  return [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Style ${style.name}"),
+                        ThemedCheckboxInput(
+                          value: _value,
+                          labelText: "Style ${style.name}",
+                          style: style,
+                          hideDetails: true,
+                          onChanged: (val) => setState(() => _value = val),
                         ),
-                        if (style == ThemedCheckboxInputStyle.asCheckbox2) ...[
-                          Text(
-                            "This design was created by our CEO, Orlando Monagas to make a more rounded checkbox, "
-                            "like a radio button.",
-                            style: Theme.of(context).textTheme.bodySmall,
-                            maxLines: 2,
-                          ),
-                        ],
-                        const SizedBox(height: 5),
-                        const Divider(),
-                        const SizedBox(height: 5),
-                      ];
-                    })
-                    .expand((element) => element)
-                    .toList(),
+                      ],
+                    ),
+                    if (style == ThemedCheckboxInputStyle.asCheckbox2) ...[
+                      Text(
+                        "This design was created by our CEO, Orlando Monagas to make a more rounded checkbox, "
+                        "like a radio button.",
+                        style: Theme.of(context).textTheme.bodySmall,
+                        maxLines: 2,
+                      ),
+                    ],
+                    const SizedBox(height: 5),
+                    const Divider(),
+                    const SizedBox(height: 5),
+                  ];
+                }).expand((element) => element),
               ],
             ),
             Text(

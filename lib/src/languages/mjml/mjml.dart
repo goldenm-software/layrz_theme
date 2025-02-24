@@ -1,4 +1,4 @@
-library mjml;
+library;
 
 import 'package:flutter/painting.dart';
 import 'package:highlight/highlight.dart';

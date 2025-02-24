@@ -188,7 +188,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
         // if (_canStreetView) ...[
         //   ThemedMapDragButton(
         //     labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
-        //     icon: MdiIcons.googleStreetView,
+        //     icon: LayrzIcons.mdiGoogleStreetView,
         //     color: buttonColor,
         //     onDragStart: (offset) {
         //       widget.controller?.notify(StartGoogleStreetView());

@@ -1,4 +1,4 @@
-part of store;
+part of './store.dart';
 
 class Layout extends StatefulWidget {
   final Widget body;
@@ -78,6 +78,11 @@ class _LayoutState extends State<Layout> {
           path: '/home',
           icon: LayrzIcons.solarOutlineHomeAngle,
           // showHeaderInSidebarMode: false,
+        ),
+        ThemedNavigatorPage(
+          labelText: 'Colorblind modes',
+          path: '/colorblind',
+          icon: LayrzIcons.solarOutlinePalette,
         ),
         ThemedNavigatorPage(
           labelText: 'Theme generation',
@@ -171,7 +176,7 @@ class _LayoutState extends State<Layout> {
       persistentItems: [
         ThemedNavigatorAction(
           labelText: "GitHub repository",
-          icon: MdiIcons.github,
+          icon: LayrzIcons.mdiGithub,
           onTap: () => launchUrlString(
             'https://github.com/goldenm-software/layrz_theme',
             mode: LaunchMode.externalApplication,

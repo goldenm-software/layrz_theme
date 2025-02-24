@@ -1,4 +1,4 @@
-library tabs;
+library;
 
 import 'package:flutter/material.dart';
 

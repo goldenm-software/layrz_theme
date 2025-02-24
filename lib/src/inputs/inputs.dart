@@ -1,4 +1,4 @@
-library inputs;
+library;
 
 // Dependencies
 import 'dart:async';

@@ -1,4 +1,4 @@
-library buttons;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:layrz_icons/layrz_icons.dart';

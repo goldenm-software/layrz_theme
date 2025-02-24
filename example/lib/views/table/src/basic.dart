@@ -1,4 +1,4 @@
-part of table;
+part of '../table.dart';
 
 class BasicTableView extends StatefulWidget {
   final String name;

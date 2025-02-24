@@ -1,4 +1,4 @@
-library utilities;
+library;
 
 import 'package:layrz_models/layrz_models.dart';
 

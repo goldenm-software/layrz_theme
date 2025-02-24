@@ -1,4 +1,4 @@
-library grid;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:layrz_theme/src/theme/theme.dart';

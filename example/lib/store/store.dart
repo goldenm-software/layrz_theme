@@ -1,28 +1,32 @@
-library store;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:layrz_icons/layrz_icons.dart';
 import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:vxstate/vxstate.dart';
 
-part 'src/wrapper.dart';
+part 'wrapper.dart';
 
 class AppStore extends VxStore {
-  ThemeMode themeMode = ThemeMode.light;
+  ThemeMode themeMode;
   ThemedLayoutStyle layoutStyle = ThemedLayoutStyle.mini;
   String? mapboxToken;
   String? googleToken;
   String? hereToken;
+  ColorblindMode colorblindMode;
+  double colorblindStrength;
 
   AppStore({
+    required this.themeMode,
     this.mapboxToken,
     this.googleToken,
     this.hereToken,
+    required this.colorblindMode,
+    required this.colorblindStrength,
   });
 
   List<MapLayer> get availableLayers => [
@@ -114,5 +118,33 @@ class GetLayout extends VxMutation<AppStore> {
         orElse: () => ThemedLayoutStyle.mini,
       );
     }
+  }
+}
+
+class SetColorblindMode extends VxMutation<AppStore> {
+  final ColorblindMode colorblindMode;
+
+  SetColorblindMode(this.colorblindMode);
+
+  @override
+  Future<void> perform() async {
+    store!.colorblindMode = colorblindMode;
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('layrz.colorblind.mode', store!.colorblindMode.name);
+  }
+}
+
+class SetColorblindStrength extends VxMutation<AppStore> {
+  final double colorblindStrength;
+
+  SetColorblindStrength(this.colorblindStrength);
+
+  @override
+  Future<void> perform() async {
+    store!.colorblindStrength = colorblindStrength;
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setDouble('layrz.colorblind.strength', store!.colorblindStrength);
   }
 }

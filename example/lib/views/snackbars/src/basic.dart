@@ -1,4 +1,4 @@
-part of table;
+part of '../snackbars.dart';
 
 class BasicSnackbarView extends StatefulWidget {
   final String name;
