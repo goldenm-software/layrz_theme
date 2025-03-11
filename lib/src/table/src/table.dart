@@ -762,7 +762,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   Widget build(BuildContext context) {
     return OverlayPortal(
       controller: _overlay,
-      overlayChildBuilder: (context) {
+      overlayChildBuilder: (context1) {
         double width = MediaQuery.sizeOf(context).width * 0.8;
         if (width > 500) {
           width = 500;
