@@ -759,11 +759,11 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     return OverlayPortal(
       controller: _overlay,
       overlayChildBuilder: (context1) {
-        double width = MediaQuery.sizeOf(context).width * 0.8;
+        double width = MediaQuery.sizeOf(ctx).width * 0.8;
         if (width > 500) {
           width = 500;
         }
@@ -772,7 +772,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           children: [
             Positioned(
               top: 10,
-              left: (MediaQuery.of(context).size.width - width) / 2,
+              left: (MediaQuery.of(ctx).size.width - width) / 2,
               width: width,
               child: Material(
                 color: Colors.transparent,
@@ -788,7 +788,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                         padding: const EdgeInsets.all(10),
                         width: width,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).inputDecorationTheme.fillColor,
+                          color: Theme.of(ctx).inputDecorationTheme.fillColor,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -810,7 +810,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                     Expanded(
                                       child: Text(
                                         t('helpers.multipleSelection.title'),
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                       ),
@@ -832,7 +832,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                 ),
                                 Text(
                                   t('helpers.multipleSelection.caption'),
-                                  style: Theme.of(context).textTheme.bodySmall,
+                                  style: Theme.of(ctx).textTheme.bodySmall,
                                 ),
                                 const SizedBox(height: 10),
                                 SizedBox(
@@ -875,16 +875,16 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                               _destroyOverlay(
                                                 callback: () async {
                                                   bool confirmation = await deleteConfirmationDialog(
-                                                    context: context,
+                                                    context: ctx,
                                                     isMultiple: true,
                                                     isCooldown: widget.isCooldown,
                                                     isLoading: widget.isLoading,
                                                     onCooldown: widget.onCooldown,
                                                   );
 
-                                                  if (confirmation && context.mounted) {
+                                                  if (confirmation && ctx.mounted) {
                                                     bool result = await widget.onMultiDelete?.call(
-                                                          context,
+                                                          ctx,
                                                           _selectedItems,
                                                         ) ??
                                                         false;
