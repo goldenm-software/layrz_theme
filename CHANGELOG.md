@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.2.7
+- Fixed use of `context.mounted` on `ThemedTable` that was causing `onMultiDelete` to not be called correctly.
+
 ## 7.2.6
 
 - Added Color Blind modes
