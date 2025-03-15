@@ -1,6 +1,11 @@
 # Changelog
 
+## 7.2.8
+
+- Upgraded flutter_map to latest version (v8.1.1)
+
 ## 7.2.7
+
 - Fixed use of `context.mounted` on `ThemedTable` that was causing `onMultiDelete` to not be called correctly.
 
 ## 7.2.6
@@ -8,6 +13,7 @@
 - Added Color Blind modes
 
 ## 7.2.5
+
 - Fixed `ThemedSelectInput` use of `didUpdateWidget` causing it to call the onchanged callback twice
 - Fixed `ThemedTextInput` handling of `didUpdateWidget` causing the change of value to not be reflected in the widget
 
@@ -20,6 +26,7 @@
 - Fixed on `ThemedNumberInput` to support negative values when writing.
 
 ## 7.2.2
+
 - add `WidgetsBinding` inside `ThemedDatePicker`
 
 ## 7.2.1
@@ -138,6 +145,7 @@
 - Disabled Google Street View on `ThemedTileLayer` due to issues with the `flutter_map` package
 
 ## 7.0.0
+
 - web package threshold changed to `web: ^1.0.0`
 
 ## 6.0.8
@@ -151,10 +159,12 @@
 - Fixed spelling on `searchableAttributes`
 
 ## 6.0.6
+
 - Added `searchableAtributes` to `ThemedSelectItem`
 - Changes to improve `ThemedDualListInput` search and sorting
 
 ## 6.0.5
+
 - Add `keyboardType` as a prop with default `TextInputType.number` inside `ThemedNumberInput`
 
 ## 6.0.4
@@ -185,6 +195,7 @@
 - Fixed `MainAxisAligment.spaceBetween` on `deleteConfirmationDialog`. Now will show the buttons with the correct spacing.
 
 ## 5.0.19
+
 - Add a flag to know if the User change `_itemsPerPage` in `ThemedTable`.
 
 ## 5.0.18
@@ -198,6 +209,7 @@
 - Fixes on `ThemedDateRangePicker` and `ThemedDateTimeRangePicker` to focus on selection instead of today.
 
 ## 5.0.16
+
 - Added `dialogConstraints` in `ThemedMultiSelectInput`.
 
 ## 5.0.15
