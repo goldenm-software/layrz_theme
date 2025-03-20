@@ -1011,7 +1011,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                   ? 0
                                   : _columns.isEmpty
                                       ? 0
-                                      : widget.fixedColumnsCount,
+                                      : widget.fixedColumnsCount > _columns.length
+                                          ? _columns.length
+                                          : widget.fixedColumnsCount,
                               verticalDetails: ScrollableDetails.vertical(controller: _verticalScroll),
                               horizontalDetails: ScrollableDetails.horizontal(controller: _horizontalScroll),
                               columnBuilder: (index) {
@@ -1111,6 +1113,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                         padding: ThemedColumn.padding,
                                         child: column.richTextBuilder != null
                                             ? RichText(
+                                                overflow: TextOverflow.ellipsis,
                                                 text: TextSpan(
                                                   children: column.richTextBuilder!.call(context, item),
                                                   style: _rowStyle,

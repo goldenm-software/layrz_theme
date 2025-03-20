@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.9
+
+- Fixed `ThemedTable` to use the correct ellipsis on `richTextBuilder`.
+
 ## 7.2.8
 
 - Upgraded flutter_map to latest version (v8.1.1)
