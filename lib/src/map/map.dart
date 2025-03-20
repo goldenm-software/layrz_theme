@@ -1,7 +1,6 @@
 library;
 
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,6 @@ part 'src/layers/toolbar.dart';
 part 'src/button.dart';
 part 'src/helpers.dart';
 part 'src/constants.dart';
-part 'src/projection.dart';
 
 // Events
 part 'src/events/controller.dart';

@@ -15,7 +15,7 @@ class BasicTableView extends StatefulWidget {
 class _BasicTableViewState extends State<BasicTableView> {
   List<Asset> _items = [];
 
-  int get _it => 100;
+  int get _it => 1;
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _BasicTableViewState extends State<BasicTableView> {
   Asset _generateAsset(int index) {
     return Asset(
       id: (index + 1).toString(),
-      name: "Asset ${index + 1}",
+      name: "Asset ${index + 1} asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
       plate: 'PLATE${index + 1}',
       vin: 'VIN${index + 1}',
     );
@@ -79,10 +79,26 @@ class _BasicTableViewState extends State<BasicTableView> {
               columns: [
                 ThemedColumn(
                   labelText: 'Name',
-                  // color: Colors.green,
-                  textColor: Colors.blue,
                   valueBuilder: (context, item) => item.name,
-                  widgetBuilder: (context, item) => Text(item.name),
+                  richTextBuilder: (context, item) {
+                    return [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      TextSpan(
+                        text: item.name,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ];
+                  },
                   width: 200,
                   // cellColor: (item) => Colors.yellow,
                   cellTextColor: (item) => Colors.red,
@@ -90,20 +106,12 @@ class _BasicTableViewState extends State<BasicTableView> {
                     debugPrint("Tapped on ${item.name}");
                   },
                 ),
-                // ThemedColumn(
-                //   labelText: 'Plate',
-                //   valueBuilder: (context, item) => item.plate ?? 'N/A',
-                // ),
-                // ThemedColumn(
-                //   labelText: 'VIN',
-                //   valueBuilder: (context, item) => item.vin ?? 'N/A',
-                // ),
-                // ...List.generate(20, (i) {
-                //   return ThemedColumn(
-                //     labelText: 'VIN $i',
-                //     valueBuilder: (context, item) => item.vin ?? 'N/A',
-                //   );
-                // }),
+                ...List.generate(20, (i) {
+                  return ThemedColumn(
+                    labelText: 'VIN $i',
+                    valueBuilder: (context, item) => item.vin ?? 'N/A',
+                  );
+                }),
               ],
             ),
           ),
