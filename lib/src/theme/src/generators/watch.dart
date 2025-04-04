@@ -1,9 +1,18 @@
-part of '../theme.dart';
+part of '../../theme.dart';
 
-/// [generateLightTheme] is a helper function to generate a [ThemeData] with the
-/// [Brightness.light] theme.
-/// Will receive the following arguments:
-ThemeData generateLightTheme({
+/// [generateWatchTheme] is a helper function to generate a [ThemeData]. Extending the configuration of
+/// [generateDarkTheme] to be used in WearOS devices.
+///
+/// This generator should be used only for Smart Watch devices, and should be declarated on
+/// your material app as:
+/// ```dart
+/// MaterialApp(
+///   themeMode: ThemeMode.dark,
+///   theme: ThemeData.light(), // This is not used, but should be declarated to avoid errors.
+///   darkTheme: generateWatchTheme(),
+///   ...
+/// )
+ThemeData generateWatchTheme({
   /// [theme] is the theme of the app. The supported colors comes from Layrz API.
   /// By default, it is `"CUSTOM"`.
   String theme = "CUSTOM",
@@ -13,7 +22,7 @@ ThemeData generateLightTheme({
   Color mainColor = kPrimaryColor,
 
   /// [titleFont] is the font of the title text.
-  /// By default, uses `Cabin` from `Google Fonts`.
+  /// By default, uses `Ubuntu` from `Google Fonts`.
   /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
   /// For example: ```dart
   /// void main() async {
@@ -23,7 +32,7 @@ ThemeData generateLightTheme({
   AppFont? titleFont,
 
   /// [bodyFont] is the font of the text.
-  /// By default, uses `Fira Sans Condensed` from `Google Fonts`.
+  /// By default, uses `Ubuntu` from `Google Fonts`.
   /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
   /// For example: ```dart
   /// void main() async {
@@ -32,37 +41,37 @@ ThemeData generateLightTheme({
   /// ```
   AppFont? bodyFont,
 }) {
-  MaterialColor color = getThemeColor(
-    theme: theme,
-    color: mainColor,
-  );
+  MaterialColor color = getThemeColor(theme: theme, color: mainColor);
 
   TextTheme textTheme = ThemedFontHandler.generateFont(
-    isDark: false,
+    isDark: true,
     titleFont: titleFont,
     bodyFont: bodyFont,
-    titleTextColor: Colors.black,
+    titleTextColor: Colors.white,
   );
 
-  // isDark ? const Color(0x1FFFFFFF) : const Color(0x1F000000);
   return ThemeData.from(
     textTheme: textTheme,
-    colorScheme: ColorScheme.fromSwatch(primarySwatch: color, brightness: Brightness.light).copyWith(
-      onPrimaryContainer: kLightBackgroundColor,
-      onSurface: kLightBackgroundColor,
+    colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: color, brightness: Brightness.dark)
+        .copyWith(
+      primary: Colors.white,
+      onPrimary: Colors.black,
+      surface: Colors.black,
+      onSurface: Colors.white,
+      brightness: Brightness.dark,
     ),
     useMaterial3: true,
   ).copyWith(
-    brightness: Brightness.light,
-    scaffoldBackgroundColor: kLightBackgroundColor,
-    dialogBackgroundColor: kLightBackgroundColor,
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: Colors.black,
     primaryColor: color,
-    canvasColor: kLightBackgroundColor,
+    canvasColor: Colors.black,
     shadowColor: Colors.black.withValues(alpha: 0.3),
 
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
-        color: color,
+        color: Colors.black,
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
@@ -77,37 +86,39 @@ ThemeData generateLightTheme({
         fontSize: 12,
       ),
     ),
+
     // Input
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.all(10),
       filled: true,
-      fillColor: Colors.grey.shade200,
+      fillColor: Colors.grey.shade800,
       border: const ThemedInputBorder(),
       labelStyle: TextStyle(
-        color: Colors.grey.shade600,
+        color: Colors.grey.shade400,
       ),
-      suffixIconColor: Colors.grey.shade500,
+      suffixIconColor: Colors.grey.shade300,
       suffixStyle: TextStyle(
-        color: Colors.grey.shade600,
+        color: Colors.grey.shade400,
         fontSize: 15,
       ),
-      prefixIconColor: Colors.grey.shade500,
+      prefixIconColor: Colors.grey.shade300,
       prefixStyle: TextStyle(
-        color: Colors.grey.shade600,
+        color: Colors.grey.shade400,
         fontSize: 15,
       ),
     ),
 
     // Tab Bar
     tabBarTheme: TabBarTheme(
-      labelColor: color,
-      unselectedLabelColor: Colors.grey.shade700,
+      labelColor: Colors.white,
+      unselectedLabelColor: Colors.grey.shade500,
       dividerColor: Colors.transparent,
     ),
 
+    // Dialog
     dialogTheme: const DialogTheme(
-      backgroundColor: kLightBackgroundColor,
-      surfaceTintColor: kLightBackgroundColor,
+      backgroundColor: Colors.black,
+      surfaceTintColor: Colors.black,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(10),
@@ -118,9 +129,9 @@ ThemeData generateLightTheme({
     // Header / AppBar
     secondaryHeaderColor: color,
     appBarTheme: const AppBarTheme(
-      systemOverlayStyle: kLightSystemUiOverlayStyle,
-      color: kLightBackgroundColor,
-      surfaceTintColor: kLightBackgroundColor,
+      systemOverlayStyle: kDarkSystemUiOverlayStyle,
+      color: Colors.black,
+      surfaceTintColor: Colors.black,
       shadowColor: Colors.transparent,
       foregroundColor: Colors.transparent,
     ),
@@ -135,9 +146,9 @@ ThemeData generateLightTheme({
     ),
 
     // Divider
-    dividerColor: Colors.black.withValues(alpha: 0.1),
+    dividerColor: Colors.grey.shade800,
     dividerTheme: DividerThemeData(
-      color: Colors.black.withValues(alpha: 0.1),
+      color: Colors.grey.shade800,
       thickness: 1,
       space: 3,
       indent: 0,
@@ -147,7 +158,7 @@ ThemeData generateLightTheme({
       trackVisibility: WidgetStateProperty.all(true),
       thumbVisibility: WidgetStateProperty.all(true),
       thumbColor: WidgetStateColor.resolveWith((states) {
-        return Colors.black.withValues(alpha: 0.4);
+        return Colors.grey.shade500.withValues(alpha: 0.4);
       }),
       trackColor: WidgetStateProperty.all(Colors.transparent),
       trackBorderColor: WidgetStateProperty.all(Colors.transparent),
@@ -156,11 +167,11 @@ ThemeData generateLightTheme({
 
     // Slider
     sliderTheme: SliderThemeData(
-      activeTrackColor: color,
+      activeTrackColor: Colors.white,
       inactiveTrackColor: Colors.grey.shade300,
-      thumbColor: color,
-      overlayColor: color.withValues(alpha: 0.3),
-      valueIndicatorColor: color,
+      thumbColor: Colors.white,
+      overlayColor: Colors.white.withValues(alpha: 0.3),
+      valueIndicatorColor: Colors.white,
       valueIndicatorTextStyle: textTheme.bodySmall?.copyWith(
         color: kLightBackgroundColor,
       ),
@@ -176,15 +187,12 @@ ThemeData generateLightTheme({
     // Inputs
     checkboxTheme: CheckboxThemeData(
       visualDensity: VisualDensity.compact,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
       fillColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return color;
+        if (states.contains(WidgetState.selected)) return Colors.white;
         return Colors.transparent;
       }),
       checkColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return validateColor(color: color);
+        if (states.contains(WidgetState.selected)) return Colors.white;
         return Colors.transparent;
       }),
       overlayColor: WidgetStateColor.resolveWith((states) {
@@ -192,33 +200,31 @@ ThemeData generateLightTheme({
         return Colors.transparent;
       }),
       mouseCursor: WidgetStateMouseCursor.clickable,
-      side: BorderSide(
-        color: Colors.grey.shade500,
-        width: 2,
-      ),
+      side: const BorderSide(color: Colors.grey, width: 2),
     ),
     switchTheme: SwitchThemeData(
       thumbIcon: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckCircle);
-        return Icon(LayrzIcons.solarOutlineCloseCircle);
+        if (states.contains(WidgetState.selected)) {
+          return Icon(LayrzIcons.solarOutlineCheckSquare, color: color);
+        }
+        return Icon(LayrzIcons.solarOutlineCloseSquare, color: color);
       }),
-      trackOutlineWidth: const WidgetStatePropertyAll(1),
       trackColor: WidgetStateColor.resolveWith((states) {
         return Colors.transparent;
       }),
       thumbColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return color;
+        if (states.contains(WidgetState.selected)) return Colors.white;
         return Colors.grey;
       }),
       trackOutlineColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return color;
+        if (states.contains(WidgetState.selected)) return Colors.white;
         return Colors.grey;
       }),
     ),
     radioTheme: RadioThemeData(
       fillColor: WidgetStateColor.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return color;
+          return Colors.white;
         }
         return Colors.grey.shade700;
       }),
@@ -234,8 +240,8 @@ ThemeData generateLightTheme({
       selectedColor: color,
     ),
     cardTheme: const CardTheme(
-      color: kLightBackgroundColor,
-      surfaceTintColor: kLightBackgroundColor,
+      color: Colors.black,
+      surfaceTintColor: Colors.black,
     ),
     dataTableTheme: const DataTableThemeData(
       decoration: BoxDecoration(

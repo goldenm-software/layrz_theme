@@ -2,7 +2,6 @@
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
@@ -30,14 +29,17 @@ Future<void> main() async {
   final rawThemeMode = prefs.getString('layrz.theme.mode');
   ThemeMode? themeMode;
   if (rawThemeMode != null) {
-    themeMode = ThemeMode.values.firstWhereOrNull((e) => e.name == rawThemeMode);
+    themeMode =
+        ThemeMode.values.firstWhereOrNull((e) => e.name == rawThemeMode);
   }
 
-  double colorblindStrength = prefs.getDouble('layrz.colorblind.strength') ?? 1.0;
+  double colorblindStrength =
+      prefs.getDouble('layrz.colorblind.strength') ?? 1.0;
   final rawColorblindMode = prefs.getString('layrz.colorblind.mode');
   ColorblindMode? colorblindMode;
   if (rawColorblindMode != null) {
-    colorblindMode = ColorblindMode.values.firstWhereOrNull((e) => e.name == rawColorblindMode);
+    colorblindMode = ColorblindMode.values
+        .firstWhereOrNull((e) => e.name == rawColorblindMode);
   }
 
   runApp(VxState(
@@ -73,7 +75,8 @@ class _MyAppState extends State<MyApp> {
               final mut = mutation as SetTheme;
               bool isDark = mut.themeMode == ThemeMode.dark;
               if (mut.themeMode == ThemeMode.system) {
-                isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+                isDark = MediaQuery.of(context).platformBrightness ==
+                    Brightness.dark;
               }
 
               overrideAppBarStyle(isDark: isDark);

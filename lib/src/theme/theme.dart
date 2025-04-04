@@ -14,8 +14,11 @@ import 'dart:math' as math;
 import 'package:layrz_icons/layrz_icons.dart';
 
 part 'src/platform.dart';
-part 'src/light_theme.dart';
-part 'src/dark_theme.dart';
 part 'src/constants.dart';
 part 'src/font.dart';
 part 'src/utilities.dart';
+
+// Generators
+part 'src/generators/light.dart';
+part 'src/generators/dark.dart';
+part 'src/generators/watch.dart';

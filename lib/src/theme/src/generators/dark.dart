@@ -1,8 +1,7 @@
-part of '../theme.dart';
+part of '../../theme.dart';
 
 /// [generateDarkTheme] is a helper function to generate a [ThemeData] with the
 /// [Brightness.dark] theme.
-/// Will receive the following arguments:
 ThemeData generateDarkTheme({
   /// [theme] is the theme of the app. The supported colors comes from Layrz API.
   /// By default, it is `"CUSTOM"`.
@@ -13,7 +12,7 @@ ThemeData generateDarkTheme({
   Color mainColor = kPrimaryColor,
 
   /// [titleFont] is the font of the title text.
-  /// By default, uses `Cabin` from `Google Fonts`.
+  /// By default, uses `Ubuntu` from `Google Fonts`.
   /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
   /// For example: ```dart
   /// void main() async {
@@ -23,7 +22,7 @@ ThemeData generateDarkTheme({
   AppFont? titleFont,
 
   /// [bodyFont] is the font of the text.
-  /// By default, uses `Fira Sans Condensed` from `Google Fonts`.
+  /// By default, uses `Ubuntu` from `Google Fonts`.
   /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
   /// For example: ```dart
   /// void main() async {
@@ -45,7 +44,9 @@ ThemeData generateDarkTheme({
 
   return ThemeData.from(
     textTheme: textTheme,
-    colorScheme: ColorScheme.fromSwatch(primarySwatch: color, brightness: Brightness.dark).copyWith(
+    colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: color, brightness: Brightness.dark)
+        .copyWith(
       primary: Colors.white,
       onPrimary: kDarkBackgroundColor,
       surface: kDarkBackgroundColor,
@@ -56,7 +57,6 @@ ThemeData generateDarkTheme({
   ).copyWith(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: kDarkBackgroundColor,
-    dialogBackgroundColor: kDarkBackgroundColor,
     primaryColor: color,
     canvasColor: kDarkBackgroundColor,
     shadowColor: Colors.black.withValues(alpha: 0.3),
@@ -196,7 +196,9 @@ ThemeData generateDarkTheme({
     ),
     switchTheme: SwitchThemeData(
       thumbIcon: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckSquare, color: color);
+        if (states.contains(WidgetState.selected)) {
+          return Icon(LayrzIcons.solarOutlineCheckSquare, color: color);
+        }
         return Icon(LayrzIcons.solarOutlineCloseSquare, color: color);
       }),
       trackColor: WidgetStateColor.resolveWith((states) {

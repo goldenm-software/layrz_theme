@@ -3,7 +3,14 @@ library;
 // Library exports
 export 'package:file_picker/file_picker.dart' show FileType;
 export 'package:layrz_models/layrz_models.dart'
-    show AppThemedAsset, LayrzAppLocalizations, Avatar, AvatarInput, ColorblindMode;
+    show
+        AppThemedAsset,
+        LayrzAppLocalizations,
+        Avatar,
+        AvatarInput,
+        ColorblindMode,
+        AppFont,
+        FontSource;
 
 // Direct exports
 export 'src/file.dart';

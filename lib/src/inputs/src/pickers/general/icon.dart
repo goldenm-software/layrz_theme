@@ -102,7 +102,8 @@ class ThemedIconPicker extends StatefulWidget {
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+  }) : assert((label == null && labelText != null) ||
+            (label != null && labelText == null));
 
   @override
   State<ThemedIconPicker> createState() => _ThemedIconPickerState();
@@ -113,9 +114,12 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
   LayrzIcon? _value;
 
   List<LayrzIcon>? selectedGroup;
-  EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
+  EdgeInsets get widgetPadding =>
+      widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
-  Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
+  Color get color => Theme.of(context).brightness == Brightness.dark
+      ? Colors.white
+      : Theme.of(context).primaryColor;
 
   final GlobalKey key = GlobalKey();
 
@@ -160,7 +164,9 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
           size: isDense ? 20 : 30,
         ),
       ),
-      suffixIcon: widget.disabled ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineAlbum,
+      suffixIcon: widget.disabled
+          ? LayrzIcons.solarOutlineLockKeyhole
+          : LayrzIcons.solarOutlineAlbum,
       labelText: widget.labelText,
       label: widget.label,
       controller: _textController,
@@ -182,7 +188,8 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
           child: Container(
             padding: const EdgeInsets.all(20),
             constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
-            decoration: generateContainerElevation(context: context, elevation: 3),
+            decoration:
+                generateContainerElevation(context: context, elevation: 3),
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Column(
@@ -204,7 +211,10 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
                             onTap: (icon) {
                               setState(() {
                                 _value = icon;
-                                _textController.text = const IconOrNullConverter().toJson(_value) ?? '';
+                                _textController.text =
+                                    const IconOrNullConverter()
+                                            .toJson(_value) ??
+                                        '';
                               });
                               Navigator.of(context).pop(icon);
                             },
@@ -245,7 +255,9 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    String result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
+    String result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ??
+        widget.translations[key] ??
+        key;
 
     if (widget.overridesLayrzTranslations) {
       result = widget.translations[key] ?? key;
@@ -271,7 +283,7 @@ class _IconGrid extends StatefulWidget {
     required this.constraints,
     this.onTap,
     this.selected,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.allowedIcons = const [],
   });
 
@@ -294,11 +306,15 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
   List<LayrzIcon> get _filteredIcons {
     if (search.isEmpty) return _icons;
 
-    return _icons.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).toList();
+    return _icons
+        .where((element) =>
+            element.name.toLowerCase().contains(search.toLowerCase()))
+        .toList();
   }
 
   void _populateIcons() {
-    _icons = iconMapping.values.toList()..sort((a, b) => a.name.compareTo(b.name));
+    _icons = iconMapping.values.toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
 
     setState(() {});
   }

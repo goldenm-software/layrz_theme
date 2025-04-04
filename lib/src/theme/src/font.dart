@@ -9,10 +9,12 @@ class ThemedFontHandler {
   /// [preloadFont] is a helper function to preload a [AppFont] from the network.
   static Future<void> preloadFont(AppFont font) async {
     if (font.source == FontSource.local) return;
-    debugPrint("layrz_theme/ThemedFontHandler.preloadFont(): Preloading font ${font.name}");
+    debugPrint(
+        "layrz_theme/ThemedFontHandler.preloadFont(): Preloading font ${font.name}");
 
     if (font.source == FontSource.uri && font.uri != null) {
-      final response = await Dio().get(font.uri!, options: Options(responseType: ResponseType.bytes));
+      final response = await Dio()
+          .get(font.uri!, options: Options(responseType: ResponseType.bytes));
       if (response.statusCode == 200) {
         final loader = FontLoader(font.name);
         loader.addFont(Future.value(response.data.buffer.asByteData()));
@@ -46,7 +48,10 @@ class ThemedFontHandler {
     /// [isDark] is a boolean to indicate if the theme is dark.
     bool isDark = false,
   }) {
-    final defaultTextTheme = (isDark ? ThemeData.dark() : ThemeData.light()).textTheme;
+    final defaultTextTheme = (isDark
+            ? ThemeData.dark(useMaterial3: true)
+            : ThemeData.light(useMaterial3: true))
+        .textTheme;
 
     String titleFontName = titleFont?.name ?? 'Ubuntu';
     if (titleFont?.source == FontSource.google) {

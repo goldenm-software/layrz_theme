@@ -32,7 +32,7 @@ class _ThemedTimeUtility extends StatefulWidget {
 
   /// [_ThemedTimeUtility] is a time utility input.
   const _ThemedTimeUtility({
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     super.key,
     this.value,
     this.onChanged,
@@ -52,7 +52,8 @@ class _ThemedTimeUtility extends StatefulWidget {
 
 class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-  Color get primaryColor => isDark ? Colors.white : Theme.of(context).primaryColor;
+  Color get primaryColor =>
+      isDark ? Colors.white : Theme.of(context).primaryColor;
   late TextEditingController _hoursController;
   late TextEditingController _minutesController;
   Timer? _blink;
@@ -103,8 +104,10 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
     _minutesController.text = _value.minute.toString();
 
     // Set cursor position
-    _hoursController.selection = TextSelection.fromPosition(TextPosition(offset: _hoursController.text.length));
-    _minutesController.selection = TextSelection.fromPosition(TextPosition(offset: _minutesController.text.length));
+    _hoursController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _hoursController.text.length));
+    _minutesController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _minutesController.text.length));
     setState(() {});
   }
 
@@ -120,8 +123,12 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
     bool isMobile = width < kSmallGrid;
 
     Widget content = Container(
-      constraints: widget.inDialog ? const BoxConstraints(maxWidth: 400, maxHeight: 400) : null,
-      decoration: widget.inDialog ? generateContainerElevation(context: context, elevation: 3) : null,
+      constraints: widget.inDialog
+          ? const BoxConstraints(maxWidth: 400, maxHeight: 400)
+          : null,
+      decoration: widget.inDialog
+          ? generateContainerElevation(context: context, elevation: 3)
+          : null,
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -165,13 +172,16 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.hour == 0) return;
-                                      _value = _value.replacing(hour: _value.hour - 1);
+                                      _value = _value.replacing(
+                                          hour: _value.hour - 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
                                 LayrzIcons.solarOutlineMinusSquare,
-                                color: Theme.of(context).inputDecorationTheme.prefixIconColor,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .prefixIconColor,
                               ),
                             ),
                           ),
@@ -183,13 +193,16 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.hour == 23) return;
-                                      _value = _value.replacing(hour: _value.hour + 1);
+                                      _value = _value.replacing(
+                                          hour: _value.hour + 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
                                 LayrzIcons.solarOutlineAddSquare,
-                                color: Theme.of(context).inputDecorationTheme.prefixIconColor,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .prefixIconColor,
                               ),
                             ),
                           ),
@@ -254,13 +267,16 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.minute == 0) return;
-                                      _value = _value.replacing(minute: _value.minute - 1);
+                                      _value = _value.replacing(
+                                          minute: _value.minute - 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
                                 LayrzIcons.solarOutlineMinusSquare,
-                                color: Theme.of(context).inputDecorationTheme.prefixIconColor,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .prefixIconColor,
                               ),
                             ),
                           ),
@@ -272,13 +288,16 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.minute == 59) return;
-                                      _value = _value.replacing(minute: _value.minute + 1);
+                                      _value = _value.replacing(
+                                          minute: _value.minute + 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
                               child: Icon(
                                 LayrzIcons.solarOutlineAddSquare,
-                                color: Theme.of(context).inputDecorationTheme.prefixIconColor,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .prefixIconColor,
                               ),
                             ),
                           ),
@@ -332,7 +351,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                 children: [
                   Expanded(
                     child: Container(
-                      color: _value.period == DayPeriod.am ? primaryColor : Colors.transparent,
+                      color: _value.period == DayPeriod.am
+                          ? primaryColor
+                          : Colors.transparent,
                       child: InkWell(
                         onTap: _value.period == DayPeriod.am
                             ? null
@@ -347,8 +368,13 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                         child: Center(
                           child: Text(
                             'AM',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: _value.period == DayPeriod.am ? validateColor(color: primaryColor) : null,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: _value.period == DayPeriod.am
+                                      ? validateColor(color: primaryColor)
+                                      : null,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
@@ -358,7 +384,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                   ),
                   Expanded(
                     child: Container(
-                      color: _value.period == DayPeriod.pm ? primaryColor : Colors.transparent,
+                      color: _value.period == DayPeriod.pm
+                          ? primaryColor
+                          : Colors.transparent,
                       child: InkWell(
                         onTap: _value.period == DayPeriod.pm
                             ? null
@@ -373,8 +401,13 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                         child: Center(
                           child: Text(
                             'PM',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: _value.period == DayPeriod.pm ? validateColor(color: primaryColor) : null,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: _value.period == DayPeriod.pm
+                                      ? validateColor(color: primaryColor)
+                                      : null,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),

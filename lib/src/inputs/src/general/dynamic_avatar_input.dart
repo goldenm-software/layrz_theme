@@ -63,16 +63,20 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
 
     /// [maxHeight] is the max height of the field.
     this.maxHeight = 350,
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+  }) : assert((label == null && labelText != null) ||
+            (label != null && labelText == null));
 
   @override
-  State<ThemedDynamicAvatarInput> createState() => _ThemedDynamicAvatarInputState();
+  State<ThemedDynamicAvatarInput> createState() =>
+      _ThemedDynamicAvatarInputState();
 }
 
-class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> with TickerProviderStateMixin {
+class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput>
+    with TickerProviderStateMixin {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-  Color get containerColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+  Color get containerColor =>
+      isDark ? Colors.grey.shade800 : Colors.grey.shade200;
   Color get iconColor => isDark ? Colors.grey.shade300 : Colors.grey.shade600;
 
   late AvatarInput _value;
@@ -115,7 +119,9 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(i18n?.t("helpers.dynamicAvatar.types.${_value.type}") ?? "Type: ${_value.type}"),
+                    child: Text(
+                        i18n?.t("helpers.dynamicAvatar.types.${_value.type}") ??
+                            "Type: ${_value.type}"),
                   ),
                   if (!disabled) ...[
                     const SizedBox(width: 10),
@@ -128,7 +134,9 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
               ),
             ),
           ),
-          if (widget.errors.isNotEmpty) ThemedFieldDisplayError(errors: widget.errors, hideDetails: widget.hideDetails),
+          if (widget.errors.isNotEmpty)
+            ThemedFieldDisplayError(
+                errors: widget.errors, hideDetails: widget.hideDetails),
         ],
       ),
     );
@@ -156,7 +164,7 @@ class _ThemedDynamicAvatarDialog extends StatefulWidget {
   final List<AvatarType> types;
 
   const _ThemedDynamicAvatarDialog({
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     super.key,
     required this.onChanged,
     required this.value,
@@ -164,10 +172,12 @@ class _ThemedDynamicAvatarDialog extends StatefulWidget {
   });
 
   @override
-  State<_ThemedDynamicAvatarDialog> createState() => _ThemedDynamicAvatarDialogState();
+  State<_ThemedDynamicAvatarDialog> createState() =>
+      _ThemedDynamicAvatarDialogState();
 }
 
-class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> {
+class _ThemedDynamicAvatarDialogState
+    extends State<_ThemedDynamicAvatarDialog> {
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   AvatarInput get _value => widget.value;
 
@@ -182,7 +192,8 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
       child: Container(
         constraints: const BoxConstraints(maxWidth: 600, maxHeight: 500),
         padding: const EdgeInsets.all(10),
-        decoration: generateContainerElevation(context: context, elevation: 5, radius: 10),
+        decoration: generateContainerElevation(
+            context: context, elevation: 5, radius: 10),
         child: DefaultTabController(
           length: widget.types.length,
           initialIndex: widget.types.indexOf(_value.type),
@@ -191,7 +202,8 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
             children: [
               Theme(
                 data: Theme.of(context).copyWith(
-                  tabBarTheme: const TabBarTheme(tabAlignment: TabAlignment.start),
+                  tabBarTheme:
+                      const TabBarTheme(tabAlignment: TabAlignment.start),
                 ),
                 child: TabBar(
                   isScrollable: true,
@@ -203,7 +215,9 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                   tabs: [
                     ...widget.types.map((type) {
                       return ThemedTab(
-                        labelText: i18n?.t('helpers.dynamicAvatar.types.$type') ?? type.readableName,
+                        labelText:
+                            i18n?.t('helpers.dynamicAvatar.types.$type') ??
+                                type.readableName,
                         leading: Icon(type.icon, size: 16),
                       );
                     }),
@@ -253,7 +267,8 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                 controller: _emojiController,
                 scrollDirection: Axis.horizontal,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -283,7 +298,9 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                 builder: (BuildContext context, BoxConstraints constraints) {
                   return _EmojiGrid(
                     iconSize: 16,
-                    selected: _value.emoji == null ? null : Emoji.byChar(_value.emoji!),
+                    selected: _value.emoji == null
+                        ? null
+                        : Emoji.byChar(_value.emoji!),
                     constraints: constraints,
                     onTap: (emoji) {
                       setState(() {
@@ -326,7 +343,8 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ThemedTextInput(
-                labelText: i18n?.t('helpers.dynamicAvatar.types.URL.url') ?? "URL",
+                labelText:
+                    i18n?.t('helpers.dynamicAvatar.types.URL.url') ?? "URL",
                 value: _value.url,
                 prefixIcon: LayrzIcons.solarOutlineLinkMinimalistic2,
                 onChanged: (value) {
@@ -351,7 +369,8 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ThemedAvatarPicker(
-                labelText: i18n?.t('helpers.dynamicAvatar.types.BASE64') ?? type.readableName,
+                labelText: i18n?.t('helpers.dynamicAvatar.types.BASE64') ??
+                    type.readableName,
                 value: _value.base64,
                 onChanged: (base64) {
                   setState(() {
