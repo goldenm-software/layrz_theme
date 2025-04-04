@@ -1,6 +1,6 @@
 part of '../../theme.dart';
 
-/// [generateWatchTheme] is a helper function to generate a [ThemeData]. Extending the configuration of
+/// [generateWearOSTheme] is a helper function to generate a [ThemeData]. Extending the configuration of
 /// [generateDarkTheme] to be used in WearOS devices.
 ///
 /// This generator should be used only for Smart Watch devices, and should be declarated on
@@ -9,10 +9,10 @@ part of '../../theme.dart';
 /// MaterialApp(
 ///   themeMode: ThemeMode.dark,
 ///   theme: ThemeData.light(), // This is not used, but should be declarated to avoid errors.
-///   darkTheme: generateWatchTheme(),
+///   darkTheme: generateWearOSTheme(),
 ///   ...
 /// )
-ThemeData generateWatchTheme({
+ThemeData generateWearOSTheme({
   /// [theme] is the theme of the app. The supported colors comes from Layrz API.
   /// By default, it is `"CUSTOM"`.
   String theme = "CUSTOM",

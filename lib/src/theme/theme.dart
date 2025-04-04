@@ -21,4 +21,4 @@ part 'src/utilities.dart';
 // Generators
 part 'src/generators/light.dart';
 part 'src/generators/dark.dart';
-part 'src/generators/watch.dart';
+part 'src/generators/wear_or.dart';
