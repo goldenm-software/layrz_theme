@@ -8,12 +8,15 @@ part of '../scaffolds.dart';
 /// - actions.confirmation.confirm
 /// - actions.confirmationMultiple.title
 /// - actions.confirmationMultiple.content
+///  If the content is to be customized without i18n, use the customTitle and customContent parameters.
 Future<bool> deleteConfirmationDialog({
   required BuildContext context,
   bool isMultiple = false,
   bool isLoading = false,
   bool isCooldown = false,
   VoidCallback? onCooldown,
+  String? customTitle,
+  String? customContent,
 }) async {
   LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
@@ -26,6 +29,13 @@ Future<bool> deleteConfirmationDialog({
   } else {
     title = i18n?.t('actions.confirmation.title') ?? 'Are you sure that you want to delete this item?';
     content = i18n?.t('actions.confirmation.content') ?? 'Once deleted, you will not be able to recover it.';
+  }
+
+  if (customTitle != null) {
+    title = customTitle;
+  }
+  if (customContent != null) {
+    content = customContent;
   }
 
   bool? result = await showDialog(
