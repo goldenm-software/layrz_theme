@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.10
+
+- Added `customTitle` and `customContent` options to `deleteConfirmationDialog`.
+
 ## 7.2.9
 
 - Fixed `ThemedTable` to use the correct ellipsis on `richTextBuilder`.
