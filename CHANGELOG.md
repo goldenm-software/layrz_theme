@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.11
+
+- Added arrows to `ThemedTabView` to move horizontally between tabs.
+
 ## 7.2.10
 
 - Added `customTitle` and `customContent` options to `deleteConfirmationDialog`.
