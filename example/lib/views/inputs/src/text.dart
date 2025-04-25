@@ -8,7 +8,7 @@ class TextInputView extends StatefulWidget {
 }
 
 class _TextInputViewState extends State<TextInputView> {
-  num? _value = 0;
+  num? _value;
   String? _text;
   Duration? _dur = const Duration();
   @override
@@ -70,7 +70,7 @@ class _TextInputViewState extends State<TextInputView> {
                     ),
                   ],
                 ),
-                const Column(
+                Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -79,6 +79,36 @@ class _TextInputViewState extends State<TextInputView> {
                       labelText: "Example label",
                       placeholder: "Example placeholder",
                       textStyle: TextStyle(color: Colors.purple),
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          final regex = RegExp(r'^\d+\,?\d*$');
+                          if (newValue.text.isEmpty) {
+                            return newValue;
+                          }
+                          if (regex.hasMatch(newValue.text)) {
+                            return newValue;
+                          }
+                          return oldValue;
+                        }),
+                      ],
+                    ),
+                    Text(r"With a Regex formater ^\d+\,?\d*$"),
+                    ThemedTextInput(
+                      labelText: "Example label",
+                      placeholder: "Example placeholder",
+                      textStyle: TextStyle(color: Colors.purple),
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          final regex = RegExp(r'^\d+\,?\d*$');
+                          if (newValue.text.isEmpty) {
+                            return newValue;
+                          }
+                          if (regex.hasMatch(newValue.text)) {
+                            return newValue;
+                          }
+                          return oldValue;
+                        }),
+                      ],
                     ),
                   ],
                 ),
@@ -126,6 +156,17 @@ class _TextInputViewState extends State<TextInputView> {
               labelText: "Example label",
               value: _value,
               decimalSeparator: ThemedDecimalSeparator.dot,
+              onChanged: (value) {
+                debugPrint("Value: $value");
+                setState(() => _value = value);
+              },
+            ),
+            ThemedNumberInput(
+              decimalSeparator: ThemedDecimalSeparator.comma,
+              dense: true,
+              value: _value,
+              labelText: 'Number input with comma as decimal separator',
+              maximumDecimalDigits: 8,
               onChanged: (value) {
                 debugPrint("Value: $value");
                 setState(() => _value = value);

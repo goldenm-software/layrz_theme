@@ -72,6 +72,9 @@ class ThemedNumberInput extends StatefulWidget {
   /// When the [format] is not null, you must provide the [inputRegExp] to filter the input.
   final RegExp? inputRegExp;
 
+  /// Defaults to 4 decimal digits. Maximum is 15 decimal digits.
+  final int maximumDecimalDigits;
+
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
@@ -98,6 +101,7 @@ class ThemedNumberInput extends StatefulWidget {
     this.format,
     this.decimalSeparator = ThemedDecimalSeparator.dot,
     this.inputRegExp,
+    this.maximumDecimalDigits = 4,
   })  : assert(
           (label == null && labelText != null) || (label != null && labelText == null),
           'You must provide either a labelText or a label, but not both.',
@@ -118,12 +122,16 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
   Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
   NumberFormat get format {
     if (widget.format != null) return widget.format!;
+    var formatToUse = NumberFormat.decimalPattern();
 
     if (widget.decimalSeparator == ThemedDecimalSeparator.comma) {
-      return NumberFormat.decimalPattern('pt');
+      formatToUse = NumberFormat.decimalPattern('pt');
     }
 
-    return NumberFormat.decimalPattern();
+    formatToUse.significantDigitsInUse = false;
+    formatToUse.maximumFractionDigits = min(15, widget.maximumDecimalDigits);
+
+    return formatToUse;
   }
 
   @override
@@ -136,26 +144,51 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
   @override
   void didUpdateWidget(ThemedNumberInput oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _updateCursorOffset(oldWidget);
+  }
+
+  void _updateCursorOffset(ThemedNumberInput oldWidget) {
     if (widget.value == null) {
       _controller.text = '';
       return;
     }
-
     if (oldWidget.value != widget.value) {
       // save the current cursor offset
       int previousCursorOffset = _controller.selection.extentOffset;
 
-      final newValue = format.format(widget.value);
-      // update the current value in the controller
-      _controller.text = newValue;
+      String oldValue = oldWidget.value != null ? format.format(oldWidget.value) : '';
+      String newValue = format.format(widget.value);
 
-      // check that the cursor offset is not greater than the length of the value
-      if (newValue.length <= previousCursorOffset) {
-        previousCursorOffset = newValue.length;
+      String thousandSeparator = ThemedDecimalSeparator.comma == widget.decimalSeparator ? '.' : ',';
+
+      // Count how many separators are before the cursor in the old text
+      int oldSeparatorsBeforeCursor = 0;
+      for (int i = 0; i < previousCursorOffset && i < oldValue.length; i++) {
+        // Count commas or dots depending on your separator
+        if (oldValue[i] == thousandSeparator) {
+          oldSeparatorsBeforeCursor++;
+        }
       }
 
+      // Count how many separators would be in the new text at similar position
+      int approximatePosition = min(previousCursorOffset, newValue.length);
+      int newSeparatorsBeforeCursor = 0;
+      for (int i = 0; i < approximatePosition; i++) {
+        if (newValue[i] == thousandSeparator) {
+          newSeparatorsBeforeCursor++;
+        }
+      }
+
+      // Adjust cursor position based on difference in separators
+      int adjustedPosition = previousCursorOffset + (newSeparatorsBeforeCursor - oldSeparatorsBeforeCursor);
+
+      // Ensure the position is within valid range
+      adjustedPosition = max(0, min(adjustedPosition, newValue.length));
+
+      // update the current value in the controller
+      _controller.text = newValue;
       // update the cursor offset
-      _controller.selection = TextSelection.fromPosition(TextPosition(offset: previousCursorOffset));
+      _controller.selection = TextSelection.fromPosition(TextPosition(offset: adjustedPosition));
     }
   }
 
@@ -199,6 +232,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
         if (value == '-') return;
 
         final castedValue = format.tryParse(value);
+
         widget.onChanged?.call(castedValue);
       },
       onSubmitted: widget.onSubmitted,

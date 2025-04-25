@@ -237,9 +237,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     // update the current value in the controller
     _controller.text = _value;
     // check that the cursor offset is not greater than the length of the value
-    if (_value.length <= previousCursorOffset) {
-      previousCursorOffset = _value.length;
-    }
+
+    previousCursorOffset = min(previousCursorOffset, _value.length);
 
     // update the cursor offset
     _controller.selection = TextSelection.fromPosition(
