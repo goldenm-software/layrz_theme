@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.2.12
+- Added `maximumDecimalDigits` prop to `ThemedNumberInput` to allow to increase the number of decimal digits.
+- Fixed `ThemedNumberInput` cursor behaviour to improve experience when typing numbers.
+
+## 7.2.11
+
+- Added arrows to `ThemedTabView` to move horizontally between tabs.
+
 ## 7.2.10
 
 - Added `customTitle` and `customContent` options to `deleteConfirmationDialog`.

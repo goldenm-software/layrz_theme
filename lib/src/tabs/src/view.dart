@@ -1,6 +1,6 @@
 part of '../tabs.dart';
 
-class ThemedTabView extends StatelessWidget {
+class ThemedTabView extends StatefulWidget {
   /// [tabs] is the list of tabs to display
   final List<ThemedTab> tabs;
 
@@ -22,6 +22,9 @@ class ThemedTabView extends StatelessWidget {
   /// [separatorPadding] is the padding of the separator between the tab and the tab view
   final EdgeInsetsGeometry separatorPadding;
 
+  /// [showArrows] is the show arrows of the tab bar view
+  final bool showArrows;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -35,37 +38,116 @@ class ThemedTabView extends StatelessWidget {
     this.animationDuration = const Duration(milliseconds: 250),
     this.physics,
     this.separatorPadding = const EdgeInsets.only(top: 10),
+    this.showArrows = false,
   });
+
+  @override
+  State<ThemedTabView> createState() => _ThemedTabViewState();
+}
+
+class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateMixin {
+  late TabController _tabController;
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  Color get color => isDark ? Colors.white : Colors.black;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _tabController = TabController(
+      length: widget.tabs.length,
+      vsync: this,
+      animationDuration: widget.animationDuration,
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant ThemedTabView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.tabs.length != widget.tabs.length || oldWidget.animationDuration != widget.animationDuration) {
+      _tabController.dispose();
+      _tabController = TabController(
+        length: widget.tabs.length,
+        vsync: this,
+        animationDuration: widget.animationDuration,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding,
-      child: DefaultTabController(
-        length: tabs.length,
-        animationDuration: animationDuration,
-        child: Column(
-          crossAxisAlignment: crossAxisAlignment,
-          mainAxisAlignment: mainAxisAlignment,
-          children: [
-            Theme(
-              data: Theme.of(context).copyWith(
-                tabBarTheme: Theme.of(context).tabBarTheme.copyWith(tabAlignment: TabAlignment.start),
-              ),
-              child: TabBar(
-                isScrollable: true,
-                tabs: tabs,
-              ),
+      padding: widget.padding,
+      child: Column(
+        crossAxisAlignment: widget.crossAxisAlignment,
+        mainAxisAlignment: widget.mainAxisAlignment,
+        children: [
+          Theme(
+            data: Theme.of(context).copyWith(
+              tabBarTheme: Theme.of(context).tabBarTheme.copyWith(tabAlignment: TabAlignment.start),
             ),
-            Padding(padding: separatorPadding),
-            Expanded(
-              child: TabBarView(
-                physics: physics,
-                children: tabs.map((e) => e.child).toList(),
-              ),
+            child: Row(
+              children: [
+                if (widget.showArrows) ...[
+                  ThemedButton(
+                    style: ThemedButtonStyle.filledTonalFab,
+                    labelText: '',
+                    tooltipEnabled: false,
+                    height: 40,
+                    fontSize: 30,
+                    color: color,
+                    icon: LayrzIcons.solarOutlineAltArrowLeft,
+                    isDisabled: _tabController.index == 0,
+                    onTap: () {
+                      if (_tabController.index == 0) return;
+                      _tabController.animateTo(_tabController.index - 1);
+                      setState(() {});
+                    },
+                  ),
+                ],
+                Expanded(
+                  child: TabBar(
+                    isScrollable: true,
+                    tabs: widget.tabs,
+                    controller: _tabController,
+                  ),
+                ),
+                if (widget.showArrows) ...[
+                  ThemedButton(
+                    style: ThemedButtonStyle.filledTonalFab,
+                    labelText: '',
+                    tooltipEnabled: false,
+                    height: 40,
+                    fontSize: 30,
+                    color: color,
+                    icon: LayrzIcons.solarOutlineAltArrowRight,
+                    isDisabled: _tabController.index == widget.tabs.length - 1,
+                    onTap: () {
+                      if (_tabController.index == widget.tabs.length - 1) return;
+                      _tabController.animateTo(_tabController.index + 1);
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(padding: widget.separatorPadding),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              physics: widget.physics,
+              children: widget.tabs.map((e) => e.child).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
