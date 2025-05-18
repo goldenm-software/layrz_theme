@@ -55,7 +55,6 @@ ThemeData generateLightTheme({
   ).copyWith(
     brightness: Brightness.light,
     scaffoldBackgroundColor: kLightBackgroundColor,
-    dialogBackgroundColor: kLightBackgroundColor,
     primaryColor: color,
     canvasColor: kLightBackgroundColor,
     shadowColor: Colors.black.withValues(alpha: 0.3),

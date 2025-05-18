@@ -32,7 +32,7 @@ class _ThemedTimeUtility extends StatefulWidget {
 
   /// [_ThemedTimeUtility] is a time utility input.
   const _ThemedTimeUtility({
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     super.key,
     this.value,
     this.onChanged,

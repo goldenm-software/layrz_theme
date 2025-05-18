@@ -56,7 +56,6 @@ ThemeData generateDarkTheme({
   ).copyWith(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: kDarkBackgroundColor,
-    dialogBackgroundColor: kDarkBackgroundColor,
     primaryColor: color,
     canvasColor: kDarkBackgroundColor,
     shadowColor: Colors.black.withValues(alpha: 0.3),

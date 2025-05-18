@@ -271,7 +271,7 @@ class _IconGrid extends StatefulWidget {
     required this.constraints,
     this.onTap,
     this.selected,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.allowedIcons = const [],
   });
 

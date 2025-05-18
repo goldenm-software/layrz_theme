@@ -156,7 +156,7 @@ class _ThemedDynamicAvatarDialog extends StatefulWidget {
   final List<AvatarType> types;
 
   const _ThemedDynamicAvatarDialog({
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     super.key,
     required this.onChanged,
     required this.value,
