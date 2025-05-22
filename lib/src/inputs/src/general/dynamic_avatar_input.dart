@@ -51,12 +51,7 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
     this.padding,
 
     /// [enabledTypes] is the list of enabled types of the field.
-    this.enabledTypes = const [
-      AvatarType.url,
-      AvatarType.base64,
-      AvatarType.icon,
-      AvatarType.emoji,
-    ],
+    this.enabledTypes = const [AvatarType.url, AvatarType.base64, AvatarType.icon, AvatarType.emoji],
 
     /// [heightFactor] is the height factor of the field.
     this.heightFactor = 0.7,
@@ -79,10 +74,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
   EdgeInsets get padding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get disabled => widget.disabled;
 
-  List<AvatarType> get enabledTypes => [
-        AvatarType.none,
-        ...widget.enabledTypes,
-      ];
+  List<AvatarType> get enabledTypes => [AvatarType.none, ...widget.enabledTypes];
 
   @override
   void initState() {
@@ -102,17 +94,10 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
             onTap: disabled ? null : _showDialog,
             child: Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: containerColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
+              decoration: BoxDecoration(color: containerColor, borderRadius: BorderRadius.circular(10)),
               child: Row(
                 children: [
-                  ThemedAvatar(
-                    size: 50,
-                    radius: 25,
-                    dynamicAvatar: Avatar.fromJson(_value.toJson()),
-                  ),
+                  ThemedAvatar(size: 50, radius: 25, dynamicAvatar: Avatar.fromJson(_value.toJson())),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(i18n?.t("helpers.dynamicAvatar.types.${_value.type}") ?? "Type: ${_value.type}"),
@@ -190,9 +175,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
             mainAxisSize: MainAxisSize.min,
             children: [
               Theme(
-                data: Theme.of(context).copyWith(
-                  tabBarTheme: const TabBarTheme(tabAlignment: TabAlignment.start),
-                ),
+                data: Theme.of(context).copyWith(tabBarTheme: const TabBarThemeData(tabAlignment: TabAlignment.start)),
                 child: TabBar(
                   isScrollable: true,
                   labelPadding: const EdgeInsets.symmetric(horizontal: 5),
@@ -217,11 +200,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                     return TabBarView(
                       children: [
                         ...widget.types.map((type) {
-                          return _buildContent(
-                            type: type,
-                            setState: setState,
-                            constraints: constraints,
-                          );
+                          return _buildContent(type: type, setState: setState, constraints: constraints);
                         }),
                       ],
                     );
@@ -235,11 +214,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
     );
   }
 
-  Widget _buildContent({
-    required BoxConstraints constraints,
-    dynamic setState,
-    required AvatarType type,
-  }) {
+  Widget _buildContent({required BoxConstraints constraints, dynamic setState, required AvatarType type}) {
     Widget content;
     switch (type) {
       case AvatarType.emoji:
@@ -274,10 +249,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(),
-            ),
+            const Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Divider()),
             Expanded(
               child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
@@ -388,10 +360,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
 
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(10)),
       child: content,
     );
   }

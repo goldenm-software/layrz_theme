@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.0-beta.1
+
+- Required changes applied to support Flutter 3.32.0
+
 ## 7.2.13
 
 - Added a way to keep the tab position when the `tabs` is resizing on `ThemedTabView`.
