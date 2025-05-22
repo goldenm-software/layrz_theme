@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.3.0-beta.2
+
+- Updated `generateContainerElevation()` design to use `Colors.black.withValues(alpha: 0.1)` instead of shadow color.
+- Modified `generateContainerElevation()` elevation visualization to be more smooth.
+
 ## 7.3.0-beta.1
 
 - Required changes applied to support Flutter 3.32.0

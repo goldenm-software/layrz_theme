@@ -10,7 +10,7 @@ part of '../helpers.dart';
 /// The [radius] is the radius of the `BorderRadius.circular` of the `BoxDecoration`, by default it is 10.
 /// The minimum value is 0.
 /// The [color] is the color of the `BoxDecoration`, by default it is `Theme.of(context).cardColor`.
-/// The [shadowColor] is the color of the `BoxShadow`, by default it is `Theme.of(context).shadowColor`.
+/// The [shadowColor] is the color of the `BoxShadow`, by default it is `Colors.black.withValues(alpha: 0.1)`.
 /// The [reverse] is the boolean to reverse shadow of the `BoxDecoration`, by default it is false.
 BoxDecoration generateContainerElevation({
   required BuildContext context,
@@ -27,15 +27,15 @@ BoxDecoration generateContainerElevation({
     color: color ?? Theme.of(context).cardColor,
     borderRadius: BorderRadius.circular(radius),
     border: Border.all(
-      color: shadowColor ?? Theme.of(context).shadowColor,
+      color: shadowColor ?? Colors.black.withValues(alpha: 0.1),
       width: elevation == 0 ? 1 : 0,
     ),
     boxShadow: elevation > 0
         ? [
             BoxShadow(
-              color: shadowColor ?? Theme.of(context).shadowColor,
-              blurRadius: 2 * elevation.toDouble(),
-              offset: Offset(0, elevation.toDouble() * (reverse ? -1 : 1)), // changes position of shadow
+              color: shadowColor ?? Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4 * elevation.toDouble(),
+              offset: Offset(0, elevation.toDouble() * (reverse ? -1.5 : 1.5)), // changes position of shadow
             ),
           ]
         : null,
