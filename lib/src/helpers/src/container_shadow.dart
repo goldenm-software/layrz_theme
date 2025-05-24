@@ -26,10 +26,12 @@ BoxDecoration generateContainerElevation({
   return BoxDecoration(
     color: color ?? Theme.of(context).cardColor,
     borderRadius: BorderRadius.circular(radius),
-    border: Border.all(
-      color: shadowColor ?? Colors.black.withValues(alpha: 0.1),
-      width: elevation == 0 ? 1 : 0,
-    ),
+    border: elevation == 0
+        ? Border.all(
+            color: shadowColor ?? Colors.black.withValues(alpha: 0.1),
+            width: 1,
+          )
+        : null,
     boxShadow: elevation > 0
         ? [
             BoxShadow(

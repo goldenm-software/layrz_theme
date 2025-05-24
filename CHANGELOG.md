@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.3.0-beta.4
+
+- Changes on shadows on `ThemedLayout`.
+- Changes on `ThemedScaffoldView`.
+
 ## 7.3.0-beta.3
 
 - Increasing the size from `35u` to `46u` on the `ThemedButton` to be more consistent with the Material 3 design.

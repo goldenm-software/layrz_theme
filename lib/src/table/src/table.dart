@@ -357,9 +357,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   Color get paginatorColor => isDark ? Colors.white : Colors.black;
 
   /// [_headerStyle] represents the style of the header.
-  TextStyle? get _headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(
-    fontWeight: FontWeight.bold,
-  );
+  TextStyle? get _headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold);
 
   /// [_rowStyle] represents the style of the header.
   TextStyle? get _rowStyle => Theme.of(context).textTheme.bodyMedium;
@@ -948,7 +946,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                         widget.title ??
                         Text(
                           widget.customTitleText ?? t('$module.title.list', {'count': widget.items.length}),
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                          style: context.titleStyle,
                         ),
                   ),
 

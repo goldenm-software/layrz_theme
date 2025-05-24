@@ -82,13 +82,15 @@ void overrideAppBarStyleWithColor({
 }) {
   Brightness brightness = useBlack(color: color) ? Brightness.dark : Brightness.light;
 
-  SystemChrome.setSystemUIOverlayStyle(kDarkSystemUiOverlayStyle.copyWith(
-    statusBarColor: color,
-    systemNavigationBarColor: color,
-    systemNavigationBarDividerColor: color,
-    statusBarIconBrightness: brightness,
-    statusBarBrightness: brightness,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    kDarkSystemUiOverlayStyle.copyWith(
+      statusBarColor: color,
+      systemNavigationBarColor: color,
+      systemNavigationBarDividerColor: color,
+      statusBarIconBrightness: brightness,
+      statusBarBrightness: brightness,
+    ),
+  );
 }
 
 class ThemedLayout extends StatefulWidget {
@@ -403,6 +405,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             avatarRadius: widget.avatarRadius,
           ),
           Expanded(
+            // child: const SizedBox(),
             child: Column(
               children: [
                 if (widget.enableBreadcumb) _composeHeader(match: match),
@@ -582,13 +585,15 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
     if (match != null) {
       if (match.icon != null) {
-        pageName.add(WidgetSpan(
-          child: Icon(
-            match.icon,
-            color: color,
-            size: 18,
+        pageName.add(
+          WidgetSpan(
+            child: Icon(
+              match.icon,
+              color: color,
+              size: 18,
+            ),
           ),
-        ));
+        );
       }
 
       // ignore: deprecated_member_use_from_same_package
@@ -610,22 +615,26 @@ class _ThemedLayoutState extends State<ThemedLayout> {
         if (submatch != null) {
           // ignore: deprecated_member_use_from_same_package
           displayHeader = submatch.enableBreadcumb;
-          pageName.add(WidgetSpan(
-            child: Icon(
-              LayrzIcons.solarOutlineAltArrowRight,
-              color: color,
-              size: 18,
-            ),
-          ));
-
-          if (submatch.icon != null) {
-            pageName.add(WidgetSpan(
+          pageName.add(
+            WidgetSpan(
               child: Icon(
-                submatch.icon,
+                LayrzIcons.solarOutlineAltArrowRight,
                 color: color,
                 size: 18,
               ),
-            ));
+            ),
+          );
+
+          if (submatch.icon != null) {
+            pageName.add(
+              WidgetSpan(
+                child: Icon(
+                  submatch.icon,
+                  color: color,
+                  size: 18,
+                ),
+              ),
+            );
           }
 
           if (submatch.labelText != null) {
