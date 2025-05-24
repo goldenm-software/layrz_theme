@@ -29,7 +29,7 @@ class ThemedActionsButtons extends StatefulWidget {
     this.forceMobileMode = false,
     this.mobileBreakpoint = kSmallGrid,
     this.actionsOffset = Offset.zero,
-    this.actionPadding = EdgeInsets.zero,
+    this.actionPadding = const EdgeInsets.only(left: 5),
   });
 
   @override
@@ -205,9 +205,9 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                                           child: Text(
                                             action.labelText ?? "",
                                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                  color: color,
-                                                  overflow: TextOverflow.fade,
-                                                ),
+                                              color: color,
+                                              overflow: TextOverflow.fade,
+                                            ),
                                             textAlign: TextAlign.end,
                                           ),
                                         ),

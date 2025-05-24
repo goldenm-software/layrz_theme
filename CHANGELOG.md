@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.3.0-beta.3
+
+- Increasing the size from `35u` to `46u` on the `ThemedButton` to be more consistent with the Material 3 design.
+- Increased horizontal padding from `10u` to `20u` on the `ThemedButton` to be more consistent with the Material 3 design.
+- Modified `actionsPadding` on `ThemedActionsButtons` to add by default a left padding of `5u`.
+- Updated `ThemedCalendar` to display the selected dates like `ThemedButtonStyle.filledTonal` instead of `ThemedButtonStyle.filled`.
+
 ## 7.3.0-beta.2
 
 - Updated `generateContainerElevation()` design to use `Colors.black.withValues(alpha: 0.1)` instead of shadow color.

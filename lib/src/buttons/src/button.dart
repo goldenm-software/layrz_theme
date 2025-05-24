@@ -2,7 +2,7 @@ part of '../buttons.dart';
 
 class ThemedButton extends StatefulWidget {
   /// [defaultHeight] is used to know the default height of the button.
-  static const double defaultHeight = 35.0;
+  static const double defaultHeight = 46;
 
   /// [label] and [labelText] is the label of the button. Cannot provide both.
   ///
@@ -14,8 +14,8 @@ class ThemedButton extends StatefulWidget {
   /// [labelText] is for send only the String and assume the component will adapt the colors and related
   /// things automatically.
   ///
-  /// Of the style of the label, we use the [ThemeData.textTheme.bodySmall] as base and changes
-  /// the [fontSize] to `13`.
+  /// Of the style of the label, we use the [ThemeData.textTheme.bodyMedium] as base and changes
+  /// the [fontSize] to `14`.
   ///
   /// Avoid using [label] and [labelText] at the same time. We will prefer [label] over [labelText].
   final String? labelText;
@@ -79,7 +79,7 @@ class ThemedButton extends StatefulWidget {
   final ThemedTooltipPosition tooltipPosition;
 
   /// [fontSize] is used to set the font size of the label.
-  /// By default, will use `13`.
+  /// By default, will use `14`.
   final double fontSize;
 
   /// [tooltipEnabled] is used to enable/disable the tooltip.
@@ -93,6 +93,10 @@ class ThemedButton extends StatefulWidget {
   /// and replace the ThemedButton.height value used by default.
   /// height 35. Using [defaultHeight]
   final double height;
+
+  /// [iconSize] is used to set the size of the icon.
+  /// By default, will use `22`.
+  final double iconSize;
 
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
@@ -111,12 +115,17 @@ class ThemedButton extends StatefulWidget {
     this.width,
     this.isDisabled = false,
     this.tooltipPosition = ThemedTooltipPosition.bottom,
-    this.fontSize = 13,
+    this.fontSize = 14,
     this.tooltipEnabled = true,
     this.showCooldownRemainingDuration = true,
     this.height = defaultHeight,
-  })  : assert(label != null || labelText != null),
-        assert(height >= 25);
+    this.iconSize = 22,
+  }) : assert(label != null || labelText != null, "You must provide a label or labelText, not both or none."),
+       assert(height >= 35, "Height must be greater than 35u"),
+       assert(iconSize >= 0, "Icon size must be greater than 0"),
+       assert(iconSize <= height, "Icon size must be less than or equal to height"),
+       assert(fontSize >= 0, "Font size must be greater than 0"),
+       assert(fontSize <= height, "Font size must be less than or equal to height");
 
   factory ThemedButton.save({
     bool isMobile = false,
@@ -317,13 +326,13 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [isFabButton] is used to know if the button is a FAB/icon button.
   bool get isFabButton => [
-        ThemedButtonStyle.outlinedFab,
-        ThemedButtonStyle.fab,
-        ThemedButtonStyle.filledFab,
-        ThemedButtonStyle.filledTonalFab,
-        ThemedButtonStyle.elevatedFab,
-        ThemedButtonStyle.outlinedTonalFab,
-      ].contains(style);
+    ThemedButtonStyle.outlinedFab,
+    ThemedButtonStyle.fab,
+    ThemedButtonStyle.filledFab,
+    ThemedButtonStyle.filledTonalFab,
+    ThemedButtonStyle.elevatedFab,
+    ThemedButtonStyle.outlinedTonalFab,
+  ].contains(style);
 
   /// [onTap] is called when the button is tapped.
   /// It's a shortcut to [widget.onTap].
@@ -339,7 +348,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       return const EdgeInsets.all(5);
     }
 
-    return const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
+    return const EdgeInsets.symmetric(horizontal: 20, vertical: 5);
   }
 
   /// [padding] defines the padding of the button.
@@ -359,14 +368,12 @@ class _ThemedButtonState extends State<ThemedButton> {
   double get kBorderWidth => 1.5;
 
   /// [defaultColor] defines the default color of the button.
-  Color get defaultColor => isDark ? Colors.white : Theme.of(context).primaryColor;
+  Color get defaultColor => Colors.blue;
 
   /// [textStyle] defines the default text style of the button.
   /// This style only applies when the button uses [labelText] instead of [label].
   /// Also, the font color will change depending of the [style] of the button.
-  TextStyle? get textStyle => Theme.of(context).textTheme.bodySmall?.copyWith(
-        fontSize: widget.fontSize,
-      );
+  TextStyle? get textStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: widget.fontSize);
 
   Color get disabledColor => ThemedButton.getDisabledColor(isDark, style);
 
@@ -381,12 +388,19 @@ class _ThemedButtonState extends State<ThemedButton> {
   Color? get colorOverride => isLoading || isCooldown ? disabledColor : null;
 
   /// [iconSize] is used to know the size of the icon.
-  /// It's always `16`.
-  double get iconSize => 16;
+  double get iconSize => widget.iconSize;
 
   /// [borderRadius] is used to know the border radius of the button.
   /// It's always `10`.
   double get borderRadius => 10;
+
+  /// [iconSeparatorSize] is used to know the size of the icon separator.
+  double get iconSeparatorSize => 8;
+
+  WidgetSpan get iconSeparator => WidgetSpan(
+    alignment: PlaceholderAlignment.middle,
+    child: SizedBox(width: iconSeparatorSize),
+  );
 
   /// [message] is used to know the message of the button.
   /// This message is only used when the button uses [label] instead of [labelText] and
@@ -441,7 +455,7 @@ class _ThemedButtonState extends State<ThemedButton> {
 
     if (icon != null) {
       // 5 is the space between the icon and the text
-      predicted += 5;
+      predicted += iconSeparatorSize;
 
       // 14 is the size of the icon
       predicted += iconSize;
@@ -519,10 +533,11 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildFilledTonal] is used to build a filled tonal button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
   Widget _buildFilledTonal() {
+    Color color = colorOverride ?? contentColor;
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorOverride ?? contentColor.withValues(alpha: kHoverOpacity),
+        color: color.withValues(alpha: kHoverOpacity),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(
@@ -535,24 +550,35 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: Padding(
               padding: padding,
               child: _buildLoadingOrChild(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(
-                        icon,
-                        color: contentColor,
-                        size: iconSize,
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                    label ??
-                        Text(
-                          labelText ?? "",
-                          style: textStyle?.copyWith(color: contentColor),
-                        ),
-                  ],
+                child: Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        if (icon != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Icon(
+                              icon,
+                              color: color,
+                              size: iconSize,
+                            ),
+                          ),
+                          iconSeparator,
+                        ],
+                        if (label != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: label!,
+                          ),
+                        ] else ...[
+                          TextSpan(
+                            text: labelText ?? "",
+                            style: textStyle?.copyWith(color: color),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -565,11 +591,13 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildFilledTonalFab] is used to build a filled tonal FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
   Widget _buildFilledTonalFab() {
+    Color color = colorOverride ?? contentColor;
+
     return _handleTooltip(
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: colorOverride ?? contentColor.withValues(alpha: kHoverOpacity),
+          color: color.withValues(alpha: kHoverOpacity),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
@@ -585,7 +613,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                   child: Center(
                     child: Icon(
                       icon ?? LayrzIcons.mdiHelp,
-                      color: contentColor,
+                      color: color,
                       size: iconSize,
                     ),
                   ),
@@ -601,11 +629,13 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildOutlinedTonal] is used to build a filled tonal button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
   Widget _buildOutlinedTonal() {
+    Color color = colorOverride ?? contentColor;
+
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorOverride ?? contentColor.withValues(alpha: kOutlinedTonalOpacity),
-        border: Border.all(color: contentColor, width: kBorderWidth),
+        color: color.withValues(alpha: kOutlinedTonalOpacity),
+        border: Border.all(color: color, width: kBorderWidth),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(
@@ -618,24 +648,35 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: Padding(
               padding: padding,
               child: _buildLoadingOrChild(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(
-                        icon,
-                        color: contentColor,
-                        size: iconSize,
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                    label ??
-                        Text(
-                          labelText ?? "",
-                          style: textStyle?.copyWith(color: contentColor),
-                        ),
-                  ],
+                child: Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        if (icon != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Icon(
+                              icon,
+                              color: color,
+                              size: iconSize,
+                            ),
+                          ),
+                          iconSeparator,
+                        ],
+                        if (label != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: label!,
+                          ),
+                        ] else ...[
+                          TextSpan(
+                            text: labelText ?? "",
+                            style: textStyle?.copyWith(color: color),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -648,12 +689,14 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildOutlinedTonalFab] is used to build a filled tonal FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
   Widget _buildOutlinedTonalFab() {
+    Color color = colorOverride ?? contentColor;
+
     return _handleTooltip(
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: colorOverride ?? contentColor.withValues(alpha: kOutlinedTonalOpacity),
-          border: Border.all(color: contentColor, width: kBorderWidth),
+          color: color.withValues(alpha: kOutlinedTonalOpacity),
+          border: Border.all(color: color, width: kBorderWidth),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
@@ -669,7 +712,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                   child: Center(
                     child: Icon(
                       icon ?? LayrzIcons.mdiHelp,
-                      color: contentColor,
+                      color: color,
                       size: iconSize,
                     ),
                   ),
@@ -701,24 +744,35 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: Padding(
               padding: padding,
               child: _buildLoadingOrChild(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(
-                        icon,
-                        color: contentColor,
-                        size: iconSize,
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                    label ??
-                        Text(
-                          labelText ?? "",
-                          style: textStyle?.copyWith(color: contentColor),
-                        ),
-                  ],
+                child: Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        if (icon != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Icon(
+                              icon,
+                              color: contentColor,
+                              size: iconSize,
+                            ),
+                          ),
+                          iconSeparator,
+                        ],
+                        if (label != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: label!,
+                          ),
+                        ] else ...[
+                          TextSpan(
+                            text: labelText ?? "",
+                            style: textStyle?.copyWith(color: contentColor),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -785,24 +839,35 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: Padding(
               padding: padding,
               child: _buildLoadingOrChild(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(
-                        icon,
-                        color: contentColor,
-                        size: iconSize,
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                    label ??
-                        Text(
-                          labelText ?? "",
-                          style: textStyle?.copyWith(color: contentColor),
-                        ),
-                  ],
+                child: Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        if (icon != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Icon(
+                              icon,
+                              color: contentColor,
+                              size: iconSize,
+                            ),
+                          ),
+                          iconSeparator,
+                        ],
+                        if (label != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: label!,
+                          ),
+                        ] else ...[
+                          TextSpan(
+                            text: labelText ?? "",
+                            style: textStyle?.copyWith(color: contentColor),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -852,10 +917,12 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildFilled] is used to build a filled button.
   /// This button is used when the [style] is [ThemedButtonStyle.filled].
   Widget _buildFilled() {
+    Color color = colorOverride ?? contentColor;
+
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorOverride ?? contentColor,
+        color: color,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Material(
@@ -868,26 +935,35 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: Padding(
               padding: padding,
               child: _buildLoadingOrChild(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(
-                        icon,
-                        color: validateColor(color: contentColor),
-                        size: iconSize,
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                    label ??
-                        Text(
-                          labelText ?? "",
-                          style: textStyle?.copyWith(
-                            color: validateColor(color: contentColor),
+                child: Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        if (icon != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Icon(
+                              icon,
+                              color: validateColor(color: color),
+                              size: iconSize,
+                            ),
                           ),
-                        ),
-                  ],
+                          iconSeparator,
+                        ],
+                        if (label != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: label!,
+                          ),
+                        ] else ...[
+                          TextSpan(
+                            text: labelText ?? "",
+                            style: textStyle?.copyWith(color: validateColor(color: color)),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -900,11 +976,13 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildFilledFab] is used to build a filled FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.filledFab].
   Widget _builFilledFab() {
+    Color color = colorOverride ?? contentColor;
+
     return _handleTooltip(
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: colorOverride ?? contentColor,
+          color: color,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Material(
@@ -919,8 +997,8 @@ class _ThemedButtonState extends State<ThemedButton> {
                 child: _buildLoadingOrChild(
                   child: Center(
                     child: Icon(
-                      icon ?? LayrzIcons.mdiHelp,
-                      color: validateColor(color: contentColor),
+                      icon ?? LayrzIcons.solarOutlineHelp,
+                      color: validateColor(color: color),
                       size: iconSize,
                     ),
                   ),
@@ -936,10 +1014,12 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildElevated] is used to build a elevated button.
   /// This button is used when the [style] is [ThemedButtonStyle.elevated].
   Widget _buildElevated() {
+    Color color = colorOverride ?? contentColor;
+
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorOverride ?? contentColor,
+        color: color,
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
@@ -960,26 +1040,35 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: Padding(
               padding: padding,
               child: _buildLoadingOrChild(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(
-                        icon,
-                        color: validateColor(color: contentColor),
-                        size: iconSize,
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                    label ??
-                        Text(
-                          labelText ?? "",
-                          style: textStyle?.copyWith(
-                            color: validateColor(color: contentColor),
+                child: Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        if (icon != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Icon(
+                              icon,
+                              color: validateColor(color: color),
+                              size: iconSize,
+                            ),
                           ),
-                        ),
-                  ],
+                          iconSeparator,
+                        ],
+                        if (label != null) ...[
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: label!,
+                          ),
+                        ] else ...[
+                          TextSpan(
+                            text: labelText ?? "",
+                            style: textStyle?.copyWith(color: validateColor(color: color)),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -992,11 +1081,13 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_buildElevatedFab] is used to build a elevated FAB button.
   /// This button is used when the [style] is [ThemedButtonStyle.elevatedFab].
   Widget _builElevatedFab() {
+    Color color = colorOverride ?? contentColor;
+
     return _handleTooltip(
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: colorOverride ?? contentColor,
+          color: color,
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: [
             BoxShadow(

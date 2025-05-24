@@ -124,8 +124,8 @@ class ThemedTimeRangePicker extends StatefulWidget {
     this.hideDetails = false,
     this.disableBlink = false,
     this.padding,
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        assert(value.length == 0 || value.length == 2);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null)),
+       assert(value.length == 0 || value.length == 2);
 
   @override
   State<ThemedTimeRangePicker> createState() => _ThemedTimeRangePickerState();
@@ -141,9 +141,11 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
       return null;
     }
 
-    return widget.value.map((t) {
-      return DateTime(0, 0, 0, t.hour, t.minute, 0).format(pattern: pattern, i18n: i18n);
-    }).join(' - ');
+    return widget.value
+        .map((t) {
+          return DateTime(0, 0, 0, t.hour, t.minute, 0).format(pattern: pattern, i18n: i18n);
+        })
+        .join(' - ');
   }
 
   @override
@@ -214,7 +216,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
         return Dialog(
           child: Container(
             padding: const EdgeInsets.all(20),
-            constraints: BoxConstraints(maxWidth: 400, maxHeight: widget.use24HourFormat ? 430 : 540),
+            constraints: BoxConstraints(maxWidth: 400, maxHeight: widget.use24HourFormat ? 430 : 550),
             decoration: generateContainerElevation(context: context, elevation: 3),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,8 +224,8 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                 Text(
                   widget.labelText ?? '',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Expanded(
@@ -235,8 +237,8 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                           Text(
                             t('layrz.timePicker.start'),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           _ThemedTimeUtility(
                             value: start,
@@ -254,8 +256,8 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                           Text(
                             t('layrz.timePicker.end'),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           _ThemedTimeUtility(
                             value: end,
