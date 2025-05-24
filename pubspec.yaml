@@ -37,7 +37,7 @@ dependencies:
   dio: ^5.7.0
   layrz_models: ^3.4.3
   pointer_interceptor: ^0.10.1+2
-  two_dimensional_scrollables: ^0.3.3
+  two_dimensional_scrollables: ^0.3.4
   sync_scroll_controller: ^1.0.1
   web: ^1.1.0
   flutter_map: ^8.1.1

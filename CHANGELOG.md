@@ -6,6 +6,8 @@
 - Increased horizontal padding from `10u` to `20u` on the `ThemedButton` to be more consistent with the Material 3 design.
 - Modified `actionsPadding` on `ThemedActionsButtons` to add by default a left padding of `5u`.
 - Updated `ThemedCalendar` to display the selected dates like `ThemedButtonStyle.filledTonal` instead of `ThemedButtonStyle.filled`.
+- Updated row height of `ThemedTable` to `50u` due to the new button size.
+- Added extension of `BuildContext` to get pre-defined text styles.
 
 ## 7.3.0-beta.2
 
