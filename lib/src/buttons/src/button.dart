@@ -2,7 +2,7 @@ part of '../buttons.dart';
 
 class ThemedButton extends StatefulWidget {
   /// [defaultHeight] is used to know the default height of the button.
-  static const double defaultHeight = 46;
+  static const double defaultHeight = 40;
 
   /// [label] and [labelText] is the label of the button. Cannot provide both.
   ///
@@ -121,7 +121,7 @@ class ThemedButton extends StatefulWidget {
     this.height = defaultHeight,
     this.iconSize = 22,
   }) : assert(label != null || labelText != null, "You must provide a label or labelText, not both or none."),
-       assert(height >= 35, "Height must be greater than 35u"),
+       assert(height >= 30, "Height must be greater than 30u"),
        assert(iconSize >= 0, "Icon size must be greater than 0"),
        assert(iconSize <= height, "Icon size must be less than or equal to height"),
        assert(fontSize >= 0, "Font size must be greater than 0"),
@@ -348,7 +348,7 @@ class _ThemedButtonState extends State<ThemedButton> {
       return const EdgeInsets.all(5);
     }
 
-    return const EdgeInsets.symmetric(horizontal: 20, vertical: 5);
+    return const EdgeInsets.symmetric(horizontal: 16, vertical: 5);
   }
 
   /// [padding] defines the padding of the button.
@@ -461,6 +461,13 @@ class _ThemedButtonState extends State<ThemedButton> {
       predicted += iconSize;
     }
 
+    if ([
+      ThemedButtonStyle.outlined,
+      ThemedButtonStyle.outlinedTonal,
+    ].contains(widget.style)) {
+      predicted += kBorderWidth * 2;
+    }
+
     return predicted;
   }
 
@@ -535,6 +542,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   Widget _buildFilledTonal() {
     Color color = colorOverride ?? contentColor;
     return Container(
+      height: height,
+      width: width,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: color.withValues(alpha: kHoverOpacity),
@@ -544,40 +553,37 @@ class _ThemedButtonState extends State<ThemedButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onTap,
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Padding(
-              padding: padding,
-              child: _buildLoadingOrChild(
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        if (icon != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: Icon(
-                              icon,
-                              color: color,
-                              size: iconSize,
-                            ),
+          child: Padding(
+            padding: padding,
+            child: _buildLoadingOrChild(
+              child: Center(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      if (icon != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            icon,
+                            color: color,
+                            size: iconSize,
                           ),
-                          iconSeparator,
-                        ],
-                        if (label != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: label!,
-                          ),
-                        ] else ...[
-                          TextSpan(
-                            text: labelText ?? "",
-                            style: textStyle?.copyWith(color: color),
-                          ),
-                        ],
+                        ),
+                        iconSeparator,
                       ],
-                    ),
+                      if (label != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: label!,
+                        ),
+                      ] else ...[
+                        TextSpan(
+                          text: labelText ?? "",
+                          style: textStyle?.copyWith(color: color),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -632,6 +638,8 @@ class _ThemedButtonState extends State<ThemedButton> {
     Color color = colorOverride ?? contentColor;
 
     return Container(
+      height: height,
+      width: width,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: color.withValues(alpha: kOutlinedTonalOpacity),
@@ -642,40 +650,37 @@ class _ThemedButtonState extends State<ThemedButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onTap,
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Padding(
-              padding: padding,
-              child: _buildLoadingOrChild(
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        if (icon != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: Icon(
-                              icon,
-                              color: color,
-                              size: iconSize,
-                            ),
+          child: Padding(
+            padding: padding,
+            child: _buildLoadingOrChild(
+              child: Center(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      if (icon != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            icon,
+                            color: color,
+                            size: iconSize,
                           ),
-                          iconSeparator,
-                        ],
-                        if (label != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: label!,
-                          ),
-                        ] else ...[
-                          TextSpan(
-                            text: labelText ?? "",
-                            style: textStyle?.copyWith(color: color),
-                          ),
-                        ],
+                        ),
+                        iconSeparator,
                       ],
-                    ),
+                      if (label != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: label!,
+                        ),
+                      ] else ...[
+                        TextSpan(
+                          text: labelText ?? "",
+                          style: textStyle?.copyWith(color: color),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -730,6 +735,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   Widget _buildText() {
     return Container(
       clipBehavior: Clip.antiAlias,
+      height: height,
+      width: width,
       decoration: BoxDecoration(
         color: colorOverride ?? Colors.transparent,
         borderRadius: BorderRadius.circular(borderRadius),
@@ -738,40 +745,37 @@ class _ThemedButtonState extends State<ThemedButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onTap,
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Padding(
-              padding: padding,
-              child: _buildLoadingOrChild(
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        if (icon != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: Icon(
-                              icon,
-                              color: contentColor,
-                              size: iconSize,
-                            ),
+          child: Padding(
+            padding: padding,
+            child: _buildLoadingOrChild(
+              child: Center(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      if (icon != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            icon,
+                            color: contentColor,
+                            size: iconSize,
                           ),
-                          iconSeparator,
-                        ],
-                        if (label != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: label!,
-                          ),
-                        ] else ...[
-                          TextSpan(
-                            text: labelText ?? "",
-                            style: textStyle?.copyWith(color: contentColor),
-                          ),
-                        ],
+                        ),
+                        iconSeparator,
                       ],
-                    ),
+                      if (label != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: label!,
+                        ),
+                      ] else ...[
+                        TextSpan(
+                          text: labelText ?? "",
+                          style: textStyle?.copyWith(color: contentColor),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -823,6 +827,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   Widget _buildOutlined() {
     return Container(
       clipBehavior: Clip.antiAlias,
+      height: height,
+      width: width,
       decoration: BoxDecoration(
         color: colorOverride ?? Colors.transparent,
         borderRadius: BorderRadius.circular(borderRadius),
@@ -833,40 +839,37 @@ class _ThemedButtonState extends State<ThemedButton> {
         child: InkWell(
           onTap: isDisabled ? null : onTap,
           hoverColor: contentColor.withValues(alpha: kHoverOpacity),
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Padding(
-              padding: padding,
-              child: _buildLoadingOrChild(
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        if (icon != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: Icon(
-                              icon,
-                              color: contentColor,
-                              size: iconSize,
-                            ),
+          child: Padding(
+            padding: padding,
+            child: _buildLoadingOrChild(
+              child: Center(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      if (icon != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            icon,
+                            color: contentColor,
+                            size: iconSize,
                           ),
-                          iconSeparator,
-                        ],
-                        if (label != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: label!,
-                          ),
-                        ] else ...[
-                          TextSpan(
-                            text: labelText ?? "",
-                            style: textStyle?.copyWith(color: contentColor),
-                          ),
-                        ],
+                        ),
+                        iconSeparator,
                       ],
-                    ),
+                      if (label != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: label!,
+                        ),
+                      ] else ...[
+                        TextSpan(
+                          text: labelText ?? "",
+                          style: textStyle?.copyWith(color: contentColor),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -920,6 +923,8 @@ class _ThemedButtonState extends State<ThemedButton> {
     Color color = colorOverride ?? contentColor;
 
     return Container(
+      height: height,
+      width: width,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: color,
@@ -929,40 +934,37 @@ class _ThemedButtonState extends State<ThemedButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onTap,
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Padding(
-              padding: padding,
-              child: _buildLoadingOrChild(
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        if (icon != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: Icon(
-                              icon,
-                              color: validateColor(color: color),
-                              size: iconSize,
-                            ),
+          child: Padding(
+            padding: padding,
+            child: _buildLoadingOrChild(
+              child: Center(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      if (icon != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            icon,
+                            color: validateColor(color: color),
+                            size: iconSize,
                           ),
-                          iconSeparator,
-                        ],
-                        if (label != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: label!,
-                          ),
-                        ] else ...[
-                          TextSpan(
-                            text: labelText ?? "",
-                            style: textStyle?.copyWith(color: validateColor(color: color)),
-                          ),
-                        ],
+                        ),
+                        iconSeparator,
                       ],
-                    ),
+                      if (label != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: label!,
+                        ),
+                      ] else ...[
+                        TextSpan(
+                          text: labelText ?? "",
+                          style: textStyle?.copyWith(color: validateColor(color: color)),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -1017,16 +1019,17 @@ class _ThemedButtonState extends State<ThemedButton> {
     Color color = colorOverride ?? contentColor;
 
     return Container(
+      height: height,
+      width: width,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            offset: const Offset(0, 1),
-            blurRadius: 4,
-            spreadRadius: 2,
+            color: Colors.black.withAlpha((255 * 0.2).toInt()),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -1034,40 +1037,37 @@ class _ThemedButtonState extends State<ThemedButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onTap,
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Padding(
-              padding: padding,
-              child: _buildLoadingOrChild(
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        if (icon != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: Icon(
-                              icon,
-                              color: validateColor(color: color),
-                              size: iconSize,
-                            ),
+          child: Padding(
+            padding: padding,
+            child: _buildLoadingOrChild(
+              child: Center(
+                child: RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      if (icon != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Icon(
+                            icon,
+                            color: validateColor(color: color),
+                            size: iconSize,
                           ),
-                          iconSeparator,
-                        ],
-                        if (label != null) ...[
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: label!,
-                          ),
-                        ] else ...[
-                          TextSpan(
-                            text: labelText ?? "",
-                            style: textStyle?.copyWith(color: validateColor(color: color)),
-                          ),
-                        ],
+                        ),
+                        iconSeparator,
                       ],
-                    ),
+                      if (label != null) ...[
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: label!,
+                        ),
+                      ] else ...[
+                        TextSpan(
+                          text: labelText ?? "",
+                          style: textStyle?.copyWith(color: validateColor(color: color)),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -1091,10 +1091,9 @@ class _ThemedButtonState extends State<ThemedButton> {
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              offset: const Offset(0, 1),
-              blurRadius: 4,
-              spreadRadius: 2,
+              color: Colors.black.withAlpha((255 * 0.2).toInt()),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
             ),
           ],
         ),

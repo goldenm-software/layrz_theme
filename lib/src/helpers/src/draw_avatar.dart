@@ -93,17 +93,9 @@ class ThemedAvatar extends StatelessWidget {
 
     if (dynamicAvatar != null) {
       return _renderDynamicAvatar(
-        onTap: onTap,
-        onLongTap: onLongTap,
-        onSecondaryTap: onSecondaryTap,
         avatar: dynamicAvatar!,
         context: context,
-        name: name ?? 'N/A',
-        elevation: elevation,
         shadowColor: baseShadow,
-        reverse: reverse,
-        size: size,
-        radius: radius,
         color: color ?? baseColor,
       );
     }
@@ -122,6 +114,7 @@ class ThemedAvatar extends StatelessWidget {
         context: context,
         shadowColor: baseShadow,
         color: baseColor,
+        icon: icon,
       );
     }
 
@@ -146,11 +139,15 @@ class ThemedAvatar extends StatelessWidget {
       context: context,
       shadowColor: shadowColor,
       color: color,
-      child: ThemedImage(
-        path: image,
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        clipBehavior: Clip.antiAlias,
+        child: ThemedImage(
+          path: image,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
@@ -159,13 +156,14 @@ class ThemedAvatar extends StatelessWidget {
     required BuildContext context,
     required Color shadowColor,
     required Color color,
+    IconData? icon,
   }) {
     return _generateCircle(
       context: context,
       shadowColor: shadowColor,
       color: color,
       child: Icon(
-        icon,
+        icon ?? LayrzIcons.solarOutlineQuestionSquare,
         color: validateColor(color: color),
         size: iconSize ?? (size * 0.7),
       ),
@@ -173,18 +171,10 @@ class ThemedAvatar extends StatelessWidget {
   }
 
   Widget _renderDynamicAvatar({
-    required Avatar avatar,
     required BuildContext context,
-    required String name,
-    required double elevation,
     required Color shadowColor,
-    required bool reverse,
-    required double size,
-    required double radius,
     required Color color,
-    VoidCallback? onTap,
-    VoidCallback? onLongTap,
-    VoidCallback? onSecondaryTap,
+    required Avatar avatar,
   }) {
     switch (avatar.type) {
       case AvatarType.emoji:
@@ -202,6 +192,7 @@ class ThemedAvatar extends StatelessWidget {
           context: context,
           shadowColor: shadowColor,
           color: color,
+          icon: avatar.icon?.iconData,
         );
 
       case AvatarType.base64:
@@ -262,6 +253,7 @@ class ThemedAvatar extends StatelessWidget {
         shadowColor: shadowColor,
         reverse: reverse,
         radius: radius,
+        hideOnElevationZero: true,
       ),
       alignment: Alignment.center,
       clipBehavior: Clip.antiAlias,

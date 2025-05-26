@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.3.0-beta.6
+
+- Changes on `ThemedButton` related to `RichText` rendering.
+- Changed size of `ThemedButton` to `46u` instead of `40u`.
+- Fixes on `ThemedAvatar` to support `ClipRect` instead of trust on the `clipBehavior` of the `Container`.
+- Modified extension `ThemedColorExtensions` to use getters with combination of the methods.
+
 ## 7.3.0-beta.5
 
 - Updated dependencies to latest
