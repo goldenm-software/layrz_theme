@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.0-beta.5
+
+- Updated dependencies to latest
+
 ## 7.3.0-beta.4
 
 - Changes on shadows on `ThemedLayout`.
