@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.3.0-beta.10
+
+- Modified `ThemedSnackbar` to use a new format of visualization, now will be displayed the first item of a queue.
+- Some changes on input styling to be more consistent with the other inputs.
+
 ## 7.3.0-beta.9
 
 - Added `padding` prop to `ThemedChip` to handle the padding of the chip.

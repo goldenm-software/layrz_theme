@@ -1,5 +1,7 @@
 library;
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:layrz_icons/layrz_icons.dart';
 import 'package:layrz_theme/src/helpers/helpers.dart';

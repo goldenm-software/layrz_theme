@@ -379,6 +379,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                             ),
                           ),
                           ThemedActionsButtons(
+                            forceMobileMode: true,
                             // actionsOffset: const Offset(20, 20),
                             actions: [
                               ThemedActionButton.cancel(
@@ -483,8 +484,6 @@ class _ButtonsViewState extends State<ButtonsView> {
         // context.go('/inputs/text');
         ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
           icon: LayrzIcons.mdiAccessPoint,
-          width: 700,
-          maxLines: 4,
           color: Colors.red,
           title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut nulla sit amet "

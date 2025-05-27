@@ -140,8 +140,8 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                         Text(
                           widget.labelText ?? '',
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                     const SizedBox(height: 10),
                     Expanded(
@@ -152,6 +152,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             if (visibleValues.contains(ThemedUnits.day)) ...[
                               ThemedNumberInput(
                                 labelText: i18n?.t('helpers.days') ?? 'Days',
+                                suffixText: i18n?.t('helpers.days') ?? 'Days',
                                 value: days,
                                 hideDetails: true,
                                 onChanged: (value) {
@@ -165,6 +166,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             if (visibleValues.contains(ThemedUnits.hour)) ...[
                               ThemedNumberInput(
                                 labelText: i18n?.t('helpers.hours') ?? 'Hours',
+                                suffixText: i18n?.t('helpers.hours') ?? 'Hours',
                                 value: hours,
                                 hideDetails: true,
                                 onChanged: (value) {
@@ -178,6 +180,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             if (visibleValues.contains(ThemedUnits.minute)) ...[
                               ThemedNumberInput(
                                 labelText: i18n?.t('helpers.minutes') ?? 'Minutes',
+                                suffixText: i18n?.t('helpers.minutes') ?? 'Minutes',
                                 value: minutes,
                                 hideDetails: true,
                                 onChanged: (value) {
@@ -191,6 +194,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             if (visibleValues.contains(ThemedUnits.second))
                               ThemedNumberInput(
                                 labelText: i18n?.t('helpers.seconds') ?? 'Seconds',
+                                suffixText: i18n?.t('helpers.seconds') ?? 'Seconds',
                                 value: seconds,
                                 hideDetails: true,
                                 onChanged: (value) {
@@ -231,12 +235,14 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                             isMobile: isMobile,
                             labelText: i18n?.t('actions.save') ?? 'Save',
                             onTap: () {
-                              Navigator.of(context).pop(_parseDuration(
-                                days: days,
-                                hours: hours,
-                                minutes: minutes,
-                                seconds: seconds,
-                              ));
+                              Navigator.of(context).pop(
+                                _parseDuration(
+                                  days: days,
+                                  hours: hours,
+                                  minutes: minutes,
+                                  seconds: seconds,
+                                ),
+                              );
                             },
                           ),
                         ],
