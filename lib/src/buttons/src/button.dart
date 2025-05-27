@@ -90,8 +90,7 @@ class ThemedButton extends StatefulWidget {
   final bool showCooldownRemainingDuration;
 
   /// [height] is used to override the height of the button.
-  /// and replace the ThemedButton.height value used by default.
-  /// height 35. Using [defaultHeight]
+  /// and replace the `ThemedButton.defaultHeight` value used by default.
   final double height;
 
   /// [iconSize] is used to set the size of the icon.
