@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.3.0-beta.7
+
+- Added new widget `ThemedAlert` to display an alert with a custom message.
+- Added new widget `ThemedAlertIcon` to display the icon using the Layrz Standard Alert styling.
+
 ## 7.3.0-beta.6
 
 - Changes on `ThemedButton` related to `RichText` rendering.

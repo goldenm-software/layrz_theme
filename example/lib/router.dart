@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:layrz_theme/layrz_theme.dart';
+import 'package:layrz_theme_example/views/alerts.dart';
 import 'package:layrz_theme_example/views/avatars/avatars.dart';
 import 'package:layrz_theme_example/views/colorblindness.dart';
 import 'package:layrz_theme_example/views/home.dart';
@@ -44,6 +45,10 @@ final goRoutes = [
   GoRoute(
     path: '/layo',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const LayoView()),
+  ),
+  GoRoute(
+    path: '/alerts',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const AlertsView()),
   ),
   GoRoute(
     path: '/avatars',
@@ -132,7 +137,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/table/basic' : '/',
+  initialLocation: kDebugMode ? '/alerts' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );
