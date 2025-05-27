@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.3.0-beta.9
+
+- Added `padding` prop to `ThemedChip` to handle the padding of the chip.
+
+## 7.3.0-beta.8
+
+- Added `ThemedChip` to display a chip with a custom message and color.
+
 ## 7.3.0-beta.7
 
 - Added new widget `ThemedAlert` to display an alert with a custom message.

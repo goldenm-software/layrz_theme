@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/store/store.dart';
-import 'package:layrz_icons/layrz_icons.dart';
 
 class AlertsView extends StatefulWidget {
   const AlertsView({super.key});
@@ -20,11 +18,30 @@ class _AlertsViewState extends State<AlertsView> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            "Alerts!",
+            "Chips and alerts!",
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
+          const SizedBox(height: 10),
+          ThemedChip(
+            content: 'This is a chip, displays the content with the provided color, and the background is the same'
+                'color with a 10% opacity.',
+            color: Colors.blue,
+          ),
+          const SizedBox(height: 10),
+          ThemedChip(
+            content: 'You can change the color, and the text style.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            color: Colors.red,
+          ),
+          const SizedBox(height: 20),
+          ThemedChip(
+            content: 'Or, change the padding if you want!',
+            color: Colors.green,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          ),
+          const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
               itemCount: ThemedAlertType.values.length,
