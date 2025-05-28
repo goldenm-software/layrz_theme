@@ -19,9 +19,12 @@ enum ThemedAlertType {
 
   /// [context] is the type of alert that displays contextual messages. The background color is grey and the
   /// icon is a menu dots icon.
-  context;
+  context,
 
-  IconData get icon {
+  /// [custom] is the type of alert that allows for custom icons and colors.
+  custom;
+
+  IconData? get icon {
     switch (this) {
       case ThemedAlertType.info:
         return LayrzIcons.solarOutlineInfoSquare;
@@ -33,10 +36,12 @@ enum ThemedAlertType {
         return LayrzIcons.solarOutlineCloseSquare;
       case ThemedAlertType.context:
         return LayrzIcons.solarOutlineMenuDotsSquare;
+      default:
+        return null; // For custom type, no default icon is provided
     }
   }
 
-  Color get color {
+  Color? get color {
     switch (this) {
       case ThemedAlertType.info:
         return Colors.blue;
@@ -48,6 +53,8 @@ enum ThemedAlertType {
         return Colors.red;
       case ThemedAlertType.context:
         return Colors.grey;
+      default:
+        return null; // For custom type, no default color is provided
     }
   }
 }

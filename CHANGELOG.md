@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.3.0-beta.11
+
+- Added `ThemedAlertType.custom` to support custom colors and icons in `ThemedAlert` and `ThemedAlertIcon`.
+- Added `ThemedAlertStyle.filledIcon` to support a filled icon style in `ThemedAlert`.
+- Added `iconSize` on `ThemedAlert` to control the size of the icon in the alert.
+
 ## 7.3.0-beta.10
 
 - Modified `ThemedSnackbar` to use a new format of visualization, now will be displayed the first item of a queue.

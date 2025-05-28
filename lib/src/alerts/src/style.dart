@@ -14,4 +14,7 @@ enum ThemedAlertStyle {
 
   /// [outlined] is an outlined style of the alert, with a border and no fill color.
   outlined,
+
+  /// [filledIcon] is a outlined filled style of the alert, with a border and a solid fill color only on the icon side.
+  filledIcon,
 }
