@@ -29,7 +29,7 @@ class ThemedActionsButtons extends StatefulWidget {
     this.forceMobileMode = false,
     this.mobileBreakpoint = kSmallGrid,
     this.actionsOffset = Offset.zero,
-    this.actionPadding = EdgeInsets.zero,
+    this.actionPadding = const EdgeInsets.only(left: 5),
   });
 
   @override
@@ -129,6 +129,21 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
       width = this.width - 20;
     }
 
+    List<double> predictedWidths = [];
+    for (ThemedActionButton action in widget.actions) {
+      TextPainter textPainter = TextPainter(
+        text: TextSpan(
+          text: action.labelText ?? "",
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: width);
+      predictedWidths.add(textPainter.size.width + 60); // 60 for icon and padding
+    }
+    double maxWidth = predictedWidths.reduce((a, b) => a > b ? a : b);
+    double overlayWidth = min(maxWidth, width);
+    debugPrint("Overlay width: $overlayWidth - Screen width: $width - Max width: $maxWidth");
+
     double? right = screenSize.width - offset.dx - boxSize.width + actionsOffset.dx;
     double? left;
 
@@ -160,7 +175,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                 right: right,
                 left: left,
                 child: SizedBox(
-                  width: width,
+                  width: overlayWidth,
                   height: _overlayHeight,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -192,25 +207,32 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          action.icon,
-                                          color: color,
-                                          size: 16,
-                                        ),
-                                        const SizedBox(width: 5),
-                                        ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                            maxWidth: width - 44,
+                                        if (left != null) ...[
+                                          Icon(
+                                            action.icon,
+                                            color: color,
+                                            size: 22,
                                           ),
+                                          const SizedBox(width: 10),
+                                        ],
+                                        Expanded(
                                           child: Text(
                                             action.labelText ?? "",
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                  color: color,
-                                                  overflow: TextOverflow.fade,
-                                                ),
+                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                              color: color,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                             textAlign: TextAlign.end,
                                           ),
                                         ),
+                                        if (left == null) ...[
+                                          const SizedBox(width: 10),
+                                          Icon(
+                                            action.icon,
+                                            color: color,
+                                            size: 22,
+                                          ),
+                                        ],
                                       ],
                                     ),
                                   ),

@@ -75,6 +75,12 @@ class ThemedNumberInput extends StatefulWidget {
   /// Defaults to 4 decimal digits. Maximum is 15 decimal digits.
   final int maximumDecimalDigits;
 
+  /// [suffixText] is the suffix text of the input.
+  final String? suffixText;
+
+  /// [prefixText] is the prefix text of the input.
+  final String? prefixText;
+
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
@@ -102,14 +108,16 @@ class ThemedNumberInput extends StatefulWidget {
     this.decimalSeparator = ThemedDecimalSeparator.dot,
     this.inputRegExp,
     this.maximumDecimalDigits = 4,
-  })  : assert(
-          (label == null && labelText != null) || (label != null && labelText == null),
-          'You must provide either a labelText or a label, but not both.',
-        ),
-        assert(
-          (format != null && inputRegExp != null) || (format == null),
-          'When the format is not null, you must provide the inputRegExp to filter the input.',
-        );
+    this.suffixText,
+    this.prefixText,
+  }) : assert(
+         (label == null && labelText != null) || (label != null && labelText == null),
+         'You must provide either a labelText or a label, but not both.',
+       ),
+       assert(
+         (format != null && inputRegExp != null) || (format == null),
+         'When the format is not null, you must provide the inputRegExp to filter the input.',
+       );
 
   @override
   State<ThemedNumberInput> createState() => _ThemedNumberInputState();
@@ -201,6 +209,8 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       label: widget.label,
       disabled: widget.disabled,
       placeholder: widget.placeholder,
+      prefixText: widget.prefixText,
+      suffixText: widget.suffixText,
       prefixIcon: LayrzIcons.solarOutlineMinusSquare,
       onPrefixTap: () {
         num newValue = (widget.value ?? 0) - (widget.step ?? 1);

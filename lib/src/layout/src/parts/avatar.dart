@@ -201,6 +201,33 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       bottom = 20 + padding.bottom + size.height;
     }
 
+    double overlayWidth = 0;
+    List<double> predictedWidths = [];
+    for (var item in actions) {
+      String labelText;
+      if (item is ThemedNavigatorLabel) {
+        labelText = item.labelText ?? '';
+      } else if (item is ThemedNavigatorPage) {
+        labelText = item.labelText ?? '';
+      } else if (item is ThemedNavigatorAction) {
+        labelText = item.labelText ?? '';
+      } else {
+        continue;
+      }
+
+      TextPainter textPainter = TextPainter(
+        text: TextSpan(
+          text: labelText,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: width - 50);
+      predictedWidths.add(textPainter.width + 50);
+    }
+
+    final largerWidth = predictedWidths.isNotEmpty ? predictedWidths.reduce(max) : 0;
+    overlayWidth = min(largerWidth.toDouble(), width);
+
     _overlayEntry = OverlayEntry(
       builder: (context) {
         return Material(
@@ -213,6 +240,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                 right: right,
                 bottom: bottom,
                 left: left,
+                width: overlayWidth,
                 child: KeyboardListener(
                   focusNode: _focusNode,
                   onKeyEvent: (event) {
@@ -224,15 +252,14 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                     scale: _animationController,
                     alignment: bottom != null
                         ? left == null
-                            ? Alignment.bottomRight
-                            : Alignment.bottomLeft
+                              ? Alignment.bottomRight
+                              : Alignment.bottomLeft
                         : left == null
-                            ? Alignment.topRight
-                            : Alignment.topLeft,
+                        ? Alignment.topRight
+                        : Alignment.topLeft,
                     child: StatefulBuilder(
                       builder: (context, setState) {
                         return Container(
-                          constraints: BoxConstraints(maxWidth: width, minWidth: 150),
                           decoration: generateContainerElevation(context: context),
                           clipBehavior: Clip.antiAlias,
                           child: ListView.builder(
@@ -245,10 +272,12 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                               if (item is ThemedNavigatorLabel) {
                                 return Padding(
                                   padding: const EdgeInsets.all(10),
-                                  child: item.label ??
+                                  child:
+                                      item.label ??
                                       Text(
                                         item.labelText ?? '',
                                         style: Theme.of(context).textTheme.bodyMedium,
+                                        textAlign: right != null ? TextAlign.right : TextAlign.left,
                                       ),
                                 );
                               }
@@ -262,20 +291,29 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                       padding: const EdgeInsets.all(10),
                                       child: Row(
                                         children: [
-                                          if (item.icon != null) ...[
+                                          if (item.icon != null && right == null) ...[
                                             Icon(
                                               item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
-                                              size: 15,
+                                              size: 20,
                                             ),
-                                            const SizedBox(width: 5),
+                                            const SizedBox(width: 10),
                                           ],
                                           Expanded(
-                                            child: item.label ??
+                                            child:
+                                                item.label ??
                                                 Text(
                                                   item.labelText ?? '',
                                                   style: Theme.of(context).textTheme.bodyMedium,
+                                                  textAlign: right != null ? TextAlign.right : TextAlign.left,
                                                 ),
                                           ),
+                                          if (item.icon != null && right != null) ...[
+                                            const SizedBox(width: 10),
+                                            Icon(
+                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                              size: 20,
+                                            ),
+                                          ],
                                         ],
                                       ),
                                     ),
@@ -292,20 +330,29 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                       padding: const EdgeInsets.all(10),
                                       child: Row(
                                         children: [
-                                          if (item.icon != null) ...[
+                                          if (item.icon != null && right == null) ...[
                                             Icon(
                                               item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
-                                              size: 15,
+                                              size: 20,
                                             ),
-                                            const SizedBox(width: 5),
+                                            const SizedBox(width: 10),
                                           ],
                                           Expanded(
-                                            child: item.label ??
+                                            child:
+                                                item.label ??
                                                 Text(
                                                   item.labelText ?? '',
                                                   style: Theme.of(context).textTheme.bodyMedium,
+                                                  textAlign: right != null ? TextAlign.right : TextAlign.left,
                                                 ),
                                           ),
+                                          if (item.icon != null && right != null) ...[
+                                            const SizedBox(width: 10),
+                                            Icon(
+                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                              size: 20,
+                                            ),
+                                          ],
                                         ],
                                       ),
                                     ),

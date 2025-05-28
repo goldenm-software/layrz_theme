@@ -49,8 +49,11 @@ class ThemedDualListInput<T> extends StatefulWidget {
   /// [mobileScaleFactor] is the scale factor of the height in mobile mode.
   final double mobileScaleFactor;
 
-  /// [compare] optional function to compare elements if the default compare is not working.
+  /// [compareFunction] optional function to compare elements if the default compare is not working.
   final bool Function(T?, T?)? compareFunction;
+
+  /// [itemExtent] is the extend of the item, used on the lists of the dual list input.
+  final double itemExtent;
 
   /// [ThemedDualListInput] is a dual list input.
   const ThemedDualListInput({
@@ -75,6 +78,7 @@ class ThemedDualListInput<T> extends StatefulWidget {
     this.selectedListName = "Selected",
     this.mobileScaleFactor = 2,
     this.compareFunction,
+    this.itemExtent = 50,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -196,8 +200,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                         child: Text(
                           "${widget.availableListName} (${available.length})",
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       ThemedSearchInput(
@@ -216,6 +220,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                 Expanded(
                   child: ListView.builder(
                     itemCount: availableFiltered.length,
+                    itemExtent: widget.itemExtent,
                     padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 10)),
                     itemBuilder: (context, index) {
                       final item = availableFiltered[index];
@@ -262,8 +267,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                         child: Text(
                           "${widget.selectedListName} (${selected.length})",
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       ThemedSearchInput(
@@ -282,6 +287,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                 Expanded(
                   child: ListView.builder(
                     itemCount: selectedFiltered.length,
+                    itemExtent: widget.itemExtent,
                     padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 10)),
                     itemBuilder: (context, index) {
                       final item = selectedFiltered[index];
@@ -319,12 +325,13 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: widget.label ??
+                          child:
+                              widget.label ??
                               Text(
                                 widget.labelText ?? '',
                                 style: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(
-                                      color: widget.disabled ? Theme.of(context).disabledColor : null,
-                                    ),
+                                  color: widget.disabled ? Theme.of(context).disabledColor : null,
+                                ),
                               ),
                         ),
                       ],
@@ -348,12 +355,13 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: widget.label ??
+                      child:
+                          widget.label ??
                           Text(
                             widget.labelText ?? '',
                             style: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(
-                                  color: widget.disabled ? Theme.of(context).disabledColor : null,
-                                ),
+                              color: widget.disabled ? Theme.of(context).disabledColor : null,
+                            ),
                           ),
                     ),
                     Expanded(
@@ -386,7 +394,8 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       child: InkWell(
         onTap: onTap,
-        child: item.content ??
+        child:
+            item.content ??
             Row(
               children: [
                 const SizedBox(width: 10),
@@ -412,28 +421,28 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
   }
 
   List<ThemedSelectItem<T>> getSelectedFiltered() => selected.where((element) {
-        if (searchSelected.isEmpty) {
-          return true;
-        }
-        List<String> searchable = [];
-        if (element.searchableAttributes.isNotEmpty) {
-          searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
-        }
-        searchable.add(element.label.toLowerCase());
-        return searchable.any((element) => element.contains(searchSelected.toLowerCase()));
-      }).toList();
+    if (searchSelected.isEmpty) {
+      return true;
+    }
+    List<String> searchable = [];
+    if (element.searchableAttributes.isNotEmpty) {
+      searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
+    }
+    searchable.add(element.label.toLowerCase());
+    return searchable.any((element) => element.contains(searchSelected.toLowerCase()));
+  }).toList();
 
   List<ThemedSelectItem<T>> getAvailableFiltered() => available.where((element) {
-        if (searchAvailable.isEmpty) {
-          return true;
-        }
-        List<String> searchable = [];
-        if (element.searchableAttributes.isNotEmpty) {
-          searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
-        }
-        searchable.add(element.label.toLowerCase());
-        return searchable.any((element) => element.contains(searchAvailable.toLowerCase()));
-      }).toList();
+    if (searchAvailable.isEmpty) {
+      return true;
+    }
+    List<String> searchable = [];
+    if (element.searchableAttributes.isNotEmpty) {
+      searchable.addAll(element.searchableAttributes.map((el) => el.toLowerCase()));
+    }
+    searchable.add(element.label.toLowerCase());
+    return searchable.any((element) => element.contains(searchAvailable.toLowerCase()));
+  }).toList();
 
   void toggleAllToSelected() {
     if (searchAvailable.isNotEmpty) {

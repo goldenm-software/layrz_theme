@@ -110,7 +110,7 @@ class ThemedTable<T> extends StatefulWidget {
   final String? customTitleText;
 
   /// [rowHeight] represents the height of the row when the table is in desktop size.
-  /// By default, this value is 40.0
+  /// By default, this value is 50.0
   final double rowHeight;
 
   /// [onIdTap] represents the callback when the user taps on a cell.
@@ -218,6 +218,11 @@ class ThemedTable<T> extends StatefulWidget {
   /// the performance of the view will be affected.
   final bool disablePaginator;
 
+  /// [idWidth] defines the size of the id column.
+  ///
+  /// By default this value is `50u`.
+  final double? idWidth;
+
   /// A standard table with a list of items, designed to be used in the scaffold.
   /// Helps to display a list of items in desktop and mobile mode without a lot of code. (I hope so)
   /// Please read the documentation of each property to understand how to use it.
@@ -250,7 +255,7 @@ class ThemedTable<T> extends StatefulWidget {
     this.canDelete = kThemedTableCanTrue,
     this.idLabel = 'ID',
     this.customTitleText,
-    this.rowHeight = 40.0,
+    this.rowHeight = 50.0,
     this.onIdTap,
     this.idEnabled = true,
     this.rowsPerPage,
@@ -276,8 +281,9 @@ class ThemedTable<T> extends StatefulWidget {
     this.refreshButtonLabelText = 'Reload list',
     this.fixedColumnsCount = 3,
     this.disablePaginator = false,
-  })  : assert(columns.length > 0),
-        assert(rowHeight > 0);
+    this.idWidth,
+  }) : assert(columns.length > 0),
+       assert(rowHeight > 0);
 
   @override
   State<ThemedTable<T>> createState() => _ThemedTableState<T>();
@@ -351,9 +357,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   Color get paginatorColor => isDark ? Colors.white : Colors.black;
 
   /// [_headerStyle] represents the style of the header.
-  TextStyle? get _headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(
-        fontWeight: FontWeight.bold,
-      );
+  TextStyle? get _headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold);
 
   /// [_rowStyle] represents the style of the header.
   TextStyle? get _rowStyle => Theme.of(context).textTheme.bodyMedium;
@@ -368,7 +372,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_idWidth] represents the width of the id column.
   /// This is used to calculate the width of the table.
-  double get _idWidth => 50;
+  double get _idWidth => widget.idWidth ?? 50;
 
   /// [_checkboxWidth] represents the width of the checkbox column.
   /// This is used to calculate the width of the table.
@@ -376,10 +380,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [border] refers to the style of the border of the cells.
   BorderSide get border => BorderSide(
-        // color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-        color: Theme.of(context).dividerColor,
-        width: 1,
-      );
+    // color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+    color: Theme.of(context).dividerColor,
+    width: 1,
+  );
 
   /// [_selectedItems] represents the list of selected items.
   List<T> _selectedItems = [];
@@ -409,64 +413,64 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
 
   /// [_columns] represents the columns of the table.
   List<ThemedColumn<T>> get _columns => [
-        if (_multiSelectionEnabled) ...[
-          ThemedColumn<T>(
-            isSortable: false,
-            label: Center(
-              child: ThemedAnimatedCheckbox(
-                value: _isAllSelected,
-                onChanged: (value) {
-                  if (value) {
-                    _selectedItems = [..._items];
-                  } else {
-                    _selectedItems = [];
-                  }
+    if (_multiSelectionEnabled) ...[
+      ThemedColumn<T>(
+        isSortable: false,
+        label: Center(
+          child: ThemedAnimatedCheckbox(
+            value: _isAllSelected,
+            onChanged: (value) {
+              if (value) {
+                _selectedItems = [..._items];
+              } else {
+                _selectedItems = [];
+              }
 
-                  _validateSelection();
-                },
-              ),
+              _validateSelection();
+            },
+          ),
+        ),
+        valueBuilder: (context, item) => '',
+        widgetBuilder: (context, item) {
+          return Center(
+            child: ThemedAnimatedCheckbox(
+              value: _selectedItems.contains(item),
+              onChanged: (value) {
+                if (value) {
+                  _selectedItems.add(item);
+                } else {
+                  _selectedItems.remove(item);
+                }
+
+                _validateSelection();
+              },
             ),
-            valueBuilder: (context, item) => '',
-            widgetBuilder: (context, item) {
-              return Center(
-                child: ThemedAnimatedCheckbox(
-                  value: _selectedItems.contains(item),
-                  onChanged: (value) {
-                    if (value) {
-                      _selectedItems.add(item);
-                    } else {
-                      _selectedItems.remove(item);
-                    }
+          );
+        },
+        width: _checkboxWidth,
+      ),
+    ],
+    if (widget.idEnabled) ...[
+      ThemedColumn<T>(
+        labelText: widget.idLabel,
+        valueBuilder: widget.idBuilder,
+        onTap: widget.onIdTap == null ? null : (item) => widget.onIdTap?.call(item),
+        customSortingFunction: (a, b) {
+          int aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
+          int bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
 
-                    _validateSelection();
-                  },
-                ),
-              );
-            },
-            width: _checkboxWidth,
-          ),
-        ],
-        if (widget.idEnabled) ...[
-          ThemedColumn<T>(
-            labelText: widget.idLabel,
-            valueBuilder: widget.idBuilder,
-            onTap: widget.onIdTap == null ? null : (item) => widget.onIdTap?.call(item),
-            customSortingFunction: (a, b) {
-              int aValue = int.tryParse(widget.idBuilder(context, a)) ?? 0;
-              int bValue = int.tryParse(widget.idBuilder(context, b)) ?? 0;
-
-              if (aValue == bValue) return 0;
-              if (aValue > bValue) return 1;
-              return -1;
-            },
-            width: _idWidth,
-            widgetBuilder: (context, item) {
-              return Text(widget.idBuilder(context, item));
-            },
-          ),
-        ],
-        ...widget.columns,
-      ];
+          if (aValue == bValue) return 0;
+          if (aValue > bValue) return 1;
+          return -1;
+        },
+        width: _idWidth,
+        widgetBuilder: (context, item) {
+          return Text(widget.idBuilder(context, item));
+        },
+      ),
+    ],
+    ...widget.columns,
+  ];
 
   /// [_hoveredIndex] represents the index of the hovered item.
   int? _hoveredIndex;
@@ -811,8 +815,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                       child: Text(
                                         t('helpers.multipleSelection.title'),
                                         style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: 5),
@@ -823,9 +827,11 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                       isCooldown: widget.isCooldown,
                                       onCooldownFinish: widget.onCooldown,
                                       onTap: () {
-                                        _destroyOverlay(callback: () {
-                                          setState(() => _selectedItems = []);
-                                        });
+                                        _destroyOverlay(
+                                          callback: () {
+                                            setState(() => _selectedItems = []);
+                                          },
+                                        );
                                       },
                                     ),
                                   ],
@@ -852,12 +858,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                             isCooldown: widget.isCooldown,
                                             onCooldownFinish: widget.onCooldown,
                                             onTap: () {
-                                              _destroyOverlay(callback: () {
-                                                bool result = action.onTap.call(_selectedItems);
-                                                if (result) {
-                                                  setState(() => _selectedItems = []);
-                                                }
-                                              });
+                                              _destroyOverlay(
+                                                callback: () {
+                                                  bool result = action.onTap.call(_selectedItems);
+                                                  if (result) {
+                                                    setState(() => _selectedItems = []);
+                                                  }
+                                                },
+                                              );
                                             },
                                           ),
                                           const SizedBox(width: 5),
@@ -883,7 +891,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                   );
 
                                                   if (confirmation && ctx.mounted) {
-                                                    bool result = await widget.onMultiDelete?.call(
+                                                    bool result =
+                                                        await widget.onMultiDelete?.call(
                                                           ctx,
                                                           _selectedItems,
                                                         ) ??
@@ -933,16 +942,16 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                 children: [
                   // Title
                   Expanded(
-                    child: widget.title ??
+                    child:
+                        widget.title ??
                         Text(
                           widget.customTitleText ?? t('$module.title.list', {'count': widget.items.length}),
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                          style: context.titleStyle,
                         ),
                   ),
 
                   /// Search bar
                   //
-
                   ThemedSearchInput(
                     asField: !isMobile,
                     maxWidth: isMobile ? 300 : searchLength,
@@ -1010,10 +1019,10 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                               pinnedColumnCount: isMobile
                                   ? 0
                                   : _columns.isEmpty
-                                      ? 0
-                                      : widget.fixedColumnsCount > _columns.length
-                                          ? _columns.length
-                                          : widget.fixedColumnsCount,
+                                  ? 0
+                                  : widget.fixedColumnsCount > _columns.length
+                                  ? _columns.length
+                                  : widget.fixedColumnsCount,
                               verticalDetails: ScrollableDetails.vertical(controller: _verticalScroll),
                               horizontalDetails: ScrollableDetails.horizontal(controller: _horizontalScroll),
                               columnBuilder: (index) {
@@ -1031,8 +1040,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                 Color? color = index == 0
                                     ? null
                                     : index.isEven
-                                        ? _stripColor
-                                        : null;
+                                    ? _stripColor
+                                    : null;
                                 return TableSpan(
                                   extent: FixedTableSpanExtent(widget.rowHeight),
                                   backgroundDecoration: SpanDecoration(
@@ -1048,7 +1057,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                 final column = _columns[vicinity.column];
 
                                 if (vicinity.row == 0) {
-                                  Widget content = column.label ??
+                                  Widget content =
+                                      column.label ??
                                       Text(
                                         column.labelText ?? '',
                                         style: _headerStyle,
@@ -1120,7 +1130,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 ),
                                               )
                                             : column.widgetBuilder?.call(context, item) ??
-                                                Text(column.valueBuilder.call(context, item)),
+                                                  Text(column.valueBuilder.call(context, item)),
                                       ),
                                     ),
                                   ),
@@ -1159,8 +1169,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                             color: isHovering
                                                 ? _hoverColor
                                                 : index.isOdd
-                                                    ? _stripColor
-                                                    : null,
+                                                ? _stripColor
+                                                : null,
                                             border: Border(
                                               top: border,
                                               bottom: index == items.length - 1 ? BorderSide.none : border,
@@ -1226,7 +1236,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                 ],
                               ),
                             ),
-                          ]
+                          ],
                         ],
                       ),
                     ),

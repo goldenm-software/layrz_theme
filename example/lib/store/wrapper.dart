@@ -172,6 +172,11 @@ class _LayoutState extends State<Layout> {
           path: '/snackbar/basic',
           icon: LayrzIcons.solarOutlineTagHorizontal,
         ),
+        ThemedNavigatorPage(
+          labelText: 'Alerts and Chips',
+          path: '/alerts',
+          icon: LayrzIcons.solarOutlineDanger,
+        ),
       ],
       persistentItems: [
         ThemedNavigatorAction(

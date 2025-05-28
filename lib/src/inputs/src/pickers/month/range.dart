@@ -267,12 +267,13 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                     Row(
                       children: [
                         Expanded(
-                          child: widget.label ??
+                          child:
+                              widget.label ??
                               Text(
                                 widget.labelText ?? '',
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                         ),
                         const SizedBox(width: 10),
@@ -286,8 +287,8 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                         Text(
                           t('layrz.monthPicker.year', {'year': _focusYear}),
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         ThemedButton(
                           style: ThemedButtonStyle.fab,
@@ -307,14 +308,15 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                         ),
                         itemCount: 12,
                         itemBuilder: (context, index) {
+                          bool isSelected = _validateSelection(
+                            _focusYear,
+                            index,
+                            selections: tempPicks.isEmpty ? selections : tempPicks,
+                          );
+                          Color backgroundColor = isSelected ? primaryColor : Theme.of(context).cardColor;
+                          Color? textColor = isSelected ? backgroundColor : null;
                           BoxDecoration decoration = BoxDecoration(
-                            color: _validateSelection(
-                              _focusYear,
-                              index,
-                              selections: tempPicks.isEmpty ? selections : tempPicks,
-                            )
-                                ? primaryColor
-                                : Theme.of(context).cardColor,
+                            color: backgroundColor.withAlpha((255 * 0.2).toInt()),
                             borderRadius: BorderRadius.circular(5),
                           );
 
@@ -325,11 +327,13 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                             child: Opacity(
                               opacity: isDisabled ? 0.5 : 1,
                               child: Container(
+                                clipBehavior: Clip.antiAlias,
                                 decoration: decoration,
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                    mouseCursor: isDisabled ||
+                                    mouseCursor:
+                                        isDisabled ||
                                             !_canRemove(
                                               _focusYear,
                                               index,
@@ -337,7 +341,8 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                                             )
                                         ? SystemMouseCursors.forbidden
                                         : SystemMouseCursors.click,
-                                    onTap: isDisabled ||
+                                    onTap:
+                                        isDisabled ||
                                             !_canRemove(
                                               _focusYear,
                                               index,
@@ -369,8 +374,8 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                                       child: Text(
                                         DateTime(2023, index + 1, 1).format(pattern: '%B', i18n: i18n),
                                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                              color: validateColor(color: decoration.color ?? Colors.white),
-                                            ),
+                                          color: textColor,
+                                        ),
                                       ),
                                     ),
                                   ),

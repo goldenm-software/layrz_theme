@@ -113,6 +113,9 @@ class ThemedSelectInput<T> extends StatefulWidget {
   /// [dialogContraints] is the constraints of the dialog.
   final BoxConstraints? dialogContraints;
 
+  /// [itemExtent] is the extend of the item, used on the lists of the dual list input.
+  final double itemExtent;
+
   /// [ThemedSelectInput] is the input for selecting an item from a list.
   const ThemedSelectInput({
     super.key,
@@ -153,6 +156,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.returnNullOnClose = false,
     this.autoSelectFirst = false,
     this.dialogContraints = const BoxConstraints(maxWidth: 500, maxHeight: 500),
+    this.itemExtent = 50,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -167,12 +171,12 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
   ThemedSelectItem<T>? selected;
 
   List<ThemedSelectItem<T>> get items => widget.items.where((item) {
-        if (searchText.isEmpty) {
-          return true;
-        }
+    if (searchText.isEmpty) {
+      return true;
+    }
 
-        return item.label.toLowerCase().contains(searchText.toLowerCase());
-      }).toList();
+    return item.label.toLowerCase().contains(searchText.toLowerCase());
+  }).toList();
 
   @override
   void initState() {
@@ -285,18 +289,20 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                         children: [
                           if (!widget.hideTitle) ...[
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(
-                                top: 14,
-                                left: 5,
-                              )),
+                              padding: const EdgeInsets.symmetric(horizontal: 10).add(
+                                const EdgeInsets.only(
+                                  top: 14,
+                                  left: 5,
+                                ),
+                              ),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       widget.labelText ?? '',
                                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   if (widget.enableSearch) ...[
@@ -310,8 +316,9 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                                         },
                                         prefixIcon: LayrzIcons.solarOutlineMagnifier,
                                         suffixIcon: searchText.isNotEmpty ? LayrzIcons.solarOutlineCloseSquare : null,
-                                        onSuffixTap:
-                                            searchText.isNotEmpty ? () => setState(() => searchText = "") : null,
+                                        onSuffixTap: searchText.isNotEmpty
+                                            ? () => setState(() => searchText = "")
+                                            : null,
                                         hideDetails: true,
                                         dense: true,
                                         keyboardType: widget.searchKeyboardType,
@@ -327,8 +334,8 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                               child: Text(
                                 t('layrz.select.empty'),
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -337,7 +344,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                               constraints: BoxConstraints(maxHeight: availableHeight),
                               child: ListView.builder(
                                 itemCount: items.length,
-                                shrinkWrap: true,
+                                itemExtent: widget.itemExtent,
                                 padding: const EdgeInsets.all(10),
                                 itemBuilder: (context, index) {
                                   return _ThemedSelectItem<T>(
@@ -361,8 +368,9 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                           ],
                           if (!widget.hideButtons) ...[
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 14)),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ).add(const EdgeInsets.only(bottom: 14)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [

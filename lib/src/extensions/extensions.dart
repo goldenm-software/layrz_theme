@@ -9,3 +9,5 @@ part 'src/color.dart';
 part 'src/page_builder.dart';
 part 'src/grid_fixed_height.dart';
 part 'src/orm.dart';
+part 'src/styling.dart';
+part 'src/i18n.dart';

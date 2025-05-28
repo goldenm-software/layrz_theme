@@ -5,7 +5,10 @@
       "name": "VSCode connected device",
       "cwd": "example",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "toolArgs": [
+        "--web-experimental-hot-reload"
+      ]
     },
     {
       "name": "VSCode connected device (Profile)",

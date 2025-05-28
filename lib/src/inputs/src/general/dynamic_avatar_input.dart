@@ -51,12 +51,7 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
     this.padding,
 
     /// [enabledTypes] is the list of enabled types of the field.
-    this.enabledTypes = const [
-      AvatarType.url,
-      AvatarType.base64,
-      AvatarType.icon,
-      AvatarType.emoji,
-    ],
+    this.enabledTypes = const [AvatarType.url, AvatarType.base64, AvatarType.icon, AvatarType.emoji],
 
     /// [heightFactor] is the height factor of the field.
     this.heightFactor = 0.7,
@@ -69,7 +64,8 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
   State<ThemedDynamicAvatarInput> createState() => _ThemedDynamicAvatarInputState();
 }
 
-class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> with TickerProviderStateMixin {
+class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> {
+  final TextEditingController _textController = TextEditingController();
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get containerColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
@@ -79,10 +75,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
   EdgeInsets get padding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get disabled => widget.disabled;
 
-  List<AvatarType> get enabledTypes => [
-        AvatarType.none,
-        ...widget.enabledTypes,
-      ];
+  List<AvatarType> get enabledTypes => [AvatarType.none, ...widget.enabledTypes];
 
   @override
   void initState() {
@@ -92,45 +85,23 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> wit
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(10),
-            onTap: disabled ? null : _showDialog,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: containerColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  ThemedAvatar(
-                    size: 50,
-                    radius: 25,
-                    dynamicAvatar: Avatar.fromJson(_value.toJson()),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(i18n?.t("helpers.dynamicAvatar.types.${_value.type}") ?? "Type: ${_value.type}"),
-                  ),
-                  if (!disabled) ...[
-                    const SizedBox(width: 10),
-                    IconButton(
-                      icon: Icon(Icons.edit, size: 15, color: iconColor),
-                      onPressed: disabled ? null : _showDialog,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          if (widget.errors.isNotEmpty) ThemedFieldDisplayError(errors: widget.errors, hideDetails: widget.hideDetails),
-        ],
+    return ThemedTextInput(
+      key: widget.key,
+      prefixWidget: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ThemedAvatar(dynamicAvatar: Avatar.fromJson(_value.toJson())),
       ),
+      suffixIcon: widget.disabled ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineAlbum,
+      labelText: widget.labelText,
+      label: widget.label,
+      controller: _textController,
+      disabled: widget.disabled,
+      readonly: true,
+      value: i18n?.t("helpers.dynamicAvatar.types.${_value.type}") ?? "Type: ${_value.type}",
+      onTap: widget.disabled ? null : _showDialog,
+      padding: widget.padding,
+      errors: widget.errors,
+      hideDetails: widget.hideDetails,
     );
   }
 
@@ -186,60 +157,26 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
         child: DefaultTabController(
           length: widget.types.length,
           initialIndex: widget.types.indexOf(_value.type),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Theme(
-                data: Theme.of(context).copyWith(
-                  tabBarTheme: const TabBarTheme(tabAlignment: TabAlignment.start),
-                ),
-                child: TabBar(
-                  isScrollable: true,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 5),
-                  onTap: (index) {
-                    final type = widget.types[index];
-                    widget.onChanged.call(_value.copyWith(type: type));
-                  },
-                  tabs: [
-                    ...widget.types.map((type) {
-                      return ThemedTab(
-                        labelText: i18n?.t('helpers.dynamicAvatar.types.$type') ?? type.readableName,
-                        leading: Icon(type.icon, size: 16),
-                      );
-                    }),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return TabBarView(
-                      children: [
-                        ...widget.types.map((type) {
-                          return _buildContent(
-                            type: type,
-                            setState: setState,
-                            constraints: constraints,
-                          );
-                        }),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return ThemedTabView(
+                tabs: [
+                  for (final type in widget.types)
+                    ThemedTab(
+                      labelText: i18n?.t('helpers.dynamicAvatar.types.$type') ?? type.readableName,
+                      leadingIcon: type.icon,
+                      child: _buildContent(type: type, setState: setState, constraints: constraints),
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildContent({
-    required BoxConstraints constraints,
-    dynamic setState,
-    required AvatarType type,
-  }) {
+  Widget _buildContent({required BoxConstraints constraints, dynamic setState, required AvatarType type}) {
     Widget content;
     switch (type) {
       case AvatarType.emoji:
@@ -274,10 +211,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(),
-            ),
+            const Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Divider()),
             Expanded(
               child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
@@ -388,10 +322,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
 
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(10)),
       child: content,
     );
   }

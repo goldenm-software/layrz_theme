@@ -32,10 +32,7 @@ ThemeData generateDarkTheme({
   /// ```
   AppFont? bodyFont,
 }) {
-  MaterialColor color = getThemeColor(
-    theme: theme,
-    color: mainColor,
-  );
+  MaterialColor color = getThemeColor(theme: theme, color: mainColor);
   TextTheme textTheme = ThemedFontHandler.generateFont(
     isDark: true,
     titleFont: titleFont,
@@ -64,18 +61,9 @@ ThemeData generateDarkTheme({
       decoration: BoxDecoration(
         color: kDarkBackgroundColor,
         borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 5, offset: const Offset(0, 3))],
       ),
-      textStyle: textTheme.bodySmall?.copyWith(
-        color: kLightBackgroundColor,
-        fontSize: 12,
-      ),
+      textStyle: textTheme.bodySmall?.copyWith(color: kLightBackgroundColor, fontSize: 12),
     ),
 
     // Input
@@ -84,37 +72,25 @@ ThemeData generateDarkTheme({
       filled: true,
       fillColor: Colors.grey.shade800,
       border: const ThemedInputBorder(),
-      labelStyle: TextStyle(
-        color: Colors.grey.shade400,
-      ),
+      labelStyle: TextStyle(color: Colors.grey.shade400),
       suffixIconColor: Colors.grey.shade300,
-      suffixStyle: TextStyle(
-        color: Colors.grey.shade400,
-        fontSize: 15,
-      ),
+      suffixStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
       prefixIconColor: Colors.grey.shade300,
-      prefixStyle: TextStyle(
-        color: Colors.grey.shade400,
-        fontSize: 15,
-      ),
+      prefixStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
     ),
 
     // Tab Bar
-    tabBarTheme: TabBarTheme(
+    tabBarTheme: TabBarThemeData(
       labelColor: Colors.white,
       unselectedLabelColor: Colors.grey.shade500,
       dividerColor: Colors.transparent,
     ),
 
     // Dialog
-    dialogTheme: const DialogTheme(
+    dialogTheme: const DialogThemeData(
       backgroundColor: kDarkBackgroundColor,
       surfaceTintColor: kDarkBackgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
     ),
 
     // Header / AppBar
@@ -129,22 +105,12 @@ ThemeData generateDarkTheme({
 
     // Bottom Navigation Bar / Bottom sheet theme
     bottomSheetTheme: const BottomSheetThemeData(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
     ),
 
     // Divider
     dividerColor: Colors.grey.shade800,
-    dividerTheme: DividerThemeData(
-      color: Colors.grey.shade800,
-      thickness: 1,
-      space: 3,
-      indent: 0,
-      endIndent: 0,
-    ),
+    dividerTheme: DividerThemeData(color: Colors.grey.shade800, thickness: 1, space: 3, indent: 0, endIndent: 0),
     scrollbarTheme: ScrollbarThemeData(
       trackVisibility: WidgetStateProperty.all(true),
       thumbVisibility: WidgetStateProperty.all(true),
@@ -163,16 +129,10 @@ ThemeData generateDarkTheme({
       thumbColor: Colors.white,
       overlayColor: Colors.white.withValues(alpha: 0.3),
       valueIndicatorColor: Colors.white,
-      valueIndicatorTextStyle: textTheme.bodySmall?.copyWith(
-        color: kLightBackgroundColor,
-      ),
+      valueIndicatorTextStyle: textTheme.bodySmall?.copyWith(color: kLightBackgroundColor),
       trackHeight: 2,
-      thumbShape: const RoundSliderThumbShape(
-        enabledThumbRadius: 10,
-      ),
-      overlayShape: const RoundSliderOverlayShape(
-        overlayRadius: 20,
-      ),
+      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+      overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
     ),
 
     // Inputs
@@ -218,25 +178,11 @@ ThemeData generateDarkTheme({
         return Colors.grey.shade700;
       }),
     ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        elevation: 0,
-      ),
-    ),
-    listTileTheme: ListTileThemeData(
-      selectedTileColor: color.withValues(alpha: 0.3),
-      selectedColor: color,
-    ),
-    cardTheme: const CardTheme(
-      color: kDarkBackgroundColor,
-      surfaceTintColor: kDarkBackgroundColor,
-    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(backgroundColor: color, elevation: 0)),
+    listTileTheme: ListTileThemeData(selectedTileColor: color.withValues(alpha: 0.3), selectedColor: color),
+    cardTheme: const CardThemeData(color: kDarkBackgroundColor, surfaceTintColor: kDarkBackgroundColor),
     dataTableTheme: const DataTableThemeData(
-      decoration: BoxDecoration(
-        boxShadow: [],
-        borderRadius: BorderRadius.zero,
-      ),
+      decoration: BoxDecoration(boxShadow: [], borderRadius: BorderRadius.zero),
     ),
   );
 }

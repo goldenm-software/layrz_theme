@@ -14,6 +14,7 @@ class ThemedAvatar extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongTap;
   final VoidCallback? onSecondaryTap;
+  final double? iconSize;
 
   const ThemedAvatar({
     super.key,
@@ -76,9 +77,14 @@ class ThemedAvatar extends StatelessWidget {
     ///
     /// Note: The tap effect is only available when is not rendering an image.
     this.onSecondaryTap,
-  })  : assert(elevation <= 5, 'The elevation must be less than or equal to 5'),
-        assert(elevation >= 0, 'The elevation must be greater than or equal to 0'),
-        assert(radius >= 0, 'The radius must be greater than or equal to 0');
+
+    /// [iconSize] is the size of the icon, by default it is a 70% of the [size].
+    ///
+    /// If you set this value, it will override the default size of the icon.
+    this.iconSize,
+  }) : assert(elevation <= 5, 'The elevation must be less than or equal to 5'),
+       assert(elevation >= 0, 'The elevation must be greater than or equal to 0'),
+       assert(radius >= 0, 'The radius must be greater than or equal to 0');
 
   @override
   Widget build(BuildContext context) {
@@ -87,180 +93,95 @@ class ThemedAvatar extends StatelessWidget {
 
     if (dynamicAvatar != null) {
       return _renderDynamicAvatar(
-        onTap: onTap,
-        onLongTap: onLongTap,
-        onSecondaryTap: onSecondaryTap,
         avatar: dynamicAvatar!,
         context: context,
-        name: name ?? 'N/A',
-        elevation: elevation,
         shadowColor: baseShadow,
-        reverse: reverse,
-        size: size,
-        radius: radius,
         color: color ?? baseColor,
       );
     }
 
     if (avatar?.isNotEmpty ?? false) {
       return _renderImage(
-        onTap: onTap,
-        onLongTap: onLongTap,
-        onSecondaryTap: onSecondaryTap,
-        image: avatar!,
         context: context,
-        name: name ?? 'N/A',
-        elevation: elevation,
         shadowColor: baseShadow,
-        reverse: reverse,
-        size: size,
-        radius: radius,
         color: baseColor,
+        image: avatar ?? '',
       );
     }
 
     if (icon != null) {
       return _renderIcon(
-        onTap: onTap,
-        onLongTap: onLongTap,
-        onSecondaryTap: onSecondaryTap,
-        icon: icon!,
         context: context,
-        name: name ?? 'N/A',
-        elevation: elevation,
         shadowColor: baseShadow,
-        reverse: reverse,
-        size: size,
-        radius: radius,
         color: baseColor,
+        icon: icon,
       );
     }
 
     return _generateDefault(
-      onTap: onTap,
-      onLongTap: onLongTap,
-      onSecondaryTap: onSecondaryTap,
       context: context,
-      name: name ?? 'N/A',
-      elevation: elevation,
       shadowColor: baseShadow,
-      reverse: reverse,
-      size: size,
-      radius: radius,
       color: baseColor,
     );
   }
 
   Widget _renderImage({
-    required String image,
     required BuildContext context,
-    required String name,
-    required double elevation,
-    required Color shadowColor,
-    required bool reverse,
-    required double size,
-    required double radius,
     required Color color,
-    VoidCallback? onTap,
-    VoidCallback? onLongTap,
-    VoidCallback? onSecondaryTap,
+    required Color shadowColor,
+    required String image,
   }) {
     if (image.isEmpty) {
-      return _generateDefault(
-        onTap: onTap,
-        onLongTap: onLongTap,
-        onSecondaryTap: onSecondaryTap,
-        context: context,
-        elevation: elevation,
-        shadowColor: shadowColor,
-        reverse: reverse,
-        color: color,
-        size: size,
-        radius: radius,
-        name: name,
-      );
+      return _generateDefault(context: context, shadowColor: shadowColor, color: color);
     }
 
     return _generateCircle(
-      onTap: onTap,
-      onLongTap: onLongTap,
-      onSecondaryTap: onSecondaryTap,
       context: context,
-      elevation: elevation,
       shadowColor: shadowColor,
-      reverse: reverse,
       color: color,
-      size: size,
-      radius: radius,
-      child: ThemedImage(
-        path: image,
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        clipBehavior: Clip.antiAlias,
+        child: ThemedImage(
+          path: image,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
 
   Widget _renderIcon({
-    required IconData icon,
     required BuildContext context,
-    required String name,
-    required double elevation,
     required Color shadowColor,
-    required bool reverse,
-    required double size,
-    required double radius,
     required Color color,
-    VoidCallback? onTap,
-    VoidCallback? onLongTap,
-    VoidCallback? onSecondaryTap,
+    IconData? icon,
   }) {
     return _generateCircle(
-      onTap: onTap,
-      onLongTap: onLongTap,
-      onSecondaryTap: onSecondaryTap,
       context: context,
-      elevation: elevation,
       shadowColor: shadowColor,
-      reverse: reverse,
       color: color,
-      size: size,
-      radius: radius,
       child: Icon(
-        icon,
+        icon ?? LayrzIcons.solarOutlineQuestionSquare,
         color: validateColor(color: color),
-        size: size * 0.7,
+        size: iconSize ?? (size * 0.7),
       ),
     );
   }
 
   Widget _renderDynamicAvatar({
-    required Avatar avatar,
     required BuildContext context,
-    required String name,
-    required double elevation,
     required Color shadowColor,
-    required bool reverse,
-    required double size,
-    required double radius,
     required Color color,
-    VoidCallback? onTap,
-    VoidCallback? onLongTap,
-    VoidCallback? onSecondaryTap,
+    required Avatar avatar,
   }) {
     switch (avatar.type) {
       case AvatarType.emoji:
         return _generateCircle(
-          onTap: onTap,
-          onLongTap: onLongTap,
-          onSecondaryTap: onSecondaryTap,
           context: context,
-          elevation: elevation,
           shadowColor: shadowColor,
-          reverse: reverse,
           color: Colors.white,
-          size: size,
-          radius: radius,
           child: Text(
             avatar.emoji ?? _cleanName(name),
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: size * 0.6),
@@ -268,100 +189,49 @@ class ThemedAvatar extends StatelessWidget {
         );
       case AvatarType.icon:
         return _renderIcon(
-          onTap: onTap,
-          onLongTap: onLongTap,
-          onSecondaryTap: onSecondaryTap,
-          icon: avatar.icon?.iconData ?? Icons.person,
           context: context,
-          name: name,
-          elevation: elevation,
           shadowColor: shadowColor,
-          reverse: reverse,
-          size: size,
-          radius: radius,
           color: color,
+          icon: avatar.icon?.iconData,
         );
 
       case AvatarType.base64:
         return _renderImage(
-          onTap: onTap,
-          onLongTap: onLongTap,
-          onSecondaryTap: onSecondaryTap,
           image: avatar.base64 ?? '',
           context: context,
-          name: name,
-          elevation: elevation,
           shadowColor: shadowColor,
-          reverse: reverse,
-          size: size,
-          radius: radius,
           color: color,
         );
 
       case AvatarType.url:
         return _renderImage(
-          onTap: onTap,
-          onLongTap: onLongTap,
-          onSecondaryTap: onSecondaryTap,
           image: avatar.url ?? '',
           context: context,
-          name: name,
-          elevation: elevation,
           shadowColor: shadowColor,
-          reverse: reverse,
-          size: size,
-          radius: radius,
           color: color,
         );
 
       default:
-        return _generateDefault(
-          onTap: onTap,
-          onLongTap: onLongTap,
-          onSecondaryTap: onSecondaryTap,
-          context: context,
-          elevation: elevation,
-          shadowColor: shadowColor,
-          reverse: reverse,
-          color: color,
-          size: size,
-          radius: radius,
-          name: name,
-        );
+        return _generateDefault(context: context, shadowColor: shadowColor, color: color);
     }
   }
 
   Widget _generateDefault({
     required BuildContext context,
-    required String name,
-    required double elevation,
     required Color shadowColor,
-    required bool reverse,
-    required double size,
-    required double radius,
     required Color color,
-    VoidCallback? onTap,
-    VoidCallback? onLongTap,
-    VoidCallback? onSecondaryTap,
   }) {
     return _generateCircle(
-      onTap: onTap,
-      onLongTap: onLongTap,
-      onSecondaryTap: onSecondaryTap,
       context: context,
-      elevation: elevation,
       shadowColor: shadowColor,
-      reverse: reverse,
       color: color,
-      size: size,
-      radius: radius,
       child: Center(
         child: Text(
           _cleanName(name),
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: validateColor(color: color),
-                fontSize: size * 0.4,
-              ),
+            color: validateColor(color: color),
+            fontSize: size * 0.4,
+          ),
         ),
       ),
     );
@@ -370,15 +240,8 @@ class ThemedAvatar extends StatelessWidget {
   Widget _generateCircle({
     required Widget child,
     required BuildContext context,
-    required double elevation,
     required Color shadowColor,
-    required bool reverse,
-    required double size,
-    required double radius,
     required Color color,
-    VoidCallback? onTap,
-    VoidCallback? onLongTap,
-    VoidCallback? onSecondaryTap,
   }) {
     return Container(
       width: size,
@@ -390,6 +253,7 @@ class ThemedAvatar extends StatelessWidget {
         shadowColor: shadowColor,
         reverse: reverse,
         radius: radius,
+        hideOnElevationZero: true,
       ),
       alignment: Alignment.center,
       clipBehavior: Clip.antiAlias,
@@ -399,10 +263,7 @@ class ThemedAvatar extends StatelessWidget {
           onTap: onTap,
           onLongPress: onLongTap,
           onSecondaryTap: onSecondaryTap,
-          child: Container(
-            alignment: Alignment.center,
-            child: child,
-          ),
+          child: Center(child: child),
         ),
       ),
     );
