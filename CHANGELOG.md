@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.0-beta.12
+
+- Added `itemExtend` to `ThemedDualListInput`, `ThemedSelectInput` and `ThemedMultiSelectInput` to set the item extend of the lists.
+
 ## 7.3.0-beta.11
 
 - Added `ThemedAlertType.custom` to support custom colors and icons in `ThemedAlert` and `ThemedAlertIcon`.
