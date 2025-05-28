@@ -135,7 +135,6 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
     _timerController.duration = snackbar.duration;
     _fadeController.duration = const Duration(milliseconds: 150);
 
-    debugPrint('Width: ${_screenSize.width} - width: $_width');
     double effectiveWidth = _width;
     effectiveWidth -= 30; // Icon of the left
     effectiveWidth -= 10; // Spacer
