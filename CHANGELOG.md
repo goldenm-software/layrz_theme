@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.0-rc.1
+
+- Release candidate 1
+
 ## 7.3.0-beta.12
 
 - Added `itemExtend` to `ThemedDualListInput`, `ThemedSelectInput` and `ThemedMultiSelectInput` to set the item extend of the lists.

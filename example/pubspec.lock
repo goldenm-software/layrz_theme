@@ -350,7 +350,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.3.0-beta.12"
+    version: "7.3.0-rc.1"
   leak_tracker:
     dependency: transitive
     description:
