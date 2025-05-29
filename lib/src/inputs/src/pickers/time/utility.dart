@@ -32,7 +32,7 @@ class _ThemedTimeUtility extends StatefulWidget {
 
   /// [_ThemedTimeUtility] is a time utility input.
   const _ThemedTimeUtility({
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     super.key,
     this.value,
     this.onChanged,
@@ -131,8 +131,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
             Text(
               widget.titleText,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
           ],
@@ -301,8 +301,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                 child: Text(
                   widget.hoursText,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -312,8 +312,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                 child: Text(
                   widget.minutesText,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -324,7 +324,6 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
             Container(
               height: 40,
               decoration: BoxDecoration(
-                color: Theme.of(context).dividerColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               clipBehavior: Clip.antiAlias,
@@ -332,7 +331,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                 children: [
                   Expanded(
                     child: Container(
-                      color: _value.period == DayPeriod.am ? primaryColor : Colors.transparent,
+                      color: _value.period == DayPeriod.am
+                          ? (isDark ? Colors.white : primaryColor).withValues(alpha: 0.3)
+                          : Theme.of(context).dividerColor,
                       child: InkWell(
                         onTap: _value.period == DayPeriod.am
                             ? null
@@ -348,9 +349,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                           child: Text(
                             'AM',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: _value.period == DayPeriod.am ? validateColor(color: primaryColor) : null,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              color: _value.period == DayPeriod.am ? (isDark ? Colors.white : primaryColor) : null,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -358,7 +359,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                   ),
                   Expanded(
                     child: Container(
-                      color: _value.period == DayPeriod.pm ? primaryColor : Colors.transparent,
+                      color: _value.period == DayPeriod.pm
+                          ? (isDark ? Colors.white : primaryColor).withValues(alpha: 0.3)
+                          : Colors.transparent,
                       child: InkWell(
                         onTap: _value.period == DayPeriod.pm
                             ? null
@@ -374,9 +377,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                           child: Text(
                             'PM',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: _value.period == DayPeriod.pm ? validateColor(color: primaryColor) : null,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              color: _value.period == DayPeriod.pm ? (isDark ? Colors.white : primaryColor) : null,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

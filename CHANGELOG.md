@@ -1,5 +1,83 @@
 # Changelog
 
+## 7.3.0
+
+- Stable release
+
+## 7.3.0-rc.2
+
+- Removed a `debugPrint` from `ThemedSnackbarMessenger`
+
+## 7.3.0-rc.1
+
+- Release candidate 1
+
+## 7.3.0-beta.12
+
+- Added `itemExtend` to `ThemedDualListInput`, `ThemedSelectInput` and `ThemedMultiSelectInput` to set the item extend of the lists.
+
+## 7.3.0-beta.11
+
+- Added `ThemedAlertType.custom` to support custom colors and icons in `ThemedAlert` and `ThemedAlertIcon`.
+- Added `ThemedAlertStyle.filledIcon` to support a filled icon style in `ThemedAlert`.
+- Added `iconSize` on `ThemedAlert` to control the size of the icon in the alert.
+
+## 7.3.0-beta.10
+
+- Modified `ThemedSnackbar` to use a new format of visualization, now will be displayed the first item of a queue.
+- Some changes on input styling to be more consistent with the other inputs.
+
+## 7.3.0-beta.9
+
+- Added `padding` prop to `ThemedChip` to handle the padding of the chip.
+
+## 7.3.0-beta.8
+
+- Added `ThemedChip` to display a chip with a custom message and color.
+
+## 7.3.0-beta.7
+
+- Added new widget `ThemedAlert` to display an alert with a custom message.
+- Added new widget `ThemedAlertIcon` to display the icon using the Layrz Standard Alert styling.
+
+## 7.3.0-beta.6
+
+- Changes on `ThemedButton` related to `RichText` rendering.
+- Changed size of `ThemedButton` to `46u` instead of `40u`.
+- Fixes on `ThemedAvatar` to support `ClipRect` instead of trust on the `clipBehavior` of the `Container`.
+- Modified extension `ThemedColorExtensions` to use getters with combination of the methods.
+
+## 7.3.0-beta.5
+
+- Updated dependencies to latest
+
+## 7.3.0-beta.4
+
+- Changes on shadows on `ThemedLayout`.
+- Changes on `ThemedScaffoldView`.
+
+## 7.3.0-beta.3
+
+- Increasing the size from `35u` to `46u` on the `ThemedButton` to be more consistent with the Material 3 design.
+- Increased horizontal padding from `10u` to `20u` on the `ThemedButton` to be more consistent with the Material 3 design.
+- Modified `actionsPadding` on `ThemedActionsButtons` to add by default a left padding of `5u`.
+- Updated `ThemedCalendar` to display the selected dates like `ThemedButtonStyle.filledTonal` instead of `ThemedButtonStyle.filled`.
+- Updated row height of `ThemedTable` to `50u` due to the new button size.
+- Added extension of `BuildContext` to get pre-defined text styles.
+
+## 7.3.0-beta.2
+
+- Updated `generateContainerElevation()` design to use `Colors.black.withValues(alpha: 0.1)` instead of shadow color.
+- Modified `generateContainerElevation()` elevation visualization to be more smooth.
+
+## 7.3.0-beta.1
+
+- Required changes applied to support Flutter 3.32.0
+
+## 7.2.13
+
+- Added a way to keep the tab position when the `tabs` is resizing on `ThemedTabView`.
+
 ## 7.2.12
 - Added `maximumDecimalDigits` prop to `ThemedNumberInput` to allow to increase the number of decimal digits.
 - Fixed `ThemedNumberInput` cursor behaviour to improve experience when typing numbers.

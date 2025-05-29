@@ -101,8 +101,9 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
 
   void _getChildrenUrls() {
     String path = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
-    final parent =
-        widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((parents) => path.startsWith(parents.path));
+    final parent = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull(
+      (parents) => path.startsWith(parents.path),
+    );
 
     if (parent == null) {
       _children = [];
@@ -133,7 +134,7 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 5,
+            blurRadius: 10,
             offset: const Offset(0, -5),
           ),
         ],
@@ -242,8 +243,8 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                 color: highlightTop
                     ? activeColor.withValues(alpha: 0.2)
                     : highlight
-                        ? activeColor
-                        : Colors.transparent,
+                    ? activeColor
+                    : Colors.transparent,
                 borderRadius: highlightTop
                     ? BorderRadius.only(
                         bottomLeft: Radius.circular(actionSize),
@@ -266,8 +267,8 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                       color: highlightTop
                           ? validateColor(color: activeColor)
                           : highlight
-                              ? validateColor(color: activeColor)
-                              : validateColor(color: backgroundColor),
+                          ? validateColor(color: activeColor)
+                          : validateColor(color: backgroundColor),
                     ),
                   ),
                 ),

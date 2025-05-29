@@ -1,7 +1,8 @@
 part of '../extensions.dart';
 
-/// [ColorToJson] is an extension to convert a [Color] to a JSON string.
-extension ColorToJson on Color {
+/// [ThemedColorExtensions] is an extension to convert a [Color] to add multiple helpers
+/// to convert a [Color] to a hex string, JSON string, and integer.
+extension ThemedColorExtensions on Color {
   /// [toJson] is an extension to convert a [Color] to a JSON string using [toHex] function.
   String toJson() => toHex();
 
@@ -17,6 +18,9 @@ extension ColorToJson on Color {
         .toUpperCase();
   }
 
+  /// [hex] is the alias for [toHex] to convert a [Color] to a hex string without transparency.
+  String get hex => toHex();
+
   /// [toHexWithAlpha] is an extension to convert a [Color] to a hex string with transparency.
   String toHexWithAlpha() {
     String red = (255 * r).round().toRadixString(16);
@@ -30,6 +34,9 @@ extension ColorToJson on Color {
             "${blue.padLeft(2, '0')}"
         .toUpperCase();
   }
+
+  /// [hexWithAlpha] is the alias for [toHexWithAlpha] to convert a [Color] to a hex string with transparency.
+  String get hexWithAlpha => toHexWithAlpha();
 
   /// [toInt] is an extension to convert a [Color] to an integer.
   int toInt() {

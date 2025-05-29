@@ -246,12 +246,13 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                     Row(
                       children: [
                         Expanded(
-                          child: widget.label ??
+                          child:
+                              widget.label ??
                               Text(
                                 widget.labelText ?? '',
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                         ),
                         const SizedBox(width: 10),
@@ -265,8 +266,8 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                         Text(
                           t('layrz.monthPicker.year', {'year': _focusYear}),
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         ThemedButton(
                           style: ThemedButtonStyle.fab,
@@ -286,10 +287,14 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                         ),
                         itemCount: 12,
                         itemBuilder: (context, index) {
+                          bool isActive = _validateSelection(_focusYear, index);
+                          Color backgroundColor = isActive ? primaryColor : Theme.of(context).cardColor;
                           BoxDecoration decoration = BoxDecoration(
-                            color: _validateSelection(_focusYear, index) ? primaryColor : Theme.of(context).cardColor,
+                            color: backgroundColor.withAlpha((255 * 0.2).toInt()),
                             borderRadius: BorderRadius.circular(5),
                           );
+
+                          Color? textColor = isActive ? backgroundColor : null;
 
                           bool isDisabled = _validateIfIsDisabled(_focusYear, index);
 
@@ -299,6 +304,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                               opacity: isDisabled ? 0.5 : 1,
                               child: Container(
                                 decoration: decoration,
+                                clipBehavior: Clip.antiAlias,
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
@@ -306,17 +312,19 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                                     onTap: isDisabled
                                         ? null
                                         : () {
-                                            Navigator.of(context).pop(ThemedMonth(
-                                              year: _focusYear,
-                                              month: Month.values[index],
-                                            ));
+                                            Navigator.of(context).pop(
+                                              ThemedMonth(
+                                                year: _focusYear,
+                                                month: Month.values[index],
+                                              ),
+                                            );
                                           },
                                     child: Center(
                                       child: Text(
                                         DateTime(2023, index + 1, 1).format(pattern: '%B', i18n: i18n),
                                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                              color: validateColor(color: decoration.color ?? Colors.white),
-                                            ),
+                                          color: textColor,
+                                        ),
                                       ),
                                     ),
                                   ),

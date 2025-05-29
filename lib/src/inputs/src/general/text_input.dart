@@ -252,7 +252,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   Widget build(BuildContext context) {
     List<String> errors = [];
 
-    Widget label = widget.label ??
+    Widget label =
+        widget.label ??
         Text(
           widget.labelText ?? "",
           style: const TextStyle(
@@ -273,35 +274,77 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
 
     errors.addAll(widget.errors);
 
-    Widget? prefix;
+    List<Widget> prefixes = [];
 
     if (widget.prefixWidget != null) {
-      prefix = InkWell(
-        onTap: widget.onPrefixTap,
-        child: widget.prefixWidget,
+      prefixes.add(
+        InkWell(
+          onTap: widget.onPrefixTap,
+          child: widget.prefixWidget,
+        ),
       );
-    } else if (widget.prefixIcon != null) {
-      prefix = InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: widget.onPrefixTap,
-        child: Icon(widget.prefixIcon, size: 18),
+    }
+    if (widget.prefixIcon != null) {
+      prefixes.add(
+        InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: widget.onPrefixTap,
+          child: Icon(widget.prefixIcon, size: 18),
+        ),
+      );
+    }
+    if (widget.prefixText != null) {
+      prefixes.add(
+        Text(
+          widget.prefixText!,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       );
     }
 
-    Widget? suffix;
+    Widget? prefix;
+    if (prefixes.isNotEmpty) {
+      prefix = Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: prefixes,
+      );
+    }
+
+    List<Widget> suffixes = [];
+
+    if (widget.suffixWidget != null) {
+      suffixes.add(
+        InkWell(
+          onTap: widget.onSuffixTap,
+          child: widget.suffixWidget,
+        ),
+      );
+    }
+
+    if (widget.suffixIcon != null) {
+      suffixes.add(
+        InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: widget.onSuffixTap,
+          child: Icon(widget.suffixIcon, size: 18),
+        ),
+      );
+    }
 
     if (widget.disabled) {
-      suffix = Icon(LayrzIcons.solarOutlineLockKeyhole, size: 18);
-    } else if (widget.suffixWidget != null) {
-      suffix = InkWell(
-        onTap: widget.onSuffixTap,
-        child: widget.suffixWidget,
-      );
-    } else if (widget.suffixIcon != null) {
-      suffix = InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: widget.onSuffixTap,
-        child: Icon(widget.suffixIcon, size: 18),
+      suffixes.add(Icon(LayrzIcons.solarOutlineLockKeyhole, size: 18));
+    }
+
+    Widget? suffix;
+    if (suffixes.isNotEmpty) {
+      suffix = Row(
+        spacing: 5,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: suffixes,
       );
     }
 
@@ -323,15 +366,15 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
               borderSide: BorderSide.none,
             )
           : widget.borderRadius != null
-              ? OutlineInputBorder(
-                  borderRadius: _entry != null
-                      ? BorderRadius.only(
-                          topLeft: Radius.circular(widget.borderRadius!),
-                          topRight: Radius.circular(widget.borderRadius!),
-                        )
-                      : BorderRadius.circular(widget.borderRadius!),
-                )
-              : null,
+          ? OutlineInputBorder(
+              borderRadius: _entry != null
+                  ? BorderRadius.only(
+                      topLeft: Radius.circular(widget.borderRadius!),
+                      topRight: Radius.circular(widget.borderRadius!),
+                    )
+                  : BorderRadius.circular(widget.borderRadius!),
+            )
+          : null,
       suffixIcon: suffix,
     );
 
@@ -346,9 +389,9 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       decoration = decoration.copyWith(
         errorText: errors.join(", "),
         errorStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-              overflow: TextOverflow.clip,
-              color: Theme.of(context).colorScheme.error,
-            ),
+          overflow: TextOverflow.clip,
+          color: Theme.of(context).colorScheme.error,
+        ),
         errorMaxLines: 3,
       );
     }
@@ -387,11 +430,11 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         onTap: widget.disabled
             ? null
             : !widget.enableCombobox
-                ? widget.onTap
-                : () async {
-                    widget.onTap?.call();
-                    await _createEntry();
-                  },
+            ? widget.onTap
+            : () async {
+                widget.onTap?.call();
+                await _createEntry();
+              },
         onSubmitted: widget.disabled
             ? null
             : (_) {
@@ -450,72 +493,73 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                 child: FadeTransition(
                   opacity: _animationController,
                   child: StreamBuilder(
-                      initialData: widget.choices,
-                      stream: _streamController.stream,
-                      builder: (context, snapshot) {
-                        List<String> choices = snapshot.data as List<String>;
-                        // 20 = padding - 5 = divider
-                        height = min(choices.length, widget.maxChoicesToDisplay) * itemExtent + 20 + 5;
+                    initialData: widget.choices,
+                    stream: _streamController.stream,
+                    builder: (context, snapshot) {
+                      List<String> choices = snapshot.data as List<String>;
+                      // 20 = padding - 5 = divider
+                      height = min(choices.length, widget.maxChoicesToDisplay) * itemExtent + 20 + 5;
 
-                        return AnimatedContainer(
-                          duration: kHoverDuration,
-                          height: height,
-                          constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                              bottomRight: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                              topLeft: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                              topRight: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                            ),
+                      return AnimatedContainer(
+                        duration: kHoverDuration,
+                        height: height,
+                        constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
+                            bottomRight: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
+                            topLeft: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
+                            topRight: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
                           ),
-                          child: Column(
-                            children: [
-                              if (!_isEntryOnTop) const Divider(),
-                              Expanded(
-                                child: choices.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          widget.emptyChoicesText,
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                        ),
-                                      )
-                                    : ListView.builder(
-                                        padding: const EdgeInsets.all(10),
-                                        itemCount: choices.length,
-                                        itemExtent: itemExtent,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          final itm = choices[index];
-                                          return SizedBox(
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: InkWell(
-                                                borderRadius: BorderRadius.circular(5),
-                                                onTap: () async {
-                                                  await _destroyEntry();
-                                                  _controller.text = itm;
-                                                  widget.onChanged?.call(itm);
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(5),
-                                                  child: Text(
-                                                    itm,
-                                                    style: Theme.of(context).textTheme.bodyMedium,
-                                                  ),
+                        ),
+                        child: Column(
+                          children: [
+                            if (!_isEntryOnTop) const Divider(),
+                            Expanded(
+                              child: choices.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        widget.emptyChoicesText,
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      padding: const EdgeInsets.all(10),
+                                      itemCount: choices.length,
+                                      itemExtent: itemExtent,
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        final itm = choices[index];
+                                        return SizedBox(
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              borderRadius: BorderRadius.circular(5),
+                                              onTap: () async {
+                                                await _destroyEntry();
+                                                _controller.text = itm;
+                                                widget.onChanged?.call(itm);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(5),
+                                                child: Text(
+                                                  itm,
+                                                  style: Theme.of(context).textTheme.bodyMedium,
                                                 ),
                                               ),
                                             ),
-                                          );
-                                        },
-                                      ),
-                              ),
-                              if (_isEntryOnTop) const Divider(),
-                            ],
-                          ),
-                        );
-                      }),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                            ),
+                            if (_isEntryOnTop) const Divider(),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

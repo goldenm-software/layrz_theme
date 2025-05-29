@@ -155,6 +155,7 @@ class _TextInputViewState extends State<TextInputView> {
             ThemedNumberInput(
               labelText: "Example label",
               value: _value,
+              suffixText: '\$',
               decimalSeparator: ThemedDecimalSeparator.dot,
               onChanged: (value) {
                 debugPrint("Value: $value");

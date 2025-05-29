@@ -25,6 +25,11 @@ class ThemedTabView extends StatefulWidget {
   /// [showArrows] is the show arrows of the tab bar view
   final bool showArrows;
 
+  /// [persistTabPosition] is whether to persist the tab position when resizing the tabs.
+  ///
+  /// If the previous position is not available, it will default to the first tab.
+  final bool persistTabPosition;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -39,6 +44,7 @@ class ThemedTabView extends StatefulWidget {
     this.physics,
     this.separatorPadding = const EdgeInsets.only(top: 10),
     this.showArrows = false,
+    this.persistTabPosition = true,
   });
 
   @override
@@ -66,11 +72,15 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.tabs.length != widget.tabs.length || oldWidget.animationDuration != widget.animationDuration) {
+      int lastIndex = _tabController.index;
+      if (!widget.persistTabPosition) lastIndex = 0;
       _tabController.dispose();
+
       _tabController = TabController(
         length: widget.tabs.length,
         vsync: this,
         animationDuration: widget.animationDuration,
+        initialIndex: lastIndex < widget.tabs.length ? lastIndex : 0,
       );
     }
   }

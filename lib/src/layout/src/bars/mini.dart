@@ -142,11 +142,15 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
     return Container(
       width: 70,
       padding: const EdgeInsets.all(10),
-      decoration: generateContainerElevation(
-        context: context,
-        radius: 0,
-        elevation: 2,
+      decoration: BoxDecoration(
         color: backgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(5, 0),
+          ),
+        ],
       ),
       child: SafeArea(
         child: Column(
@@ -277,8 +281,8 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                 color: highlightTop
                     ? activeColor.withValues(alpha: 0.2)
                     : highlight
-                        ? activeColor
-                        : Colors.transparent,
+                    ? activeColor
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(actionSize),
               ),
               clipBehavior: Clip.antiAlias,
@@ -307,8 +311,8 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                       color: highlightTop
                           ? validateColor(color: backgroundColor)
                           : highlight
-                              ? backgroundColor
-                              : validateColor(color: backgroundColor),
+                          ? backgroundColor
+                          : validateColor(color: backgroundColor),
                     ),
                   ),
                 ),

@@ -8,19 +8,19 @@ class GeneralPickersView extends StatefulWidget {
 }
 
 class _GeneralPickersViewState extends State<GeneralPickersView> {
-  List<ThemedSelectItem<int>> get _choices => List.generate(20, (i) {
-        return ThemedSelectItem(
-          value: i + 1,
-          label: "Choice ${i + 1}",
-          // content: Row(
-          //   children: [
-          //     drawAvatar(context: context),
-          //     const SizedBox(width: 10),
-          //     Text("Choice ${i + 1}"),
-          //   ],
-          // ),
-        );
-      });
+  List<ThemedSelectItem<int>> get _choices => List.generate(3, (i) {
+    return ThemedSelectItem(
+      value: i + 1,
+      label: "Choice ${i + 1}",
+      // content: Row(
+      //   children: [
+      //     drawAvatar(context: context),
+      //     const SizedBox(width: 10),
+      //     Text("Choice ${i + 1}"),
+      //   ],
+      // ),
+    );
+  });
 
   List<int> selectedMultiple = [];
   int? selectedSingle;
@@ -37,8 +37,8 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
               "We have a lot of pickers, like file pickers, choices picker (aka, select and multi select "
               "or dropdown), color pickers, etc. See the following examples:",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             ListView(

@@ -148,8 +148,8 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        assert(value.length == 0 || value.length == 2);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null)),
+       assert(value.length == 0 || value.length == 2);
 
   @override
   State<ThemedDateTimeRangePicker> createState() => _ThemedDateTimeRangePickerState();
@@ -169,9 +169,11 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
       return null;
     }
 
-    return widget.value.map((t) {
-      return t.format(pattern: pattern, i18n: i18n);
-    }).join(' - ');
+    return widget.value
+        .map((t) {
+          return t.format(pattern: pattern, i18n: i18n);
+        })
+        .join(' - ');
   }
 
   @override
@@ -307,9 +309,11 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
     endDate = widget.value.isNotEmpty ? widget.value.last : DateTime.now();
     startTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.first) : TimeOfDay.now();
     endTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.last) : TimeOfDay.now();
-    filledDates = _fillDates([startDate, endDate]..sort((a, b) {
+    filledDates = _fillDates(
+      [startDate, endDate]..sort((a, b) {
         return a.compareTo(b);
-      }));
+      }),
+    );
   }
 
   @override
@@ -337,81 +341,37 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
                 Text(
                   widget.labelText ?? '',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
                     color: Theme.of(context).dividerColor,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: Row(
                     children: [
                       Expanded(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: _tabController.index == 0
-                                ? null
-                                : () {
-                                    _tabController.animateTo(0);
-                                    setState(() {});
-                                  },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              height: double.infinity,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: _tabController.index == 0 ? Theme.of(context).primaryColor : Colors.transparent,
-                              ),
-                              child: Text(
-                                t('layrz.datetimePicker.date'),
-                                style: TextStyle(
-                                  color: _tabController.index == 0
-                                      ? isDark
-                                          ? Colors.white
-                                          : validateColor(color: Theme.of(context).primaryColor)
-                                      : null,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                        child: _drawTab(
+                          index: 0,
+                          labelText: t('layrz.datetimePicker.date'),
+                          onTap: () {
+                            _tabController.animateTo(0);
+                            setState(() {});
+                          },
                         ),
                       ),
                       Expanded(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: _tabController.index == 1
-                                ? null
-                                : () {
-                                    _tabController.animateTo(1);
-                                    setState(() {});
-                                  },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              height: double.infinity,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: _tabController.index == 1 ? Theme.of(context).primaryColor : Colors.transparent,
-                              ),
-                              child: Text(
-                                t('layrz.datetimePicker.time'),
-                                style: TextStyle(
-                                  color: _tabController.index == 1
-                                      ? isDark
-                                          ? Colors.white
-                                          : validateColor(color: Theme.of(context).primaryColor)
-                                      : null,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                        child: _drawTab(
+                          index: 1,
+                          labelText: t('layrz.datetimePicker.time'),
+                          onTap: () {
+                            _tabController.animateTo(1);
+                            setState(() {});
+                          },
                         ),
                       ),
                     ],
@@ -444,9 +404,11 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
 
                           endDate = newDate;
                           tempDate = null;
-                          filledDates = _fillDates([startDate, endDate]..sort((a, b) {
+                          filledDates = _fillDates(
+                            [startDate, endDate]..sort((a, b) {
                               return a.compareTo(b);
-                            }));
+                            }),
+                          );
                           setState(() {});
                         },
                       ),
@@ -510,9 +472,11 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
 
                         _tabController.animateTo(0);
 
-                        Navigator.of(context).pop([start, end]..sort((a, b) {
+                        Navigator.of(context).pop(
+                          [start, end]..sort((a, b) {
                             return a.compareTo(b);
-                          }));
+                          }),
+                        );
                       },
                     ),
                   ],
@@ -556,5 +520,44 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
     }
 
     return result;
+  }
+
+  Widget _drawTab({
+    required int index,
+    required String labelText,
+    required VoidCallback onTap,
+  }) {
+    bool isActive = _tabController.index == index;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isActive ? null : onTap,
+        child: Container(
+          height: double.infinity,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isActive
+                ? isDark
+                      ? Colors.white.withValues(alpha: 0.3)
+                      : Theme.of(context).primaryColor.withValues(alpha: 0.3)
+                : Theme.of(context).dividerColor,
+          ),
+          child: Text(
+            labelText,
+            style: TextStyle(
+              color: isActive
+                  ? isDark
+                        ? Colors.white
+                        : isActive
+                        ? Theme.of(context).primaryColor
+                        : validateColor(color: Theme.of(context).primaryColor)
+                  : null,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

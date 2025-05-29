@@ -280,17 +280,17 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                   message: t('layrz.calendar.pickMonth'),
                   child: Icon(
                     LayrzIcons.solarOutlineCalendar,
-                    size: 20,
+                    size: 25,
                   ),
                 ),
               ),
-              const SizedBox(width: 5),
+              const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   _title,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               // if (widget.onModeChanged != null) ...[
@@ -588,8 +588,8 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                         child: Text(
                           widget.smallWeekdays ? weekdayString.substring(0, 3) : weekdayString,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       );
                     }),
@@ -624,9 +624,11 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                       DateTime now = DateTime(day.year, day.month, day.day);
                       bool isFocusDay =
                           day.year == _focusDay.year && day.month == _focusDay.month && day.day == _focusDay.day;
-                      bool isDisabled = widget.disabledDays.map((disabled) {
-                        return DateTime(disabled.year, disabled.month, disabled.day);
-                      }).contains(now);
+                      bool isDisabled = widget.disabledDays
+                          .map((disabled) {
+                            return DateTime(disabled.year, disabled.month, disabled.day);
+                          })
+                          .contains(now);
 
                       if (widget.isHighlightDaysAsRange) {
                         isFocusDay = false;
@@ -641,16 +643,14 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
 
                       bool hightlight = highlightedDays.contains(now);
 
-                      Color containerColor = (hightlight || isFocusDay) && isCurrentMonth
-                          ? primaryColor
-                          : Theme.of(context).scaffoldBackgroundColor;
+                      Color? containerColor = (hightlight || isFocusDay) && isCurrentMonth ? primaryColor : null;
 
                       return Opacity(
                         opacity: isDisabled
                             ? 0.3
                             : isCurrentMonth
-                                ? 1
-                                : 0.5,
+                            ? 1
+                            : 0.5,
                         child: Container(
                           color: Theme.of(context).scaffoldBackgroundColor,
                           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -663,8 +663,8 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                 width: widget.showEntries ? 30 : height * 0.5,
                                 height: widget.showEntries ? 30 : height * 0.5,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: containerColor,
+                                  borderRadius: BorderRadius.circular(height / 6),
+                                  color: containerColor?.withValues(alpha: 0.3),
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: Material(
@@ -675,19 +675,17 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                     mouseCursor: isDisabled
                                         ? SystemMouseCursors.forbidden
                                         : !widget.showEntries
-                                            ? null
-                                            : SystemMouseCursors.basic,
+                                        ? null
+                                        : SystemMouseCursors.basic,
                                     onTap: isDisabled ? null : () => widget.onDayTap?.call(day),
                                     child: Center(
                                       child: Text(
                                         day.day.toString(),
                                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: widget.showEntries ? null : height * 0.2,
-                                              color: validateColor(
-                                                color: containerColor,
-                                              ),
-                                            ),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: widget.showEntries ? null : height * 0.2,
+                                          color: containerColor,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -704,7 +702,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                       child: Icon(
                                         LayrzIcons.solarOutlineCalendar,
                                         size: 20,
-                                        color: validateColor(color: containerColor),
+                                        color: containerColor,
                                       ),
                                     ),
                                   ),
@@ -752,9 +750,9 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                                         item.title,
                                                         textAlign: item.textAlign,
                                                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                              color: validateColor(color: cardColor),
-                                                              fontSize: 10,
-                                                            ),
+                                                          color: validateColor(color: cardColor),
+                                                          fontSize: 10,
+                                                        ),
                                                       ),
                                                     ),
                                                     const SizedBox(width: 5),
@@ -901,8 +899,7 @@ enum ThemedCalendarMode {
   month,
 
   /// [ThemedCalendarMode.year] displays a single year of months.
-  year,
-  ;
+  year;
 
   String get translation {
     switch (this) {

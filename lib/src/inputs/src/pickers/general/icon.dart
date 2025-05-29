@@ -166,6 +166,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
       controller: _textController,
       dense: isDense,
       disabled: widget.disabled,
+      readonly: true,
       value: const IconOrNullConverter().toJson(_value) ?? '',
       onTap: widget.disabled ? null : _showPicker,
       padding: widget.padding,
@@ -191,8 +192,8 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
                     Text(
                       widget.labelText ?? '',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Expanded(
@@ -271,7 +272,7 @@ class _IconGrid extends StatefulWidget {
     required this.constraints,
     this.onTap,
     this.selected,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.allowedIcons = const [],
   });
 

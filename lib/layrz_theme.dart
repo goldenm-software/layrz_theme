@@ -27,3 +27,5 @@ export 'src/table/table.dart';
 export 'src/utilities/utilities.dart';
 export 'src/map/map.dart';
 export 'src/colorblindness/colorblindness.dart';
+export 'src/alerts/alerts.dart';
+export 'src/chips/chips.dart';

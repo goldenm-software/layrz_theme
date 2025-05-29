@@ -85,12 +85,12 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
   double get sidebarButtonSize => 30;
   String search = '';
   List<T> get items => widget.items.where((item) {
-        if (search.isEmpty) return true;
+    if (search.isEmpty) return true;
 
-        bool c1 = widget.titleBuilder(context, item).toLowerCase().contains(search.toLowerCase());
-        bool c2 = widget.subtitleBuilder(context, item).toLowerCase().contains(search.toLowerCase());
-        return c1 || c2;
-      }).toList();
+    bool c1 = widget.titleBuilder(context, item).toLowerCase().contains(search.toLowerCase());
+    bool c2 = widget.subtitleBuilder(context, item).toLowerCase().contains(search.toLowerCase());
+    return c1 || c2;
+  }).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -98,31 +98,31 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
       builder: (context, constraints) {
         bool isMobile = constraints.maxWidth < widget.mobileBreakpoint;
 
-        return Wrap(
-          alignment: WrapAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10).subtract(EdgeInsets.only(bottom: isMobile ? 0 : 10)),
-              width: isMobile ? constraints.maxWidth : constraints.maxWidth - widget.sidebarWidth,
-              height: constraints.maxHeight - (isMobile ? sidebarButtonSize : 0),
-              child: widget.child,
-            ),
-            if (isMobile) ...[
+        if (isMobile) {
+          return Column(
+            children: [
+              Expanded(child: widget.child),
               _drawBottomSheetButton(
                 isUp: true,
                 onTap: () => showModalBottomSheet(
                   context: context,
                   builder: (context) => _drawContent(isMobile: true),
                 ),
-              )
-            ] else ...[
-              Container(
-                width: widget.sidebarWidth,
-                height: constraints.maxHeight,
-                padding: const EdgeInsets.all(10),
-                child: _drawContent(),
               ),
             ],
+          );
+        }
+
+        return Row(
+          // alignment: WrapAlignment.center,
+          children: [
+            Expanded(child: widget.child),
+            const SizedBox(width: 10),
+            SizedBox(
+              width: widget.sidebarWidth,
+              height: constraints.maxHeight,
+              child: _drawContent(),
+            ),
           ],
         );
       },
@@ -130,20 +130,23 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
   }
 
   Widget _drawBottomSheetButton({bool isUp = true, required VoidCallback onTap}) {
-    BorderRadius border = const BorderRadius.only(
-      topLeft: Radius.circular(10),
-      topRight: Radius.circular(10),
-    );
+    BorderRadius border = BorderRadius.circular(10);
+
     return Container(
       height: sidebarButtonSize,
-      width: 50,
-      decoration: generateContainerElevation(context: context, elevation: 2).copyWith(
-        borderRadius: border,
-      ),
-      child: InkWell(
-        borderRadius: border,
-        onTap: onTap,
-        child: Center(child: Icon(isUp ? LayrzIcons.solarOutlineAltArrowUp : LayrzIcons.solarOutlineAltArrowDown)),
+      width: sidebarButtonSize,
+      decoration: generateContainerElevation(context: context, elevation: 2).copyWith(borderRadius: border),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: border,
+          onTap: onTap,
+          child: Center(
+            child: Icon(
+              isUp ? LayrzIcons.solarOutlineAltArrowUp : LayrzIcons.solarOutlineAltArrowDown,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -152,6 +155,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
     return Container(
       padding: const EdgeInsets.all(10).subtract(EdgeInsets.only(top: isMobile ? 0 : 10)),
       decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
         border: isMobile
             ? null
             : Border(
@@ -160,32 +164,38 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
                   width: 1,
                 ),
               ),
+        borderRadius: isMobile ? BorderRadius.circular(10) : BorderRadius.zero,
+        boxShadow: isMobile
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 10,
+                  spreadRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : [],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  t('${widget.module}.title.list', {'count': widget.items.length}),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-              ThemedSearchInput(
-                labelText: t('${widget.module}.search'),
-                value: search,
-                onSearch: (value) => setState(() => search = value),
-              ),
-            ],
+          Text(
+            t('${widget.module}.title.list', {'count': widget.items.length}),
+            style: context.subtitleStyle,
           ),
-          const SizedBox(height: 10),
-          const Divider(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
+          ThemedSearchInput(
+            labelText: t('${widget.module}.search'),
+            value: search,
+            onSearch: (value) => setState(() => search = value),
+            asField: true,
+            maxWidth: double.infinity,
+          ),
+          const SizedBox(height: 5),
           Expanded(
-            child: ListView.separated(
+            child: ListView.builder(
               itemCount: items.length,
-              separatorBuilder: (context, index) => const Divider(),
+              itemExtent: 43,
               itemBuilder: (context, index) {
                 T item = items[index];
                 ThemedTableAvatar avatar = widget.avatarBuilder(context, item);
@@ -195,60 +205,75 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
 
                 IconData? prefixIcon = widget.prefixIconBuilder?.call(context, item);
 
-                return InkWell(
-                  onTap: isSelected
-                      ? null
-                      : () {
-                          if (isMobile) {
-                            Navigator.of(context).pop();
-                          }
-                          widget.onTap(item);
-                        },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: Row(
-                      children: [
-                        ThemedAvatar(
-                          name: avatar.label,
-                          avatar: avatar.avatar,
-                          icon: avatar.icon,
-                          color: avatar.color,
-                          dynamicAvatar: avatar.dynamicAvatar,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 5),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Theme.of(context).inputDecorationTheme.fillColor : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: isSelected
+                          ? null
+                          : () {
+                              if (isMobile) {
+                                Navigator.of(context).pop();
+                              }
+                              widget.onTap(item);
+                            },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          children: [
+                            ThemedAvatar(
+                              name: avatar.label,
+                              avatar: avatar.avatar,
+                              icon: avatar.icon,
+                              color: avatar.color,
+                              dynamicAvatar: avatar.dynamicAvatar,
+                              size: 27,
+                              iconSize: 18,
+                              elevation: 0,
+                              radius: 5,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (isSelected) ...[
-                                    Icon(LayrzIcons.solarOutlineStart1, size: 14, color: Colors.grey),
-                                    const SizedBox(width: 5),
-                                  ] else if (prefixIcon != null) ...[
-                                    Icon(
-                                      prefixIcon,
-                                      size: 14,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 5),
-                                  ],
-                                  Expanded(
-                                    child: Text(
-                                      widget.titleBuilder(context, item),
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                    ),
+                                  Row(
+                                    children: [
+                                      if (isSelected) ...[
+                                        Icon(LayrzIcons.solarOutlineStart1, size: 14, color: Colors.grey),
+                                        const SizedBox(width: 5),
+                                      ] else if (prefixIcon != null) ...[
+                                        Icon(
+                                          prefixIcon,
+                                          size: 14,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 5),
+                                      ],
+                                      Expanded(
+                                        child: Text(
+                                          widget.titleBuilder(context, item),
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    widget.subtitleBuilder(context, item),
+                                    style: Theme.of(context).textTheme.bodySmall,
                                   ),
                                 ],
                               ),
-                              Text(
-                                widget.subtitleBuilder(context, item),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 );
