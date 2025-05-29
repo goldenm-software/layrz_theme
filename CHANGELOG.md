@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.0
+
+- Stable release
+
 ## 7.3.0-rc.2
 
 - Removed a `debugPrint` from `ThemedSnackbarMessenger`
