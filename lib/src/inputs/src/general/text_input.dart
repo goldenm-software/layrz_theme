@@ -278,26 +278,24 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
 
     if (widget.prefixWidget != null) {
       prefixes.add(
-        InkWell(
-          onTap: widget.onPrefixTap,
-          child: widget.prefixWidget,
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: InkWell(
+            onTap: widget.onPrefixTap,
+            child: widget.prefixWidget,
+          ),
         ),
       );
     }
     if (widget.prefixIcon != null) {
       prefixes.add(
-        InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: widget.onPrefixTap,
-          child: Icon(widget.prefixIcon, size: 18),
-        ),
-      );
-    }
-    if (widget.prefixText != null) {
-      prefixes.add(
-        Text(
-          widget.prefixText!,
-          style: Theme.of(context).textTheme.bodySmall,
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: widget.onPrefixTap,
+            child: Icon(widget.prefixIcon, size: 18),
+          ),
         ),
       );
     }
@@ -316,31 +314,41 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
 
     if (widget.suffixWidget != null) {
       suffixes.add(
-        InkWell(
-          onTap: widget.onSuffixTap,
-          child: widget.suffixWidget,
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: InkWell(
+            onTap: widget.onSuffixTap,
+            child: widget.suffixWidget,
+          ),
         ),
       );
     }
 
     if (widget.suffixIcon != null) {
       suffixes.add(
-        InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: widget.onSuffixTap,
-          child: Icon(widget.suffixIcon, size: 18),
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: widget.onSuffixTap,
+            child: Icon(widget.suffixIcon, size: 18),
+          ),
         ),
       );
     }
 
     if (widget.disabled) {
-      suffixes.add(Icon(LayrzIcons.solarOutlineLockKeyhole, size: 18));
+      suffixes.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: Icon(LayrzIcons.solarOutlineLockKeyhole, size: 18),
+        ),
+      );
     }
 
     Widget? suffix;
     if (suffixes.isNotEmpty) {
       suffix = Row(
-        spacing: 5,
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

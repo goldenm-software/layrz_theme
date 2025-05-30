@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.1
+
+- Fixed behavior of `ThemedTextInput` multiple prefixes or suffixes, now will display correctly.
+
 ## 7.3.0
 
 - Stable release
