@@ -37,9 +37,6 @@ class ThemedNumberInput extends StatefulWidget {
   /// [onSubmitted] is the callback function when the input is submitted.
   final VoidCallback? onSubmitted;
 
-  /// [readonly] is the state of the input being readonly.
-  final bool readonly;
-
   /// [inputFormatters] is the list of input formatters of the input.
   final List<TextInputFormatter> inputFormatters;
 
@@ -81,6 +78,9 @@ class ThemedNumberInput extends StatefulWidget {
   /// [prefixText] is the prefix text of the input.
   final String? prefixText;
 
+  /// [hidePrefixSuffixActions] is the state of the input to hide the prefix and suffix actions. on the input
+  final bool hidePrefixSuffixActions;
+
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
@@ -97,7 +97,6 @@ class ThemedNumberInput extends StatefulWidget {
     this.dense = false,
     this.isRequired = false,
     this.onSubmitted,
-    this.readonly = false,
     this.inputFormatters = const [],
     this.borderRadius,
     this.minimum,
@@ -110,6 +109,7 @@ class ThemedNumberInput extends StatefulWidget {
     this.maximumDecimalDigits = 4,
     this.suffixText,
     this.prefixText,
+    this.hidePrefixSuffixActions = false,
   }) : assert(
          (label == null && labelText != null) || (label != null && labelText == null),
          'You must provide either a labelText or a label, but not both.',
@@ -124,6 +124,8 @@ class ThemedNumberInput extends StatefulWidget {
 }
 
 class _ThemedNumberInputState extends State<ThemedNumberInput> {
+  bool get _hideActionButtons => widget.hidePrefixSuffixActions || widget.disabled;
+
   RegExp get _regex => RegExp(r'[-0-9\,.]');
   final _controller = TextEditingController();
   bool get isDense => widget.dense;
@@ -211,16 +213,18 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       placeholder: widget.placeholder,
       prefixText: widget.prefixText,
       suffixText: widget.suffixText,
-      prefixIcon: LayrzIcons.solarOutlineMinusSquare,
+      prefixIcon: _hideActionButtons ? null : LayrzIcons.solarOutlineMinusSquare,
       onPrefixTap: () {
+        if (_hideActionButtons) return;
         num newValue = (widget.value ?? 0) - (widget.step ?? 1);
         if (newValue < (widget.minimum ?? double.negativeInfinity)) {
           return;
         }
         widget.onChanged?.call(newValue);
       },
-      suffixIcon: LayrzIcons.solarOutlineAddSquare,
+      suffixIcon: _hideActionButtons ? null : LayrzIcons.solarOutlineAddSquare,
       onSuffixTap: () {
+        if (_hideActionButtons) return;
         num newValue = (widget.value ?? 0) + (widget.step ?? 1);
         if (newValue > (widget.maximum ?? double.infinity)) {
           return;

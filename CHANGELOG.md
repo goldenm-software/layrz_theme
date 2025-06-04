@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.2
+
+- Added `hidePrefixSuffixActions` prop on `ThemedNumberInput` and removed unused `readonly` prop.
+
 ## 7.3.1
 
 - Fixed behavior of `ThemedTextInput` multiple prefixes or suffixes, now will display correctly.
