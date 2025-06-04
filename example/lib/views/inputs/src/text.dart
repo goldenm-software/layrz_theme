@@ -22,8 +22,8 @@ class _TextInputViewState extends State<TextInputView> {
             Text(
               "Basic text input",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             ThemedButton(
               labelText: "Set value to 123456",
@@ -51,8 +51,8 @@ class _TextInputViewState extends State<TextInputView> {
             Text(
               "But, that's not all, you can also personalize it, see the following examples:",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             ListView(
@@ -148,8 +148,8 @@ class _TextInputViewState extends State<TextInputView> {
             Text(
               "But, you can also use ThemedNumberInput to handle numbers easly, like the following example:",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             ThemedNumberInput(
@@ -178,8 +178,8 @@ class _TextInputViewState extends State<TextInputView> {
               "Or handle durations, to do that, you can use ThemedDurationInput to handle easly, "
               "like the following example:",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             ThemedDurationInput(

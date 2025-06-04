@@ -239,8 +239,9 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                     children: [
                       ScaleTransition(
                         scale: Tween<double>(begin: 0, end: 1).animate(animation),
-                        alignment:
-                            widget.position == ThemedSearchPosition.left ? Alignment.centerRight : Alignment.centerLeft,
+                        alignment: widget.position == ThemedSearchPosition.left
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
                         child: Actions(
                           actions: {
                             DismissIntent: CallbackAction<DismissIntent>(

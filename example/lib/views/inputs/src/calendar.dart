@@ -23,8 +23,8 @@ class _CalendarViewState extends State<CalendarView> {
           Text(
             "This is an example of our calendar, you can show or hide the entries using the button below.",
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 10),
           ThemedButton(

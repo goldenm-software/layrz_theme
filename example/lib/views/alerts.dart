@@ -21,12 +21,13 @@ class _AlertsViewState extends State<AlertsView> {
           Text(
             "Chips and alerts!",
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 10),
           ThemedChip(
-            content: 'This is a chip, displays the content with the provided color, and the background is the same'
+            content:
+                'This is a chip, displays the content with the provided color, and the background is the same'
                 'color with a 10% opacity.',
             color: Colors.blue,
           ),
@@ -72,7 +73,7 @@ class _AlertsViewState extends State<AlertsView> {
                           ),
                         ),
                       ),
-                    ]
+                    ],
                   ],
                 );
               },

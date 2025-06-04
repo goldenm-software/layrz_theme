@@ -112,8 +112,8 @@ class ThemedDateRangePicker extends StatefulWidget {
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
-  })  : assert((label == null && labelText != null) || (label != null && labelText == null)),
-        assert(value.length == 0 || value.length == 2);
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null)),
+       assert(value.length == 0 || value.length == 2);
 
   @override
   State<ThemedDateRangePicker> createState() => _ThemedDateRangePickerState();

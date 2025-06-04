@@ -14,8 +14,8 @@ class WorkInProgressView extends StatelessWidget {
         Text(
           'Work in progress',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );

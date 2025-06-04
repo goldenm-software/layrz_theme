@@ -27,8 +27,8 @@ class _HomeViewState extends State<HomeView> {
             Text(
               "Components available:",
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             Expanded(

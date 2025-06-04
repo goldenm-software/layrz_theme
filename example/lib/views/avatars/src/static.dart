@@ -19,8 +19,8 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
             Text(
               "What is a static avatar?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "It's simple, avatars using static images or icons are static avatars (In the Layrz philosophy).",
@@ -30,8 +30,8 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
             Text(
               "How to use it?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "To generate an avatar, you will use an utility function drawAvatar, here is an example:",
@@ -44,8 +44,8 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
             Text(
               "Result:",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const ThemedAvatar(size: 30),
@@ -61,8 +61,8 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
             Text(
               "Result:",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const ThemedAvatar(size: 30, color: Colors.red),
@@ -70,8 +70,8 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
             Text(
               "Look this other examples:",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "Our functions offers inline documentation, so you can see all the arguments and their types.",
@@ -85,7 +85,8 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                 _buildExampleRow(
                   name: 'Using an image',
                   avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
-                  codeExample: "ThemedAvatar(size: 50, avatar: "
+                  codeExample:
+                      "ThemedAvatar(size: 50, avatar: "
                       "'https://cdn.layrz.com/resources/layo/layo2.png')",
                 ),
                 const SizedBox(height: 5),
@@ -105,7 +106,8 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                   avatar: 'https://cdn.layrz.com/resources/layo/layo2.png',
                   radius: 10,
                   elevation: 3,
-                  codeExample: "ThemedAvatar(size: 50, avatar: "
+                  codeExample:
+                      "ThemedAvatar(size: 50, avatar: "
                       "'https://cdn.layrz.com/resources/layo/layo2.png', radius: 10, elevation: 3)",
                 ),
               ],
@@ -154,13 +156,15 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
           labelText: "Get the code",
           onTap: () {
             Clipboard.setData(ClipboardData(text: codeExample));
-            ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
-              message: "Copied to clipboard",
-              icon: LayrzIcons.mdiClipboardCheckOutline,
-              color: Colors.green,
-            ));
+            ThemedSnackbarMessenger.of(context).showSnackbar(
+              ThemedSnackbar(
+                message: "Copied to clipboard",
+                icon: LayrzIcons.mdiClipboardCheckOutline,
+                color: Colors.green,
+              ),
+            );
           },
-        )
+        ),
       ],
     );
   }

@@ -22,15 +22,15 @@ class _ButtonsViewState extends State<ButtonsView> {
           Text(
             "Buttons",
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 10),
           Text(
             "Our buttons has different styles, check out the following examples:",
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 10),
           Expanded(
@@ -44,8 +44,8 @@ class _ButtonsViewState extends State<ButtonsView> {
                       Text(
                         "Our favorite style is the filledTonal, take a look:",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Row(
@@ -103,8 +103,8 @@ class _ButtonsViewState extends State<ButtonsView> {
                       Text(
                         "Need a more elevated style? We have it!",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Row(
@@ -162,8 +162,8 @@ class _ButtonsViewState extends State<ButtonsView> {
                       Text(
                         "Classic buttons? Take a look at the filled styles:",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Row(
@@ -219,8 +219,8 @@ class _ButtonsViewState extends State<ButtonsView> {
                       Text(
                         "Do you like outlined buttons? We have them too!",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Row(
@@ -278,8 +278,8 @@ class _ButtonsViewState extends State<ButtonsView> {
                       Text(
                         "A combination of Outlined and Filled tonal? No problem!",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Row(
@@ -337,8 +337,8 @@ class _ButtonsViewState extends State<ButtonsView> {
                       Text(
                         "Do you don't like the styles avobe? You can use the plain styles:",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Row(
@@ -413,8 +413,8 @@ class _ButtonsViewState extends State<ButtonsView> {
               Text(
                 "Tools",
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -437,7 +437,8 @@ class _ButtonsViewState extends State<ButtonsView> {
                         labelText: "Toggle cooldown state",
                         icon: LayrzIcons.mdiTimerSandEmpty,
                         color: Colors.red,
-                        hintText: 'Toggles the cooldown state of the buttons, '
+                        hintText:
+                            'Toggles the cooldown state of the buttons, '
                             'when the cooldown is active, the button will be disabled and '
                             'will be enabled again when the cooldown is finished',
                         tooltipPosition: ThemedTooltipPosition.top,
@@ -482,14 +483,17 @@ class _ButtonsViewState extends State<ButtonsView> {
       tooltipPosition: tooltipPosition,
       onTap: () {
         // context.go('/inputs/text');
-        ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
-          icon: LayrzIcons.mdiAccessPoint,
-          color: Colors.red,
-          title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut nulla sit amet "
-                  "tellus dictum molestie in sit amet ligula. Nullam pulvinar risus eu sapien dictum blandit." *
-              2,
-        ));
+        ThemedSnackbarMessenger.of(context).showSnackbar(
+          ThemedSnackbar(
+            icon: LayrzIcons.mdiAccessPoint,
+            color: Colors.red,
+            title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            message:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ut nulla sit amet "
+                    "tellus dictum molestie in sit amet ligula. Nullam pulvinar risus eu sapien dictum blandit." *
+                2,
+          ),
+        );
       },
     );
   }

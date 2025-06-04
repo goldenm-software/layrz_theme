@@ -21,8 +21,8 @@ class _RadioButtonsViewState extends State<RadioButtonsView> {
             Text(
               "Radio buttons",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             ThemedRadioInput(
               value: _value,
@@ -46,8 +46,8 @@ class _RadioButtonsViewState extends State<RadioButtonsView> {
             Text(
               "Similar to the text inputs, this widget has a error property:",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             ThemedRadioInput(

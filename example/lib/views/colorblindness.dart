@@ -43,8 +43,8 @@ class _ColorblindnessViewState extends State<ColorblindnessView> {
             Text(
               "Colorblind modes",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "Layrz has supported 6 colorblind modes, you can use them like this:",
@@ -59,8 +59,8 @@ class _ColorblindnessViewState extends State<ColorblindnessView> {
             Text(
               "You can test it out on this app by",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             ThemedSelectInput(
               labelText: 'Select a colorblind mode',

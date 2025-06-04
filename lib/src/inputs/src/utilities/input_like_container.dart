@@ -37,7 +37,8 @@ class ThemedInputLikeContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget inputLabel = label ??
+    Widget inputLabel =
+        label ??
         Text(
           labelText ?? "",
           style: const TextStyle(

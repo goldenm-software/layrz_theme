@@ -74,9 +74,9 @@ class ThemedCodeEditor extends StatefulWidget {
   State<ThemedCodeEditor> createState() => _ThemedCodeEditorState();
 
   static AppFont get font => AppFont(
-        source: FontSource.google,
-        name: GoogleFonts.jetBrainsMono().fontFamily ?? 'Ubuntu',
-      );
+    source: FontSource.google,
+    name: GoogleFonts.jetBrainsMono().fontFamily ?? 'Ubuntu',
+  );
 }
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
@@ -175,10 +175,10 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   late CodeController _controller;
 
   TextStyle? get codeTextStyle => TextStyle(
-        fontFamily: ThemedCodeEditor.font.name,
-        color: textColor,
-        fontSize: 18,
-      );
+    fontFamily: ThemedCodeEditor.font.name,
+    color: textColor,
+    fontSize: 18,
+  );
 
   @override
   void initState() {
@@ -242,13 +242,14 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: widget.label ??
+                      child:
+                          widget.label ??
                           Text(
                             widget.labelText ?? '',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: textColor,
-                                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                                ),
+                              color: textColor,
+                              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                            ),
                           ),
                     ),
                     if (!widget.disabled) ...[
@@ -339,9 +340,9 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                               child: Text(
                                                 result,
                                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                      color: textColor,
-                                                      fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                                                    ),
+                                                  color: textColor,
+                                                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                                                ),
                                                 maxLines: 4,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -490,35 +491,39 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
   }
 
   Map<String, String> get _defaultErrors => {
-        'lcl.multiroot.found': 'Multiple root functions found, Layrz Compute Language only supports one '
-            'root function',
-        'lcl.unknown.typedef': 'Datatype {name} not found',
-        'lcl.unsupported.typedef': 'Unsuported {name}',
-        'lcl.unknown.node': '{name} not found',
-        'lcl.arguments.mismatch': 'Function {name} has an arguments mismstch, required {expected} and '
-            '{received} received',
-        'lcl.function.not.found': 'Function {name} not found',
-        'python.empty.code': 'Empty code not supported',
-        'python.not.function': 'Only you can define functions in the root code',
-        'python.main.function.not.found': 'The main function {name} not found',
-        'python.function.arguments.mismatch': 'The function {name} doesn\'t have the right arguments, '
-            'we expect {expected} as an arguments, and {received} was found.\nThe arguments must be exactly '
-            'as the defined in our documentation',
-        'python.unsupported.type': 'Python datatype {name} unsupported',
-        'python.function.no.return': 'The function {name} doesn\'t have a return statement, '
-            'you must return a value',
-        'python.import.not.allowed': 'The statement import ... or from ... import ... cannot be used',
-        'python.range.too.big': 'The range only can run {expected} iterations, your code iterates {received} times',
-        'python.range.only.constant': 'The range function only can support constant values',
-        'python.too.deep': 'Your code exceeds the maximum depth. Consider reducing the number of nested loops',
-        'python.undefined.import': 'Module {name} not defined',
-        'python.async.not.allowed': 'Async operations not allowed',
-        'python.prohibed.element': 'The statement or function {name} is not allowed',
-        'python.match.not.allowed': 'match/case statement not allowed',
-        'python.global.not.allowed': 'The use of global variables is restricted',
-        'python.nonlocal.not.allowed': 'The use of nonlocal variables is restricted',
-        'layrz.editor.lint.error': 'Error at line {line}: {error}',
-      };
+    'lcl.multiroot.found':
+        'Multiple root functions found, Layrz Compute Language only supports one '
+        'root function',
+    'lcl.unknown.typedef': 'Datatype {name} not found',
+    'lcl.unsupported.typedef': 'Unsuported {name}',
+    'lcl.unknown.node': '{name} not found',
+    'lcl.arguments.mismatch':
+        'Function {name} has an arguments mismstch, required {expected} and '
+        '{received} received',
+    'lcl.function.not.found': 'Function {name} not found',
+    'python.empty.code': 'Empty code not supported',
+    'python.not.function': 'Only you can define functions in the root code',
+    'python.main.function.not.found': 'The main function {name} not found',
+    'python.function.arguments.mismatch':
+        'The function {name} doesn\'t have the right arguments, '
+        'we expect {expected} as an arguments, and {received} was found.\nThe arguments must be exactly '
+        'as the defined in our documentation',
+    'python.unsupported.type': 'Python datatype {name} unsupported',
+    'python.function.no.return':
+        'The function {name} doesn\'t have a return statement, '
+        'you must return a value',
+    'python.import.not.allowed': 'The statement import ... or from ... import ... cannot be used',
+    'python.range.too.big': 'The range only can run {expected} iterations, your code iterates {received} times',
+    'python.range.only.constant': 'The range function only can support constant values',
+    'python.too.deep': 'Your code exceeds the maximum depth. Consider reducing the number of nested loops',
+    'python.undefined.import': 'Module {name} not defined',
+    'python.async.not.allowed': 'Async operations not allowed',
+    'python.prohibed.element': 'The statement or function {name} is not allowed',
+    'python.match.not.allowed': 'match/case statement not allowed',
+    'python.global.not.allowed': 'The use of global variables is restricted',
+    'python.nonlocal.not.allowed': 'The use of nonlocal variables is restricted',
+    'layrz.editor.lint.error': 'Error at line {line}: {error}',
+  };
 }
 
 enum LayrzSupportedLanguage {
@@ -536,7 +541,6 @@ enum LayrzSupportedLanguage {
 
   /// MJML or MailJet Markup Language support for Emails.
   mjml,
-  ;
 }
 
 class ThemedCodeError {
@@ -596,8 +600,8 @@ class _ThemedCodeSuggestions extends StatelessWidget {
                 child: Text(
                   options[index],
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
-                      ),
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -608,7 +612,8 @@ class _ThemedCodeSuggestions extends StatelessWidget {
           return ThemedTooltip(
             position: ThemedTooltipPosition.top,
             color: Colors.white,
-            message: LayrzAppLocalizations.maybeOf(context)?.t('layrz.editor.documentation') ??
+            message:
+                LayrzAppLocalizations.maybeOf(context)?.t('layrz.editor.documentation') ??
                 'Long press or right click to open documentation',
             child: content,
           );

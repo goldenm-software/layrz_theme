@@ -213,17 +213,17 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                       Text(
                         "#${widget.index + 1}",
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 20,
-                            ),
+                          fontSize: 20,
+                        ),
                       ),
                       const SizedBox(width: 5),
                       Expanded(
                         child: Text(
                           object.field.isEmpty ? 'N/A' : object.field,
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 5),
@@ -255,7 +255,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                         child: ThemedTextInput(
                           labelText: i18n.t('requiredFields.field'),
                           value: object.field,
-                          inputFormatters: widget.inputFormatters ??
+                          inputFormatters:
+                              widget.inputFormatters ??
                               [
                                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_.]')),
                               ],
@@ -266,11 +267,13 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                                 text: '${widget.translationPrefix}.${object.field}',
                               ),
                             );
-                            ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(ThemedSnackbar(
-                              message: i18n.t('helpers.copyToClipboard.post'),
-                              color: Colors.blue,
-                              icon: LayrzIcons.solarOutlineClipboardCheck,
-                            ));
+                            ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(
+                              ThemedSnackbar(
+                                message: i18n.t('helpers.copyToClipboard.post'),
+                                color: Colors.blue,
+                                icon: LayrzIcons.solarOutlineClipboardCheck,
+                              ),
+                            );
                           },
                           errors: context.getErrors(key: '${widget.errorsKey}.${widget.index}.field'),
                           onChanged: (value) {
@@ -285,10 +288,12 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                         md: widget.enabledActions.isNotEmpty ? Sizes.col4 : Sizes.col8,
                         child: ThemedSelectInput<CredentialFieldType>(
                           items: widget.enabledTypes
-                              .map((field) => ThemedSelectItem(
-                                    value: field,
-                                    label: i18n.t('requiredFields.types.${field.toJson()}'),
-                                  ))
+                              .map(
+                                (field) => ThemedSelectItem(
+                                  value: field,
+                                  label: i18n.t('requiredFields.types.${field.toJson()}'),
+                                ),
+                              )
                               .toList(),
                           labelText: i18n.t('requiredFields.type'),
                           value: object.type,
@@ -305,8 +310,10 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                                 object.choices = [];
                                 object.onlyChoices = [];
                                 object.onlyField = null;
-                              } else if ([CredentialFieldType.integer, CredentialFieldType.float]
-                                  .contains(value?.value)) {
+                              } else if ([
+                                CredentialFieldType.integer,
+                                CredentialFieldType.float,
+                              ].contains(value?.value)) {
                                 object.maxLength = null;
                                 object.minLength = null;
                                 object.maxValue = 1;
@@ -334,10 +341,12 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                           md: Sizes.col4,
                           child: ThemedSelectInput<CredentialFieldAction>(
                             items: widget.enabledActions
-                                .map((field) => ThemedSelectItem(
-                                      value: field,
-                                      label: i18n.t('requiredFields.actions.${field.toJson()}'),
-                                    ))
+                                .map(
+                                  (field) => ThemedSelectItem(
+                                    value: field,
+                                    label: i18n.t('requiredFields.actions.${field.toJson()}'),
+                                  ),
+                                )
                                 .toList(),
                             labelText: i18n.t('requiredFields.action'),
                             value: object.action,
@@ -366,8 +375,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                       child: Text(
                         i18n.t('requiredFields.sections.validators'),
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     ResponsiveRow(
@@ -405,10 +414,12 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                               xs: Sizes.col12,
                               child: ThemedSelectInput(
                                 items: widget.otherFields
-                                    .map((field) => ThemedSelectItem(
-                                          value: field,
-                                          label: field,
-                                        ))
+                                    .map(
+                                      (field) => ThemedSelectItem(
+                                        value: field,
+                                        label: field,
+                                      ),
+                                    )
                                     .toList(),
                                 labelText: i18n.t('requiredFields.onlyField'),
                                 value: object.onlyField,
@@ -425,10 +436,12 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                             sm: Sizes.col6,
                             child: ThemedMultiSelectInput<String>(
                               items: object.choices
-                                  .map((choice) => ThemedSelectItem(
-                                        value: choice,
-                                        label: choice,
-                                      ))
+                                  .map(
+                                    (choice) => ThemedSelectItem(
+                                      value: choice,
+                                      label: choice,
+                                    ),
+                                  )
                                   .toList(),
                               labelText: i18n.t('requiredFields.onlyChoices'),
                               value: object.onlyChoices,

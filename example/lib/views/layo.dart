@@ -23,8 +23,8 @@ class _LayoViewState extends State<LayoView> {
             Text(
               "How to use it?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "It's simple, use the following code to display a Layo:",
@@ -38,8 +38,8 @@ class _LayoViewState extends State<LayoView> {
             Text(
               "Result:",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const Layo(
@@ -71,8 +71,8 @@ class _LayoViewState extends State<LayoView> {
                             Text(
                               "${emotion.name} emotion",
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Text("Enum value: ${emotion.toString()}"),
                           ],
@@ -86,13 +86,15 @@ class _LayoViewState extends State<LayoView> {
                         labelText: "Copy this emotion as example",
                         onTap: () {
                           Clipboard.setData(ClipboardData(text: "Layo(size: 30, emotion: ${emotion.toString()})"));
-                          ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
-                            message: "Copied to clipboard",
-                            icon: LayrzIcons.mdiClipboardCheckOutline,
-                            color: Colors.green,
-                          ));
+                          ThemedSnackbarMessenger.of(context).showSnackbar(
+                            ThemedSnackbar(
+                              message: "Copied to clipboard",
+                              icon: LayrzIcons.mdiClipboardCheckOutline,
+                              color: Colors.green,
+                            ),
+                          );
                         },
-                      )
+                      ),
                     ],
                   ),
                 );

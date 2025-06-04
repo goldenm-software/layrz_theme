@@ -481,8 +481,10 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         data: params,
       );
       if (response.statusCode != 200) {
-        debugPrint('layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): '
-            'Error fetching google maps url: ${response.statusCode}');
+        debugPrint(
+          'layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): '
+          'Error fetching google maps url: ${response.statusCode}',
+        );
         return null;
       }
 
@@ -493,8 +495,10 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
 
       return 'https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session=${data['session']}&key=$googleMapsKey';
     } catch (e) {
-      debugPrint('layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): '
-          'Error fetching google maps url: $e');
+      debugPrint(
+        'layrz_theme/ThemedTileLayer/_fetchGoogleAuth(): '
+        'Error fetching google maps url: $e',
+      );
       return null;
     }
   }

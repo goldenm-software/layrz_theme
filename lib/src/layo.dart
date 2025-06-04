@@ -32,9 +32,9 @@ class Layo extends StatelessWidget {
     this.elevation = 1,
     this.shadowColor,
     this.reverse = false,
-  })  : radius = radius ?? size,
-        assert(elevation <= 5, 'The elevation must be less than or equal to 5'),
-        assert(elevation >= 0, 'The elevation must be greater than or equal to 0');
+  }) : radius = radius ?? size,
+       assert(elevation <= 5, 'The elevation must be less than or equal to 5'),
+       assert(elevation >= 0, 'The elevation must be greater than or equal to 0');
 
   /// [layoAspectRatio] is the aspect ratio of the image (This ratio is based on the original export).
   double get layoAspectRatio => 500 / 833;

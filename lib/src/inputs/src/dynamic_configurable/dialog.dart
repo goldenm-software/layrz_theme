@@ -49,8 +49,8 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
             Text(
               i18n.t('requiredFields.choices.edit'),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             ThemedTextInput(
@@ -187,12 +187,14 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
       richText.add(TextSpan(text: parts[i], style: baseStyle));
 
       if (i < parts.length - 1) {
-        richText.add(TextSpan(
-          text: _search,
-          style: baseStyle?.copyWith(
-            fontWeight: FontWeight.bold,
+        richText.add(
+          TextSpan(
+            text: _search,
+            style: baseStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ));
+        );
       }
     }
 

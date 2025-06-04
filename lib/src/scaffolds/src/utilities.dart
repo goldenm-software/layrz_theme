@@ -56,8 +56,8 @@ Future<bool> deleteConfirmationDialog({
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
                 maxLines: 10,
                 textAlign: TextAlign.justify,
               ),
