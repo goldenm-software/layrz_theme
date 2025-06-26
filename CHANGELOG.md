@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.3.3
+- add `isDense` in `ThemedTimePicker`
+
 ## 7.3.2
 
 - Added `hidePrefixSuffixActions` prop on `ThemedNumberInput` and removed unused `readonly` prop.
