@@ -285,10 +285,12 @@ extension DateTimeExtension on DateTime {
       '%M': minute.toString().padLeft(2, '0'),
       '%S': second.toString().padLeft(2, '0'),
       '%f': microsecond.toString().padLeft(6, '0'),
-      '%z': "${timeZoneOffset.isNegative ? '-' : '+'}"
+      '%z':
+          "${timeZoneOffset.isNegative ? '-' : '+'}"
           "${timeZoneOffset.inHours.abs().toString().padLeft(2, '0')}"
           "${(timeZoneOffset.inMinutes % 60).toString().padLeft(2, '0')}",
-      '%:z': "${timeZoneOffset.isNegative ? '-' : '+'}"
+      '%:z':
+          "${timeZoneOffset.isNegative ? '-' : '+'}"
           "${timeZoneOffset.inHours.abs().toString().padLeft(2, '0')}"
           ":${(timeZoneOffset.inMinutes % 60).toString().padLeft(2, '0')}",
       '%Z': timeZoneName,

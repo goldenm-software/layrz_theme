@@ -19,8 +19,8 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
             Text(
               "What is a dynamic avatar?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "It's similar as the static avatar, but using an model entity (from layrz_models) "
@@ -33,8 +33,8 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
             Text(
               "How to use it?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "Like the static avatar, to generate an avatar, you will use an utility function drawAvatar, "
@@ -42,15 +42,16 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const ThemedCodeSnippet(
-              code: "ThemedAvatar(size: 30, dynamicAvatar: Avatar(type: AvatarType.url, "
+              code:
+                  "ThemedAvatar(size: 30, dynamicAvatar: Avatar(type: AvatarType.url, "
                   "url: 'https://cdn.layrz.com/resources/layo/layo2.png'))",
             ),
             const SizedBox(height: 10),
             Text(
               "Result:",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const ThemedAvatar(
@@ -65,8 +66,8 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
             Text(
               "Look at this examples:",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "Our functions offers inline documentation, so you can see all the arguments and their types.",
@@ -79,7 +80,8 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
               children: [
                 _buildExampleRow(
                   avatar: const Avatar(type: AvatarType.none),
-                  codeExample: "ThemedAvatar(size: 30, name: 'Example', "
+                  codeExample:
+                      "ThemedAvatar(size: 30, name: 'Example', "
                       "dynamicAvatar: const Avatar(type: AvatarType.none))",
                 ),
                 const SizedBox(height: 5),
@@ -87,7 +89,8 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   avatar: const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/layo2.png'),
-                  codeExample: "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
+                  codeExample:
+                      "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
                       "const Avatar(type: AvatarType.url, url: 'https://cdn.layrz.com/resources/layo/"
                       "layo2.png'))",
                 ),
@@ -96,7 +99,8 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   avatar: Avatar(type: AvatarType.icon, icon: LayrzIconsClasses.mdiClipboard),
-                  codeExample: "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
+                  codeExample:
+                      "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
                       "Avatar(type: AvatarType.icon, icon: LayrzIconsClasses.mdiClipboard))",
                 ),
                 const SizedBox(height: 5),
@@ -104,7 +108,8 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   avatar: const Avatar(type: AvatarType.emoji, emoji: '👍'),
-                  codeExample: "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
+                  codeExample:
+                      "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
                       "const Avatar(type: AvatarType.emoji, emoji: '👍'))",
                 ),
               ],
@@ -144,13 +149,15 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
           labelText: "Get the code",
           onTap: () {
             Clipboard.setData(ClipboardData(text: codeExample));
-            ThemedSnackbarMessenger.of(context).showSnackbar(ThemedSnackbar(
-              message: "Copied to clipboard",
-              icon: LayrzIcons.mdiClipboardCheckOutline,
-              color: Colors.green,
-            ));
+            ThemedSnackbarMessenger.of(context).showSnackbar(
+              ThemedSnackbar(
+                message: "Copied to clipboard",
+                icon: LayrzIcons.mdiClipboardCheckOutline,
+                color: Colors.green,
+              ),
+            );
           },
-        )
+        ),
       ],
     );
   }

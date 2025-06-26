@@ -38,14 +38,17 @@ Future<List<ThemedFile>?> pickFile({
   );
 
   if (result != null) {
-    return result.files.where((file) {
-      return file.bytes != null;
-    }).map((file) {
-      return ThemedFile(
-        name: file.name,
-        bytes: file.bytes!,
-      );
-    }).toList();
+    return result.files
+        .where((file) {
+          return file.bytes != null;
+        })
+        .map((file) {
+          return ThemedFile(
+            name: file.name,
+            bytes: file.bytes!,
+          );
+        })
+        .toList();
   }
   return null;
 }

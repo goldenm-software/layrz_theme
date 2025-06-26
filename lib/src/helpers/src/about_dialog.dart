@@ -22,7 +22,8 @@ void openInfoDialog({
   showAboutDialog(
     context: context,
     applicationName: appTitle,
-    applicationLegalese: "${DateTime.now().year} $companyName\n"
+    applicationLegalese:
+        "${DateTime.now().year} $companyName\n"
         "${i18n?.t('copyright.powered.by') ?? "Powered by Layrz"}",
     routeSettings: const RouteSettings(name: '/legally'),
     applicationIcon: ThemedImage(

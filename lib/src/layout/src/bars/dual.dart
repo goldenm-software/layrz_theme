@@ -60,8 +60,9 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
 
   void _getChildrenUrls() {
     String path = widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
-    final parent =
-        widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull((parents) => path.startsWith(parents.path));
+    final parent = widget.items.whereType<ThemedNavigatorPage>().firstWhereOrNull(
+      (parents) => path.startsWith(parents.path),
+    );
 
     if (parent == null) {
       _children = [];

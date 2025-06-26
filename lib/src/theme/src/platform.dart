@@ -31,8 +31,7 @@ enum ThemedPlatform {
   webWasm,
 
   /// [ThemedPlatform.unknown] is the unknown platform.
-  unknown,
-  ;
+  unknown;
 
   /// [isWeb] is `true` if the platform is web.
   /// This getter is a shortcut to `kThemedPlatform == ThemedPlatform.web`.

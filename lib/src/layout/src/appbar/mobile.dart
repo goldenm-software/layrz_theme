@@ -280,8 +280,8 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                 color: highlightTop
                     ? activeColor.withValues(alpha: 0.2)
                     : highlight
-                        ? activeColor
-                        : Colors.transparent,
+                    ? activeColor
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(actionSize),
               ),
               clipBehavior: Clip.antiAlias,
@@ -308,8 +308,8 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                       color: highlightTop
                           ? validateColor(color: backgroundColor)
                           : highlight
-                              ? backgroundColor
-                              : validateColor(color: backgroundColor),
+                          ? backgroundColor
+                          : validateColor(color: backgroundColor),
                     ),
                   ),
                 ),

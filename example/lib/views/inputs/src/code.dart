@@ -23,8 +23,8 @@ class _CodeInputViewState extends State<CodeInputView> {
             Text(
               "Code editor input",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             ResponsiveRow(
               children: [

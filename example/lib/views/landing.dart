@@ -37,9 +37,9 @@ class _LandingViewState extends State<LandingView> {
                 Text(
                   "Welcome to Layrz Theme!",
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).textTheme.bodyLarge?.color,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Text(

@@ -224,8 +224,8 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
                     Text(
                       widget.labelText ?? '',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     ThemedTextInput(
@@ -518,7 +518,9 @@ class __EmojiButtonState extends State<_EmojiButton> {
           color: widget.isSelected || isHover ? hoverColor : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Center(child: Text(widget.emoji.char, style: TextStyle(fontSize: iconSize))),
+        child: Center(
+          child: Text(widget.emoji.char, style: TextStyle(fontSize: iconSize)),
+        ),
       ),
     );
   }

@@ -64,17 +64,17 @@ class ThemedNavigatorPage extends ThemedNavigatorItem {
   }) : assert(label != null || labelText != null);
 
   void Function(ThemedNavigatorPushFunction) get onTap => (onPush) {
-        if (useDefaultRedirect) {
-          final subpages = children.whereType<ThemedNavigatorPage>();
-          if (subpages.isNotEmpty) {
-            onPush.call(subpages.first.path);
-          } else {
-            onPush.call(path);
-          }
-        } else {
-          onPush.call(path);
-        }
-      };
+    if (useDefaultRedirect) {
+      final subpages = children.whereType<ThemedNavigatorPage>();
+      if (subpages.isNotEmpty) {
+        onPush.call(subpages.first.path);
+      } else {
+        onPush.call(path);
+      }
+    } else {
+      onPush.call(path);
+    }
+  };
 }
 
 class ThemedNavigatorAction extends ThemedNavigatorItem {

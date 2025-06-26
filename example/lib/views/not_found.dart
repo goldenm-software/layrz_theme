@@ -22,16 +22,16 @@ class _NotFoundViewState extends State<NotFoundView> {
             Text(
               "404",
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "Page not found",
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "The page you are looking for does not exist.",

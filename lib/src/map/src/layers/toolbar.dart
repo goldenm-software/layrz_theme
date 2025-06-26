@@ -173,9 +173,9 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   List<MapLayer> get layers => widget.layers;
 
   List<ThemedMapButton> get actions => [
-        ...widget.additionalButtons,
-        ...fixedButtons,
-      ];
+    ...widget.additionalButtons,
+    ...fixedButtons,
+  ];
 
   // bool get _canStreetView =>
   //     widget.enableGoogleStreetView &&
@@ -185,79 +185,79 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   //     widget.mapKey != null;
 
   List<ThemedMapButton> get fixedButtons => [
-        // if (_canStreetView) ...[
-        //   ThemedMapDragButton(
-        //     labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
-        //     icon: LayrzIcons.mdiGoogleStreetView,
-        //     color: buttonColor,
-        //     onDragStart: (offset) {
-        //       widget.controller?.notify(StartGoogleStreetView());
-        //     },
-        //     onDragFinish: (offset) async {
-        //       widget.controller?.notify(StopGoogleStreetView());
+    // if (_canStreetView) ...[
+    //   ThemedMapDragButton(
+    //     labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
+    //     icon: LayrzIcons.mdiGoogleStreetView,
+    //     color: buttonColor,
+    //     onDragStart: (offset) {
+    //       widget.controller?.notify(StartGoogleStreetView());
+    //     },
+    //     onDragFinish: (offset) async {
+    //       widget.controller?.notify(StopGoogleStreetView());
 
-        //       if (offset == null) return;
-        //       if (widget.mapKey == null) return;
-        //       if (widget.mapController == null) return;
+    //       if (offset == null) return;
+    //       if (widget.mapKey == null) return;
+    //       if (widget.mapController == null) return;
 
-        //       RenderBox box = widget.mapKey!.currentContext!.findRenderObject() as RenderBox;
-        //       final projectedOffset = box.globalToLocal(offset);
-        //       math.Point p = math.Point(projectedOffset.dx, projectedOffset.dy);
-        //       LatLng coordinates = widget.mapController!.camera.pointToLatLng(p);
-        //       final result = await _searchStreetView(coordinates);
-        //       if (result == null) return;
-        //       _openStreetView(result.$1, result.$2, result.$3);
-        //     },
-        //     onDragCancel: () {
-        //       widget.controller?.notify(StopGoogleStreetView());
-        //     },
-        //   ),
-        // ],
-        if (widget.onZoomIn != null) ...[
-          ThemedMapButton(
-            labelText: i18n?.t('layrz.map.zoom.in') ?? widget.zoomInLabelText,
-            icon: LayrzIcons.solarOutlineAddSquare,
-            isDisabled: widget.zoomInDisabled,
-            onTap: widget.onZoomIn,
-            color: buttonColor,
-          ),
-        ],
-        if (widget.onZoomOut != null) ...[
-          ThemedMapButton(
-            labelText: i18n?.t('layrz.map.zoom.out') ?? widget.zoomOutLabelText,
-            icon: LayrzIcons.solarOutlineMinusSquare,
-            isDisabled: widget.zoomOutDisabled,
-            onTap: widget.onZoomOut,
-            color: buttonColor,
-          ),
-        ],
-        if (layers.isNotEmpty) ...[
-          ThemedMapButton(
-            labelText: i18n?.t('layrz.map.change.layer') ?? widget.changeLayerLabelText,
-            icon: LayrzIcons.solarOutlineLayersMinimalistic,
-            color: buttonColor,
-            onTap: () async {
-              final res = await showDialog<MapLayer>(
-                context: context,
-                builder: (context) {
-                  return ThemedChangeLayerDialog(
-                    layers: layers,
-                    currentLayer: _selected,
-                    saveLabelText: i18n?.t('actions.save') ?? widget.saveLabelText,
-                    cancelLabelText: i18n?.t('actions.cancel') ?? widget.cancelLabelText,
-                    title: i18n?.t('layrz.map.change.layer') ?? widget.changeLayerLabelText,
-                  );
-                },
+    //       RenderBox box = widget.mapKey!.currentContext!.findRenderObject() as RenderBox;
+    //       final projectedOffset = box.globalToLocal(offset);
+    //       math.Point p = math.Point(projectedOffset.dx, projectedOffset.dy);
+    //       LatLng coordinates = widget.mapController!.camera.pointToLatLng(p);
+    //       final result = await _searchStreetView(coordinates);
+    //       if (result == null) return;
+    //       _openStreetView(result.$1, result.$2, result.$3);
+    //     },
+    //     onDragCancel: () {
+    //       widget.controller?.notify(StopGoogleStreetView());
+    //     },
+    //   ),
+    // ],
+    if (widget.onZoomIn != null) ...[
+      ThemedMapButton(
+        labelText: i18n?.t('layrz.map.zoom.in') ?? widget.zoomInLabelText,
+        icon: LayrzIcons.solarOutlineAddSquare,
+        isDisabled: widget.zoomInDisabled,
+        onTap: widget.onZoomIn,
+        color: buttonColor,
+      ),
+    ],
+    if (widget.onZoomOut != null) ...[
+      ThemedMapButton(
+        labelText: i18n?.t('layrz.map.zoom.out') ?? widget.zoomOutLabelText,
+        icon: LayrzIcons.solarOutlineMinusSquare,
+        isDisabled: widget.zoomOutDisabled,
+        onTap: widget.onZoomOut,
+        color: buttonColor,
+      ),
+    ],
+    if (layers.isNotEmpty) ...[
+      ThemedMapButton(
+        labelText: i18n?.t('layrz.map.change.layer') ?? widget.changeLayerLabelText,
+        icon: LayrzIcons.solarOutlineLayersMinimalistic,
+        color: buttonColor,
+        onTap: () async {
+          final res = await showDialog<MapLayer>(
+            context: context,
+            builder: (context) {
+              return ThemedChangeLayerDialog(
+                layers: layers,
+                currentLayer: _selected,
+                saveLabelText: i18n?.t('actions.save') ?? widget.saveLabelText,
+                cancelLabelText: i18n?.t('actions.cancel') ?? widget.cancelLabelText,
+                title: i18n?.t('layrz.map.change.layer') ?? widget.changeLayerLabelText,
               );
-
-              if (res != null) {
-                _selected = res;
-                _notify();
-              }
             },
-          ),
-        ],
-      ];
+          );
+
+          if (res != null) {
+            _selected = res;
+            _notify();
+          }
+        },
+      ),
+    ],
+  ];
 
   double get _dividerSize => 2;
   double get _dividerIndent => 5;
@@ -284,10 +284,10 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   }
 
   List<Widget> get items => [
-        ...widget.additionalButtons,
-        _divider,
-        ...fixedButtons,
-      ];
+    ...widget.additionalButtons,
+    _divider,
+    ...fixedButtons,
+  ];
 
   double get calculatedSize {
     double size = buttonSize * actions.length;

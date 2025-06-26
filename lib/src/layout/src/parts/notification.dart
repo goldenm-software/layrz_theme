@@ -63,7 +63,6 @@ enum ThemedNotificationLocation {
   /// Using this mode, you can provide the exact location using `ThemedCustomNotificationLocation` to
   /// move the notification icon to the desired location.
   custom,
-  ;
 }
 
 class ThemedNotificationIcon extends StatefulWidget {
@@ -133,8 +132,8 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
   List<ThemedNotificationItem> get notifications => widget.notifications;
 
   Color get notificationIconColor => validateColor(color: backgroundColor).withValues(
-        alpha: (notifications.isEmpty ? 0.5 : 1),
-      );
+    alpha: (notifications.isEmpty ? 0.5 : 1),
+  );
 
   late AnimationController _controller;
   OverlayEntry? _overlay;
@@ -165,7 +164,8 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
             offset: const Offset(10, -12),
             smallSize: 10,
             largeSize: 10,
-            child: widget.child ??
+            child:
+                widget.child ??
                 Icon(
                   widget.icon ?? LayrzIcons.solarOutlineBellBing,
                   color: notificationIconColor,
@@ -321,24 +321,24 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                                 Text(
                                                   item.title,
                                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                                 Text(
                                                   item.content,
                                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                        fontSize: 13,
-                                                      ),
+                                                    fontSize: 13,
+                                                  ),
                                                   textAlign: TextAlign.justify,
                                                   maxLines: 2,
                                                 ),
                                                 Text(
                                                   at.format(pattern: '%I:%M %p'),
                                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                        color: validateColor(
-                                                          color: Theme.of(context).scaffoldBackgroundColor,
-                                                        ).withValues(alpha: 0.5),
-                                                      ),
+                                                    color: validateColor(
+                                                      color: Theme.of(context).scaffoldBackgroundColor,
+                                                    ).withValues(alpha: 0.5),
+                                                  ),
                                                 ),
                                               ],
                                             ),

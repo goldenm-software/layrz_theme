@@ -21,8 +21,8 @@ class _ThemeGenerationViewState extends State<ThemeGenerationView> {
             Text(
               "Why?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "Layrz theme changes many default properties of the Material Design theme, "
@@ -37,8 +37,8 @@ class _ThemeGenerationViewState extends State<ThemeGenerationView> {
             Text(
               "How to use it?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               "To configure the light theme, you only need to add this property to your MaterialApp:",

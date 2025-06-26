@@ -49,8 +49,8 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
             Text(
               "Map Layers",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             Text(

@@ -35,8 +35,8 @@ class ThemedImage extends StatelessWidget {
     this.filterQuality = FilterQuality.medium,
     this.customProvider,
     this.alignment = Alignment.center,
-  })  : assert(path != null || customProvider != null, 'You must provide a path or a custom provider'),
-        assert(path == null || customProvider == null, 'You must provide a path or a custom provider, not both');
+  }) : assert(path != null || customProvider != null, 'You must provide a path or a custom provider'),
+       assert(path == null || customProvider == null, 'You must provide a path or a custom provider, not both');
 
   bool get isSvg {
     if (customProvider != null) return false;

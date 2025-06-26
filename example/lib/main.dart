@@ -40,17 +40,19 @@ Future<void> main() async {
     colorblindMode = ColorblindMode.values.firstWhereOrNull((e) => e.name == rawColorblindMode);
   }
 
-  runApp(VxState(
-    store: AppStore(
-      themeMode: themeMode ?? ThemeMode.system,
-      mapboxToken: mapboxToken,
-      googleToken: googleToken,
-      hereToken: hereToken,
-      colorblindMode: colorblindMode ?? ColorblindMode.normal,
-      colorblindStrength: colorblindStrength,
+  runApp(
+    VxState(
+      store: AppStore(
+        themeMode: themeMode ?? ThemeMode.system,
+        mapboxToken: mapboxToken,
+        googleToken: googleToken,
+        hereToken: hereToken,
+        colorblindMode: colorblindMode ?? ColorblindMode.normal,
+        colorblindStrength: colorblindStrength,
+      ),
+      child: const MyApp(),
     ),
-    child: const MyApp(),
-  ));
+  );
 }
 
 class MyApp extends StatefulWidget {

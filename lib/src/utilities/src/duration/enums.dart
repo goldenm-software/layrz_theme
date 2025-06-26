@@ -22,5 +22,5 @@ const Map<ThemedUnits, int> unitMeasures = {
   ThemedUnits.hour: 3600000,
   ThemedUnits.minute: 60000,
   ThemedUnits.second: 1000,
-  ThemedUnits.millisecond: 1
+  ThemedUnits.millisecond: 1,
 };

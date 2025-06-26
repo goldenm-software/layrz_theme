@@ -98,9 +98,10 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                 labelText: t('$translatePrefix.${field.field}.title'),
                 value: credentials[field.field] ?? '',
                 errors: ThemedOrm.getErrors(
-                    key: widget.nested != null
-                        ? 'credentials.${widget.nested}.${field.field}'
-                        : 'credentials.${field.field}'),
+                  key: widget.nested != null
+                      ? 'credentials.${widget.nested}.${field.field}'
+                      : 'credentials.${field.field}',
+                ),
                 onChanged: (value) {
                   credentials[field.field] = value;
                   setState(() {});
@@ -115,9 +116,10 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                 labelText: t('$translatePrefix.${field.field}.title'),
                 value: credentials[field.field],
                 errors: ThemedOrm.getErrors(
-                    key: widget.nested != null
-                        ? 'credentials.${widget.nested}.${field.field}'
-                        : 'credentials.${field.field}'),
+                  key: widget.nested != null
+                      ? 'credentials.${widget.nested}.${field.field}'
+                      : 'credentials.${field.field}',
+                ),
                 onChanged: (value) {
                   if (value == null) {
                     credentials[field.field] = null;
@@ -148,9 +150,10 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                 labelText: t('$translatePrefix.${field.field}.title'),
                 value: credentials[field.field],
                 errors: ThemedOrm.getErrors(
-                    key: widget.nested != null
-                        ? 'credentials.${widget.nested}.${field.field}'
-                        : 'credentials.${field.field}'),
+                  key: widget.nested != null
+                      ? 'credentials.${widget.nested}.${field.field}'
+                      : 'credentials.${field.field}',
+                ),
                 onChanged: (value) {
                   credentials[field.field] = value?.value;
                   setState(() {});
@@ -169,16 +172,19 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                 onSuffixTap: widget.layrzGeneratedToken != null
                     ? () {
                         Clipboard.setData(ClipboardData(text: widget.layrzGeneratedToken!));
-                        ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(ThemedSnackbar(
-                          message: t('builder.authorization.tokenCopied'),
-                          icon: LayrzIcons.solarOutlineClipboardCheck,
-                        ));
+                        ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(
+                          ThemedSnackbar(
+                            message: t('builder.authorization.tokenCopied'),
+                            icon: LayrzIcons.solarOutlineClipboardCheck,
+                          ),
+                        );
                       }
                     : null,
                 errors: ThemedOrm.getErrors(
-                    key: widget.nested != null
-                        ? 'credentials.${widget.nested}.${field.field}'
-                        : 'credentials.${field.field}'),
+                  key: widget.nested != null
+                      ? 'credentials.${widget.nested}.${field.field}'
+                      : 'credentials.${field.field}',
+                ),
               );
               break;
             case CredentialFieldType.nestedField:
@@ -202,9 +208,10 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                 readonly: true,
                 value: credentials[field.field],
                 errors: ThemedOrm.getErrors(
-                    key: widget.nested != null
-                        ? 'credentials.${widget.nested}.${field.field}'
-                        : 'credentials.${field.field}'),
+                  key: widget.nested != null
+                      ? 'credentials.${widget.nested}.${field.field}'
+                      : 'credentials.${field.field}',
+                ),
                 suffixIcon: isLoading ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineRefreshSquare,
                 onSuffixTap: () => widget.actionCallback?.call(CredentialFieldAction.wialonOAuth),
               );
@@ -220,11 +227,11 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
           sm: sm,
           child: content != null
               ? field.type == CredentialFieldType.nestedField
-                  ? content
-                  : Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: content,
-                    )
+                    ? content
+                    : Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: content,
+                      )
               : const SizedBox(),
         );
       }).toList(),

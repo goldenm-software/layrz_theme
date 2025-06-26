@@ -55,17 +55,17 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
   bool _isLoading = true;
 
   List<ThemedLicense> get _filteredLicenses => _parsedLicenses.where((license) {
-        if (_searchText.isEmpty) return true;
+    if (_searchText.isEmpty) return true;
 
-        return license.package.toLowerCase().contains(_searchText.toLowerCase());
-      }).toList();
+    return license.package.toLowerCase().contains(_searchText.toLowerCase());
+  }).toList();
 
   List<String> get _publicLayrzPackages => [
-        'layrz_theme',
-        'layrz_models',
-        'layrz_icons',
-        'layrz_logging',
-      ];
+    'layrz_theme',
+    'layrz_models',
+    'layrz_icons',
+    'layrz_logging',
+  ];
 
   @override
   void initState() {
@@ -174,8 +174,8 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                   TextSpan(
                     text: "© ${DateTime.now().year} ${widget.companyName}",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const WidgetSpan(
                     child: SizedBox(width: 5),
@@ -193,8 +193,8 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                   TextSpan(
                     text: "${i18n?.t('copyright.platform.os') ?? "Platform"}: ",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   TextSpan(
                     text: kThemedPlatform.toString(),
@@ -264,8 +264,8 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                                             Text(
                                               package.package,
                                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                             const SizedBox(height: 10),
                                             Text(

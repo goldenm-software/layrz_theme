@@ -31,15 +31,15 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             Text(
               "We separate the date and time pickers in 4 categories: date, time, date and time and month pickers",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             Text(
               "Date pickers",
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const Text("Classic picker"),
@@ -58,8 +58,8 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             Text(
               "Time pickers",
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const Text("Classic picker"),
@@ -83,8 +83,8 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             Text(
               "Date and time pickers",
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const Text("Classic picker"),
@@ -108,8 +108,8 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             Text(
               "Month pickers",
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const Text("Classic picker"),

@@ -84,13 +84,13 @@ class __ThemedSelectItemState<T> extends State<_ThemedSelectItem<T>> {
         child: InkWell(
           mouseCursor: widget.selected
               ? widget.canUnselect
-                  ? SystemMouseCursors.click
-                  : SystemMouseCursors.forbidden
+                    ? SystemMouseCursors.click
+                    : SystemMouseCursors.forbidden
               : SystemMouseCursors.click,
           onTap: widget.selected
               ? widget.canUnselect
-                  ? widget.onTap
-                  : null
+                    ? widget.onTap
+                    : null
               : widget.onTap,
           borderRadius: BorderRadius.circular(5),
           child: Padding(

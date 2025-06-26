@@ -50,11 +50,13 @@ class ThemedCodeSnippet extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: code));
-                ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(ThemedSnackbar(
-                  message: copyToClipboardText,
-                  icon: LayrzIcons.solarOutlineClipboardCheck,
-                  color: Colors.green,
-                ));
+                ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(
+                  ThemedSnackbar(
+                    message: copyToClipboardText,
+                    icon: LayrzIcons.solarOutlineClipboardCheck,
+                    color: Colors.green,
+                  ),
+                );
               },
               child: Icon(
                 LayrzIcons.solarOutlineCopy,

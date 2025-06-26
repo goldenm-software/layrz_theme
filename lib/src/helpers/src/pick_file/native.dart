@@ -44,15 +44,18 @@ Future<List<ThemedFile>?> pickFile({
     );
 
     if (result != null) {
-      return result.files.where((file) {
-        return file.path != null;
-      }).map((file) {
-        return ThemedFile(
-          name: file.name,
-          path: file.path,
-          bytes: File(file.path!).readAsBytesSync(),
-        );
-      }).toList();
+      return result.files
+          .where((file) {
+            return file.path != null;
+          })
+          .map((file) {
+            return ThemedFile(
+              name: file.name,
+              path: file.path,
+              bytes: File(file.path!).readAsBytesSync(),
+            );
+          })
+          .toList();
     }
 
     return null;
@@ -76,15 +79,18 @@ Future<List<ThemedFile>?> pickFile({
     );
 
     if (result != null) {
-      return result.files.where((file) {
-        return file.path != null;
-      }).map((file) {
-        return ThemedFile(
-          name: file.name,
-          path: file.path,
-          bytes: File(file.path!).readAsBytesSync(),
-        );
-      }).toList();
+      return result.files
+          .where((file) {
+            return file.path != null;
+          })
+          .map((file) {
+            return ThemedFile(
+              name: file.name,
+              path: file.path,
+              bytes: File(file.path!).readAsBytesSync(),
+            );
+          })
+          .toList();
     }
 
     return null;
@@ -114,15 +120,18 @@ Future<List<ThemedFile>?> pickFile({
     }
 
     if (result != null) {
-      return result.files.where((file) {
-        return file.path != null;
-      }).map((file) {
-        return ThemedFile(
-          name: file.name,
-          path: file.path,
-          bytes: File(file.path!).readAsBytesSync(),
-        );
-      }).toList();
+      return result.files
+          .where((file) {
+            return file.path != null;
+          })
+          .map((file) {
+            return ThemedFile(
+              name: file.name,
+              path: file.path,
+              bytes: File(file.path!).readAsBytesSync(),
+            );
+          })
+          .toList();
     }
 
     return null;
@@ -143,15 +152,18 @@ Future<List<ThemedFile>?> pickFile({
     }
 
     if (result != null) {
-      return result.files.where((file) {
-        return file.path != null;
-      }).map((file) {
-        return ThemedFile(
-          name: file.name,
-          path: file.path,
-          bytes: File(file.path!).readAsBytesSync(),
-        );
-      }).toList();
+      return result.files
+          .where((file) {
+            return file.path != null;
+          })
+          .map((file) {
+            return ThemedFile(
+              name: file.name,
+              path: file.path,
+              bytes: File(file.path!).readAsBytesSync(),
+            );
+          })
+          .toList();
     }
 
     return null;
@@ -172,15 +184,18 @@ Future<List<ThemedFile>?> pickFile({
     }
 
     if (result != null) {
-      return result.files.where((file) {
-        return file.path != null;
-      }).map((file) {
-        return ThemedFile(
-          name: file.name,
-          path: file.path,
-          bytes: File(file.path!).readAsBytesSync(),
-        );
-      }).toList();
+      return result.files
+          .where((file) {
+            return file.path != null;
+          })
+          .map((file) {
+            return ThemedFile(
+              name: file.name,
+              path: file.path,
+              bytes: File(file.path!).readAsBytesSync(),
+            );
+          })
+          .toList();
     }
 
     return null;

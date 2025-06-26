@@ -132,8 +132,8 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
       (isDark
           ? kDarkBackgroundColor
           : widget.fromScaffold
-              ? kLightBackgroundColor
-              : Theme.of(context).primaryColor);
+          ? kLightBackgroundColor
+          : Theme.of(context).primaryColor);
 
   Color get activeColor {
     if (isDark) {
@@ -244,21 +244,22 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
     return Container(
       width: 270,
       height: double.infinity,
-      decoration: generateContainerElevation(
-        context: context,
-        radius: 0,
-        color: backgroundColor,
-      ).copyWith(
-        boxShadow: widget.fromScaffold
-            ? [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  blurRadius: 30,
-                  spreadRadius: 10,
-                )
-              ]
-            : null,
-      ),
+      decoration:
+          generateContainerElevation(
+            context: context,
+            radius: 0,
+            color: backgroundColor,
+          ).copyWith(
+            boxShadow: widget.fromScaffold
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 30,
+                      spreadRadius: 10,
+                    ),
+                  ]
+                : null,
+          ),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,8 +336,8 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                               child: Text(
                                 widget.userName,
                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      color: sidebarTextColor,
-                                    ),
+                                  color: sidebarTextColor,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -415,16 +416,19 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
   Widget _buildItem(ThemedNavigatorItem item, {int depth = 0, bool removePadding = false}) {
     if (item is ThemedNavigatorLabel) {
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(EdgeInsets.only(
-          left: 10 * depth.toDouble(),
-        )),
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(
+          EdgeInsets.only(
+            left: 10 * depth.toDouble(),
+          ),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: item.label ??
+        child:
+            item.label ??
             Text(
               item.labelText ?? '',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: validateColor(color: backgroundColor),
-                  ),
+                color: validateColor(color: backgroundColor),
+              ),
             ),
       );
     }
@@ -446,9 +450,11 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(EdgeInsets.only(
-                  left: 10 * depth.toDouble(),
-                )),
+                margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(
+                  EdgeInsets.only(
+                    left: 10 * depth.toDouble(),
+                  ),
+                ),
                 decoration: BoxDecoration(
                   color: highlight ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
@@ -482,12 +488,13 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                             const SizedBox(width: 10),
                           ],
                           Expanded(
-                            child: item.label ??
+                            child:
+                                item.label ??
                                 Text(
                                   item.labelText ?? '',
                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: highlight ? activeColor : validateColor(color: backgroundColor),
-                                      ),
+                                    color: highlight ? activeColor : validateColor(color: backgroundColor),
+                                  ),
                                 ),
                           ),
                           if (item.children.isNotEmpty) ...[
@@ -524,9 +531,11 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
 
     if (item is ThemedNavigatorAction) {
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(EdgeInsets.only(
-          left: 10 * depth.toDouble(),
-        )),
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(
+          EdgeInsets.only(
+            left: 10 * depth.toDouble(),
+          ),
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -550,12 +559,13 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                     const SizedBox(width: 10),
                   ],
                   Expanded(
-                    child: item.label ??
+                    child:
+                        item.label ??
                         Text(
                           item.labelText ?? '',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: validateColor(color: backgroundColor),
-                              ),
+                            color: validateColor(color: backgroundColor),
+                          ),
                         ),
                   ),
                 ],

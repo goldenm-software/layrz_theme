@@ -60,9 +60,9 @@ class _ThemedChangeLayerDialogState extends State<ThemedChangeLayerDialog> {
             Text(
               widget.title,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
             const SizedBox(height: 10),
 

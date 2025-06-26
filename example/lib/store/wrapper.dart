@@ -14,14 +14,14 @@ class _LayoutState extends State<Layout> {
   ThemedLayoutStyle get layoutStyle => store.layoutStyle;
 
   AppThemedAsset get logo => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/com.layrz.one/logo/normal.svg',
-        white: 'https://cdn.layrz.com/resources/com.layrz.one/logo/white.svg',
-      );
+    normal: 'https://cdn.layrz.com/resources/com.layrz.one/logo/normal.svg',
+    white: 'https://cdn.layrz.com/resources/com.layrz.one/logo/white.svg',
+  );
 
   AppThemedAsset get favicon => const AppThemedAsset(
-        normal: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/normal.svg',
-        white: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/white.svg',
-      );
+    normal: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/normal.svg',
+    white: 'https://cdn.layrz.com/resources/com.layrz.one/favicon/white.svg',
+  );
 
   @override
   void initState() {

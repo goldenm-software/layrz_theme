@@ -35,8 +35,8 @@ class ThemedFieldDisplayError extends StatelessWidget {
                   : Text(
                       errors.join(', '),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.red.shade800,
-                          ),
+                        color: Colors.red.shade800,
+                      ),
                       maxLines: maxLines,
                     ),
             ),
