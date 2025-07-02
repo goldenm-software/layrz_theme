@@ -97,6 +97,10 @@ class ThemedButton extends StatefulWidget {
   /// By default, will use `22`.
   final double iconSize;
 
+  /// [iconSeparatorSize] is used to set the spacing between the icon and the text
+  /// defaults to `8`
+  final double iconSeparatorSize;
+
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -119,6 +123,7 @@ class ThemedButton extends StatefulWidget {
     this.showCooldownRemainingDuration = true,
     this.height = defaultHeight,
     this.iconSize = 22,
+    this.iconSeparatorSize = 8,
   }) : assert(label != null || labelText != null, "You must provide a label or labelText, not both or none."),
        assert(height >= 30, "Height must be greater than 30u"),
        assert(iconSize >= 0, "Icon size must be greater than 0"),
@@ -394,7 +399,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   double get borderRadius => 10;
 
   /// [iconSeparatorSize] is used to know the size of the icon separator.
-  double get iconSeparatorSize => 8;
+  double get iconSeparatorSize => widget.iconSeparatorSize;
 
   WidgetSpan get iconSeparator => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
