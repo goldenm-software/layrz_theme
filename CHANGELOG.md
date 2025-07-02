@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.3.5
+
+- Added `ThemedNavigatorWidget` to the `ThemedNavigatorItem` class elements to allow full custom widgets to be added.
+
+## 7.3.4
+
+- Updated
+
 ## 7.3.3
 - add `isDense` in `ThemedTimePicker`
 

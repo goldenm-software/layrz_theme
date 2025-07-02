@@ -101,6 +101,22 @@ class ThemedNavigatorAction extends ThemedNavigatorItem {
   }) : assert(label != null || labelText != null);
 }
 
+class ThemedNavigatorWidget extends ThemedNavigatorItem {
+  /// [widget] is the widget to be displayed in the view.
+  final Widget widget;
+
+  /// [onTap] is the action to be executed when the item is tapped.
+  final VoidCallback? onTap;
+
+  /// [ThemedNavigatorWidget] is a helper class to handle the widgets of the view.
+  ThemedNavigatorWidget({
+    super.label,
+    super.labelText,
+    this.onTap,
+    required this.widget,
+  }) : assert(label != null || labelText != null);
+}
+
 class ThemedNavigatorSeparator extends ThemedNavigatorItem {
   /// [type] is the type of the separator.
   final ThemedSeparatorType type;

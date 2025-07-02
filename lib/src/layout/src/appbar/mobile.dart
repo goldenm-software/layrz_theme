@@ -377,6 +377,37 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
       );
     }
 
+    if (item is ThemedNavigatorWidget) {
+      return ThemedTooltip(
+        position: ThemedTooltipPosition.right,
+        message: item.labelText ?? item.label?.toString() ?? '',
+        child: Container(
+          margin: const EdgeInsets.all(5),
+          width: actionSize - 10,
+          height: actionSize - 10,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(actionSize),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(actionSize),
+              hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
+              onTap: item.onTap,
+              child: Container(
+                alignment: Alignment.center,
+                constraints: const BoxConstraints(
+                  minWidth: 30,
+                  minHeight: 30,
+                ),
+                child: item.widget,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return const SizedBox();
   }
 }
