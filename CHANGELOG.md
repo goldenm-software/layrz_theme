@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.6
+
+- Added `iconSeparatorSize` prop to `ThemedButton`
+
 ## 7.3.5
 
 - Added `ThemedNavigatorWidget` to the `ThemedNavigatorItem` class elements to allow full custom widgets to be added.
