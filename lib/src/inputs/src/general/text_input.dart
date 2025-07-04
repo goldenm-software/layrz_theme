@@ -384,11 +384,17 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
             )
           : null,
       suffixIcon: suffix,
+      contentPadding: EdgeInsets.all(10).copyWith(
+        top: 12,
+      ),
     );
 
     if (isDense) {
       decoration = decoration.copyWith(
-        contentPadding: const EdgeInsets.all(10).subtract(const EdgeInsets.symmetric(vertical: 5)),
+        contentPadding: const EdgeInsets.all(10).copyWith(
+          top: 8,
+          bottom: 5,
+        ),
         isDense: true,
       );
     }

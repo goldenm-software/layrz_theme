@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.7
+
+- Adjusted `ThemedTextInput` dense padding to adjust top label padding.
+
 ## 7.3.6
 
 - Added `iconSeparatorSize` prop to `ThemedButton`
