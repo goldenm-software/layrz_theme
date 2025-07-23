@@ -74,7 +74,10 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                       labelText: "Example label",
                       items: _choices,
                       value: selectedSingle,
-                      onChanged: (v) => setState(() => selectedSingle = v?.value),
+                      canUnselect: true,
+                      onChanged: (v) {
+                        setState(() => selectedSingle = v?.value);
+                      },
                     ),
                     ThemedSelectInput<int>(
                       labelText: "2nd Example label",

@@ -157,13 +157,17 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.autoSelectFirst = false,
     this.dialogContraints = const BoxConstraints(maxWidth: 500, maxHeight: 500),
     this.itemExtent = 50,
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+  }) : assert(
+         (label == null && labelText != null) ||
+             (label != null && labelText == null),
+       );
 
   @override
   State<ThemedSelectInput<T>> createState() => _ThemedSelectInputState<T>();
 }
 
-class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with SingleTickerProviderStateMixin {
+class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
@@ -201,7 +205,9 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
   /// BECAUSE IT WILL CAUSE A LOOP 👁️👁️
   void _handleDidUpdateWidget() {
     if (widget.items.isNotEmpty) {
-      ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
+      ThemedSelectItem<T>? value = widget.items.firstWhereOrNull(
+        (item) => item.value == widget.value,
+      );
       selected = value;
       // if (mounted) _controller.text = displayedValue;
       setState(() {}); // Force rebuild
@@ -215,7 +221,9 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
       }
 
       if (widget.items.isNotEmpty) {
-        ThemedSelectItem<T>? value = widget.items.firstWhereOrNull((item) => item.value == widget.value);
+        ThemedSelectItem<T>? value = widget.items.firstWhereOrNull(
+          (item) => item.value == widget.value,
+        );
         setState(() => selected = value);
 
         if (widget.autoSelectFirst && selected == null) {
@@ -289,20 +297,20 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                         children: [
                           if (!widget.hideTitle) ...[
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10).add(
-                                const EdgeInsets.only(
-                                  top: 14,
-                                  left: 5,
-                                ),
-                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ).add(const EdgeInsets.only(top: 14, left: 5)),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       widget.labelText ?? '',
-                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                   ),
                                   if (widget.enableSearch) ...[
@@ -314,10 +322,15 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                                         onChanged: (value) {
                                           setState2(() => searchText = value);
                                         },
-                                        prefixIcon: LayrzIcons.solarOutlineMagnifier,
-                                        suffixIcon: searchText.isNotEmpty ? LayrzIcons.solarOutlineCloseSquare : null,
+                                        prefixIcon:
+                                            LayrzIcons.solarOutlineMagnifier,
+                                        suffixIcon: searchText.isNotEmpty
+                                            ? LayrzIcons.solarOutlineCloseSquare
+                                            : null,
                                         onSuffixTap: searchText.isNotEmpty
-                                            ? () => setState(() => searchText = "")
+                                            ? () => setState(
+                                                () => searchText = "",
+                                              )
                                             : null,
                                         hideDetails: true,
                                         dense: true,
@@ -333,15 +346,16 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                             Center(
                               child: Text(
                                 t('layrz.select.empty'),
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
                             ),
                           ] else ...[
                             ConstrainedBox(
-                              constraints: BoxConstraints(maxHeight: availableHeight),
+                              constraints: BoxConstraints(
+                                maxHeight: availableHeight,
+                              ),
                               child: ListView.builder(
                                 itemCount: items.length,
                                 itemExtent: widget.itemExtent,
@@ -353,7 +367,17 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                                     canUnselect: widget.canUnselect,
                                     onTap: () {
                                       items[index].onTap?.call();
-                                      if (temp?.value == items[index].value && widget.canUnselect) {
+                                      // debugPrint(
+                                      //   "Temp.value: ${temp?.value} - Item value: ${items[index].value}",
+                                      // );
+                                      // debugPrint(
+                                      //   "Bool to remove the warning: ${temp?.value == items[index].value} - ${widget.canUnselect} ",
+                                      // );
+                                      if (temp?.value == items[index].value &&
+                                          widget.canUnselect) {
+                                        debugPrint(
+                                          "Unselecting item: ${items[index].value}",
+                                        );
                                         setState(() => temp = null);
                                         Navigator.of(context).pop(null);
                                       } else {
@@ -372,17 +396,20 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
                                 horizontal: 10,
                               ).add(const EdgeInsets.only(bottom: 14)),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   ThemedButton.cancel(
                                     isMobile: isMobile,
                                     labelText: t('actions.cancel'),
-                                    onTap: () => Navigator.of(context).pop(null),
+                                    onTap: () =>
+                                        Navigator.of(context).pop(null),
                                   ),
                                   ThemedButton.save(
                                     isMobile: isMobile,
                                     labelText: t('actions.save'),
-                                    onTap: () => Navigator.of(context).pop(temp),
+                                    onTap: () =>
+                                        Navigator.of(context).pop(temp),
                                   ),
                                 ],
                               ),
@@ -407,13 +434,19 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
     } else if (result != null) {
       setState(() => selected = result);
       widget.onChanged?.call(result);
+    } else if (widget.canUnselect && result == null) {
+      setState(() => selected = null);
+      widget.onChanged?.call(null);
     }
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
     late String result;
     try {
-      result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
+      result =
+          LayrzAppLocalizations.maybeOf(context)?.t(key, args) ??
+          widget.translations[key] ??
+          key;
     } catch (_) {
       result = widget.translations[key] ?? key;
     }
