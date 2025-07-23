@@ -375,9 +375,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>>
                                       // );
                                       if (temp?.value == items[index].value &&
                                           widget.canUnselect) {
-                                        debugPrint(
-                                          "Unselecting item: ${items[index].value}",
-                                        );
+                                        // Removed debugPrint statement.
                                         setState(() => temp = null);
                                         Navigator.of(context).pop(null);
                                       } else {
