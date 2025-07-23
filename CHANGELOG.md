@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.3.8
+- Added a condition in the `Themed SelectInput` where the deselect scenario is considered
+
 ## 7.3.7
 
 - Adjusted `ThemedTextInput` dense padding to adjust top label padding.
