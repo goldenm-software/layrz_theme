@@ -367,12 +367,6 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>>
                                     canUnselect: widget.canUnselect,
                                     onTap: () {
                                       items[index].onTap?.call();
-                                      // debugPrint(
-                                      //   "Temp.value: ${temp?.value} - Item value: ${items[index].value}",
-                                      // );
-                                      // debugPrint(
-                                      //   "Bool to remove the warning: ${temp?.value == items[index].value} - ${widget.canUnselect} ",
-                                      // );
                                       if (temp?.value == items[index].value &&
                                           widget.canUnselect) {
                                         // Removed debugPrint statement.
