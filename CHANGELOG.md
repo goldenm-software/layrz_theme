@@ -1,6 +1,11 @@
 # Changelog
 
+## 7.3.9
+
+- Added new property `onSearchChanged` in `ThemedTable` component
+
 ## 7.3.8
+
 - Added a condition in the `Themed SelectInput` where the deselect scenario is considered
 
 ## 7.3.7
@@ -20,6 +25,7 @@
 - Updated
 
 ## 7.3.3
+
 - add `isDense` in `ThemedTimePicker`
 
 ## 7.3.2
@@ -109,6 +115,7 @@
 - Added a way to keep the tab position when the `tabs` is resizing on `ThemedTabView`.
 
 ## 7.2.12
+
 - Added `maximumDecimalDigits` prop to `ThemedNumberInput` to allow to increase the number of decimal digits.
 - Fixed `ThemedNumberInput` cursor behaviour to improve experience when typing numbers.
 
