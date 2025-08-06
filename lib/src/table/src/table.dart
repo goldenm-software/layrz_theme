@@ -223,6 +223,9 @@ class ThemedTable<T> extends StatefulWidget {
   /// By default this value is `50u`.
   final double? idWidth;
 
+  /// [onSearchChanged] represents the callback when the user types in the search input.
+  final void Function(String)? onSearchChanged;
+
   /// A standard table with a list of items, designed to be used in the scaffold.
   /// Helps to display a list of items in desktop and mobile mode without a lot of code. (I hope so)
   /// Please read the documentation of each property to understand how to use it.
@@ -282,6 +285,7 @@ class ThemedTable<T> extends StatefulWidget {
     this.fixedColumnsCount = 3,
     this.disablePaginator = false,
     this.idWidth,
+    this.onSearchChanged,
   }) : assert(columns.length > 0),
        assert(rowHeight > 0);
 
@@ -963,6 +967,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                       _currentPage = 0;
                       setState(() {});
                       _sort();
+                      widget.onSearchChanged?.call(value);
                     },
                   ),
                   const SizedBox(width: 5),
