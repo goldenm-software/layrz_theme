@@ -111,7 +111,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
   final bool autoSelectFirst;
 
   /// [dialogContraints] is the constraints of the dialog.
-  final BoxConstraints? dialogContraints;
+  final BoxConstraints dialogContraints;
 
   /// [itemExtent] is the extend of the item, used on the lists of the dual list input.
   final double itemExtent;
@@ -157,17 +157,13 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.autoSelectFirst = false,
     this.dialogContraints = const BoxConstraints(maxWidth: 500, maxHeight: 500),
     this.itemExtent = 50,
-  }) : assert(
-         (label == null && labelText != null) ||
-             (label != null && labelText == null),
-       );
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
   State<ThemedSelectInput<T>> createState() => _ThemedSelectInputState<T>();
 }
 
-class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>>
-    with SingleTickerProviderStateMixin {
+class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
@@ -247,7 +243,6 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>>
     }
 
     return ThemedTextInput(
-      // controller: _controller,
       onTap: widget.disabled ? null : _showPicker,
       label: widget.label,
       labelText: widget.labelText,
@@ -267,178 +262,52 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>>
   }
 
   Future<void> _showPicker() async {
-    double width = MediaQuery.of(context).size.width;
-    bool isMobile = width < kSmallGrid;
-
-    ThemedSelectItem<T>? result = await showDialog(
+    SelectInputResult? result = await showDialog(
       context: context,
       builder: (context) {
-        searchText = "";
-        ThemedSelectItem<T>? temp = selected;
-
-        return PopScope(
-          canPop: widget.hideButtons || temp != null,
-          child: Dialog(
-            child: StatefulBuilder(
-              builder: (context, setState2) {
-                return Container(
-                  constraints: widget.dialogContraints,
-                  decoration: generateContainerElevation(
-                    context: context,
-                    elevation: 5,
-                    radius: 10,
-                  ),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      double availableHeight = constraints.maxHeight - (60 * 2);
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (!widget.hideTitle) ...[
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ).add(const EdgeInsets.only(top: 14, left: 5)),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      widget.labelText ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ),
-                                  if (widget.enableSearch) ...[
-                                    const SizedBox(height: 10),
-                                    Expanded(
-                                      child: ThemedTextInput(
-                                        labelText: t('layrz.select.search'),
-                                        padding: EdgeInsets.zero,
-                                        onChanged: (value) {
-                                          setState2(() => searchText = value);
-                                        },
-                                        prefixIcon:
-                                            LayrzIcons.solarOutlineMagnifier,
-                                        suffixIcon: searchText.isNotEmpty
-                                            ? LayrzIcons.solarOutlineCloseSquare
-                                            : null,
-                                        onSuffixTap: searchText.isNotEmpty
-                                            ? () => setState(
-                                                () => searchText = "",
-                                              )
-                                            : null,
-                                        hideDetails: true,
-                                        dense: true,
-                                        keyboardType: widget.searchKeyboardType,
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ],
-                          if (items.isEmpty) ...[
-                            Center(
-                              child: Text(
-                                t('layrz.select.empty'),
-                                style: Theme.of(context).textTheme.bodyLarge
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ] else ...[
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight: availableHeight,
-                              ),
-                              child: ListView.builder(
-                                itemCount: items.length,
-                                itemExtent: widget.itemExtent,
-                                padding: const EdgeInsets.all(10),
-                                itemBuilder: (context, index) {
-                                  return _ThemedSelectItem<T>(
-                                    item: items[index],
-                                    selected: temp?.value == items[index].value,
-                                    canUnselect: widget.canUnselect,
-                                    onTap: () {
-                                      items[index].onTap?.call();
-                                      if (temp?.value == items[index].value &&
-                                          widget.canUnselect) {
-                                        // Removed debugPrint statement.
-                                        setState(() => temp = null);
-                                        Navigator.of(context).pop(null);
-                                      } else {
-                                        setState(() => temp = items[index]);
-                                        Navigator.of(context).pop(temp);
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                          if (!widget.hideButtons) ...[
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ).add(const EdgeInsets.only(bottom: 14)),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ThemedButton.cancel(
-                                    isMobile: isMobile,
-                                    labelText: t('actions.cancel'),
-                                    onTap: () =>
-                                        Navigator.of(context).pop(null),
-                                  ),
-                                  ThemedButton.save(
-                                    isMobile: isMobile,
-                                    labelText: t('actions.save'),
-                                    onTap: () =>
-                                        Navigator.of(context).pop(temp),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ],
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
+        return DialogSelectInput(
+          dialogConstraints: widget.dialogContraints,
+          labelText: widget.labelText,
+          hideTitle: widget.hideTitle,
+          enableSearch: widget.enableSearch,
+          searchKeyboardType: widget.searchKeyboardType,
+          items: widget.items,
+          itemExtent: widget.itemExtent,
+          canUnselect: widget.canUnselect,
+          returnNullOnClose: widget.returnNullOnClose,
+          hideButtons: widget.hideButtons,
+          translations: widget.translations,
+          overridesLayrzTranslations: widget.overridesLayrzTranslations,
+          autoclose: widget.autoclose,
+          value: selected,
         );
       },
     );
 
     _focusNode.unfocus();
-    if (widget.returnNullOnClose && result == null) {
-      widget.onChanged?.call(null);
-      setState(() => selected = result);
-    } else if (result != null) {
-      setState(() => selected = result);
-      widget.onChanged?.call(result);
-    } else if (widget.canUnselect && result == null) {
-      setState(() => selected = null);
-      widget.onChanged?.call(null);
+
+    /// If the result is null, User Tap outSide
+    if (result == null) {
+      if (widget.returnNullOnClose) {
+        widget.onChanged?.call(null);
+      } else {
+        widget.onChanged?.call(selected);
+      }
+    } else {
+      if (result.isRemoved) {
+        /// widget.canUnselect return a value but with isRemoved flag == true
+        widget.onChanged?.call(null);
+      } else {
+        /// Final result its all ok or normal
+        widget.onChanged?.call(result.result as ThemedSelectItem<T>?);
+      }
     }
   }
 
   String t(String key, [Map<String, dynamic> args = const {}]) {
     late String result;
     try {
-      result =
-          LayrzAppLocalizations.maybeOf(context)?.t(key, args) ??
-          widget.translations[key] ??
-          key;
+      result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
     } catch (_) {
       result = widget.translations[key] ?? key;
     }
@@ -454,5 +323,236 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>>
     }
 
     return result;
+  }
+}
+
+class DialogSelectInput<T> extends StatefulWidget {
+  final BoxConstraints dialogConstraints;
+  final String? labelText;
+  final bool hideTitle;
+  final bool enableSearch;
+  final TextInputType searchKeyboardType;
+  final List<ThemedSelectItem<T>> items;
+  final double itemExtent;
+  final bool canUnselect;
+  final bool returnNullOnClose;
+  final bool hideButtons;
+  final Map<String, String> translations;
+  final bool overridesLayrzTranslations;
+  final bool autoclose;
+  final ThemedSelectItem<T>? value;
+
+  const DialogSelectInput({
+    super.key,
+    required this.dialogConstraints,
+    required this.labelText,
+    required this.hideTitle,
+    required this.enableSearch,
+    required this.searchKeyboardType,
+    required this.items,
+    required this.itemExtent,
+    required this.canUnselect,
+    required this.returnNullOnClose,
+    required this.hideButtons,
+    required this.translations,
+    required this.overridesLayrzTranslations,
+    required this.autoclose,
+    required this.value,
+  });
+
+  @override
+  State<DialogSelectInput> createState() => _DialogSelectInputState();
+}
+
+class _DialogSelectInputState extends State<DialogSelectInput> {
+  ThemedSelectItem? selectedItem;
+  String searchText = "";
+  List<ThemedSelectItem> get items => widget.items.where((item) {
+    if (searchText.isEmpty) return true;
+    return item.label.toLowerCase().contains(searchText.toLowerCase());
+  }).toList();
+  @override
+  void initState() {
+    selectedItem = widget.value;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.sizeOf(context).width < kSmallGrid;
+
+    return PopScope(
+      canPop: widget.hideButtons || selectedItem != null,
+      child: Dialog(
+        child: Container(
+          constraints: widget.dialogConstraints,
+          decoration: generateContainerElevation(
+            context: context,
+            elevation: 5,
+            radius: 10,
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// Title and Search
+                  if (!widget.hideTitle) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10, left: 15, top: 14),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: 10,
+                        children: [
+                          /// Title
+                          Expanded(
+                            child: Text(
+                              widget.labelText ?? '',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.visible,
+                              ),
+                            ),
+                          ),
+
+                          /// Search
+                          if (widget.enableSearch) ...[
+                            Expanded(
+                              child: ThemedSearchInput(
+                                value: searchText,
+                                onSearch: (value) => setState(() => searchText = value),
+                                asField: true,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (items.isEmpty) ...[
+                    Center(
+                      child: Text(
+                        t('layrz.select.empty'),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ] else ...[
+                    /// Items
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: items.length,
+                        itemExtent: widget.itemExtent,
+                        padding: const EdgeInsets.all(10),
+                        itemBuilder: (context, index) {
+                          bool isSelected = selectedItem == items[index];
+                          return _ThemedSelectItem(
+                            item: items[index],
+                            selected: isSelected,
+                            canUnselect: widget.canUnselect,
+                            onTap: () {
+                              items[index].onTap?.call();
+                              if (isSelected && widget.canUnselect) {
+                                selectedItem = null;
+                              } else {
+                                selectedItem = items[index];
+                              }
+                              setState(() {});
+                              if (widget.autoclose) {
+                                Navigator.of(context).pop(
+                                  SelectInputResult(result: selectedItem),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+
+                  /// Actions
+                  if (!widget.hideButtons) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ).add(const EdgeInsets.only(bottom: 14)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ThemedButton.cancel(
+                            isMobile: isMobile,
+                            labelText: t('actions.cancel'),
+                            onTap: () => Navigator.of(context).pop(
+                              SelectInputResult(result: widget.value),
+                            ),
+                          ),
+                          if (widget.canUnselect && selectedItem?.value != null)
+                            ThemedButton(
+                              style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+                              icon: LayrzIcons.solarBoldMinusSquare,
+                              labelText: t('layrz.select.unselect'),
+                              color: Colors.orange,
+                              onTap: () {
+                                Navigator.of(context).pop(
+                                  SelectInputResult(result: selectedItem, isRemoved: true),
+                                );
+                              },
+                            ),
+                          ThemedButton.save(
+                            isMobile: isMobile,
+                            labelText: t('actions.save'),
+                            onTap: () => Navigator.of(context).pop(
+                              SelectInputResult(result: selectedItem),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  String t(String key, [Map<String, dynamic> args = const {}]) {
+    late String result;
+    try {
+      result = LayrzAppLocalizations.maybeOf(context)?.t(key, args) ?? widget.translations[key] ?? key;
+    } catch (_) {
+      result = widget.translations[key] ?? key;
+    }
+
+    if (widget.overridesLayrzTranslations) {
+      result = widget.translations[key] ?? key;
+    }
+
+    if (args.isNotEmpty) {
+      args.forEach((key, value) {
+        result = result.replaceAll('{$key}', value.toString());
+      });
+    }
+
+    return result;
+  }
+}
+
+class SelectInputResult {
+  final ThemedSelectItem? result;
+  final bool isRemoved;
+
+  SelectInputResult({
+    this.result,
+    this.isRemoved = false,
+  });
+
+  @override
+  String toString() {
+    return 'FinalResult(result: $result, isRemoved: $isRemoved)';
   }
 }

@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.3.10
+- Rework `ThemedSelectInput` to support `canUnselect`, `returnNullOnClose` and `autoClose`
+
 ## 7.3.9
 
 - Added new property `onSearchChanged` in `ThemedTable` component
