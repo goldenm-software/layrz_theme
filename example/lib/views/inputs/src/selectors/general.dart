@@ -70,8 +70,10 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                   children: [
                     const Text("Select input"),
                     Text('Select input Current value: $selectedSingle'),
+
+                    /// Can Unselect
                     ThemedSelectInput<int>(
-                      labelText: "Example label",
+                      labelText: "Example Can unselect",
                       items: _choices,
                       value: selectedSingle,
                       canUnselect: true,
@@ -80,7 +82,19 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                       },
                     ),
                     ThemedSelectInput<int>(
-                      labelText: "2nd Example label",
+                      labelText: "Example Can unselect without autoClose false",
+                      items: _choices,
+                      value: selectedSingle,
+                      canUnselect: true,
+                      autoclose: false,
+                      onChanged: (v) {
+                        setState(() => selectedSingle = v?.value);
+                      },
+                    ),
+
+                    /// Can return null on close
+                    ThemedSelectInput<int>(
+                      labelText: "Return null on close",
                       autoclose: false,
                       returnNullOnClose: true,
                       items: _choices,
@@ -89,12 +103,14 @@ class _GeneralPickersViewState extends State<GeneralPickersView> {
                         setState(() => selectedSingle = v?.value);
                       },
                     ),
+
+                    /// Default
                     ThemedSelectInput<int>(
-                      labelText: "3rd Example label without onChanged",
-                      autoclose: false,
-                      returnNullOnClose: true,
+                      labelText: "Default",
+
                       items: _choices,
                       value: selectedSingle,
+                      onChanged: (v) => setState(() => selectedSingle = v?.value),
                     ),
                   ],
                 ),

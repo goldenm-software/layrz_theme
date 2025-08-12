@@ -30,6 +30,10 @@ class ThemedSelectItem<T> {
   /// Allowing that any other visible atributes may also be searchable.
   final Set<String> searchableAttributes;
 
+  /// Indicates whether the item has been marked as removed.
+  /// This is only used when the [ThemedSelectInput] has the property `canUnselect` set to true.
+  final bool isRemoved;
+
   /// [ThemedSelectItem] is the item of the [ThemedSelectInput], [ThemedMultiSelectInput] and [ThemedDualListInput].
   const ThemedSelectItem({
     required this.label,
@@ -40,6 +44,7 @@ class ThemedSelectItem<T> {
     this.content,
     this.canDelete = false,
     this.searchableAttributes = const {},
+    this.isRemoved = false,
   });
 
   @override
