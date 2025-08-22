@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.11
+- Removed dependency on `flutter_map_cancellable_tile_provider` due to deprecation
+- Updated `flutter_map` to `8.2.1` and updated `ThemedTileLayer` accordingly
+
 ## 7.3.10
 - Rework `ThemedSelectInput` to support `canUnselect`, `returnNullOnClose` and `autoClose`
 

@@ -10,7 +10,15 @@ class ThemedTileLayer extends StatefulWidget {
   /// [maxZoom] is the maximum zoom level for the map.
   final double maxZoom;
 
-  /// [isCancellable] is a flag to indicate whether the map can be cancelled or not.
+  /// [isCancellable] is a flag to indicate whether the map http request can be cancelled or not.
+  /// Defaults to `true`. It is recommended to enable this functionality, unless
+  /// you suspect it is causing problems.
+  /// Whether to abort HTTP requests for tiles that will no longer be displayed.
+  ///
+  /// For example, tiles may be pruned from an intermediate zoom level during a
+  /// user's fast zoom. When disabled, the request for each tile that has been
+  /// pruned still needs to complete and be processed. When enabled, those
+  /// tiles' requests can be aborted before they are fully loaded.
   final bool isCancellable;
 
   /// [controller] defines the `ThemedMapController` to listen some events from other widgets.
@@ -334,9 +342,13 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
       maxZoom: widget.maxZoom,
       minNativeZoom: widget.minZoom.toInt(),
       maxNativeZoom: widget.maxZoom.toInt(),
-      tileProvider: widget.isCancellable
-          ? CancellableNetworkTileProvider(headers: headers)
-          : NetworkTileProvider(headers: headers),
+      tileProvider: NetworkTileProvider(
+        headers: headers,
+
+        /// Setting for the previous CancellableNetworkTileProvider
+        abortObsoleteRequests: widget.isCancellable,
+      ),
+
       keepBuffer: buffer,
       panBuffer: buffer,
     );
