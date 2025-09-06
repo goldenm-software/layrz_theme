@@ -62,7 +62,7 @@ class HeaderTableSection<T> extends StatelessWidget {
                   child: Align(
                     alignment: col.alignment,
                     child: Text(
-                      col.labelText,
+                      col.headerText,
                       style: textStyle?.copyWith(fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,
                     ),

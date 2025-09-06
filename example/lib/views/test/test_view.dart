@@ -56,53 +56,38 @@ class _TestViewState extends State<TestView> {
 
               columns: [
                 ThemedColumn2(
-                  labelText: 'ID',
-                  valueBuilder: (context, item) => item.id,
+                  headerText: 'ID',
+                  value: (item) => item.id,
                   width: 80,
-
-                  widgetBuilder: (context, item) => Row(
-                    spacing: 8,
-                    children: [
-                      Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      Text(item.id),
-                    ],
-                  ),
                 ),
                 ThemedColumn2(
-                  labelText: 'Name',
-                  valueBuilder: (context, item) => item.name,
+                  headerText: 'Name',
+                  value: (item) => item.name,
                   onTap: (item) {
                     debugPrint("Tapped on ${item.name}");
                   },
                 ),
                 ThemedColumn2(
-                  labelText: 'Plate',
-                  valueBuilder: (context, item) => item.plate ?? 'N/A',
+                  headerText: 'Plate',
+                  value: (item) => item.plate ?? 'N/A',
                 ),
                 ThemedColumn2(
-                  labelText: 'VIN',
-                  valueBuilder: (context, item) => item.vin ?? 'N/A',
+                  headerText: 'VIN',
+                  value: (item) => item.vin ?? 'N/A',
                 ),
                 ThemedColumn2(
-                  labelText: 'Mode',
-                  valueBuilder: (context, item) => item.mode?.name ?? 'N/A',
+                  headerText: 'Mode',
+                  value: (item) => item.mode?.name ?? 'N/A',
                 ),
                 ThemedColumn2(
-                  labelText: 'Kind',
-                  valueBuilder: (context, item) => item.kind?.name ?? 'N/A',
+                  headerText: 'Kind',
+                  value: (item) => item.kind?.name ?? 'N/A',
                 ),
                 ThemedColumn2(
-                  labelText: 'Active Time',
-                  valueBuilder: (context, item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
+                  headerText: 'Active Time',
+                  value: (item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
                   width: 250,
-                  widgetBuilder: (context, item) => Row(
+                  widgetBuilder: (item) => Row(
                     spacing: 8,
                     children: [
                       Icon(

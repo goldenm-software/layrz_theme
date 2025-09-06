@@ -28,19 +28,17 @@ class NewThemedTable<T> extends StatefulWidget {
 
 class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   String search = '';
-
   TextStyle get textStyleDefault => Theme.of(context).textTheme.bodyMedium!;
-  Future<void>? _tableFuture;
   List<T> itemsSelected = [];
+  bool isLoading = true;
+  List<ThemedColumn2<T>> columnsFiltered = [];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _tableFuture = assignMinWidthToColumns();
-
-      _tableFuture = null;
-      setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _assignMinWidthToColumns();
+      setState(() => isLoading = false);
     });
   }
 
@@ -48,50 +46,47 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   void didUpdateWidget(covariant NewThemedTable<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.columns != oldWidget.columns) {
-      _tableFuture = assignMinWidthToColumns();
-      ();
-      _tableFuture = null;
-
-      setState(() {});
+      _assignMinWidthToColumns();
     }
   }
 
-  Future<List<ThemedColumn2<T>>> assignMinWidthToColumns() async {
-    final List<ThemedColumn2<T>> list = [];
-
+  Future<void> _assignMinWidthToColumns() async {
+    columnsFiltered.clear();
     for (final col in widget.columns) {
-      debugPrint("Col: ${col.labelText} - Width: ${col.width}");
+      debugPrint("Col: ${col.headerText} - Width: ${col.width}");
 
       // Medir el ancho del header (labelText)
       final headerPainter = TextPainter(
         text: TextSpan(
-          text: col.labelText,
-          style: textStyleDefault?.copyWith(fontWeight: FontWeight.bold),
+          text: col.headerText,
+          style: textStyleDefault.copyWith(fontWeight: FontWeight.bold),
         ),
         textDirection: TextDirection.ltr,
       )..layout();
 
       /// must to add 24 pixels of possible icon
       double minWidth = headerPainter.size.width + 24;
+      int count = 1;
       for (final item in widget.items) {
         double cellWidth;
-        final text = col.valueBuilder(context, item);
+        final text = col.value(item);
         final painter = TextPainter(
           text: TextSpan(text: text, style: textStyleDefault),
           textDirection: TextDirection.ltr,
         )..layout();
         cellWidth = painter.size.width;
         if (cellWidth > minWidth) minWidth = cellWidth;
+        count++;
+        if (count == 100) break;
       }
 
       /// Add padding
       col.minWidth = minWidth + 20;
 
-      list.add(col);
+      columnsFiltered.add(col);
       debugPrint("final Col min width: ${col.minWidth} - Max: ${col.minWidth}\n");
       debugPrint("--------");
     }
-    return list;
   }
 
   @override
@@ -114,43 +109,27 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
           ),
           // Table
           Expanded(
-            child: FutureBuilder(
-              future: _tableFuture,
-              builder: (context, snapshot) {
-                // Loader
-                if ([ConnectionState.active, ConnectionState.waiting].contains(snapshot.connectionState)) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                // Error Case
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                      style: const TextStyle(overflow: TextOverflow.visible),
-                    ),
-                  );
-                }
-                return TableSection<T>(
-                  items: widget.items,
-                  columns: widget.columns,
-                  textStyle: textStyleDefault,
-                  onShow: widget.onShow,
-                  onEdit: widget.onEdit,
-                  onDelete: widget.onDelete,
-                  addtionalActions: widget.addtionalActions,
-                  itemsSelected: itemsSelected,
-                  enableMultiSelect: true,
-                  multiSelectOnChange: (add) {
-                    if (add) {
-                      itemsSelected = widget.items;
-                    } else {
-                      itemsSelected.clear();
-                    }
-                    setState(() {});
-                  },
-                );
-              },
-            ),
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TableSection<T>(
+                    items: widget.items,
+                    columns: widget.columns,
+                    textStyle: textStyleDefault,
+                    onShow: widget.onShow,
+                    onEdit: widget.onEdit,
+                    onDelete: widget.onDelete,
+                    addtionalActions: widget.addtionalActions,
+                    enableMultiSelect: true,
+                    multiSelectOnChange: (bool add) {
+                      setState(() {
+                        if (add) {
+                          itemsSelected = List.from(widget.items);
+                        } else {
+                          itemsSelected.clear();
+                        }
+                      });
+                    },
+                  ),
           ),
         ],
       ),

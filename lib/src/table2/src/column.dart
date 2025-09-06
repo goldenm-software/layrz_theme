@@ -1,9 +1,9 @@
 part of '../new_table.dart';
 
 class ThemedColumn2<T> {
-  final String labelText;
-  final ValueBuilder<T> valueBuilder;
-  final WidgetBuilder<T>? widgetBuilder;
+  final String headerText;
+  final String Function(T item) value;
+  final Widget Function(T item)? widgetBuilder;
   final Alignment alignment;
   final bool isSortable;
   double? width;
@@ -12,8 +12,8 @@ class ThemedColumn2<T> {
   final CellTap<T>? onTap;
 
   ThemedColumn2({
-    required this.labelText,
-    required this.valueBuilder,
+    required this.headerText,
+    required this.value,
     this.widgetBuilder,
     this.alignment = Alignment.centerLeft,
     this.isSortable = true,

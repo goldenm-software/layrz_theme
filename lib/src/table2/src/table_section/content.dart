@@ -164,9 +164,9 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
                               children: [
                                 ...widget.columns.map((ThemedColumn2<T> col) {
                                   final Widget cellContent = col.widgetBuilder != null
-                                      ? col.widgetBuilder!(context, item)
+                                      ? col.widgetBuilder!(item)
                                       : Text(
-                                          col.valueBuilder(context, item),
+                                          col.value(item),
                                           style: widget.textStyle,
                                           overflow: TextOverflow.ellipsis,
                                         );
