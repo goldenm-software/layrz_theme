@@ -16,6 +16,8 @@ class TableSection<T> extends StatelessWidget {
   final double minActionsWidth;
   final double headerHeight;
   final Color headerBackgroundColor;
+  final String actionsLabelText;
+  final IconData actionsIcon;
 
   const TableSection({
     required this.items,
@@ -24,6 +26,9 @@ class TableSection<T> extends StatelessWidget {
     required this.minActionsWidth,
     required this.headerHeight,
     required this.headerBackgroundColor,
+    required this.actionsLabelText,
+    required this.actionsIcon,
+    required this.itemsSelected,
     super.key,
     this.textStyle,
     this.onShow,
@@ -31,7 +36,6 @@ class TableSection<T> extends StatelessWidget {
     this.onDelete,
     this.addtionalActions = const [],
     this.enableMultiSelect = false,
-    this.itemsSelected = const [],
     this.itemMultiSelectOnChange,
     this.multiSelectOnChange,
   });
@@ -52,6 +56,7 @@ class TableSection<T> extends StatelessWidget {
 
     final selectWdith = 60.0;
     final actionsWidth = _getActionsWidth(isActionsMobileActive: size.width <= actionsMobileBreakpoint);
+    debugPrint("Items Selected: ${itemsSelected.length} - if all selected (${itemsSelected.length == items.length})");
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -73,9 +78,11 @@ class TableSection<T> extends StatelessWidget {
           columns: columns,
           actionsWidth: actionsWidth,
           itemHeight: itemHeight,
-          isSelected: itemsSelected.length == items.length && items.isNotEmpty,
+          isSelected: itemsSelected.length == items.length,
           headerHeight: headerHeight,
           headerBackgroundColor: headerBackgroundColor,
+          actionsLabelText: actionsLabelText,
+          actionsIcon: actionsIcon,
         ),
 
         // Columns content

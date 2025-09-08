@@ -16,6 +16,8 @@ class HeaderTableSection<T> extends StatelessWidget {
     required this.isSelected,
     required this.headerHeight,
     required this.headerBackgroundColor,
+    required this.actionsLabelText,
+    required this.actionsIcon,
 
     super.key,
   });
@@ -34,22 +36,31 @@ class HeaderTableSection<T> extends StatelessWidget {
   final bool isSelected;
   final double headerHeight;
   final Color headerBackgroundColor;
+  final String actionsLabelText;
+  final IconData actionsIcon;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (enableMultiSelect) ...[
-          InkWell(
-            onTap: enableMultiSelect ? () => multiSelectOnChange?.call(itemsSelected.length != items.length) : null,
-            child: Container(
-              width: selectWdith,
-              height: headerHeight,
-              decoration: decoration,
-              child: Center(
-                child: ThemedAnimatedCheckbox(
-                  value: isSelected,
-                  activeColor: validateColor(color: headerBackgroundColor),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: enableMultiSelect ? () => multiSelectOnChange?.call(itemsSelected.length != items.length) : null,
+              child: Container(
+                width: selectWdith,
+                height: headerHeight,
+                decoration: decoration,
+                child: Center(
+                  child: AbsorbPointer(
+                    child: ThemedAnimatedCheckbox(
+                      value: isSelected,
+                      activeColor: validateColor(color: headerBackgroundColor),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -64,9 +75,7 @@ class HeaderTableSection<T> extends StatelessWidget {
                   height: headerHeight,
                   decoration: decoration,
                   width: col.width,
-                  constraints: BoxConstraints(
-                    minWidth: col.minWidth ?? 50,
-                  ),
+                  constraints: BoxConstraints(minWidth: col.minWidth ?? 50),
                   child: Align(
                     alignment: col.alignment,
                     child: Text(
@@ -98,13 +107,12 @@ class HeaderTableSection<T> extends StatelessWidget {
             spacing: 8,
             children: [
               Text(
-                "Actions",
-                textAlign: TextAlign.right,
+                actionsLabelText,
                 style: textStyle,
                 overflow: TextOverflow.ellipsis,
               ),
               Icon(
-                LayrzIcons.mdiDotsVertical,
+                actionsIcon,
                 size: 16,
                 color: textStyle?.color,
               ),

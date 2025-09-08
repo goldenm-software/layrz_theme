@@ -12,6 +12,8 @@ class NewThemedTable<T> extends StatefulWidget {
   final double actionsMobileBreakpoint;
   final double headerHeight;
   final Color? headerBackgroundColor;
+  final String actionsLabelText;
+  final IconData? actionsIcon;
 
   const NewThemedTable({
     required this.labelText,
@@ -26,6 +28,8 @@ class NewThemedTable<T> extends StatefulWidget {
     this.actionsMobileBreakpoint = kSmallGrid,
     this.headerHeight = 40,
     this.headerBackgroundColor,
+    this.actionsLabelText = "Actions",
+    this.actionsIcon,
   });
 
   @override
@@ -93,7 +97,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
     /// Calculate min width for actions
     final actionHeaderPainter = TextPainter(
       text: TextSpan(
-        text: 'Actions',
+        text: widget.actionsLabelText,
         style: textStyleDefault.copyWith(fontWeight: FontWeight.bold),
       ),
       textDirection: TextDirection.ltr,
@@ -138,10 +142,15 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                     minActionsWidth: minActionsWidth,
                     headerHeight: widget.headerHeight,
                     headerBackgroundColor: widget.headerBackgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+                    actionsLabelText: widget.actionsLabelText,
+                    actionsIcon: widget.actionsIcon ?? LayrzIcons.mdiDotsVertical,
+                    itemsSelected: itemsSelected,
                     multiSelectOnChange: (bool add) {
+                      debugPrint("Is add: $add");
                       setState(() {
                         if (add) {
                           itemsSelected = List.from(widget.items);
+                          debugPrint("ItemsSelected: ${itemsSelected.length}");
                         } else {
                           itemsSelected.clear();
                         }
