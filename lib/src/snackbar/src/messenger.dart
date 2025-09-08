@@ -14,6 +14,10 @@ class ThemedSnackbarMessenger extends StatefulWidget {
   /// It is used to determine if the snackbar should be displayed on the bottom of the screen
   final double mobileBreakpoint;
 
+  /// defaults to `true` when `true` and [mobileBreakpoint] is reached, the snackbar will consider the `MediaQuery.viewInsetsOf(context).bottom` property to consider the virtual keyboard height when showing the snackbar on Android and iOS devices.
+  ///
+  final bool useViewInsetsBottom;
+
   /// [ThemedSnackbarMessenger] is a widget that provides a way to show snackbars
   /// using the Layrz Design styling.
   ///
@@ -27,6 +31,7 @@ class ThemedSnackbarMessenger extends StatefulWidget {
     required this.child,
     this.maxWidth = 400,
     this.mobileBreakpoint = kSmallGrid,
+    this.useViewInsetsBottom = true,
   });
 
   @override
@@ -204,6 +209,8 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
 
   bool get _isMobile => _screenSize.width < widget.mobileBreakpoint;
 
+  late EdgeInsets _viewInsets;
+
   @override
   void initState() {
     super.initState();
@@ -271,6 +278,12 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
 
   @override
   Widget build(BuildContext context) {
+    // To consider the virtual keyboard height when showing the snackbar on mobile devices
+    _viewInsets = MediaQuery.viewInsetsOf(context);
+    double viewInsetsBottom = 0;
+    if (widget.useViewInsetsBottom) {
+      viewInsetsBottom = _viewInsets.bottom;
+    }
     return _ThemedSnackbarScope(
       state: this,
       child: Stack(
@@ -281,7 +294,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
               Positioned(
                 top: _isMobile ? null : 15 + _viewPadding.top,
                 right: _isMobile ? 15 + _viewPadding.right : 15 + _viewPadding.right,
-                bottom: _isMobile ? 15 + _viewPadding.bottom : null,
+                bottom: _isMobile ? 15 + _viewPadding.bottom + viewInsetsBottom : null,
                 left: _isMobile ? 15 + _viewPadding.left : null,
                 width: _isMobile ? null : _width,
                 height: _height + 20,
@@ -411,7 +424,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                 Positioned(
                   top: _isMobile ? null : 10 + _viewPadding.top,
                   right: _isMobile ? 10 + _viewPadding.right : 10 + _viewPadding.right,
-                  bottom: _isMobile ? 10 + _viewPadding.bottom + _height : null,
+                  bottom: _isMobile ? 10 + _viewPadding.bottom + _height + viewInsetsBottom : null,
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
