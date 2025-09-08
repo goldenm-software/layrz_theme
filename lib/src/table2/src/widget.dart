@@ -9,6 +9,9 @@ class NewThemedTable<T> extends StatefulWidget {
   final Future<void> Function(BuildContext, T)? onEdit;
   final Future<void> Function(BuildContext, T)? onDelete;
   final List<ThemedActionButton> addtionalActions;
+  final double actionsMobileBreakpoint;
+  final double headerHeight;
+  final Color? headerBackgroundColor;
 
   const NewThemedTable({
     required this.labelText,
@@ -20,6 +23,9 @@ class NewThemedTable<T> extends StatefulWidget {
     this.onEdit,
     this.onDelete,
     this.addtionalActions = const [],
+    this.actionsMobileBreakpoint = kSmallGrid,
+    this.headerHeight = 40,
+    this.headerBackgroundColor,
   });
 
   @override
@@ -32,6 +38,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   List<T> itemsSelected = [];
   bool isLoading = true;
   List<ThemedColumn2<T>> columnsFiltered = [];
+  double minActionsWidth = 100;
 
   @override
   void initState() {
@@ -53,9 +60,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   Future<void> _assignMinWidthToColumns() async {
     columnsFiltered.clear();
     for (final col in widget.columns) {
-      debugPrint("Col: ${col.headerText} - Width: ${col.width}");
-
-      // Medir el ancho del header (labelText)
+      // Calculate min width based on header
       final headerPainter = TextPainter(
         text: TextSpan(
           text: col.headerText,
@@ -82,11 +87,20 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
 
       /// Add padding
       col.minWidth = minWidth + 20;
-
       columnsFiltered.add(col);
-      debugPrint("final Col min width: ${col.minWidth} - Max: ${col.minWidth}\n");
-      debugPrint("--------");
     }
+
+    /// Calculate min width for actions
+    final actionHeaderPainter = TextPainter(
+      text: TextSpan(
+        text: 'Actions',
+        style: textStyleDefault.copyWith(fontWeight: FontWeight.bold),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    /// LabelText + Padding + Icon
+    minActionsWidth = actionHeaderPainter.size.width + 20 + 50;
   }
 
   @override
@@ -120,6 +134,10 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                     onDelete: widget.onDelete,
                     addtionalActions: widget.addtionalActions,
                     enableMultiSelect: true,
+                    actionsMobileBreakpoint: widget.actionsMobileBreakpoint,
+                    minActionsWidth: minActionsWidth,
+                    headerHeight: widget.headerHeight,
+                    headerBackgroundColor: widget.headerBackgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
                     multiSelectOnChange: (bool add) {
                       setState(() {
                         if (add) {

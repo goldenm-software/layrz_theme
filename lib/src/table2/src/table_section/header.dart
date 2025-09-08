@@ -12,6 +12,11 @@ class HeaderTableSection<T> extends StatelessWidget {
     required this.textStyle,
     required this.columns,
     required this.actionsWidth,
+    required this.itemHeight,
+    required this.isSelected,
+    required this.headerHeight,
+    required this.headerBackgroundColor,
+
     super.key,
   });
 
@@ -25,6 +30,10 @@ class HeaderTableSection<T> extends StatelessWidget {
   final TextStyle? textStyle;
   final List<ThemedColumn2<T>> columns;
   final double actionsWidth;
+  final double itemHeight;
+  final bool isSelected;
+  final double headerHeight;
+  final Color headerBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +43,13 @@ class HeaderTableSection<T> extends StatelessWidget {
           InkWell(
             onTap: enableMultiSelect ? () => multiSelectOnChange?.call(itemsSelected.length != items.length) : null,
             child: Container(
-              padding: padding,
-              decoration: decoration,
               width: selectWdith,
-              child: Align(
-                child: Text(
-                  "Select",
-                  style: textStyle?.copyWith(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
+              height: headerHeight,
+              decoration: decoration,
+              child: Center(
+                child: ThemedAnimatedCheckbox(
+                  value: isSelected,
+                  activeColor: validateColor(color: headerBackgroundColor),
                 ),
               ),
             ),
@@ -54,6 +61,7 @@ class HeaderTableSection<T> extends StatelessWidget {
               ...columns.map((col) {
                 Widget cell = Container(
                   padding: padding,
+                  height: headerHeight,
                   decoration: decoration,
                   width: col.width,
                   constraints: BoxConstraints(
@@ -63,7 +71,7 @@ class HeaderTableSection<T> extends StatelessWidget {
                     alignment: col.alignment,
                     child: Text(
                       col.headerText,
-                      style: textStyle?.copyWith(fontWeight: FontWeight.bold),
+                      style: textStyle,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -82,6 +90,7 @@ class HeaderTableSection<T> extends StatelessWidget {
           padding: padding,
           decoration: decoration,
           width: actionsWidth,
+          height: headerHeight,
 
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -91,12 +100,13 @@ class HeaderTableSection<T> extends StatelessWidget {
               Text(
                 "Actions",
                 textAlign: TextAlign.right,
-                style: textStyle?.copyWith(fontWeight: FontWeight.bold),
+                style: textStyle,
                 overflow: TextOverflow.ellipsis,
               ),
               Icon(
                 LayrzIcons.mdiDotsVertical,
                 size: 16,
+                color: textStyle?.color,
               ),
             ],
           ),

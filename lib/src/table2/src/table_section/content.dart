@@ -18,6 +18,7 @@ class ContentTableSection<T> extends StatefulWidget {
     required this.onEdit,
     required this.onDelete,
     required this.isDark,
+    required this.actionsMobileBreakpoint,
     super.key,
   });
 
@@ -37,6 +38,7 @@ class ContentTableSection<T> extends StatefulWidget {
   final Future<void> Function(BuildContext, T)? onEdit;
   final Future<void> Function(BuildContext, T)? onDelete;
   final bool isDark;
+  final double actionsMobileBreakpoint;
 
   @override
   State<ContentTableSection<T>> createState() => _ContentTableSectionState<T>();
@@ -206,53 +208,58 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
               ),
 
               // Actions
-              SizedBox(
-                width: widget.actionsWidth,
-                height: availableHeight,
-                child: ListView.builder(
-                  itemExtent: widget.itemHeight,
-                  itemCount: widget.items.length,
-                  controller: actionsController,
-                  itemBuilder: (context, index) {
-                    final item = widget.items[index];
-                    final isHovered = _hoveredRows.contains(index);
-                    return Container(
-                      padding: widget.padding,
-                      height: widget.itemHeight,
+              if (widget.onShow != null ||
+                  widget.onEdit != null ||
+                  widget.onDelete != null ||
+                  widget.addtionalActions.isNotEmpty)
+                SizedBox(
+                  width: widget.actionsWidth,
+                  height: availableHeight,
+                  child: ListView.builder(
+                    itemExtent: widget.itemHeight,
+                    itemCount: widget.items.length,
+                    controller: actionsController,
+                    itemBuilder: (context, index) {
+                      final item = widget.items[index];
+                      final isHovered = _hoveredRows.contains(index);
+                      return Container(
+                        padding: widget.padding,
+                        height: widget.itemHeight,
 
-                      decoration: widget.decoration.copyWith(
-                        color: isHovered ? hoverColor : null,
-                      ),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: ThemedActionsButtons(
-                          actions: [
-                            ...widget.addtionalActions,
-                            if (widget.onShow != null)
-                              ThemedActionButton.show(
-                                labelText: 'Show',
-                                isMobile: true,
-                                onTap: () => widget.onShow!(context, item),
-                              ),
-                            if (widget.onEdit != null)
-                              ThemedActionButton.edit(
-                                labelText: 'Edit',
-                                isMobile: true,
-                                onTap: () => widget.onEdit!(context, item),
-                              ),
-                            if (widget.onDelete != null)
-                              ThemedActionButton.delete(
-                                labelText: 'Delete',
-                                isMobile: true,
-                                onTap: () => widget.onDelete!(context, item),
-                              ),
-                          ],
+                        decoration: widget.decoration.copyWith(
+                          color: isHovered ? hoverColor : null,
                         ),
-                      ),
-                    );
-                  },
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: ThemedActionsButtons(
+                            mobileBreakpoint: widget.actionsMobileBreakpoint,
+                            actions: [
+                              ...widget.addtionalActions,
+                              if (widget.onShow != null)
+                                ThemedActionButton.show(
+                                  labelText: 'Show',
+                                  isMobile: true,
+                                  onTap: () => widget.onShow!(context, item),
+                                ),
+                              if (widget.onEdit != null)
+                                ThemedActionButton.edit(
+                                  labelText: 'Edit',
+                                  isMobile: true,
+                                  onTap: () => widget.onEdit!(context, item),
+                                ),
+                              if (widget.onDelete != null)
+                                ThemedActionButton.delete(
+                                  labelText: 'Delete',
+                                  isMobile: true,
+                                  onTap: () => widget.onDelete!(context, item),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
           ),
         );
