@@ -10,7 +10,7 @@ class TableSection<T> extends StatelessWidget {
   final List<ThemedActionButton> addtionalActions;
   final bool enableMultiSelect;
   final List<T> itemsSelected;
-  final Function({T? item, required bool add})? itemMultiSelectOnChange;
+  final Function(T item, bool add)? itemMultiSelectOnChange;
   final Function(bool add)? multiSelectOnChange;
   final double actionsMobileBreakpoint;
   final double minActionsWidth;

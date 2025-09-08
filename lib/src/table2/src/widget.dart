@@ -155,13 +155,20 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                     headerBackgroundColor: widget.headerBackgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
                     actionsLabelText: widget.actionsLabelText,
                     actionsIcon: widget.actionsIcon ?? LayrzIcons.mdiDotsVertical,
-                    multiSelectOnChange: (bool add) {
-                      if (add) {
+                    multiSelectOnChange: (bool isAdd) {
+                      if (isAdd) {
                         itemsSelected = List.from(itemsFiltered);
                       } else {
                         itemsSelected.clear();
                       }
                       setState(() {});
+                    },
+                    itemMultiSelectOnChange: (item, isAdd) {
+                      if (isAdd) {
+                        itemsSelected.add(item);
+                      } else {
+                        itemsSelected.remove(item);
+                      }
                     },
                   ),
           ),

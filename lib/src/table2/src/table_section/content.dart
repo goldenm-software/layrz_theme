@@ -27,7 +27,7 @@ class ContentTableSection<T> extends StatefulWidget {
   final List items;
   final double itemHeight;
   final List itemsSelected;
-  final Function({required bool add, T? item})? itemMultiSelectOnChange;
+  final Function(T item, bool add)? itemMultiSelectOnChange;
   final List<ThemedColumn2<T>> columns;
   final TextStyle? textStyle;
   final EdgeInsets padding;
@@ -124,10 +124,7 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
                           child: Center(
                             child: ThemedAnimatedCheckbox(
                               value: isSelected,
-                              onChanged: (value) => widget.itemMultiSelectOnChange?.call(
-                                item: item,
-                                add: value,
-                              ),
+                              onChanged: (value) => widget.itemMultiSelectOnChange?.call(item, value),
                             ),
                           ),
                         );
