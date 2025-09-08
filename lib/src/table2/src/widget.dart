@@ -41,13 +41,16 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   TextStyle get textStyleDefault => Theme.of(context).textTheme.bodyMedium!;
   List<T> itemsSelected = [];
   bool isLoading = true;
-  List<ThemedColumn2<T>> columnsFiltered = [];
+  List<ThemedColumn2<T>> columsOverrieded = [];
+  List<T> itemsFiltered = [];
   double minActionsWidth = 100;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      itemsFiltered = widget.items;
       await _assignMinWidthToColumns();
       setState(() => isLoading = false);
     });
@@ -56,13 +59,22 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   @override
   void didUpdateWidget(covariant NewThemedTable<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.items != oldWidget.items) {
+      _filterList();
+    }
     if (widget.columns != oldWidget.columns) {
       _assignMinWidthToColumns();
     }
   }
 
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
   Future<void> _assignMinWidthToColumns() async {
-    columnsFiltered.clear();
+    columsOverrieded.clear();
     for (final col in widget.columns) {
       // Calculate min width based on header
       final headerPainter = TextPainter(
@@ -91,7 +103,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
 
       /// Add padding
       col.minWidth = minWidth + 20;
-      columnsFiltered.add(col);
+      columsOverrieded.add(col);
     }
 
     /// Calculate min width for actions
@@ -109,8 +121,6 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
 
   @override
   Widget build(BuildContext context) {
-    _filterList();
-
     return Container(
       padding: widget.padding,
       child: Column(
@@ -121,16 +131,17 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
           // Toolbar
           ThemedTableToolbar(
             labelText: widget.labelText,
-            itemCount: widget.items.length,
+            itemCount: itemsFiltered.length,
             search: search,
-            onSearch: (String value) => setState(() => search = value),
+            onSearch: _onSearchChanged,
           ),
           // Table
           Expanded(
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
                 : TableSection<T>(
-                    items: widget.items,
+                    items: itemsFiltered,
+                    itemsSelected: itemsSelected,
                     columns: widget.columns,
                     textStyle: textStyleDefault,
                     onShow: widget.onShow,
@@ -144,17 +155,13 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                     headerBackgroundColor: widget.headerBackgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
                     actionsLabelText: widget.actionsLabelText,
                     actionsIcon: widget.actionsIcon ?? LayrzIcons.mdiDotsVertical,
-                    itemsSelected: itemsSelected,
                     multiSelectOnChange: (bool add) {
-                      debugPrint("Is add: $add");
-                      setState(() {
-                        if (add) {
-                          itemsSelected = List.from(widget.items);
-                          debugPrint("ItemsSelected: ${itemsSelected.length}");
-                        } else {
-                          itemsSelected.clear();
-                        }
-                      });
+                      if (add) {
+                        itemsSelected = List.from(itemsFiltered);
+                      } else {
+                        itemsSelected.clear();
+                      }
+                      setState(() {});
                     },
                   ),
           ),
@@ -163,7 +170,22 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
     );
   }
 
+  void _onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      search = value;
+      _filterList();
+      setState(() {});
+    });
+  }
+
   void _filterList() {
-    debugPrint("Filtering list with search: $search");
+    if (search.isEmpty) {
+      itemsFiltered = widget.items;
+    } else {
+      itemsFiltered = widget.items.where((item) {
+        return widget.columns.any((col) => col.value(item).toLowerCase().contains(search.toLowerCase()));
+      }).toList();
+    }
   }
 }
