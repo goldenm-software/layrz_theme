@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.12
+- Updated `ThemedPlatform` to use `defaultTargetPlatform` instead of `Platform` to prevent issues on native builds.
+- Added `useViewInsetsBottom` property to `ThemedSnackbarMessenger` to allow the snackbar to consider the virtual keyboard height when showing the snackbar on mobile devices.
+
 ## 7.3.11
 - Removed dependency on `flutter_map_cancellable_tile_provider` due to deprecation
 - Updated `flutter_map` to `8.2.1` and updated `ThemedTileLayer` accordingly

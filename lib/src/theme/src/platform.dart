@@ -100,11 +100,11 @@ ThemedPlatform get kThemedPlatform {
     return ThemedPlatform.web;
   }
 
-  if (Platform.isAndroid) return ThemedPlatform.android;
-  if (Platform.isIOS) return ThemedPlatform.iOS;
-  if (Platform.isMacOS) return ThemedPlatform.macOS;
-  if (Platform.isWindows) return ThemedPlatform.windows;
-  if (Platform.isLinux) return ThemedPlatform.linux;
-  if (Platform.isFuchsia) return ThemedPlatform.fuchsia;
+  if (defaultTargetPlatform == TargetPlatform.android) return ThemedPlatform.android;
+  if (defaultTargetPlatform == TargetPlatform.iOS) return ThemedPlatform.iOS;
+  if (defaultTargetPlatform == TargetPlatform.macOS) return ThemedPlatform.macOS;
+  if (defaultTargetPlatform == TargetPlatform.windows) return ThemedPlatform.windows;
+  if (defaultTargetPlatform == TargetPlatform.linux) return ThemedPlatform.linux;
+  if (defaultTargetPlatform == TargetPlatform.fuchsia) return ThemedPlatform.fuchsia;
   return ThemedPlatform.unknown;
 }
