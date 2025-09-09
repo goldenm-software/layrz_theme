@@ -19,14 +19,15 @@ class ContentTableSection<T> extends StatefulWidget {
     required this.onDelete,
     required this.isDark,
     required this.actionsMobileBreakpoint,
+    required this.horizontalController,
     super.key,
   });
 
   final bool enableMultiSelect;
   final double selectWdith;
-  final List items;
+  final List<T> items;
   final double itemHeight;
-  final List itemsSelected;
+  final List<T> itemsSelected;
   final Function(T item, bool add)? itemMultiSelectOnChange;
   final List<ThemedColumn2<T>> columns;
   final TextStyle? textStyle;
@@ -39,6 +40,7 @@ class ContentTableSection<T> extends StatefulWidget {
   final Future<void> Function(BuildContext, T)? onDelete;
   final bool isDark;
   final double actionsMobileBreakpoint;
+  final ScrollController horizontalController;
 
   @override
   State<ContentTableSection<T>> createState() => _ContentTableSectionState<T>();
@@ -94,7 +96,11 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final availableHeight = constraints.maxHeight;
-        final contentWidth = availableHeight - widget.selectWdith - widget.actionsWidth;
+        final double avaliableWidth = constraints.maxWidth;
+
+        final double totalColumnsWidth = _getTotal();
+        final bool addExpanded = avaliableWidth > totalColumnsWidth;
+
         return SizedBox(
           height: availableHeight,
           child: Row(
@@ -135,72 +141,27 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
 
               // Content <T>
               Expanded(
-                child: SizedBox(
-                  height: availableHeight,
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                    child: ListView.builder(
-                      itemExtent: widget.itemHeight,
-                      itemCount: widget.items.length,
-                      controller: contentController,
-                      itemBuilder: (context, index) {
-                        final item = widget.items[index];
-                        final isHovered = _hoveredRows.contains(index);
-
-                        return MouseRegion(
-                          onEnter: (_) {
-                            _hoveredRows.add(index);
-                            setState(() {});
-                          },
-                          onExit: (_) {
-                            _hoveredRows.remove(index);
-                            setState(() {});
-                          },
-                          child: SizedBox(
-                            height: widget.itemHeight,
-                            width: contentWidth,
-                            child: Row(
-                              children: [
-                                ...widget.columns.map((ThemedColumn2<T> col) {
-                                  final Widget cellContent = col.widgetBuilder != null
-                                      ? col.widgetBuilder!(item)
-                                      : Text(
-                                          col.value(item),
-                                          style: widget.textStyle,
-                                          overflow: TextOverflow.ellipsis,
-                                        );
-                                  Widget cell = Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: col.onTap != null ? () => col.onTap!(item) : null,
-                                      child: Container(
-                                        alignment: col.alignment,
-                                        padding: widget.padding,
-                                        decoration: widget.decoration.copyWith(
-                                          color: isHovered ? hoverColor : null,
-                                        ),
-                                        width: col.width,
-                                        constraints: BoxConstraints(
-                                          minWidth: col.minWidth ?? 200,
-                                        ),
-                                        child: cellContent,
-                                      ),
-                                    ),
-                                  );
-
-                                  if (col.width != null) {
-                                    return cell;
-                                  } else {
-                                    return Expanded(child: cell);
-                                  }
-                                }),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                child: ColumsContent<T>(
+                  items: widget.items,
+                  itemHeight: widget.itemHeight,
+                  columns: widget.columns,
+                  textStyle: widget.textStyle,
+                  padding: widget.padding,
+                  decoration: widget.decoration,
+                  hoverColor: hoverColor,
+                  onEnter: (index) {
+                    _hoveredRows.add(index);
+                    setState(() {});
+                  },
+                  onExit: (index) {
+                    _hoveredRows.remove(index);
+                    setState(() {});
+                  },
+                  hoveredRows: _hoveredRows,
+                  addExpanded: addExpanded,
+                  totalColumnsWidth: totalColumnsWidth,
+                  contentController: contentController,
+                  horizontalController: widget.horizontalController,
                 ),
               ),
 
@@ -262,5 +223,224 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
         );
       },
     );
+  }
+
+  double _getTotal() {
+    double number = 0;
+    for (var column in widget.columns) {
+      if (column.wantMinWidth) {
+        number += column.minWidth;
+        continue;
+      }
+      if (column.fixWidth != null) {
+        number += column.fixWidth!;
+        continue;
+      }
+      number += column.minWidth;
+      continue;
+    }
+    return number;
+  }
+}
+
+class ColumsContent<T> extends StatelessWidget {
+  final Function(int) onEnter;
+  final Function(int) onExit;
+  final double itemHeight;
+  final List<T> items;
+  final Set<int> hoveredRows;
+  final List<ThemedColumn2<T>> columns;
+  final TextStyle? textStyle;
+  final EdgeInsets padding;
+  final BoxDecoration decoration;
+  final Color hoverColor;
+  final bool addExpanded;
+  final double totalColumnsWidth;
+
+  final ScrollController contentController;
+  final ScrollController horizontalController;
+
+  const ColumsContent({
+    required this.onEnter,
+    required this.onExit,
+    required this.items,
+    required this.hoveredRows,
+    required this.itemHeight,
+    required this.columns,
+    required this.textStyle,
+    required this.padding,
+    required this.decoration,
+    required this.hoverColor,
+    required this.addExpanded,
+    required this.totalColumnsWidth,
+    required this.contentController,
+    required this.horizontalController,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Widget list = ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+      child: ListView.builder(
+        itemExtent: itemHeight,
+        itemCount: items.length,
+        controller: contentController,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          final isHovered = hoveredRows.contains(index);
+
+          return MouseRegion(
+            onEnter: (_) => onEnter(index),
+            onExit: (_) => onExit(index),
+            child: SizedBox(
+              height: itemHeight,
+
+              child: Row(
+                children: [
+                  ...columns.map((ThemedColumn2<T> col) {
+                    // final Widget cellContent = DefaultTextStyle.merge(
+                    //   style: TextStyle(color: Colors.red),
+                    //   child: RichText(
+                    //     text: col.richTextBuilder(item),
+                    //   ),
+                    // );
+
+                    final Widget cellContent = col.widgetBuilder != null
+                        ? col.widgetBuilder!(item)
+                        : Text(
+                            col.valueBuilder(item),
+                            style: textStyle,
+                            overflow: TextOverflow.ellipsis,
+                          );
+
+                    Widget cell = Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: col.onTap != null ? () => col.onTap!(item) : null,
+                        child: Container(
+                          alignment: col.alignment,
+                          padding: padding,
+                          decoration: decoration.copyWith(
+                            color: isHovered ? hoverColor : null,
+                          ),
+                          width: col.fixWidth ?? col.minWidth,
+
+                          child: cellContent,
+                        ),
+                      ),
+                    );
+                    if (col.fixWidth != null || col.wantMinWidth) {
+                      return cell;
+                    }
+                    if (addExpanded) {
+                      return Expanded(child: cell);
+                    } else {
+                      return cell;
+                    }
+                  }),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    if (!addExpanded) {
+      return Scrollbar(
+        thumbVisibility: true,
+        interactive: true,
+        controller: horizontalController,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          controller: horizontalController,
+          child: SizedBox(
+            width: totalColumnsWidth,
+
+            child: list,
+          ),
+        ),
+      );
+    }
+    return list;
+    // return Scrollbar(
+    //   thumbVisibility: true,
+    //   interactive: true,
+    //   controller: widget.horizontalController,
+    //   child: SingleChildScrollView(
+    //     scrollDirection: Axis.horizontal,
+    //     controller: widget.horizontalController,
+    //     child: ScrollConfiguration(
+    //       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+    //       child: SizedBox(
+    //         height: availableHeight,
+    //         width: contentWidth,
+    //         child: ListView.builder(
+    //           itemExtent: widget.itemHeight,
+    //           itemCount: widget.items.length,
+    //           controller: contentController,
+    //           itemBuilder: (context, index) {
+    //             final item = widget.items[index];
+    //             final isHovered = _hoveredRows.contains(index);
+
+    //             return MouseRegion(
+    //               onEnter: (_) {
+    //                 _hoveredRows.add(index);
+    //                 setState(() {});
+    //               },
+    //               onExit: (_) {
+    //                 _hoveredRows.remove(index);
+    //                 setState(() {});
+    //               },
+    //               child: SizedBox(
+    //                 height: widget.itemHeight,
+
+    //                 child: Row(
+    //                   children: [
+    //                     ...widget.columns.map((ThemedColumn2<T> col) {
+    //                       final Widget cellContent = col.widgetBuilder != null
+    //                           ? col.widgetBuilder!(item)
+    //                           : Text(
+    //                               col.value(item),
+    //                               style: widget.textStyle,
+    //                               overflow: TextOverflow.ellipsis,
+    //                             );
+    //                       Widget cell = Material(
+    //                         color: Colors.transparent,
+    //                         child: InkWell(
+    //                           onTap: col.onTap != null ? () => col.onTap!(item) : null,
+    //                           child: Container(
+    //                             alignment: col.alignment,
+    //                             padding: widget.padding,
+
+    //                             decoration: widget.decoration.copyWith(
+    //                               color: isHovered ? hoverColor : null,
+    //                             ),
+    //                             width: col.fixWidth ?? col.minWidth,
+
+    //                             child: cellContent,
+    //                           ),
+    //                         ),
+    //                       );
+    //                       if (col.fixWidth != null || col.wantMinWidth) {
+    //                         return cell;
+    //                       }
+    //                       if (addExpanded) {
+    //                         return Expanded(child: cell);
+    //                       } else {
+    //                         return cell;
+    //                       }
+    //                     }),
+    //                   ],
+    //                 ),
+    //               ),
+    //             );
+    //           },
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }

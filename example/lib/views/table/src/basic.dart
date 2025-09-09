@@ -15,7 +15,7 @@ class BasicTableView extends StatefulWidget {
 class _BasicTableViewState extends State<BasicTableView> {
   List<Asset> _items = [];
 
-  int get _it => 1;
+  int get _it => 5;
 
   @override
   void initState() {

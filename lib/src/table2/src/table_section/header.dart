@@ -18,7 +18,7 @@ class HeaderTableSection<T> extends StatelessWidget {
     required this.headerBackgroundColor,
     required this.actionsLabelText,
     required this.actionsIcon,
-
+    required this.horizontalController,
     super.key,
   });
 
@@ -38,88 +38,175 @@ class HeaderTableSection<T> extends StatelessWidget {
   final Color headerBackgroundColor;
   final String actionsLabelText;
   final IconData actionsIcon;
+  final ScrollController horizontalController;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (enableMultiSelect) ...[
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: enableMultiSelect ? () => multiSelectOnChange?.call(itemsSelected.length != items.length) : null,
-              child: Container(
-                width: selectWdith,
-                height: headerHeight,
-                decoration: decoration,
-                child: Center(
-                  child: AbsorbPointer(
-                    child: ThemedAnimatedCheckbox(
-                      value: isSelected,
-                      activeColor: validateColor(color: headerBackgroundColor),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double avaliableWidth = constraints.maxWidth;
+        final double totalColumnsWidth = _getTotal();
+        final bool addExpanded = avaliableWidth > totalColumnsWidth;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (enableMultiSelect) ...[
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: enableMultiSelect
+                      ? () => multiSelectOnChange?.call(itemsSelected.length != items.length)
+                      : null,
+                  child: Container(
+                    width: selectWdith,
+                    height: headerHeight,
+                    decoration: decoration,
+                    child: Center(
+                      child: AbsorbPointer(
+                        child: ThemedAnimatedCheckbox(
+                          value: isSelected,
+                          activeColor: validateColor(color: headerBackgroundColor),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-        Expanded(
-          child: Row(
-            children: [
-              ...columns.map((col) {
-                Widget cell = Container(
-                  padding: padding,
-                  height: headerHeight,
-                  decoration: decoration,
-                  width: col.width,
-                  constraints: BoxConstraints(minWidth: col.minWidth ?? 50),
-                  child: Align(
-                    alignment: col.alignment,
-                    child: Text(
-                      col.headerText,
-                      style: textStyle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                );
-                if (col.width != null) {
-                  return cell;
-                } else {
-                  return Expanded(child: cell);
-                }
-              }),
             ],
-          ),
-        ),
+            Expanded(
+              child: ColumsHeader(
+                horizontalController: horizontalController,
+                totalColumnsWidth: totalColumnsWidth,
+                headerHeight: headerHeight,
+                columns: columns,
+                padding: padding,
+                decoration: decoration,
+                textStyle: textStyle,
+                addExpanded: addExpanded,
+                avaliableWidth: avaliableWidth,
+              ),
+            ),
 
-        Container(
-          padding: padding,
-          decoration: decoration,
-          width: actionsWidth,
-          height: headerHeight,
+            Container(
+              padding: padding,
+              decoration: decoration,
+              width: actionsWidth,
+              height: headerHeight,
 
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 8,
-            children: [
-              Text(
-                actionsLabelText,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 8,
+                children: [
+                  Text(
+                    actionsLabelText,
+                    style: textStyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Icon(
+                    actionsIcon,
+                    size: 16,
+                    color: textStyle?.color,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  double _getTotal() {
+    double number = 0;
+    for (var column in columns) {
+      if (column.wantMinWidth) {
+        number += column.minWidth;
+        continue;
+      }
+      if (column.fixWidth != null) {
+        number += column.fixWidth!;
+        continue;
+      }
+      number += column.minWidth;
+      continue;
+    }
+    return number;
+  }
+}
+
+class ColumsHeader extends StatelessWidget {
+  const ColumsHeader({
+    required this.horizontalController,
+    required this.totalColumnsWidth,
+    required this.headerHeight,
+    required this.columns,
+    required this.padding,
+    required this.decoration,
+    required this.textStyle,
+    required this.addExpanded,
+    required this.avaliableWidth,
+
+    super.key,
+  });
+
+  final ScrollController horizontalController;
+  final double totalColumnsWidth;
+  final double headerHeight;
+  final List<ThemedColumn2> columns;
+  final EdgeInsets padding;
+  final BoxDecoration decoration;
+  final TextStyle? textStyle;
+  final bool addExpanded;
+  final double avaliableWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget colums = Row(
+      children: [
+        ...columns.map((col) {
+          Widget cell = Container(
+            padding: padding,
+            height: headerHeight,
+            decoration: decoration,
+            width: col.wantMinWidth ? col.minWidth : col.fixWidth ?? col.minWidth,
+
+            child: Align(
+              alignment: col.alignment,
+              child: Text(
+                col.headerText,
                 style: textStyle,
                 overflow: TextOverflow.ellipsis,
               ),
-              Icon(
-                actionsIcon,
-                size: 16,
-                color: textStyle?.color,
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+
+          if (col.fixWidth != null || col.wantMinWidth) {
+            return cell;
+          }
+
+          if (addExpanded) {
+            return Expanded(child: cell);
+          } else {
+            return cell;
+          }
+        }),
       ],
     );
+
+    if (!addExpanded) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        controller: horizontalController,
+
+        child: SizedBox(
+          width: totalColumnsWidth,
+          height: headerHeight,
+          child: colums,
+        ),
+      );
+    }
+    return colums;
   }
 }

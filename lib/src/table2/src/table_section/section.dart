@@ -1,6 +1,6 @@
 part of '../../new_table.dart';
 
-class TableSection<T> extends StatelessWidget {
+class TableSection<T> extends StatefulWidget {
   final List<T> items;
   final List<ThemedColumn2<T>> columns;
   final TextStyle? textStyle;
@@ -41,6 +41,45 @@ class TableSection<T> extends StatelessWidget {
   });
 
   @override
+  State<TableSection<T>> createState() => _TableSectionState<T>();
+}
+
+class _TableSectionState<T> extends State<TableSection<T>> {
+  late ScrollController headerHorizontalController;
+  late ScrollController contentHorizontalController;
+  bool _isSyncing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    headerHorizontalController = ScrollController();
+    contentHorizontalController = ScrollController();
+
+    headerHorizontalController.addListener(() => _syncScroll(headerHorizontalController));
+    contentHorizontalController.addListener(() => _syncScroll(contentHorizontalController));
+  }
+
+  void _syncScroll(ScrollController source) {
+    if (_isSyncing) return;
+    _isSyncing = true;
+    final offset = source.offset;
+    if (source != headerHorizontalController && headerHorizontalController.hasClients) {
+      headerHorizontalController.jumpTo(offset);
+    }
+    if (source != contentHorizontalController && contentHorizontalController.hasClients) {
+      contentHorizontalController.jumpTo(offset);
+    }
+    _isSyncing = false;
+  }
+
+  @override
+  void dispose() {
+    headerHorizontalController.dispose();
+    contentHorizontalController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.sizeOf(context);
@@ -53,58 +92,57 @@ class TableSection<T> extends StatelessWidget {
     );
     final padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 12);
     final itemHeight = 60.0;
-
     final selectWdith = 60.0;
-    final actionsWidth = _getActionsWidth(isActionsMobileActive: size.width <= actionsMobileBreakpoint);
-    debugPrint("Items Selected: ${itemsSelected.length} - if all selected (${itemsSelected.length == items.length})");
-
+    final actionsWidth = _getActionsWidth(isActionsMobileActive: size.width <= widget.actionsMobileBreakpoint);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header
         HeaderTableSection(
-          enableMultiSelect: enableMultiSelect,
-          multiSelectOnChange: multiSelectOnChange,
-          itemsSelected: itemsSelected,
-          items: items,
+          enableMultiSelect: widget.enableMultiSelect,
+          multiSelectOnChange: widget.multiSelectOnChange,
+          itemsSelected: widget.itemsSelected,
+          items: widget.items,
           padding: padding,
-          decoration: decoration.copyWith(color: headerBackgroundColor),
+          decoration: decoration.copyWith(color: widget.headerBackgroundColor),
           selectWdith: selectWdith,
-          textStyle: textStyle?.copyWith(
+          textStyle: widget.textStyle?.copyWith(
             fontWeight: FontWeight.bold,
-            color: validateColor(color: headerBackgroundColor),
+            color: validateColor(color: widget.headerBackgroundColor),
           ),
-          columns: columns,
+          columns: widget.columns,
           actionsWidth: actionsWidth,
           itemHeight: itemHeight,
-          isSelected: itemsSelected.length == items.length,
-          headerHeight: headerHeight,
-          headerBackgroundColor: headerBackgroundColor,
-          actionsLabelText: actionsLabelText,
-          actionsIcon: actionsIcon,
+          isSelected: widget.itemsSelected.length == widget.items.length,
+          headerHeight: widget.headerHeight,
+          headerBackgroundColor: widget.headerBackgroundColor,
+          actionsLabelText: widget.actionsLabelText,
+          actionsIcon: widget.actionsIcon,
+          horizontalController: headerHorizontalController,
         ),
 
         // Columns content
         Expanded(
           child: ContentTableSection(
-            enableMultiSelect: enableMultiSelect,
+            enableMultiSelect: widget.enableMultiSelect,
             selectWdith: selectWdith,
-            items: items,
+            items: widget.items,
             itemHeight: itemHeight,
-            itemsSelected: itemsSelected,
-            itemMultiSelectOnChange: itemMultiSelectOnChange,
-            columns: columns,
-            textStyle: textStyle,
+            itemsSelected: widget.itemsSelected,
+            itemMultiSelectOnChange: widget.itemMultiSelectOnChange,
+            columns: widget.columns,
+            textStyle: widget.textStyle,
             padding: padding,
             decoration: decoration,
             actionsWidth: actionsWidth,
-            addtionalActions: addtionalActions,
-            onShow: onShow,
-            onEdit: onEdit,
-            onDelete: onDelete,
+            addtionalActions: widget.addtionalActions,
+            onShow: widget.onShow,
+            onEdit: widget.onEdit,
+            onDelete: widget.onDelete,
             isDark: isDark,
-            actionsMobileBreakpoint: actionsMobileBreakpoint,
+            actionsMobileBreakpoint: widget.actionsMobileBreakpoint,
+            horizontalController: contentHorizontalController,
           ),
         ),
       ],
@@ -116,23 +154,23 @@ class TableSection<T> extends StatelessWidget {
     double width = 0.0;
 
     if (isActionsMobileActive) {
-      if (onShow != null || onEdit != null || onDelete != null) {
+      if (widget.onShow != null || widget.onEdit != null || widget.onDelete != null) {
         width += actionWidth;
       }
-      if (addtionalActions.isNotEmpty) {
-        width += addtionalActions.length * actionWidth;
+      if (widget.addtionalActions.isNotEmpty) {
+        width += widget.addtionalActions.length * actionWidth;
       }
     } else {
-      if (onShow != null) width += actionWidth;
-      if (onEdit != null) width += actionWidth;
-      if (onDelete != null) width += actionWidth;
-      if (addtionalActions.isNotEmpty) {
-        width += addtionalActions.length * actionWidth;
+      if (widget.onShow != null) width += actionWidth;
+      if (widget.onEdit != null) width += actionWidth;
+      if (widget.onDelete != null) width += actionWidth;
+      if (widget.addtionalActions.isNotEmpty) {
+        width += widget.addtionalActions.length * actionWidth;
       }
     }
 
-    if (width < minActionsWidth) {
-      width = minActionsWidth;
+    if (width < widget.minActionsWidth) {
+      width = widget.minActionsWidth;
     }
 
     return width;

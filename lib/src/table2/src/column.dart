@@ -2,23 +2,28 @@ part of '../new_table.dart';
 
 class ThemedColumn2<T> {
   final String headerText;
-  final String Function(T item) value;
+  @Deprecated("")
+  final String Function(T item) valueBuilder;
+  @Deprecated("")
   final Widget Function(T item)? widgetBuilder;
+  final InlineSpan Function(T item)? richTextBuilder;
   final Alignment alignment;
   final bool isSortable;
-  double? width;
-  double? minWidth;
-
+  final double? fixWidth;
+  double minWidth;
+  final bool wantMinWidth;
   final CellTap<T>? onTap;
 
   ThemedColumn2({
     required this.headerText,
-    required this.value,
+    required this.valueBuilder,
+    this.richTextBuilder,
     this.widgetBuilder,
     this.alignment = Alignment.centerLeft,
     this.isSortable = true,
-    this.width,
-    this.minWidth,
+    this.fixWidth,
+    this.minWidth = 100,
+    this.wantMinWidth = false,
     this.onTap,
   });
 }

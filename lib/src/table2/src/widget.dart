@@ -14,6 +14,8 @@ class NewThemedTable<T> extends StatefulWidget {
   final Color? headerBackgroundColor;
   final String actionsLabelText;
   final IconData? actionsIcon;
+  final Color? evenColor;
+  final Color? oddColor;
 
   const NewThemedTable({
     required this.labelText,
@@ -30,6 +32,8 @@ class NewThemedTable<T> extends StatefulWidget {
     this.headerBackgroundColor,
     this.actionsLabelText = "Actions",
     this.actionsIcon,
+    this.evenColor,
+    this.oddColor,
   });
 
   @override
@@ -38,13 +42,14 @@ class NewThemedTable<T> extends StatefulWidget {
 
 class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   String search = '';
-  TextStyle get textStyleDefault => Theme.of(context).textTheme.bodyMedium!;
+  TextStyle get textStyleDefault => Theme.of(context).textTheme.titleSmall!;
   List<T> itemsSelected = [];
   bool isLoading = true;
   List<ThemedColumn2<T>> columsOverrieded = [];
   List<T> itemsFiltered = [];
   double minActionsWidth = 100;
   Timer? _debounce;
+  final ScrollController _horizontalScrollController = ScrollController();
 
   @override
   void initState() {
@@ -70,6 +75,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   @override
   void dispose() {
     _debounce?.cancel();
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -87,10 +93,11 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
 
       /// must to add 24 pixels of possible icon
       double minWidth = headerPainter.size.width + 24;
+      // ignore: unused_local_variable
       int count = 1;
       for (final item in widget.items) {
         double cellWidth;
-        final text = col.value(item);
+        final text = col.valueBuilder(item);
         final painter = TextPainter(
           text: TextSpan(text: text, style: textStyleDefault),
           textDirection: TextDirection.ltr,
@@ -98,7 +105,8 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
         cellWidth = painter.size.width;
         if (cellWidth > minWidth) minWidth = cellWidth;
         count++;
-        if (count == 100) break;
+        // TODO: ask mra1796
+        // if (count == 100) break;
       }
 
       /// Add padding
@@ -191,7 +199,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
       itemsFiltered = widget.items;
     } else {
       itemsFiltered = widget.items.where((item) {
-        return widget.columns.any((col) => col.value(item).toLowerCase().contains(search.toLowerCase()));
+        return widget.columns.any((col) => col.valueBuilder(item).toLowerCase().contains(search.toLowerCase()));
       }).toList();
     }
   }

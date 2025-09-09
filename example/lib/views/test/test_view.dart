@@ -41,6 +41,7 @@ class _TestViewState extends State<TestView> {
 
   @override
   Widget build(BuildContext context) {
+    // TextStyle? style = Theme.of(context).textTheme.titleSmall;
     return Layout(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -57,45 +58,80 @@ class _TestViewState extends State<TestView> {
               columns: [
                 ThemedColumn2(
                   headerText: 'ID',
-                  value: (item) => item.id,
-                  width: 80,
+                  valueBuilder: (item) => item.id,
+                  wantMinWidth: true,
+                  // richTextBuilder: (item) => TextSpan(
+                  //   text: item.id,
+                  //   // style: style,
+                  // ),
                 ),
                 ThemedColumn2(
                   headerText: 'Name',
-                  value: (item) => item.name,
+                  valueBuilder: (item) => item.name,
+                  // richTextBuilder: (item) => TextSpan(
+                  //   text: item.name,
+                  //   // style: style,
+                  // ),
+                  fixWidth: 500,
+
                   onTap: (item) {
                     debugPrint("Tapped on ${item.name}");
                   },
                 ),
                 ThemedColumn2(
                   headerText: 'Plate',
-                  value: (item) => item.plate ?? 'N/A',
+                  fixWidth: 500,
+
+                  // richTextBuilder: (item) => TextSpan(
+                  //   text: item.plate ?? 'N/A',
+                  //   // style: style,
+                  // ),
+                  valueBuilder: (item) => item.plate ?? 'N/A',
                 ),
                 ThemedColumn2(
                   headerText: 'VIN',
-                  value: (item) => item.vin ?? 'N/A',
+                  fixWidth: 500,
+
+                  // richTextBuilder: (item) => TextSpan(
+                  //   text: item.vin ?? 'N/A',
+                  //   // style: style,
+                  // ),
+                  valueBuilder: (item) => item.vin ?? 'N/A',
                 ),
                 ThemedColumn2(
                   headerText: 'Mode',
-                  value: (item) => item.mode?.name ?? 'N/A',
+
+                  // richTextBuilder: (item) => TextSpan(
+                  //   text: item.mode?.name ?? 'N/A',
+                  //   // style: style,
+                  // ),
+                  valueBuilder: (item) => item.mode?.name ?? 'N/A',
                 ),
                 ThemedColumn2(
                   headerText: 'Kind',
-                  value: (item) => item.kind?.name ?? 'N/A',
+                  valueBuilder: (item) => item.kind?.name ?? 'N/A',
+                  // richTextBuilder: (item) => TextSpan(
+                  //   text: item.kind?.name ?? 'N/A',
+                  //   // style: style,
+                  // ),
                 ),
                 ThemedColumn2(
                   headerText: 'Active Time',
-                  value: (item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
-                  width: 250,
-                  widgetBuilder: (item) => Row(
-                    spacing: 8,
-                    children: [
-                      Icon(
-                        LayrzIcons.mdiClock,
-                      ),
-                      Text(item.activeTime.toString()),
-                    ],
-                  ),
+                  valueBuilder: (item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
+                  // richTextBuilder: (item) => TextSpan(
+                  //   text: item.activeTime != null ? item.activeTime.toString() : 'N/A',
+                  //   // style: style,
+                  // ),
+                  // width: 250,
+                  // widgetBuilder: (item) => Row(
+                  //   spacing: 8,
+                  //   children: [
+                  //     Icon(
+                  //       LayrzIcons.mdiClock,
+                  //     ),
+                  //     Text(item.activeTime.toString()),
+                  //   ],
+                  // ),
                 ),
               ],
             ),
