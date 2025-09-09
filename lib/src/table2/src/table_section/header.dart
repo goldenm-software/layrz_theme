@@ -22,6 +22,7 @@ class HeaderTableSection<T> extends StatelessWidget {
     required this.headerOnTap,
     required this.selectedColumn,
     required this.isReverse,
+    required this.disableHeader,
     super.key,
   });
 
@@ -45,6 +46,7 @@ class HeaderTableSection<T> extends StatelessWidget {
   final Function(ThemedColumn2<T>) headerOnTap;
   final ThemedColumn2<T> selectedColumn;
   final bool isReverse;
+  final bool disableHeader;
 
   @override
   Widget build(BuildContext context) {
@@ -97,31 +99,31 @@ class HeaderTableSection<T> extends StatelessWidget {
                 isReverse: isReverse,
               ),
             ),
+            if (disableHeader)
+              Container(
+                padding: padding,
+                decoration: decoration,
+                width: actionsWidth,
+                height: headerHeight,
 
-            Container(
-              padding: padding,
-              decoration: decoration,
-              width: actionsWidth,
-              height: headerHeight,
-
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                spacing: 8,
-                children: [
-                  Text(
-                    actionsLabelText,
-                    style: textStyle,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Icon(
-                    actionsIcon,
-                    size: 16,
-                    color: textStyle?.color,
-                  ),
-                ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 8,
+                  children: [
+                    Text(
+                      actionsLabelText,
+                      style: textStyle,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Icon(
+                      actionsIcon,
+                      size: 16,
+                      color: textStyle?.color,
+                    ),
+                  ],
+                ),
               ),
-            ),
           ],
         );
       },
