@@ -52,12 +52,15 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   double minActionsWidth = 100;
   Timer? _debounce;
   final ScrollController _horizontalScrollController = ScrollController();
+  late ThemedColumn2<T> selectedColumn;
+  bool isReversed = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       itemsFiltered = widget.items;
+      selectedColumn = widget.columns.first;
       await _assignMinWidthToColumns();
       setState(() => isLoading = false);
     });
@@ -177,6 +180,9 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                     actionsLabelText: widget.actionsLabelText,
                     actionsIcon: widget.actionsIcon ?? LayrzIcons.mdiDotsVertical,
                     actionWidth: widget.actionWidth,
+                    selectedColumn: selectedColumn,
+                    isReverse: isReversed,
+
                     multiSelectOnChange: (bool isAdd) {
                       if (isAdd) {
                         itemsSelected = List.from(itemsFiltered);
@@ -191,6 +197,15 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                       } else {
                         itemsSelected.remove(item);
                       }
+                    },
+                    headerOntap: (col) {
+                      if (selectedColumn == col) {
+                        isReversed = !isReversed; // Alterna el orden
+                      } else {
+                        isReversed = false; // Nuevo orden ascendente
+                        selectedColumn = col;
+                      }
+                      _sortList(isReversed);
                     },
                   ),
           ),
@@ -216,5 +231,51 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
         return widget.columns.any((col) => col.valueBuilder(item).toLowerCase().contains(search.toLowerCase()));
       }).toList();
     }
+  }
+
+  void _sortList(bool isReversed) {
+    debugPrint("Is reversed: $isReversed");
+    itemsFiltered.sort((a, b) {
+      final valueA = selectedColumn.valueBuilder(a);
+      final valueB = selectedColumn.valueBuilder(b);
+
+      // Try to parse as number
+      final numA = num.tryParse(valueA);
+      final numB = num.tryParse(valueB);
+      if (numA != null && numB != null) {
+        return isReversed ? numB.compareTo(numA) : numA.compareTo(numB);
+      }
+
+      // Try to parse as Duration (format HH:mm:ss)
+      Duration? parseDuration(String s) {
+        final parts = s.split(':');
+        if (parts.length == 3) {
+          final h = int.tryParse(parts[0]) ?? 0;
+          final m = int.tryParse(parts[1]) ?? 0;
+          final sec = int.tryParse(parts[2]) ?? 0;
+          return Duration(hours: h, minutes: m, seconds: sec);
+        }
+        return null;
+      }
+
+      final durA = parseDuration(valueA);
+      final durB = parseDuration(valueB);
+      if (durA != null && durB != null) {
+        return isReversed ? durB.compareTo(durA) : durA.compareTo(durB);
+      }
+
+      // Try to parse as DateTime
+      final dateA = DateTime.tryParse(valueA);
+      final dateB = DateTime.tryParse(valueB);
+      if (dateA != null && dateB != null) {
+        return isReversed ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
+      }
+
+      // Default: compare as string (case insensitive)
+      return isReversed
+          ? valueB.toLowerCase().compareTo(valueA.toLowerCase())
+          : valueA.toLowerCase().compareTo(valueB.toLowerCase());
+    });
+    setState(() {});
   }
 }

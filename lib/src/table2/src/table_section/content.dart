@@ -150,6 +150,11 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
                   padding: widget.padding,
                   decoration: widget.decoration,
                   hoverColor: hoverColor,
+                  hoveredRows: _hoveredRows,
+                  addExpanded: addExpanded,
+                  totalColumnsWidth: totalColumnsWidth,
+                  contentController: contentController,
+                  horizontalController: widget.horizontalController,
                   onEnter: (index) {
                     _hoveredRows.add(index);
                     setState(() {});
@@ -158,11 +163,6 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
                     _hoveredRows.remove(index);
                     setState(() {});
                   },
-                  hoveredRows: _hoveredRows,
-                  addExpanded: addExpanded,
-                  totalColumnsWidth: totalColumnsWidth,
-                  contentController: contentController,
-                  horizontalController: widget.horizontalController,
                 ),
               ),
 
@@ -302,13 +302,6 @@ class ColumsContent<T> extends StatelessWidget {
               child: Row(
                 children: [
                   ...columns.map((ThemedColumn2<T> col) {
-                    // final Widget cellContent = DefaultTextStyle.merge(
-                    //   style: TextStyle(color: Colors.red),
-                    //   child: RichText(
-                    //     text: col.richTextBuilder(item),
-                    //   ),
-                    // );
-
                     final Widget cellContent = col.widgetBuilder != null
                         ? col.widgetBuilder!(item)
                         : Text(
@@ -324,9 +317,7 @@ class ColumsContent<T> extends StatelessWidget {
                         child: Container(
                           alignment: col.alignment,
                           padding: padding,
-                          decoration: decoration.copyWith(
-                            color: isHovered ? hoverColor : null,
-                          ),
+                          decoration: decoration.copyWith(color: isHovered ? hoverColor : null),
                           width: col.fixWidth ?? col.minWidth,
 
                           child: cellContent,

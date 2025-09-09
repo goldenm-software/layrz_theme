@@ -19,18 +19,23 @@ class TableSection<T> extends StatefulWidget {
   final Color headerBackgroundColor;
   final String actionsLabelText;
   final IconData actionsIcon;
+  final Function(ThemedColumn2<T> col) headerOntap;
+  final ThemedColumn2<T> selectedColumn;
+  final bool isReverse;
 
   const TableSection({
     required this.items,
     required this.columns,
     required this.actionsMobileBreakpoint,
     required this.minActionsWidth,
-
     required this.headerHeight,
     required this.headerBackgroundColor,
     required this.actionsLabelText,
     required this.actionsIcon,
     required this.itemsSelected,
+    required this.headerOntap,
+    required this.selectedColumn,
+    required this.isReverse,
     super.key,
     this.textStyle,
     this.onShow,
@@ -57,7 +62,6 @@ class _TableSectionState<T> extends State<TableSection<T>> {
     super.initState();
     headerHorizontalController = ScrollController();
     contentHorizontalController = ScrollController();
-
     headerHorizontalController.addListener(() => _syncScroll(headerHorizontalController));
     contentHorizontalController.addListener(() => _syncScroll(contentHorizontalController));
   }
@@ -123,6 +127,9 @@ class _TableSectionState<T> extends State<TableSection<T>> {
           actionsLabelText: widget.actionsLabelText,
           actionsIcon: widget.actionsIcon,
           horizontalController: headerHorizontalController,
+          headerOnTap: widget.headerOntap,
+          selectedColumn: widget.selectedColumn,
+          isReverse: widget.isReverse,
         ),
 
         // Columns content

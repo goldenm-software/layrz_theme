@@ -19,6 +19,9 @@ class HeaderTableSection<T> extends StatelessWidget {
     required this.actionsLabelText,
     required this.actionsIcon,
     required this.horizontalController,
+    required this.headerOnTap,
+    required this.selectedColumn,
+    required this.isReverse,
     super.key,
   });
 
@@ -39,6 +42,9 @@ class HeaderTableSection<T> extends StatelessWidget {
   final String actionsLabelText;
   final IconData actionsIcon;
   final ScrollController horizontalController;
+  final Function(ThemedColumn2<T>) headerOnTap;
+  final ThemedColumn2<T> selectedColumn;
+  final bool isReverse;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +82,7 @@ class HeaderTableSection<T> extends StatelessWidget {
               ),
             ],
             Expanded(
-              child: ColumsHeader(
+              child: ColumsHeader<T>(
                 horizontalController: horizontalController,
                 totalColumnsWidth: totalColumnsWidth,
                 headerHeight: headerHeight,
@@ -86,6 +92,9 @@ class HeaderTableSection<T> extends StatelessWidget {
                 textStyle: textStyle,
                 addExpanded: addExpanded,
                 avaliableWidth: avaliableWidth,
+                headerOnTap: headerOnTap,
+                selectedColumn: selectedColumn,
+                isReverse: isReverse,
               ),
             ),
 
@@ -138,7 +147,7 @@ class HeaderTableSection<T> extends StatelessWidget {
   }
 }
 
-class ColumsHeader extends StatelessWidget {
+class ColumsHeader<T> extends StatelessWidget {
   const ColumsHeader({
     required this.horizontalController,
     required this.totalColumnsWidth,
@@ -149,36 +158,65 @@ class ColumsHeader extends StatelessWidget {
     required this.textStyle,
     required this.addExpanded,
     required this.avaliableWidth,
-
+    required this.headerOnTap,
+    required this.selectedColumn,
+    required this.isReverse,
     super.key,
   });
 
   final ScrollController horizontalController;
   final double totalColumnsWidth;
   final double headerHeight;
-  final List<ThemedColumn2> columns;
+  final List<ThemedColumn2<T>> columns;
   final EdgeInsets padding;
   final BoxDecoration decoration;
   final TextStyle? textStyle;
   final bool addExpanded;
   final double avaliableWidth;
+  final Function(ThemedColumn2<T>) headerOnTap;
+  final ThemedColumn2<T> selectedColumn;
+  final bool isReverse;
 
   @override
   Widget build(BuildContext context) {
     Widget colums = Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ...columns.map((col) {
-          Widget cell = Container(
-            padding: padding,
-            height: headerHeight,
-            decoration: decoration,
-            width: col.wantMinWidth ? col.minWidth : col.fixWidth ?? col.minWidth,
-            child: Align(
-              alignment: col.alignment,
-              child: Text(
-                col.headerText,
-                style: textStyle,
-                overflow: TextOverflow.ellipsis,
+        ...columns.map((ThemedColumn2<T> col) {
+          Widget cell = Material(
+            color: decoration.color,
+
+            child: InkWell(
+              onTap: () => headerOnTap(col),
+              child: Container(
+                padding: padding,
+                height: headerHeight,
+                decoration: BoxDecoration(border: decoration.border),
+                width: col.wantMinWidth ? col.minWidth : col.fixWidth ?? col.minWidth,
+                child: Align(
+                  alignment: col.alignment,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 8,
+                    children: [
+                      Text(
+                        col.headerText,
+                        style: textStyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (col == selectedColumn)
+                        Icon(
+                          isReverse
+                              ? LayrzIcons.mdiSortAlphabeticalDescending
+                              : LayrzIcons.mdiSortAlphabeticalAscending,
+                          size: 16,
+                          color: textStyle?.color,
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           );
