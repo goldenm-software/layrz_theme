@@ -15,7 +15,7 @@ class BasicTableView extends StatefulWidget {
 class _BasicTableViewState extends State<BasicTableView> {
   List<Asset> _items = [];
 
-  int get _it => 20;
+  int get _it => 14000;
 
   @override
   void initState() {
@@ -26,9 +26,12 @@ class _BasicTableViewState extends State<BasicTableView> {
   Asset _generateAsset(int index) {
     return Asset(
       id: (index + 1).toString(),
-      name: "Asset ${index + 1} asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-      plate: 'PLATE${index + 1}',
+      name: (index == 2) ? "Asset asdasfasfasf ${index + 1}" : "Other Asset ${index + 1}",
+      plate: 'PLATE${index + 1} testestes',
       vin: 'VIN${index + 1}',
+      mode: AssetMode.single,
+      kind: Category(id: (index + 1).toString(), name: 'Category ${index + 1}', kind: CategoryKind.asset),
+      activeTime: DateTime.now().toString(),
     );
   }
 
@@ -102,12 +105,44 @@ class _BasicTableViewState extends State<BasicTableView> {
               debugPrint("Tapped on ${item.name}");
             },
           ),
-          ...List.generate(20, (i) {
-            return ThemedColumn(
-              labelText: 'VIN $i',
-              valueBuilder: (context, item) => item.vin ?? 'N/A',
-            );
-          }),
+          ThemedColumn(
+            labelText: 'Name',
+            valueBuilder: (_, item) => item.name,
+            onTap: (item) {
+              debugPrint("Tapped on ${item.name}");
+            },
+          ),
+          ThemedColumn(
+            labelText: 'Plate',
+
+            valueBuilder: (_, item) => item.plate ?? 'N/A',
+          ),
+          ThemedColumn(
+            labelText: 'VIN',
+            valueBuilder: (_, item) => item.vin ?? 'N/A',
+          ),
+          ThemedColumn(
+            labelText: 'Mode',
+            valueBuilder: (_, item) => item.mode?.name ?? 'N/A',
+          ),
+          ThemedColumn(
+            labelText: 'Kind',
+            valueBuilder: (_, item) => item.kind?.name ?? 'N/A',
+          ),
+          ThemedColumn(
+            labelText: 'Active Time',
+            valueBuilder: (_, item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
+
+            widgetBuilder: (_, item) => Row(
+              spacing: 8,
+              children: [
+                Icon(
+                  LayrzIcons.mdiClock,
+                ),
+                Text(item.activeTime.toString()),
+              ],
+            ),
+          ),
         ],
       ),
     );

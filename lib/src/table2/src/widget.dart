@@ -71,6 +71,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
     super.didUpdateWidget(oldWidget);
     if (widget.items != oldWidget.items) {
       _filterList();
+      // _sortList(isReversed);
     }
     if (widget.columns != oldWidget.columns) {
       _assignMinWidthToColumns();
@@ -87,7 +88,6 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
   Future<void> _assignMinWidthToColumns() async {
     columsOverrieded.clear();
     for (final col in widget.columns) {
-      // Calculate min width based on header
       final headerPainter = TextPainter(
         text: TextSpan(
           text: col.headerText,
@@ -96,11 +96,8 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
         textDirection: TextDirection.ltr,
       )..layout();
 
-      /// must to add 24 pixels of possible icon
       double minWidth = headerPainter.size.width + 16 + 16;
-      // ignore: unused_local_variable
-      int count = 1;
-      // debugPrint("Col name: ${col.headerText} - $minWidth");
+      // int count = 1;
 
       for (final item in widget.items) {
         double cellWidth;
@@ -110,13 +107,10 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
           textDirection: TextDirection.ltr,
         )..layout();
 
-        /// I DONT KNOW WHY, but if you dont add 30 px some cells could be in overflow
         cellWidth = painter.size.width + 16 + 30;
-        // debugPrint("${col.headerText} Min: $minWidth - Cell: ${painter.size.width} - Cell + P: $cellWidth");
 
         if (cellWidth > minWidth) minWidth = cellWidth;
-        // debugPrint("Final width: $minWidth");
-        count++;
+        // count++;
         // TODO: ask mra1796
         // if (count == 100) break;
       }
@@ -158,6 +152,15 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
             itemCount: itemsFiltered.length,
             search: search,
             onSearch: _onSearchChanged,
+            additionalButtons: [
+              ThemedButton(
+                labelText: "Test",
+                onTap: () {
+                  _assignMinWidthToColumns();
+                  setState(() {});
+                },
+              ),
+            ],
           ),
           // Table
           Expanded(
@@ -182,7 +185,6 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                     actionWidth: widget.actionWidth,
                     selectedColumn: selectedColumn,
                     isReverse: isReversed,
-
                     multiSelectOnChange: (bool isAdd) {
                       if (isAdd) {
                         itemsSelected = List.from(itemsFiltered);
@@ -198,14 +200,14 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                         itemsSelected.remove(item);
                       }
                     },
-                    headerOntap: (col) {
+                    headerOntap: (col) async {
                       if (selectedColumn == col) {
-                        isReversed = !isReversed; // Alterna el orden
+                        isReversed = !isReversed;
                       } else {
-                        isReversed = false; // Nuevo orden ascendente
+                        isReversed = false;
                         selectedColumn = col;
                       }
-                      _sortList(isReversed);
+                      await _sortListAsync(isReversed);
                     },
                   ),
           ),
@@ -233,49 +235,24 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
     }
   }
 
-  void _sortList(bool isReversed) {
-    debugPrint("Is reversed: $isReversed");
-    itemsFiltered.sort((a, b) {
-      final valueA = selectedColumn.valueBuilder(a);
-      final valueB = selectedColumn.valueBuilder(b);
-
-      // Try to parse as number
-      final numA = num.tryParse(valueA);
-      final numB = num.tryParse(valueB);
-      if (numA != null && numB != null) {
-        return isReversed ? numB.compareTo(numA) : numA.compareTo(numB);
-      }
-
-      // Try to parse as Duration (format HH:mm:ss)
-      Duration? parseDuration(String s) {
-        final parts = s.split(':');
-        if (parts.length == 3) {
-          final h = int.tryParse(parts[0]) ?? 0;
-          final m = int.tryParse(parts[1]) ?? 0;
-          final sec = int.tryParse(parts[2]) ?? 0;
-          return Duration(hours: h, minutes: m, seconds: sec);
-        }
-        return null;
-      }
-
-      final durA = parseDuration(valueA);
-      final durB = parseDuration(valueB);
-      if (durA != null && durB != null) {
-        return isReversed ? durB.compareTo(durA) : durA.compareTo(durB);
-      }
-
-      // Try to parse as DateTime
-      final dateA = DateTime.tryParse(valueA);
-      final dateB = DateTime.tryParse(valueB);
-      if (dateA != null && dateB != null) {
-        return isReversed ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
-      }
-
-      // Default: compare as string (case insensitive)
-      return isReversed
-          ? valueB.toLowerCase().compareTo(valueA.toLowerCase())
-          : valueA.toLowerCase().compareTo(valueB.toLowerCase());
+  Future<void> _sortListAsync(bool isReversed) async {
+    setState(() {
+      isLoading = true;
     });
-    setState(() {});
+    final valueBuilder = selectedColumn.valueBuilder;
+    final pairs = itemsFiltered.map((item) => [valueBuilder(item), item]).toList();
+
+    final sortedPairs = await compute(
+      sortPairsInIsolate,
+      {
+        'pairs': pairs,
+        'isReversed': isReversed,
+      },
+    );
+    itemsFiltered = sortedPairs.map((pair) => pair[1] as T).toList();
+
+    setState(() {
+      isLoading = false;
+    });
   }
 }
