@@ -64,7 +64,6 @@ class _TestViewState extends State<TestView> {
                   onTap: () {},
                 ),
                 ThemedActionButton(
-                  isMobile: true,
                   icon: LayrzIcons.faSolidLayerGroup,
                   labelText: "Test",
                   color: Colors.blueGrey,
