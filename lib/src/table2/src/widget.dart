@@ -10,6 +10,7 @@ class NewThemedTable<T> extends StatefulWidget {
   final Future<void> Function(BuildContext, T)? onDelete;
   final List<ThemedActionButton> addtionalActions;
   final double actionsMobileBreakpoint;
+  final double? actionWidth;
   final double headerHeight;
   final Color? headerBackgroundColor;
   final String actionsLabelText;
@@ -34,6 +35,7 @@ class NewThemedTable<T> extends StatefulWidget {
     this.actionsIcon,
     this.evenColor,
     this.oddColor,
+    this.actionWidth,
   });
 
   @override
@@ -114,17 +116,21 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
       columsOverrieded.add(col);
     }
 
-    /// Calculate min width for actions
-    final actionHeaderPainter = TextPainter(
-      text: TextSpan(
-        text: widget.actionsLabelText,
-        style: textStyleDefault.copyWith(fontWeight: FontWeight.bold),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
+    if (widget.actionWidth != null) {
+      minActionsWidth = widget.actionWidth!;
+    } else {
+      /// Calculate min width for actions
+      final actionHeaderPainter = TextPainter(
+        text: TextSpan(
+          text: widget.actionsLabelText,
+          style: textStyleDefault.copyWith(fontWeight: FontWeight.bold),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
 
-    /// LabelText + Padding + Icon
-    minActionsWidth = actionHeaderPainter.size.width + 20 + 50;
+      /// LabelText + Padding + Icon
+      minActionsWidth = actionHeaderPainter.size.width + 20 + 24;
+    }
   }
 
   @override
@@ -163,6 +169,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
                     headerBackgroundColor: widget.headerBackgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
                     actionsLabelText: widget.actionsLabelText,
                     actionsIcon: widget.actionsIcon ?? LayrzIcons.mdiDotsVertical,
+                    actionWidth: widget.actionWidth,
                     multiSelectOnChange: (bool isAdd) {
                       if (isAdd) {
                         itemsSelected = List.from(itemsFiltered);

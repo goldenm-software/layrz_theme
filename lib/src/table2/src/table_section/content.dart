@@ -180,38 +180,40 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
                     itemBuilder: (context, index) {
                       final item = widget.items[index];
                       final isHovered = _hoveredRows.contains(index);
-                      return Container(
-                        padding: widget.padding,
-                        height: widget.itemHeight,
+                      return SingleChildScrollView(
+                        child: Container(
+                          padding: widget.padding,
+                          height: widget.itemHeight,
 
-                        decoration: widget.decoration.copyWith(
-                          color: isHovered ? hoverColor : null,
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: ThemedActionsButtons(
-                            mobileBreakpoint: widget.actionsMobileBreakpoint,
-                            actions: [
-                              ...widget.addtionalActions,
-                              if (widget.onShow != null)
-                                ThemedActionButton.show(
-                                  labelText: 'Show',
-                                  isMobile: true,
-                                  onTap: () => widget.onShow!(context, item),
-                                ),
-                              if (widget.onEdit != null)
-                                ThemedActionButton.edit(
-                                  labelText: 'Edit',
-                                  isMobile: true,
-                                  onTap: () => widget.onEdit!(context, item),
-                                ),
-                              if (widget.onDelete != null)
-                                ThemedActionButton.delete(
-                                  labelText: 'Delete',
-                                  isMobile: true,
-                                  onTap: () => widget.onDelete!(context, item),
-                                ),
-                            ],
+                          decoration: widget.decoration.copyWith(
+                            color: isHovered ? hoverColor : null,
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: ThemedActionsButtons(
+                              mobileBreakpoint: widget.actionsMobileBreakpoint,
+                              actions: [
+                                ...widget.addtionalActions,
+                                if (widget.onShow != null)
+                                  ThemedActionButton.show(
+                                    labelText: 'Show',
+                                    isMobile: true,
+                                    onTap: () => widget.onShow!(context, item),
+                                  ),
+                                if (widget.onEdit != null)
+                                  ThemedActionButton.edit(
+                                    labelText: 'Edit',
+                                    isMobile: true,
+                                    onTap: () => widget.onEdit!(context, item),
+                                  ),
+                                if (widget.onDelete != null)
+                                  ThemedActionButton.delete(
+                                    labelText: 'Delete',
+                                    isMobile: true,
+                                    onTap: () => widget.onDelete!(context, item),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       );

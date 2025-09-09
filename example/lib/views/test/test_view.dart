@@ -54,6 +54,25 @@ class _TestViewState extends State<TestView> {
               onShow: (p0, p1) async => debugPrint("Show $p1"),
               onEdit: (p0, p1) async => debugPrint("Edit $p1"),
               onDelete: (p0, p1) async => debugPrint("Delete $p1"),
+              addtionalActions: [
+                ThemedActionButton(icon: LayrzIcons.faSolidLayerGroup, labelText: "Test", onTap: () {}, onlyIcon: true),
+                ThemedActionButton(
+                  icon: LayrzIcons.faSolidLayerGroup,
+                  color: Colors.teal,
+                  labelText: "Test",
+                  onlyIcon: true,
+                  onTap: () {},
+                ),
+                ThemedActionButton(
+                  isMobile: true,
+                  icon: LayrzIcons.faSolidLayerGroup,
+                  labelText: "Test",
+                  color: Colors.blueGrey,
+                  onlyIcon: true,
+
+                  onTap: () {},
+                ),
+              ],
 
               columns: [
                 ThemedColumn2(
@@ -68,19 +87,17 @@ class _TestViewState extends State<TestView> {
                 ThemedColumn2(
                   headerText: 'Name',
                   valueBuilder: (item) => item.name,
+
                   // richTextBuilder: (item) => TextSpan(
                   //   text: item.name,
                   //   // style: style,
                   // ),
-                  fixWidth: 500,
-
                   onTap: (item) {
                     debugPrint("Tapped on ${item.name}");
                   },
                 ),
                 ThemedColumn2(
                   headerText: 'Plate',
-                  fixWidth: 500,
 
                   // richTextBuilder: (item) => TextSpan(
                   //   text: item.plate ?? 'N/A',
@@ -90,7 +107,6 @@ class _TestViewState extends State<TestView> {
                 ),
                 ThemedColumn2(
                   headerText: 'VIN',
-                  fixWidth: 500,
 
                   // richTextBuilder: (item) => TextSpan(
                   //   text: item.vin ?? 'N/A',
@@ -122,16 +138,16 @@ class _TestViewState extends State<TestView> {
                   //   text: item.activeTime != null ? item.activeTime.toString() : 'N/A',
                   //   // style: style,
                   // ),
-                  // width: 250,
-                  // widgetBuilder: (item) => Row(
-                  //   spacing: 8,
-                  //   children: [
-                  //     Icon(
-                  //       LayrzIcons.mdiClock,
-                  //     ),
-                  //     Text(item.activeTime.toString()),
-                  //   ],
-                  // ),
+                  fixWidth: 250,
+                  widgetBuilder: (item) => Row(
+                    spacing: 8,
+                    children: [
+                      Icon(
+                        LayrzIcons.mdiClock,
+                      ),
+                      Text(item.activeTime.toString()),
+                    ],
+                  ),
                 ),
               ],
             ),

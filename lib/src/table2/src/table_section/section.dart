@@ -14,6 +14,7 @@ class TableSection<T> extends StatefulWidget {
   final Function(bool add)? multiSelectOnChange;
   final double actionsMobileBreakpoint;
   final double minActionsWidth;
+  final double? actionWidth;
   final double headerHeight;
   final Color headerBackgroundColor;
   final String actionsLabelText;
@@ -24,6 +25,7 @@ class TableSection<T> extends StatefulWidget {
     required this.columns,
     required this.actionsMobileBreakpoint,
     required this.minActionsWidth,
+
     required this.headerHeight,
     required this.headerBackgroundColor,
     required this.actionsLabelText,
@@ -38,6 +40,7 @@ class TableSection<T> extends StatefulWidget {
     this.enableMultiSelect = false,
     this.itemMultiSelectOnChange,
     this.multiSelectOnChange,
+    this.actionWidth,
   });
 
   @override
@@ -150,6 +153,10 @@ class _TableSectionState<T> extends State<TableSection<T>> {
   }
 
   double _getActionsWidth({required bool isActionsMobileActive}) {
+    if (widget.actionWidth != null) {
+      debugPrint("Override action width: ${widget.actionWidth}");
+      return widget.actionWidth!;
+    }
     const double actionWidth = 50;
     double width = 0.0;
 
@@ -168,6 +175,8 @@ class _TableSectionState<T> extends State<TableSection<T>> {
         width += widget.addtionalActions.length * actionWidth;
       }
     }
+    debugPrint("Calculated actions width: $width");
+    debugPrint("Min actions width: ${widget.minActionsWidth}");
 
     if (width < widget.minActionsWidth) {
       width = widget.minActionsWidth;
