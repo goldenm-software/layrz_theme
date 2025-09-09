@@ -97,9 +97,10 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
       builder: (context, constraints) {
         final availableHeight = constraints.maxHeight;
         final double avaliableWidth = constraints.maxWidth;
+        final double avaliableContentWidth = avaliableWidth - widget.selectWdith - widget.actionsWidth;
 
         final double totalColumnsWidth = _getTotal();
-        final bool addExpanded = avaliableWidth > totalColumnsWidth;
+        final bool addExpanded = avaliableContentWidth > totalColumnsWidth;
 
         return SizedBox(
           height: availableHeight,
@@ -366,83 +367,5 @@ class ColumsContent<T> extends StatelessWidget {
       );
     }
     return list;
-    // return Scrollbar(
-    //   thumbVisibility: true,
-    //   interactive: true,
-    //   controller: widget.horizontalController,
-    //   child: SingleChildScrollView(
-    //     scrollDirection: Axis.horizontal,
-    //     controller: widget.horizontalController,
-    //     child: ScrollConfiguration(
-    //       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-    //       child: SizedBox(
-    //         height: availableHeight,
-    //         width: contentWidth,
-    //         child: ListView.builder(
-    //           itemExtent: widget.itemHeight,
-    //           itemCount: widget.items.length,
-    //           controller: contentController,
-    //           itemBuilder: (context, index) {
-    //             final item = widget.items[index];
-    //             final isHovered = _hoveredRows.contains(index);
-
-    //             return MouseRegion(
-    //               onEnter: (_) {
-    //                 _hoveredRows.add(index);
-    //                 setState(() {});
-    //               },
-    //               onExit: (_) {
-    //                 _hoveredRows.remove(index);
-    //                 setState(() {});
-    //               },
-    //               child: SizedBox(
-    //                 height: widget.itemHeight,
-
-    //                 child: Row(
-    //                   children: [
-    //                     ...widget.columns.map((ThemedColumn2<T> col) {
-    //                       final Widget cellContent = col.widgetBuilder != null
-    //                           ? col.widgetBuilder!(item)
-    //                           : Text(
-    //                               col.value(item),
-    //                               style: widget.textStyle,
-    //                               overflow: TextOverflow.ellipsis,
-    //                             );
-    //                       Widget cell = Material(
-    //                         color: Colors.transparent,
-    //                         child: InkWell(
-    //                           onTap: col.onTap != null ? () => col.onTap!(item) : null,
-    //                           child: Container(
-    //                             alignment: col.alignment,
-    //                             padding: widget.padding,
-
-    //                             decoration: widget.decoration.copyWith(
-    //                               color: isHovered ? hoverColor : null,
-    //                             ),
-    //                             width: col.fixWidth ?? col.minWidth,
-
-    //                             child: cellContent,
-    //                           ),
-    //                         ),
-    //                       );
-    //                       if (col.fixWidth != null || col.wantMinWidth) {
-    //                         return cell;
-    //                       }
-    //                       if (addExpanded) {
-    //                         return Expanded(child: cell);
-    //                       } else {
-    //                         return cell;
-    //                       }
-    //                     }),
-    //                   ],
-    //                 ),
-    //               ),
-    //             );
-    //           },
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }

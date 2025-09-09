@@ -96,7 +96,7 @@ class _TableSectionState<T> extends State<TableSection<T>> {
     final padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 12);
     final itemHeight = 60.0;
     final selectWdith = 60.0;
-    final actionsWidth = _getActionsWidth(isActionsMobileActive: size.width <= widget.actionsMobileBreakpoint);
+    final actionsWidth = _getActionsWidth(isBrackPointMobileActivate: size.width <= widget.actionsMobileBreakpoint);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,20 +152,16 @@ class _TableSectionState<T> extends State<TableSection<T>> {
     );
   }
 
-  double _getActionsWidth({required bool isActionsMobileActive}) {
+  double _getActionsWidth({required bool isBrackPointMobileActivate}) {
     if (widget.actionWidth != null) {
-      debugPrint("Override action width: ${widget.actionWidth}");
       return widget.actionWidth!;
     }
     const double actionWidth = 50;
     double width = 0.0;
 
-    if (isActionsMobileActive) {
+    if (isBrackPointMobileActivate) {
       if (widget.onShow != null || widget.onEdit != null || widget.onDelete != null) {
         width += actionWidth;
-      }
-      if (widget.addtionalActions.isNotEmpty) {
-        width += widget.addtionalActions.length * actionWidth;
       }
     } else {
       if (widget.onShow != null) width += actionWidth;
@@ -175,8 +171,6 @@ class _TableSectionState<T> extends State<TableSection<T>> {
         width += widget.addtionalActions.length * actionWidth;
       }
     }
-    debugPrint("Calculated actions width: $width");
-    debugPrint("Min actions width: ${widget.minActionsWidth}");
 
     if (width < widget.minActionsWidth) {
       width = widget.minActionsWidth;

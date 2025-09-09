@@ -94,9 +94,11 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
       )..layout();
 
       /// must to add 24 pixels of possible icon
-      double minWidth = headerPainter.size.width + 24;
+      double minWidth = headerPainter.size.width + 16 + 16;
       // ignore: unused_local_variable
       int count = 1;
+      // debugPrint("Col name: ${col.headerText} - $minWidth");
+
       for (final item in widget.items) {
         double cellWidth;
         final text = col.valueBuilder(item);
@@ -104,8 +106,13 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
           text: TextSpan(text: text, style: textStyleDefault),
           textDirection: TextDirection.ltr,
         )..layout();
-        cellWidth = painter.size.width;
+
+        /// I DONT KNOW WHY, but if you dont add 30 px some cells could be in overflow
+        cellWidth = painter.size.width + 16 + 30;
+        // debugPrint("${col.headerText} Min: $minWidth - Cell: ${painter.size.width} - Cell + P: $cellWidth");
+
         if (cellWidth > minWidth) minWidth = cellWidth;
+        // debugPrint("Final width: $minWidth");
         count++;
         // TODO: ask mra1796
         // if (count == 100) break;

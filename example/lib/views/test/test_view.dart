@@ -19,7 +19,7 @@ class TestView extends StatefulWidget {
 class _TestViewState extends State<TestView> {
   List<Asset> _items = [];
 
-  int get _it => 14000;
+  int get _it => 1;
 
   @override
   void initState() {
@@ -78,19 +78,10 @@ class _TestViewState extends State<TestView> {
                   headerText: 'ID',
                   valueBuilder: (item) => item.id,
                   wantMinWidth: true,
-                  // richTextBuilder: (item) => TextSpan(
-                  //   text: item.id,
-                  //   // style: style,
-                  // ),
                 ),
                 ThemedColumn2(
                   headerText: 'Name',
                   valueBuilder: (item) => item.name,
-
-                  // richTextBuilder: (item) => TextSpan(
-                  //   text: item.name,
-                  //   // style: style,
-                  // ),
                   onTap: (item) {
                     debugPrint("Tapped on ${item.name}");
                   },
@@ -98,45 +89,23 @@ class _TestViewState extends State<TestView> {
                 ThemedColumn2(
                   headerText: 'Plate',
 
-                  // richTextBuilder: (item) => TextSpan(
-                  //   text: item.plate ?? 'N/A',
-                  //   // style: style,
-                  // ),
                   valueBuilder: (item) => item.plate ?? 'N/A',
                 ),
                 ThemedColumn2(
                   headerText: 'VIN',
-
-                  // richTextBuilder: (item) => TextSpan(
-                  //   text: item.vin ?? 'N/A',
-                  //   // style: style,
-                  // ),
                   valueBuilder: (item) => item.vin ?? 'N/A',
                 ),
                 ThemedColumn2(
                   headerText: 'Mode',
-
-                  // richTextBuilder: (item) => TextSpan(
-                  //   text: item.mode?.name ?? 'N/A',
-                  //   // style: style,
-                  // ),
                   valueBuilder: (item) => item.mode?.name ?? 'N/A',
                 ),
                 ThemedColumn2(
                   headerText: 'Kind',
                   valueBuilder: (item) => item.kind?.name ?? 'N/A',
-                  // richTextBuilder: (item) => TextSpan(
-                  //   text: item.kind?.name ?? 'N/A',
-                  //   // style: style,
-                  // ),
                 ),
                 ThemedColumn2(
                   headerText: 'Active Time',
                   valueBuilder: (item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
-                  // richTextBuilder: (item) => TextSpan(
-                  //   text: item.activeTime != null ? item.activeTime.toString() : 'N/A',
-                  //   // style: style,
-                  // ),
                   fixWidth: 250,
                   widgetBuilder: (item) => Row(
                     spacing: 8,

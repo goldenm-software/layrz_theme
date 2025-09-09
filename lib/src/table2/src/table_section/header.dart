@@ -45,8 +45,9 @@ class HeaderTableSection<T> extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double avaliableWidth = constraints.maxWidth;
+        final double avaliableContentWidth = avaliableWidth - selectWdith - actionsWidth;
         final double totalColumnsWidth = _getTotal();
-        final bool addExpanded = avaliableWidth > totalColumnsWidth;
+        final bool addExpanded = avaliableContentWidth > totalColumnsWidth;
         return Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,16 +121,17 @@ class HeaderTableSection<T> extends StatelessWidget {
 
   double _getTotal() {
     double number = 0;
-    for (var column in columns) {
-      if (column.wantMinWidth) {
-        number += column.minWidth;
+
+    for (var col in columns) {
+      if (col.wantMinWidth) {
+        number += col.minWidth;
         continue;
       }
-      if (column.fixWidth != null) {
-        number += column.fixWidth!;
+      if (col.fixWidth != null) {
+        number += col.fixWidth!;
         continue;
       }
-      number += column.minWidth;
+      number += col.minWidth;
       continue;
     }
     return number;
@@ -171,7 +173,6 @@ class ColumsHeader extends StatelessWidget {
             height: headerHeight,
             decoration: decoration,
             width: col.wantMinWidth ? col.minWidth : col.fixWidth ?? col.minWidth,
-
             child: Align(
               alignment: col.alignment,
               child: Text(
@@ -185,7 +186,6 @@ class ColumsHeader extends StatelessWidget {
           if (col.fixWidth != null || col.wantMinWidth) {
             return cell;
           }
-
           if (addExpanded) {
             return Expanded(child: cell);
           } else {
