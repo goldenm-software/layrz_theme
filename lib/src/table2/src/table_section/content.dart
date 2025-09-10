@@ -185,10 +185,7 @@ class _ContentTableSectionState<T> extends State<ContentTableSection<T>> {
                         child: Container(
                           padding: widget.padding,
                           height: widget.itemHeight,
-
-                          decoration: widget.decoration.copyWith(
-                            color: isHovered ? hoverColor : null,
-                          ),
+                          decoration: widget.decoration.copyWith(color: isHovered ? hoverColor : null),
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: ThemedActionsButtons(
@@ -292,13 +289,13 @@ class ColumsContent<T> extends StatelessWidget {
         itemBuilder: (context, index) {
           final item = items[index];
           final isHovered = hoveredRows.contains(index);
+          debugPrint("Item: ${item}");
 
           return MouseRegion(
             onEnter: (_) => onEnter(index),
             onExit: (_) => onExit(index),
             child: SizedBox(
               height: itemHeight,
-
               child: Row(
                 children: [
                   ...columns.map((ThemedColumn2<T> col) {

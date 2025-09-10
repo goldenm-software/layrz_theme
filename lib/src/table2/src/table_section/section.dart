@@ -130,7 +130,7 @@ class _TableSectionState<T> extends State<TableSection<T>> {
           headerOnTap: widget.headerOntap,
           selectedColumn: widget.selectedColumn,
           isReverse: widget.isReverse,
-          disableHeader:
+          disableActions:
               widget.onShow == null &&
               widget.onEdit == null &&
               widget.onDelete == null &&

@@ -15,8 +15,6 @@ class NewThemedTable<T> extends StatefulWidget {
   final Color? headerBackgroundColor;
   final String actionsLabelText;
   final IconData? actionsIcon;
-  final Color? evenColor;
-  final Color? oddColor;
 
   const NewThemedTable({
     required this.labelText,
@@ -33,10 +31,9 @@ class NewThemedTable<T> extends StatefulWidget {
     this.headerBackgroundColor,
     this.actionsLabelText = "Actions",
     this.actionsIcon,
-    this.evenColor,
-    this.oddColor,
+
     this.actionWidth,
-  });
+  }) : assert(columns.length > 0, 'Columns cant be empty');
 
   @override
   State<NewThemedTable<T>> createState() => _NewThemedTableState<T>();
@@ -71,7 +68,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
     super.didUpdateWidget(oldWidget);
     if (widget.items != oldWidget.items) {
       _filterList();
-      // _sortList(isReversed);
+      _sortListAsync(isReversed);
     }
     if (widget.columns != oldWidget.columns) {
       _assignMinWidthToColumns();
@@ -97,7 +94,7 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
       )..layout();
 
       double minWidth = headerPainter.size.width + 16 + 16;
-      // int count = 1;
+      int count = 1;
 
       for (final item in widget.items) {
         double cellWidth;
@@ -110,9 +107,10 @@ class _NewThemedTableState<T> extends State<NewThemedTable<T>> {
         cellWidth = painter.size.width + 16 + 30;
 
         if (cellWidth > minWidth) minWidth = cellWidth;
-        // count++;
+
+        count++;
         // TODO: ask mra1796
-        // if (count == 100) break;
+        if (count == 3) break;
       }
 
       /// Add padding

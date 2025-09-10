@@ -22,7 +22,7 @@ class HeaderTableSection<T> extends StatelessWidget {
     required this.headerOnTap,
     required this.selectedColumn,
     required this.isReverse,
-    required this.disableHeader,
+    required this.disableActions,
     super.key,
   });
 
@@ -46,7 +46,7 @@ class HeaderTableSection<T> extends StatelessWidget {
   final Function(ThemedColumn2<T>) headerOnTap;
   final ThemedColumn2<T> selectedColumn;
   final bool isReverse;
-  final bool disableHeader;
+  final bool disableActions;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +56,7 @@ class HeaderTableSection<T> extends StatelessWidget {
         final double avaliableContentWidth = avaliableWidth - selectWdith - actionsWidth;
         final double totalColumnsWidth = _getTotal();
         final bool addExpanded = avaliableContentWidth > totalColumnsWidth;
+        debugPrint("DisableActions ${disableActions}");
         return Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,7 +100,7 @@ class HeaderTableSection<T> extends StatelessWidget {
                 isReverse: isReverse,
               ),
             ),
-            if (disableHeader)
+            if (!disableActions)
               Container(
                 padding: padding,
                 decoration: decoration,
