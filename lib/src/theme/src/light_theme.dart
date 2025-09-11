@@ -94,7 +94,7 @@ ThemeData generateLightTheme({
     secondaryHeaderColor: color,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: kLightSystemUiOverlayStyle,
-      color: kLightBackgroundColor,
+      backgroundColor: kLightBackgroundColor,
       surfaceTintColor: kLightBackgroundColor,
       shadowColor: Colors.transparent,
       foregroundColor: Colors.transparent,

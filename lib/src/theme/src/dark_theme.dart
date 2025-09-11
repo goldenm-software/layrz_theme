@@ -97,7 +97,7 @@ ThemeData generateDarkTheme({
     secondaryHeaderColor: color,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: kDarkSystemUiOverlayStyle,
-      color: kDarkBackgroundColor,
+      backgroundColor: kDarkBackgroundColor,
       surfaceTintColor: kDarkBackgroundColor,
       shadowColor: Colors.transparent,
       foregroundColor: Colors.transparent,
@@ -139,7 +139,7 @@ ThemeData generateDarkTheme({
     checkboxTheme: CheckboxThemeData(
       visualDensity: VisualDensity.compact,
       fillColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Colors.white;
+        if (states.contains(WidgetState.selected)) return Colors.grey.shade600;
         return Colors.transparent;
       }),
       checkColor: WidgetStateColor.resolveWith((states) {
@@ -147,7 +147,7 @@ ThemeData generateDarkTheme({
         return Colors.transparent;
       }),
       overlayColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) return Colors.grey.shade200;
+        if (states.contains(WidgetState.hovered)) return Colors.grey.shade800;
         return Colors.transparent;
       }),
       mouseCursor: WidgetStateMouseCursor.clickable,
