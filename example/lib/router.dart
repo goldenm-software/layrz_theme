@@ -12,7 +12,6 @@ import 'package:layrz_theme_example/views/layo.dart';
 import 'package:layrz_theme_example/views/map/map.dart';
 import 'package:layrz_theme_example/views/not_found.dart';
 import 'package:layrz_theme_example/views/table/table.dart';
-import 'package:layrz_theme_example/views/test/test_view.dart';
 import 'package:layrz_theme_example/views/theme_generation.dart';
 import 'package:layrz_theme_example/views/snackbars/snackbars.dart';
 
@@ -135,17 +134,14 @@ final goRoutes = [
     path: '/colorblind',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const ColorblindnessView()),
   ),
-
-  // TOOD: @mra1796 remove this route whne finished
   GoRoute(
-    path: '/test',
-    pageBuilder: (context, state) => customTransitionBuilder(context, state, const TestView()),
+    path: '/table/infinity',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const InfinityTableView()),
   ),
 ];
 
 final router = GoRouter(
-  // initialLocation: kDebugMode ? '/test' : '/',
-  initialLocation: '/test',
+  initialLocation: kDebugMode ? '/table/infinity' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

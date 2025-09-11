@@ -7,3 +7,4 @@ import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/store/store.dart';
 
 part 'src/basic.dart';
+part 'src/table2.dart';

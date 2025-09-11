@@ -1,7 +1,6 @@
 part of '../new_table.dart';
 
 class ThemedTable2<T> extends StatefulWidget {
-  final String labelText;
   final List<T> items;
   final List<ThemedColumn2<T>> columns;
   final List<ThemedActionButton> Function(T)? addtionalActions;
@@ -13,7 +12,6 @@ class ThemedTable2<T> extends StatefulWidget {
   final String loadingLabelText;
 
   const ThemedTable2({
-    required this.labelText,
     required this.items,
     required this.columns,
     super.key,

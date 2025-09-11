@@ -1,22 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:layrz_icons/layrz_icons.dart';
-import 'package:layrz_models/layrz_models.dart';
-import 'package:layrz_theme/layrz_theme.dart';
-import 'package:layrz_theme_example/store/store.dart';
+part of '../table.dart';
 
-class TestView extends StatefulWidget {
+class InfinityTableView extends StatefulWidget {
   final String name;
 
-  const TestView({
+  const InfinityTableView({
     super.key,
     this.name = 'Generic View',
   });
 
   @override
-  State<TestView> createState() => _TestViewState();
+  State<InfinityTableView> createState() => _InfinityTableViewState();
 }
 
-class _TestViewState extends State<TestView> {
+class _InfinityTableViewState extends State<InfinityTableView> {
   List<Asset> _items = [];
 
   int get _it => 15_000;
@@ -43,7 +39,6 @@ class _TestViewState extends State<TestView> {
   Widget build(BuildContext context) {
     return Layout(
       body: ThemedTable2<Asset>(
-        labelText: "Assets",
         items: _items,
         addtionalActions: (Asset item) => [
           ThemedActionButton(
