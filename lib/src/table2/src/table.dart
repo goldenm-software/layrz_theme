@@ -275,7 +275,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   @override
   Widget build(BuildContext context) {
-    _filteredData = _filterData();
+    _filterData();
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -602,11 +602,11 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     });
   }
 
-  List<_ThemedData<T>> _filterData() {
+  void _filterData() {
     if (_search.isEmpty) {
-      return _computedData;
+      _filteredData = _computedData;
     } else {
-      return _computedData.where((item) {
+      _filteredData = _computedData.where((item) {
         return widget.columns.any((col) => col.valueBuilder(item.item).toLowerCase().contains(_search.toLowerCase()));
       }).toList();
     }
