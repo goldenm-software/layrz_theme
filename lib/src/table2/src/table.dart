@@ -1,15 +1,34 @@
 part of '../table2.dart';
 
 class ThemedTable2<T> extends StatefulWidget {
+  /// [items] is the list of data objects to display in the table.
   final List<T> items;
+
+  /// [columns] defines the columns of the table, including their headers and value builders.
   final List<ThemedColumn2<T>> columns;
+
+  /// [addtionalActions] is an optional function that returns a list of action buttons for each item.
   final List<ThemedActionButton> Function(T)? addtionalActions;
+
+  /// [actionsMobileBreakpoint] sets the screen width at which the actions column switches to mobile layout.
   final double actionsMobileBreakpoint;
+
+  /// [headerHeight] sets the height of the table header row.
   final double headerHeight;
+
+  /// [actionsLabelText] is the label shown for the actions column.
   final String actionsLabelText;
+
+  /// [hasMultiselect] enables or disables the multi-select checkbox column.
   final bool hasMultiselect;
+
+  /// [hasActions] enables or disables the actions column.
   final bool hasActions;
+
+  /// [loadingLabelText] is the text shown while the table is loading or computing data.
   final String loadingLabelText;
+
+  /// [canSearch] enables or disables the search input above the table.
   final bool canSearch;
 
   const ThemedTable2({
@@ -32,9 +51,6 @@ class ThemedTable2<T> extends StatefulWidget {
 
 class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-
-  Timer? _debounce;
-  bool isReversed = false;
 
   /// [_future] holds the future for the precomputation of the table data
   Future<void>? _future;
@@ -96,9 +112,17 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [_search] holds the current search query used to filter items.
   String _search = '';
 
-  /// [_filterComputeData]
+  /// [_filteredData] holds the filtered and sorted data currently displayed in the table.
   List<_ThemedData<T>> _filteredData = [];
+
+  /// [colSelected] is the currently selected column used for sorting.
   late ThemedColumn2<T> colSelected;
+
+  /// [_debounce] is a timer used to debounce the search input.
+  Timer? _debounce;
+
+  /// [isReversed] indicates whether the current sort order is descending (true) or ascending (false).
+  bool isReversed = false;
 
   @override
   void initState() {
