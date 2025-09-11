@@ -1,4 +1,4 @@
-part of '../new_table.dart';
+part of '../table2.dart';
 
 class _ThemedData<T> {
   final T item;

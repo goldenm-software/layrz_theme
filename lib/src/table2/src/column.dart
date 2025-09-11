@@ -1,4 +1,4 @@
-part of '../new_table.dart';
+part of '../table2.dart';
 
 class ThemedColumn2<T> {
   final String headerText;
