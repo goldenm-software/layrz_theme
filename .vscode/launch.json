@@ -15,9 +15,9 @@
       "cwd": "example",
       "request": "launch",
       "type": "dart",
+      "flutterMode":  "profile",
       "args": [
         "--profile",
-        "--cache-sksl",
         "--purge-persistent-cache"
       ]
     }

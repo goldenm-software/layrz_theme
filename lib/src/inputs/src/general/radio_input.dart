@@ -89,48 +89,48 @@ class _ThemedRadioInputState<T> extends State<ThemedRadioInput<T>> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               widget.label ?? Text(widget.labelText ?? ''),
-              ResponsiveRow.builder(
-                itemCount: widget.items.length,
-                itemBuilder: (i) {
-                  final item = widget.items[i];
+              RadioGroup<T>(
+                groupValue: _value,
+                onChanged: widget.disabled
+                    ? (_) {}
+                    : (value) {
+                        widget.onChanged?.call(value);
+                        setState(() => _value = value);
+                      },
+                child: ResponsiveRow.builder(
+                  itemCount: widget.items.length,
+                  itemBuilder: (i) {
+                    final item = widget.items[i];
 
-                  return ResponsiveCol(
-                    xs: widget.xsSize,
-                    sm: widget.smSize,
-                    md: widget.mdSize,
-                    lg: widget.lgSize,
-                    xl: widget.xlSize,
-                    child: Row(
-                      children: [
-                        Radio<T>(
-                          value: item.value as T,
-                          groupValue: _value,
-                          onChanged: widget.disabled
-                              ? null
-                              : (T? value) {
-                                  widget.onChanged?.call(value);
-                                  setState(() => _value = value);
-                                },
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: widget.disabled
-                                ? null
-                                : () {
-                                    if (_value != item.value) {
-                                      widget.onChanged?.call(item.value);
-                                      setState(() => _value = item.value);
-                                    }
-                                  },
-                            child: Text(
-                              item.label,
+                    return ResponsiveCol(
+                      xs: widget.xsSize,
+                      sm: widget.smSize,
+                      md: widget.mdSize,
+                      lg: widget.lgSize,
+                      xl: widget.xlSize,
+                      child: Row(
+                        children: [
+                          Radio<T>(value: item.value as T),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: widget.disabled
+                                  ? null
+                                  : () {
+                                      if (_value != item.value) {
+                                        widget.onChanged?.call(item.value);
+                                        setState(() => _value = item.value);
+                                      }
+                                    },
+                              child: Text(
+                                item.label,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),

@@ -134,10 +134,14 @@ final goRoutes = [
     path: '/colorblind',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const ColorblindnessView()),
   ),
+  GoRoute(
+    path: '/table/infinity',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const InfinityTableView()),
+  ),
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/alerts' : '/',
+  initialLocation: kDebugMode ? '/table/infinity' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

@@ -12,6 +12,9 @@ typedef CellTap<T> = void Function(T item);
 /// [CellColor<T>] defines the color of the cell.
 typedef CellColor<T> = Color? Function(T item);
 
+/// [ValueBuilder2<T>] defines the value to display in a column.
+typedef ValueBuilder2<T> = String Function(T item);
+
 class ThemedColumn<T> {
   /// The label of the column.
   final Widget? label;
