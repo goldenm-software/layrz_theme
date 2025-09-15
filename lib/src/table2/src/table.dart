@@ -299,8 +299,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   @override
   Widget build(BuildContext context) {
-    _filterData();
-
     return LayoutBuilder(
       builder: (context, constraints) {
         _layoutSize = constraints;
@@ -367,6 +365,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         onTap: () {
+                                          debugPrint("Entry: ${entry.headerText}");
                                           if (isSelected) {
                                             isReversed = !isReversed;
                                           } else {
@@ -490,55 +489,61 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
                         /// Items.value
                         Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            controller: _horizontalContentController,
-                            child: ScrollConfiguration(
-                              behavior: const ScrollBehavior().copyWith(scrollbars: false),
-                              child: SizedBox(
-                                width: _totalSize,
-                                child: ListView.builder(
-                                  itemCount: _filteredData.length,
-                                  itemExtent: 50,
-                                  controller: _contentController,
-                                  itemBuilder: (context, index) {
-                                    final data = _filteredData[index];
+                          child: ScrollConfiguration(
+                            behavior: const ScrollBehavior().copyWith(scrollbars: true),
 
-                                    return Row(
-                                      children: [
-                                        for (final entry in widget.columns.asMap().entries) ...[
-                                          Material(
-                                            color: index % 2 == 0 ? null : _stripColor,
-                                            child: InkWell(
-                                              onTap: entry.value.onTap != null
-                                                  ? () => entry.value.onTap?.call(data.item)
-                                                  : null,
-                                              child: Container(
-                                                width:
-                                                    _sizes[entry.key] - (entry.key < widget.columns.length - 1 ? 1 : 0),
-                                                padding: _padding,
-                                                alignment: entry.value.alignment,
-                                                child: data.richTextValues[entry.key] != null
-                                                    ? RichText(
-                                                        text: TextSpan(
-                                                          children: data.richTextValues[entry.key],
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              controller: _horizontalContentController,
+
+                              child: ScrollConfiguration(
+                                behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                                child: SizedBox(
+                                  width: _totalSize,
+                                  child: ListView.builder(
+                                    itemCount: _filteredData.length,
+                                    itemExtent: 50,
+                                    controller: _contentController,
+                                    itemBuilder: (context, index) {
+                                      final data = _filteredData[index];
+
+                                      return Row(
+                                        children: [
+                                          for (final entry in widget.columns.asMap().entries) ...[
+                                            Material(
+                                              color: index % 2 == 0 ? null : _stripColor,
+                                              child: InkWell(
+                                                onTap: entry.value.onTap != null
+                                                    ? () => entry.value.onTap?.call(data.item)
+                                                    : null,
+                                                child: Container(
+                                                  width:
+                                                      _sizes[entry.key] -
+                                                      (entry.key < widget.columns.length - 1 ? 1 : 0),
+                                                  padding: _padding,
+                                                  alignment: entry.value.alignment,
+                                                  child: data.richTextValues[entry.key] != null
+                                                      ? RichText(
+                                                          text: TextSpan(
+                                                            children: data.richTextValues[entry.key],
+                                                            style: _style,
+                                                          ),
+                                                          maxLines: 1,
+                                                        )
+                                                      : Text(
+                                                          data.values[entry.key],
                                                           style: _style,
+                                                          maxLines: 1,
                                                         ),
-                                                        maxLines: 1,
-                                                      )
-                                                    : Text(
-                                                        data.values[entry.key],
-                                                        style: _style,
-                                                        maxLines: 1,
-                                                      ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          if (entry.key < _sizes.length - 1) const VerticalDivider(width: 1),
+                                            if (entry.key < _sizes.length - 1) const VerticalDivider(width: 1),
+                                          ],
                                         ],
-                                      ],
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
