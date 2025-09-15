@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0-beta1
+- Fix generateContainerElevation in dark mode
+- Add `ThemedTable2` with `ThemedColum2` to support infinity items
+
 ## 7.3.12
 - Updated `ThemedPlatform` to use `defaultTargetPlatform` instead of `Platform` to prevent issues on native builds.
 - Added `useViewInsetsBottom` property to `ThemedSnackbarMessenger` to allow the snackbar to consider the virtual keyboard height when showing the snackbar on mobile devices.
