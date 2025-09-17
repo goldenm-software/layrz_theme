@@ -7,8 +7,8 @@ class ThemedTable2<T> extends StatefulWidget {
   /// [columns] defines the columns of the table, including their headers and value builders.
   final List<ThemedColumn2<T>> columns;
 
-  /// [addtionalActions] is an optional function that returns a list of action buttons for each item.
-  final List<ThemedActionButton> Function(T)? addtionalActions;
+  /// [actionsBuilder] is an optional function that returns a list of action buttons for each item.
+  final List<ThemedActionButton> Function(T item)? actionsBuilder;
 
   /// [actionsMobileBreakpoint] sets the screen width at which the actions column switches to mobile layout.
   final double actionsMobileBreakpoint;
@@ -35,7 +35,7 @@ class ThemedTable2<T> extends StatefulWidget {
     required this.items,
     required this.columns,
     super.key,
-    this.addtionalActions,
+    this.actionsBuilder,
     this.actionsMobileBreakpoint = kSmallGrid,
     this.headerHeight = 40,
     this.actionsLabelText = "Actions",
@@ -162,7 +162,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   void didUpdateWidget(ThemedTable2<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     final eq = const ListEquality().equals;
-    debugPrint("Didupdat called");
 
     if (!eq(widget.items, oldWidget.items) ||
         !eq(widget.columns, oldWidget.columns) ||
@@ -179,12 +178,12 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   Future<void> _precompute(String source) async {
-    debugPrint("Precomputing table data triggered by $source");
+    debugPrint("layrz_theme/ThemedTable2: Precomputing table data triggered by $source");
     _computedData = [];
     _sizes = [];
     _actionSize = 0;
 
-    debugPrint("Precomputing table data for ${widget.items.length} items");
+    debugPrint("layrz_theme/ThemedTable2: Precomputing table data for ${widget.items.length} items");
     final completer = Completer<void>();
 
     if (mounted) {
@@ -198,9 +197,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       });
     }
 
-    debugPrint("Waiting for context...");
+    debugPrint("layrz_theme/ThemedTable2: Waiting for context...");
     await completer.future;
-    debugPrint("Context is ready, computing data...");
+    debugPrint("layrz_theme/ThemedTable2: Context is ready, computing data...");
 
     List<_ThemedData<T>> data = [];
 
@@ -249,7 +248,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         }
       }
 
-      List<ThemedActionButton> actions = widget.addtionalActions?.call(item) ?? [];
+      List<ThemedActionButton> actions = (widget.actionsBuilder?.call(item) ?? []).map((act) {
+        return act.copyWith(onlyIcon: true);
+      }).toList();
+
       double actionSize = actions.length * ThemedButton.defaultHeight;
 
       actionSize += 5 * actions.length;
@@ -290,7 +292,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _totalSize = colWidths.fold<double>(0, (previousValue, element) => previousValue + element);
     _sizes = colWidths;
 
-    debugPrint("Computed ${_computedData.length} items, setting state!");
+    debugPrint("layrz_theme/ThemedTable2: Computed ${_computedData.length} items, setting state!");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!context.mounted) return;
       setState(() {});
@@ -306,7 +308,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
           future: _future,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              debugPrint("Building table with ${_computedData.length} items - $_availableWidth");
+              debugPrint(
+                "layrz_theme/ThemedTable2: Building table with ${_computedData.length} items - $_availableWidth",
+              );
               return Column(
                 children: [
                   // Search
@@ -365,7 +369,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         onTap: () {
-                                          debugPrint("Entry: ${entry.headerText}");
+                                          debugPrint("layrz_theme/ThemedTable2: Entry: ${entry.headerText}");
                                           if (isSelected) {
                                             isReversed = !isReversed;
                                           } else {

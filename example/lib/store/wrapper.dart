@@ -164,8 +164,21 @@ class _LayoutState extends State<Layout> {
         ),
         ThemedNavigatorPage(
           labelText: 'Table',
-          path: '/table/basic',
+          path: '/table',
+          useDefaultRedirect: false,
           icon: LayrzIcons.solarOutlineSliderMinimalisticHorizontal,
+          children: [
+            ThemedNavigatorPage(
+              labelText: 'Basic table',
+              path: '/table/basic',
+              icon: LayrzIcons.solarOutlineSliderMinimalisticHorizontal,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Infinite table',
+              path: '/table/infinite',
+              icon: LayrzIcons.solarOutlineDocumentsMinimalistic,
+            ),
+          ],
         ),
         ThemedNavigatorPage(
           labelText: 'Snackbars',

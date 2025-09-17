@@ -40,19 +40,18 @@ class _InfinityTableViewState extends State<InfinityTableView> {
     return Layout(
       body: ThemedTable2<Asset>(
         items: _items,
-        addtionalActions: (Asset item) => [
+        actionsBuilder: (Asset item) => [
           ThemedActionButton(
             icon: LayrzIcons.faSolidLayerGroup,
             color: Colors.teal,
             labelText: "Test",
-            onlyIcon: true,
+
             onTap: () {},
           ),
           ThemedActionButton(
             icon: LayrzIcons.faSolidLayerGroup,
             labelText: "Test",
             color: Colors.blueGrey,
-            onlyIcon: true,
 
             onTap: () {},
           ),
@@ -60,7 +59,6 @@ class _InfinityTableViewState extends State<InfinityTableView> {
             icon: LayrzIcons.faSolidLayerGroup,
             labelText: "Test",
             onTap: () {},
-            onlyIcon: true,
           ),
         ],
 

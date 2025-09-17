@@ -1,18 +1,27 @@
 # Changelog
 
+## 7.4.0-prerelease1
+
+- Small adjustments on `ThemedTable2` to prevent actions to be non `onlyIcon`
+- Renamed from `additionalActions` to `actionsBuilder` on `ThemedTable2` to be more descriptive
+
 ## 7.4.0-beta1
+
 - Fix generateContainerElevation in dark mode
 - Add `ThemedTable2` with `ThemedColum2` to support infinity items
 
 ## 7.3.12
+
 - Updated `ThemedPlatform` to use `defaultTargetPlatform` instead of `Platform` to prevent issues on native builds.
 - Added `useViewInsetsBottom` property to `ThemedSnackbarMessenger` to allow the snackbar to consider the virtual keyboard height when showing the snackbar on mobile devices.
 
 ## 7.3.11
+
 - Removed dependency on `flutter_map_cancellable_tile_provider` due to deprecation
 - Updated `flutter_map` to `8.2.1` and updated `ThemedTileLayer` accordingly
 
 ## 7.3.10
+
 - Rework `ThemedSelectInput` to support `canUnselect`, `returnNullOnClose` and `autoClose`
 
 ## 7.3.9
