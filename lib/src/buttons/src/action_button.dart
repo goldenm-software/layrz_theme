@@ -459,4 +459,35 @@ class ThemedActionButton {
       color: Colors.red,
     );
   }
+
+  /// [copyWith] allows to copy the current widget with new values.
+  ThemedActionButton copyWith({
+    Widget? label,
+    String? labelText,
+    IconData? icon,
+    VoidCallback? onTap,
+    Color? color,
+    bool? onlyIcon,
+    bool? isLoading,
+    Duration? cooldown,
+    bool? isCooldown,
+    VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition? tooltipPosition,
+    bool? isDisabled,
+  }) {
+    return ThemedActionButton(
+      label: label ?? this.label,
+      labelText: labelText ?? this.labelText,
+      icon: icon ?? this.icon,
+      onTap: onTap ?? this.onTap,
+      color: color ?? this.color,
+      onlyIcon: onlyIcon ?? this.onlyIcon,
+      isLoading: isLoading ?? this.isLoading,
+      cooldown: cooldown ?? this.cooldown,
+      isCooldown: isCooldown ?? this.isCooldown,
+      onCooldownFinish: onCooldownFinish ?? this.onCooldownFinish,
+      tooltipPosition: tooltipPosition ?? this.tooltipPosition,
+      isDisabled: isDisabled ?? this.isDisabled,
+    );
+  }
 }
