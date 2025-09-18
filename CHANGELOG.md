@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.4.0-prerelease3
+
+- Added multi selection support to `ThemedTable2` with actions
+- Fixes on `ThemedMapToolbar` to prevent oversize.
+
 ## 7.4.0-prerelease2
 
 - Massive changes on `ThemedTable2` to improve performance and reduce the number of `setState`s.

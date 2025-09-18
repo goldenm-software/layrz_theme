@@ -307,10 +307,6 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   double get calculatedSize {
     double size = actions.length * _buttonSize;
 
-    if (widget.additionalButtons.isNotEmpty) {
-      size += widget.additionalButtons.length * _buttonSize;
-    }
-
     if (widget.zoomSlider) {
       size += _buttonSize * _sliderSizeFactor + (_buttonSize * 2);
     }

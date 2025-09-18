@@ -37,6 +37,23 @@ class ThemedTable2<T> extends StatefulWidget {
   /// [minColumnWidth] sets the minimum width for each column when calculating flexible widths.
   final double minColumnWidth;
 
+  /// [multiSelectionTitleText] replaces the text of the multi selection title.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionTitleText;
+
+  /// [multiSelectionContentText] replaces the text of the multi selection content.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionContentText;
+
+  /// [multiSelectionCancelLabelText] replaces the text of the multi selection cancel button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionCancelLabelText;
+
+  /// [multiselectActions] is a list of action buttons that will be shown when one or more items are selected.
+  ///
+  /// Consider that the list will be appened with the clear button
+  final List<ThemedActionButton> multiselectActions;
+
   const ThemedTable2({
     required this.items,
     required this.columns,
@@ -50,6 +67,10 @@ class ThemedTable2<T> extends StatefulWidget {
     this.loadingLabelText = "Computing data, please wait...",
     this.canSearch = true,
     this.minColumnWidth = 250,
+    this.multiselectActions = const [],
+    this.multiSelectionTitleText = "Multiple items selected",
+    this.multiSelectionContentText = "You have selected multiple items. What do you want to do?",
+    this.multiSelectionCancelLabelText = "Clear",
   }) : assert(columns.length > 0, 'Columns cant be empty');
 
   @override
@@ -104,9 +125,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [_filteredData] holds the filtered and sorted data currently displayed in the table.
   List<T> _filteredData = [];
 
-  /// [_sortedData] holds the sorted data currently displayed in the table.
-  List<T> _sortedData = [];
-
   /// [_itemsStrings] holds a precomputed list of string representations of the items for efficient searching.
   Map<int, Map<int, String>> _itemsStrings = {};
 
@@ -118,6 +136,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   /// [isReversed] indicates whether the current sort order is descending (true) or ascending (false).
   bool isReversed = false;
+
+  /// [_shouldShowActions] indicates whether action buttons should be shown based on selection state.
+  bool _shouldShowActions = false;
 
   @override
   void initState() {
@@ -256,6 +277,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                           } else {
                             _selected = [];
                           }
+
+                          _shouldShowActions = _selected.isNotEmpty;
                           setState(() {});
                         },
                       ),
@@ -393,6 +416,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                   } else {
                                     if (_selected.contains(index)) _selected.remove(index);
                                   }
+
+                                  _shouldShowActions = _selected.isNotEmpty;
                                   setState(() {});
                                 },
                               ),
@@ -513,6 +538,55 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                 ],
               ),
             ),
+
+            // /Content
+            // Actions
+            if (_shouldShowActions) ...[
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.multiSelectionTitleText,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                    ),
+                    Text(
+                      widget.multiSelectionContentText,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: SingleChildScrollView(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ThemedButton(
+                              labelText: widget.multiSelectionCancelLabelText,
+                              color: Colors.orange,
+                              icon: LayrzIcons.solarOutlineEraser,
+                              onTap: () {
+                                _selected = [];
+                                _shouldShowActions = false;
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            // /Actions
           ],
         );
       },
