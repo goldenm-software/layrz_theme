@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.4.0-prerelease2
+
+- Massive changes on `ThemedTable2` to improve performance and reduce the number of `setState`s.
+- Changes on `ThemedMapToolbar` to now depend on `AnimatedMapController` from `flutter_map_animations`.
+
 ## 7.4.0-prerelease1
 
 - Small adjustments on `ThemedTable2` to prevent actions to be non `onlyIcon`

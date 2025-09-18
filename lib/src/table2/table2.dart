@@ -10,4 +10,3 @@ import 'package:sync_scroll_controller/sync_scroll_controller.dart';
 
 part 'src/table.dart';
 part 'src/column.dart';
-part 'src/data.dart';

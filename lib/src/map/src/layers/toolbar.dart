@@ -37,20 +37,6 @@ class ThemedMapToolbar extends StatefulWidget {
   /// You must provide `layers` to define the list of layers to toggle.
   final MapLayer? selectedLayer;
 
-  /// [onZoomIn] defines the callback to execute when the user press the zoom in button.
-  /// If is null, the button will not be shown.
-  final VoidCallback? onZoomIn;
-
-  /// [onZoomOut] defines the callback to execute when the user press the zoom out button.
-  /// If is null, the button will not be shown.
-  final VoidCallback? onZoomOut;
-
-  /// [zoomInDisabled] defines if the zoom in button is disabled.
-  final bool zoomInDisabled;
-
-  /// [zoomOutDisabled] defines if the zoom out button is disabled.
-  final bool zoomOutDisabled;
-
   /// [onLayerChanged] defines the callback to execute when the user change the layer.
   final void Function(MapLayer?)? onLayerChanged;
 
@@ -89,15 +75,22 @@ class ThemedMapToolbar extends StatefulWidget {
   /// Only will be shown if the selected layer is a google layer.
   final bool enableGoogleStreetView;
 
-  /// [controller] defines the `ThemedMapController` to listen some events from other widgets.
-  final ThemedMapController? controller;
-
-  /// [mapController] defines the `MapController` class from `flutter_map` package.
-  final MapController? mapController;
-
   /// [mapKey] defines the key of the map.
   /// Is used to convert screen coordinates to map coordinates.
   final GlobalKey? mapKey;
+
+  /// [zoomSlider] defines if the zoom slider is enabled. When is enabled, the zoom in and zoom out buttons will not be shown.
+  final bool zoomSlider;
+
+  /// [animatedMapController] defines the `AnimatedMapController` class from `flutter_map_animation` package.
+  /// It's used to animate the zoom in and zoom out actions.
+  final AnimatedMapController animatedMapController;
+
+  /// [maxZoom] defines the maximum zoom level of the map.
+  final double maxZoom;
+
+  /// [minZoom] defines the minimum zoom level of the map.
+  final double minZoom;
 
   /// [ThemedMapToolbar] is a widget that builds a toolbar for the map.
   /// The position of the toolbar is on the right-bottom corner of the map but you can change it.
@@ -139,10 +132,6 @@ class ThemedMapToolbar extends StatefulWidget {
     super.key,
     this.layers = const [],
     this.selectedLayer,
-    this.onZoomIn,
-    this.onZoomOut,
-    this.zoomInDisabled = false,
-    this.zoomOutDisabled = false,
     this.onLayerChanged,
     this.position = Alignment.bottomRight,
     this.flow = ThemedMapToolbarFlow.vertical,
@@ -153,9 +142,12 @@ class ThemedMapToolbar extends StatefulWidget {
     this.saveLabelText = 'Save',
     this.cancelLabelText = 'Cancel',
     this.enableGoogleStreetView = false,
-    this.controller,
-    this.mapController,
+
     this.mapKey,
+    this.zoomSlider = false,
+    required this.animatedMapController,
+    this.maxZoom = kMaxZoom,
+    this.minZoom = kMinZoom,
   });
 
   @override
@@ -164,11 +156,13 @@ class ThemedMapToolbar extends StatefulWidget {
 
 class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-  double get buttonSize => ThemedMapButton.size;
+  double get _buttonSize => ThemedMapButton.size;
   Color get buttonColor => isDark ? Colors.white : Colors.black;
 
   MapLayer? _selected;
   LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+
+  double get _sliderSizeFactor => 5;
 
   List<MapLayer> get layers => widget.layers;
 
@@ -176,6 +170,8 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     ...widget.additionalButtons,
     ...fixedButtons,
   ];
+
+  final ValueNotifier<double> _zoomListenable = ValueNotifier<double>(0);
 
   // bool get _canStreetView =>
   //     widget.enableGoogleStreetView &&
@@ -185,56 +181,10 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   //     widget.mapKey != null;
 
   List<ThemedMapButton> get fixedButtons => [
-    // if (_canStreetView) ...[
-    //   ThemedMapDragButton(
-    //     labelText: i18n?.t('layrz.map.google.street.view') ?? 'Street View',
-    //     icon: LayrzIcons.mdiGoogleStreetView,
-    //     color: buttonColor,
-    //     onDragStart: (offset) {
-    //       widget.controller?.notify(StartGoogleStreetView());
-    //     },
-    //     onDragFinish: (offset) async {
-    //       widget.controller?.notify(StopGoogleStreetView());
-
-    //       if (offset == null) return;
-    //       if (widget.mapKey == null) return;
-    //       if (widget.mapController == null) return;
-
-    //       RenderBox box = widget.mapKey!.currentContext!.findRenderObject() as RenderBox;
-    //       final projectedOffset = box.globalToLocal(offset);
-    //       math.Point p = math.Point(projectedOffset.dx, projectedOffset.dy);
-    //       LatLng coordinates = widget.mapController!.camera.pointToLatLng(p);
-    //       final result = await _searchStreetView(coordinates);
-    //       if (result == null) return;
-    //       _openStreetView(result.$1, result.$2, result.$3);
-    //     },
-    //     onDragCancel: () {
-    //       widget.controller?.notify(StopGoogleStreetView());
-    //     },
-    //   ),
-    // ],
-    if (widget.onZoomIn != null) ...[
-      ThemedMapButton(
-        labelText: i18n?.t('layrz.map.zoom.in') ?? widget.zoomInLabelText,
-        icon: LayrzIcons.solarOutlineAddSquare,
-        isDisabled: widget.zoomInDisabled,
-        onTap: widget.onZoomIn,
-        color: buttonColor,
-      ),
-    ],
-    if (widget.onZoomOut != null) ...[
-      ThemedMapButton(
-        labelText: i18n?.t('layrz.map.zoom.out') ?? widget.zoomOutLabelText,
-        icon: LayrzIcons.solarOutlineMinusSquare,
-        isDisabled: widget.zoomOutDisabled,
-        onTap: widget.onZoomOut,
-        color: buttonColor,
-      ),
-    ],
     if (layers.isNotEmpty) ...[
       ThemedMapButton(
         labelText: i18n?.t('layrz.map.change.layer') ?? widget.changeLayerLabelText,
-        icon: LayrzIcons.solarOutlineLayersMinimalistic,
+        icon: LayrzIcons.solarBoldLayersMinimalistic,
         color: buttonColor,
         onTap: () async {
           final res = await showDialog<MapLayer>(
@@ -260,7 +210,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   ];
 
   double get _dividerSize => 2;
-  double get _dividerIndent => 5;
+  double get _dividerIndent => 4;
 
   Widget get _divider {
     if (fixedButtons.isEmpty) {
@@ -286,21 +236,93 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   List<Widget> get items => [
     ...widget.additionalButtons,
     _divider,
+    if (widget.zoomSlider) ...[
+      ValueListenableBuilder(
+        valueListenable: _zoomListenable,
+        builder: (context, value, child) {
+          return ThemedMapButton(
+            labelText: i18n?.t('layrz.map.zoom.in') ?? widget.zoomOutLabelText,
+            icon: LayrzIcons.solarBoldAddSquare,
+            isDisabled: value >= widget.maxZoom,
+            onTap: () async {
+              double newZoom = (value - 1).clamp(widget.minZoom, widget.maxZoom);
+              debugPrint('layrz_theme/ThemedMapToolbar/ZoomOut: Zoom to $newZoom');
+              await widget.animatedMapController.animatedZoomTo(newZoom);
+              _zoomListenable.value = newZoom;
+            },
+            color: buttonColor,
+          );
+        },
+      ),
+      SizedBox(
+        height: widget.flow == ThemedMapToolbarFlow.horizontal ? _buttonSize : _buttonSize * _sliderSizeFactor,
+        width: widget.flow == ThemedMapToolbarFlow.horizontal ? _buttonSize * _sliderSizeFactor : _buttonSize,
+        child: RotatedBox(
+          quarterTurns: widget.flow == ThemedMapToolbarFlow.horizontal ? 0 : 3,
+          child: ValueListenableBuilder(
+            valueListenable: _zoomListenable,
+            builder: (context, value, _) {
+              return Slider(
+                value: value,
+                min: widget.minZoom,
+                max: widget.maxZoom,
+                // divisions: 15,
+                label: value.toStringAsFixed(2),
+                onChanged: (value) async {
+                  value = value.clamp(widget.minZoom, widget.maxZoom);
+                  value = (value * 100).toInt() / 100.0;
+                  debugPrint('layrz_theme/ThemedMapToolbar/Slider: Zoom to $value');
+                  widget.animatedMapController.mapController.move(
+                    widget.animatedMapController.mapController.camera.center,
+                    value,
+                  );
+                  _zoomListenable.value = value;
+                },
+              );
+            },
+          ),
+        ),
+      ),
+      ValueListenableBuilder(
+        valueListenable: _zoomListenable,
+        builder: (context, value, child) {
+          return ThemedMapButton(
+            labelText: i18n?.t('layrz.map.zoom.out') ?? widget.zoomOutLabelText,
+            icon: LayrzIcons.solarBoldMinusSquare,
+            isDisabled: value <= widget.minZoom,
+            onTap: () async {
+              double newZoom = (value + 1).clamp(widget.minZoom, widget.maxZoom);
+              debugPrint('layrz_theme/ThemedMapToolbar/ZoomOut: Zoom to $newZoom');
+              await widget.animatedMapController.animatedZoomTo(newZoom);
+              _zoomListenable.value = newZoom;
+            },
+            color: buttonColor,
+          );
+        },
+      ),
+    ],
     ...fixedButtons,
   ];
 
   double get calculatedSize {
-    double size = buttonSize * actions.length;
+    double size = actions.length * _buttonSize;
 
-    if (widget.additionalButtons.isEmpty) {
-      return size;
+    if (widget.additionalButtons.isNotEmpty) {
+      size += widget.additionalButtons.length * _buttonSize;
     }
 
-    if (fixedButtons.isEmpty) {
-      return size;
+    if (widget.zoomSlider) {
+      size += _buttonSize * _sliderSizeFactor + (_buttonSize * 2);
     }
 
-    return (buttonSize * actions.length) + 2;
+    if (fixedButtons.isNotEmpty && widget.additionalButtons.isNotEmpty) {
+      size += _dividerSize;
+    }
+
+    // Check why on dark mode the size is not correct
+    size += 2;
+
+    return size;
   }
 
   @override
@@ -315,7 +337,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     }
     _notify();
 
-    widget.controller?.addListener(_eventListener);
+    _zoomListenable.value = widget.animatedMapController.mapController.camera.zoom;
   }
 
   @override
@@ -330,16 +352,11 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
       }
       _notify();
     }
-
-    if (oldWidget.controller != widget.controller) {
-      oldWidget.controller?.removeListener(_eventListener);
-      widget.controller?.addListener(_eventListener);
-    }
   }
 
   @override
   void dispose() {
-    widget.controller?.removeListener(_eventListener);
+    _zoomListenable.dispose();
     super.dispose();
   }
 
@@ -347,10 +364,6 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onLayerChanged?.call(_selected);
     });
-  }
-
-  void _eventListener(ThemedMapEvent event) {
-    debugPrint("Event received in toolbar: $event");
   }
 
   @override
@@ -369,8 +382,8 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
           radius: 8,
         ),
         clipBehavior: Clip.antiAlias,
-        width: widget.flow == ThemedMapToolbarFlow.horizontal ? calculatedSize : buttonSize,
-        height: widget.flow == ThemedMapToolbarFlow.horizontal ? buttonSize : calculatedSize,
+        width: widget.flow == ThemedMapToolbarFlow.horizontal ? calculatedSize : _buttonSize,
+        height: widget.flow == ThemedMapToolbarFlow.horizontal ? _buttonSize : calculatedSize,
         child: widget.flow == ThemedMapToolbarFlow.horizontal
             ? Row(
                 children: items,
@@ -381,146 +394,4 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
       ),
     );
   }
-
-  /// [_openStreetView] opens a street view with the given [panoId], [xTiles], [yTiles] and [tileSize].
-  /// Each parameter comes from the metadata query,
-  /// [xTiles] is calculated using `imageWidth` and `tileWidth` from the metadata query.
-  /// [yTiles] is calculated using `imageHeight` and `tileWidth` from the metadata query.
-  /// Why `tileWidth`? Because `tileWidth` and `tileHeight` are the same (At least in the tests I did).
-  // void _openStreetView(String panoId, int xTiles, int yTiles) async {
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   String? googleSession = prefs.getString('google.maps.${_selected!.id}.streetView.token');
-  //   int? googleExpiration = prefs.getInt('google.maps.${_selected!.id}.streetView.expiration');
-
-  //   if (googleSession == null || googleExpiration == null) {
-  //     debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): No session found');
-  //     return;
-  //   }
-
-  //   if (googleExpiration < DateTime.now().secondsSinceEpoch) {
-  //     debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): Session expired');
-  //     return;
-  //   }
-
-  //   debugPrint('layrz_theme/ThemedMapToolbar/_openStreetView(): Opening street view');
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return ThemedStreetViewDialog(
-  //         panoId: panoId,
-  //         session: googleSession,
-  //         googleToken: _selected!.googleToken!,
-  //         xTiles: xTiles,
-  //         yTiles: yTiles,
-  //       );
-  //     },
-  //   );
-  // }
-
-  /// [_searchStreetView] searches for a street view in Map Tiles API with the given [point].
-  /// Returns the `panoId` of the street view if found, otherwise returns `null`.
-  /// Also, can return `null` if the requirements are not met.
-  ///
-  /// Returns:
-  /// - String: `panoId` of the street view.
-  /// - double: `xTiles` of the street view.
-  /// - double: `yTiles` of the street view.
-  /// - double: `tileSize` of the street view.
-  // Future<(String, int, int)?> _searchStreetView(LatLng point) async {
-  //   if (_selected == null) return null;
-  //   if (_selected!.source != MapSource.google) return null;
-  //   String? googleMapsKey = _selected!.googleToken;
-
-  //   if (googleMapsKey == null) return null;
-
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   String? googleSession = prefs.getString('google.maps.${_selected!.id}.streetView.token');
-  //   int? googleExpiration = prefs.getInt('google.maps.${_selected!.id}.streetView.expiration');
-
-  //   if (googleSession == null || googleExpiration == null) {
-  //     final resp = await _startSession(prefs, googleMapsKey);
-  //     if (resp == null) return null;
-
-  //     googleSession = resp.$1;
-  //     googleExpiration = resp.$2;
-  //   }
-
-  //   if (googleExpiration < DateTime.now().secondsSinceEpoch) {
-  //     final resp = await _startSession(prefs, googleMapsKey);
-  //     if (resp == null) return null;
-
-  //     googleSession = resp.$1;
-  //     googleExpiration = resp.$2;
-  //   }
-
-  //   debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): Searching street view');
-
-  //   try {
-  //     final search = await http.get(Uri.parse(
-  //       'https://tile.googleapis.com/v1/streetview/metadata?'
-  //       'session=$googleSession&'
-  //       'key=$googleMapsKey&'
-  //       'lat=${point.latitude}&'
-  //       'lng=${point.longitude}&'
-  //       'radius=100',
-  //     ));
-
-  //     final pano = jsonDecode(search.body);
-  //     if (pano['error'] != null) {
-  //       debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): metadata error ${pano['error']}');
-  //       prefs.remove('google.maps.${_selected!.id}.streetView.token');
-  //       prefs.remove('google.maps.${_selected!.id}.streetView.expiration');
-  //       return null;
-  //     }
-
-  //     num imageWidth = pano['imageWidth'] as num;
-  //     num imageHeight = pano['imageHeight'] as num;
-  //     num tileSize = pano['tileWidth'] as num;
-
-  //     int xTiles = (imageWidth / tileSize).ceil();
-  //     int yTiles = (imageHeight / tileSize).ceil();
-
-  //     return (pano['panoId'] as String, xTiles, yTiles);
-  //   } catch (e) {
-  //     debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): metadata exception $e');
-  //     return null;
-  //   }
-  // }
-
-  // Future<(String, int)?> _startSession(SharedPreferences prefs, String googleMapsKey) async {
-  //   try {
-  //     final params = {
-  //       'mapType': 'streetview',
-  //       'language': 'en-US',
-  //     };
-
-  //     debugPrint('layrz_theme/ThemedMApToolbar/_searchStreetView(): Request $params');
-  //     final response = await http.post(
-  //       Uri.parse('https://tile.googleapis.com/v1/createSession?key=$googleMapsKey'),
-  //       body: jsonEncode(params),
-  //     );
-  //     if (response.statusCode != 200) {
-  //       debugPrint(
-  //         'layrz_theme/ThemedMapToolbar/_searchStreetView(): createSession error code ${response.statusCode}',
-  //       );
-  //       return null;
-  //     }
-
-  //     debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): Response ${response.body}');
-  //     final data = jsonDecode(response.body);
-
-  //     prefs.setString('google.maps.${_selected!.id}.streetView.token', data['session']);
-  //     prefs.setInt('google.maps.${_selected!.id}.streetView.expiration', int.parse(data['expiry']));
-  //     String googleSession = data['session'];
-  //     int googleExpiration = int.parse(data['expiry']);
-
-  //     return (googleSession, googleExpiration);
-  //   } catch (e) {
-  //     debugPrint('layrz_theme/ThemedMapToolbar/_searchStreetView(): createSession exception $e');
-  //     return null;
-  //   }
-  // }
 }

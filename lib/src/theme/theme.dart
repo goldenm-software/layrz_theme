@@ -12,6 +12,7 @@ import 'package:dio/dio.dart';
 import 'dart:math' as math;
 
 import 'package:layrz_icons/layrz_icons.dart';
+import 'package:layrz_theme/src/theme/src/custom_painters/thumb_shape.dart';
 
 part 'src/platform.dart';
 part 'src/light_theme.dart';

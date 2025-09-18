@@ -127,15 +127,16 @@ ThemeData generateLightTheme({
 
     // Slider
     sliderTheme: SliderThemeData(
-      activeTrackColor: color,
+      activeTrackColor: Colors.grey.shade700,
       inactiveTrackColor: Colors.grey.shade300,
       thumbColor: color,
-      overlayColor: color.withValues(alpha: 0.3),
+      overlayColor: color.withValues(alpha: 0.1),
       valueIndicatorColor: color,
-      valueIndicatorTextStyle: textTheme.bodySmall?.copyWith(color: kLightBackgroundColor),
+      valueIndicatorTextStyle: textTheme.bodySmall,
       trackHeight: 2,
-      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-      overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
+      trackShape: const RectangularSliderTrackShape(),
+      thumbShape: RoundedRectangleSeekbarShape(),
+      overlayShape: const RoundSliderOverlayShape(overlayRadius: 17),
     ),
 
     // Inputs

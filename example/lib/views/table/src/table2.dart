@@ -16,11 +16,24 @@ class _InfinityTableViewState extends State<InfinityTableView> {
   List<Asset> _items = [];
 
   int get _it => 15_000;
+  // int get _it => 100;
 
+  final ValueNotifier<DateTime> _now = ValueNotifier(DateTime.now());
+  late final Timer timer;
   @override
   void initState() {
     super.initState();
     _items = List.generate(_it, (i) => _generateAsset(i));
+
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _now.value = DateTime.now();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   Asset _generateAsset(int index) {
@@ -40,6 +53,7 @@ class _InfinityTableViewState extends State<InfinityTableView> {
     return Layout(
       body: ThemedTable2<Asset>(
         items: _items,
+        actionsCount: 3,
         actionsBuilder: (Asset item) => [
           ThemedActionButton(
             icon: LayrzIcons.faSolidLayerGroup,
@@ -65,82 +79,43 @@ class _InfinityTableViewState extends State<InfinityTableView> {
         columns: [
           ThemedColumn2(
             headerText: 'ID',
+            width: 80,
             valueBuilder: (item) => item.id,
           ),
           ThemedColumn2(
             headerText: 'Name',
             valueBuilder: (item) => item.name,
-            onTap: (item) {
-              debugPrint("Tapped on ${item.name}");
-            },
+            width: 200,
           ),
           ThemedColumn2(
             headerText: 'Plate',
-
             valueBuilder: (item) => item.plate ?? 'N/A',
           ),
+          // ...List.generate(10, (index) {
+          //   return ThemedColumn2(
+          //     width: 100,
+          //     headerText: 'Column ${index + 1}',
+          //     valueBuilder: (item) => 'Data ${index + 1}',
+          //   );
+          // }),
           ThemedColumn2(
             headerText: 'VIN',
-            valueBuilder: (item) => item.vin ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Mode',
-            valueBuilder: (item) => item.mode?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Active Time',
-            valueBuilder: (item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
-            fixedWidth: 250,
+            valueBuilder: (item) => '${item.vin}',
+            width: 250,
             richTextBuilder: (item) => [
               WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Icon(
-                    LayrzIcons.mdiClock,
-                    size: 14,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                child: Container(color: Colors.green, width: 8, height: 8, margin: const EdgeInsets.only(right: 6)),
+              ),
+              WidgetSpan(
+                child: ValueListenableBuilder(
+                  valueListenable: _now,
+                  builder: (context, value, child) {
+                    return Text('${item.vin} - ${value.hour}:${value.minute}:${value.second}');
+                  },
                 ),
               ),
-              TextSpan(text: item.activeTime.toString()),
             ],
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
-          ),
-          ThemedColumn2(
-            headerText: 'Kind',
-            valueBuilder: (item) => item.kind?.name ?? 'N/A',
           ),
         ],
       ),

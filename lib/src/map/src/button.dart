@@ -53,7 +53,7 @@ class _ThemedMapButtonState extends State<ThemedMapButton> {
             color: color,
             child: Icon(
               widget.icon,
-              size: 17,
+              size: 22,
               color: color,
             ),
           ),

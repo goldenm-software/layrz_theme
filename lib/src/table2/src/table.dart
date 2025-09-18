@@ -22,14 +22,20 @@ class ThemedTable2<T> extends StatefulWidget {
   /// [hasMultiselect] enables or disables the multi-select checkbox column.
   final bool hasMultiselect;
 
-  /// [hasActions] enables or disables the actions column.
-  final bool hasActions;
+  /// [actionsCount] is the maximum number of actions per row. if you expect 5 actions in a single row, the expected
+  /// value is 5.
+  ///
+  /// If the supplied value is 0, it will be ignored as column.
+  final int actionsCount;
 
   /// [loadingLabelText] is the text shown while the table is loading or computing data.
   final String loadingLabelText;
 
   /// [canSearch] enables or disables the search input above the table.
   final bool canSearch;
+
+  /// [minColumnWidth] sets the minimum width for each column when calculating flexible widths.
+  final double minColumnWidth;
 
   const ThemedTable2({
     required this.items,
@@ -40,9 +46,10 @@ class ThemedTable2<T> extends StatefulWidget {
     this.headerHeight = 40,
     this.actionsLabelText = "Actions",
     this.hasMultiselect = true,
-    this.hasActions = true,
+    this.actionsCount = 0,
     this.loadingLabelText = "Computing data, please wait...",
     this.canSearch = true,
+    this.minColumnWidth = 250,
   }) : assert(columns.length > 0, 'Columns cant be empty');
 
   @override
@@ -51,18 +58,6 @@ class ThemedTable2<T> extends StatefulWidget {
 
 class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
-
-  /// [_future] holds the future for the precomputation of the table data
-  Future<void>? _future;
-
-  /// [_computedData] holds the raw data for the table after precomputation, this data is not filtered or sorted
-  List<_ThemedData<T>> _computedData = [];
-
-  /// [_sizes] holds the computed sizes for each column
-  List<double> _sizes = [];
-
-  /// [_actionSize] holds the computed size for the action column
-  double _actionSize = 0;
 
   /// [_stripColor] represents the color of the strip item.
   Color get _stripColor => isDark ? Colors.grey.shade900 : Colors.grey.shade100;
@@ -91,17 +86,11 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [_padding] represents the standard padding for the cells
   EdgeInsets get _padding => const EdgeInsets.symmetric(horizontal: 10);
 
+  /// [_actionsPadding] represents the standard padding for the action cells
+  EdgeInsets get _actionsPadding => const EdgeInsets.only(left: 5);
+
   /// [_style] represents the standard text style for the cells
   TextStyle? get _style => Theme.of(context).textTheme.bodyMedium;
-
-  /// [_availableWidth] is the maximum size of the table
-  double _availableWidth = 0;
-
-  /// [_totalSize] is the total size of the table
-  double _totalSize = 0;
-
-  /// [_layoutSize] is the size of the layout
-  BoxConstraints _layoutSize = const BoxConstraints();
 
   /// [_selected] is the index of the selected column for sorting
   List<int> _selected = [];
@@ -113,7 +102,13 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   String _search = '';
 
   /// [_filteredData] holds the filtered and sorted data currently displayed in the table.
-  List<_ThemedData<T>> _filteredData = [];
+  List<T> _filteredData = [];
+
+  /// [_sortedData] holds the sorted data currently displayed in the table.
+  List<T> _sortedData = [];
+
+  /// [_itemsStrings] holds a precomputed list of string representations of the items for efficient searching.
+  Map<int, Map<int, String>> _itemsStrings = {};
 
   /// [colSelected] is the currently selected column used for sorting.
   late ThemedColumn2<T> colSelected;
@@ -138,10 +133,21 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _contentController = _verticalScrollControllerGroup.addAndGet();
     _actionsController = _verticalScrollControllerGroup.addAndGet();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _future = _precompute('INIT_STATE');
+    _filterAndSort();
+  }
+
+  @override
+  void didUpdateWidget(covariant ThemedTable2<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final eq = const DeepCollectionEquality().equals;
+    if (!eq(oldWidget.items, widget.items) ||
+        !eq(oldWidget.columns, widget.columns) ||
+        oldWidget.actionsCount != widget.actionsCount ||
+        oldWidget.canSearch != widget.canSearch ||
+        kDebugMode) {
+      _filterAndSort();
       setState(() {});
-    });
+    }
   }
 
   @override
@@ -159,521 +165,425 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   @override
-  void didUpdateWidget(ThemedTable2<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final eq = const ListEquality().equals;
-
-    if (!eq(widget.items, oldWidget.items) ||
-        !eq(widget.columns, oldWidget.columns) ||
-        widget.hasActions != oldWidget.hasActions ||
-        widget.hasMultiselect != oldWidget.hasMultiselect) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (_future != null) await _future;
-        _future = _precompute('DID_UPDATE_WIDGET');
-        _filterData();
-        _sortDataAsync();
-        setState(() {});
-      });
-    }
-  }
-
-  Future<void> _precompute(String source) async {
-    debugPrint("layrz_theme/ThemedTable2: Precomputing table data triggered by $source");
-    _computedData = [];
-    _sizes = [];
-    _actionSize = 0;
-
-    debugPrint("layrz_theme/ThemedTable2: Precomputing table data for ${widget.items.length} items");
-    final completer = Completer<void>();
-
-    if (mounted) {
-      completer.complete();
-    } else {
-      Timer.periodic(const Duration(milliseconds: 5), (timer) {
-        if (mounted) {
-          timer.cancel();
-          completer.complete();
-        }
-      });
-    }
-
-    debugPrint("layrz_theme/ThemedTable2: Waiting for context...");
-    await completer.future;
-    debugPrint("layrz_theme/ThemedTable2: Context is ready, computing data...");
-
-    List<_ThemedData<T>> data = [];
-
-    List<double> colWidths = [];
-
-    for (final header in widget.columns) {
-      /// 5 == space beetwen header.headerText and _sortIconSize
-      final value = _computeTextWidth(header.headerText) + _sortIconSize + 5;
-      colWidths.add(value);
-    }
-
-    for (final item in widget.items) {
-      List<String> values = [];
-      List<List<InlineSpan>?> richTextValues = [];
-
-      for (final entry in widget.columns.asMap().entries) {
-        final header = entry.value;
-
-        final value = header.valueBuilder(item);
-        final richValue = header.richTextBuilder?.call(item);
-
-        values.add(value);
-        richTextValues.add(richValue);
-
-        final index = entry.key;
-
-        double width = 0;
-        int extra = 0;
-        if (entry.key < widget.columns.length - 1) extra = 1;
-
-        if (header.fixedWidth != null) {
-          width = header.fixedWidth! + extra;
-        } else if (richValue != null) {
-          width = _computeRichTextWidth(richValue) + extra;
-        } else {
-          width = _computeTextWidth(value) + extra;
-        }
-
-        if (colWidths.length <= index) {
-          colWidths.add(width);
-          continue;
-        }
-
-        if (width > colWidths[index]) {
-          colWidths[index] = width;
-        }
-      }
-
-      List<ThemedActionButton> actions = (widget.actionsBuilder?.call(item) ?? []).map((act) {
-        return act.copyWith(onlyIcon: true);
-      }).toList();
-
-      double actionSize = actions.length * ThemedButton.defaultHeight;
-
-      actionSize += 5 * actions.length;
-      actionSize += _padding.horizontal;
-      if (actionSize > _actionSize) _actionSize = actionSize;
-
-      data.add(
-        _ThemedData<T>(
-          item: item,
-          values: values,
-          richTextValues: richTextValues,
-          actions: actions,
-        ),
-      );
-    }
-
-    final totalSize = colWidths.fold<double>(0, (previousValue, element) => previousValue + element);
-    _availableWidth = _layoutSize.maxWidth;
-    if (widget.hasMultiselect) _availableWidth -= (50 + 1);
-    if (widget.hasActions) _availableWidth -= (_actionSize + 1);
-
-    if (_availableWidth <= 0) _availableWidth = 0;
-
-    if (totalSize < _availableWidth) {
-      final diff = _availableWidth - totalSize;
-      final nonFixedColumns = widget.columns.where((element) => element.fixedWidth == null).length;
-      final perItem = diff / nonFixedColumns;
-      for (final entry in widget.columns.asMap().entries) {
-        if (entry.value.fixedWidth == null) {
-          colWidths[entry.key] += perItem;
-        }
-      }
-    }
-
-    _computedData = data;
-    _filteredData = data;
-
-    _totalSize = colWidths.fold<double>(0, (previousValue, element) => previousValue + element);
-    _sizes = colWidths;
-
-    debugPrint("layrz_theme/ThemedTable2: Computed ${_computedData.length} items, setting state!");
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!context.mounted) return;
-      setState(() {});
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        _layoutSize = constraints;
-        return FutureBuilder(
-          future: _future,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              debugPrint(
-                "layrz_theme/ThemedTable2: Building table with ${_computedData.length} items - $_availableWidth",
-              );
-              return Column(
+        bool isMobile = constraints.maxWidth < widget.actionsMobileBreakpoint;
+        Map<int, double> sizes = {};
+        double actionsSize;
+        if (isMobile) {
+          actionsSize = ThemedButton.defaultHeight + _padding.horizontal;
+        } else {
+          actionsSize = widget.actionsCount * (ThemedButton.defaultHeight + _actionsPadding.horizontal);
+          actionsSize += _padding.horizontal;
+        }
+
+        double maxWidth = constraints.maxWidth;
+        if (widget.hasMultiselect) {
+          maxWidth -= 50;
+          maxWidth -= 1; // Divider
+        }
+        if (widget.actionsCount > 0) {
+          maxWidth -= actionsSize;
+          maxWidth -= 1; // Divider
+        }
+
+        double availableWidth = maxWidth;
+
+        int fixedColumns = 0;
+        for (final entry in widget.columns.asMap().entries) {
+          final col = entry.value;
+
+          if (col.width != null) {
+            fixedColumns++;
+            sizes[entry.key] = col.width! - 1; // Divider
+            availableWidth -= col.width! - 1; // Divider
+          }
+        }
+
+        int flexColumns = widget.columns.length - fixedColumns;
+        double flexWidth = flexColumns > 0 ? availableWidth / flexColumns : 0;
+        if (flexWidth < widget.minColumnWidth) flexWidth = widget.minColumnWidth;
+
+        for (final entry in widget.columns.asMap().entries) {
+          final col = entry.value;
+
+          if (col.width == null) {
+            sizes[entry.key] = flexWidth - 1; // Divider
+          }
+        }
+
+        return Column(
+          children: [
+            // Search
+            if (widget.canSearch) ...[
+              SizedBox(
+                width: double.infinity,
+                child: ThemedSearchInput(
+                  value: _search,
+                  onSearch: _onSearchChanged,
+                  asField: true,
+                ),
+              ),
+              const SizedBox(height: 8),
+              if (_debounce?.isActive ?? false) ...[
+                LinearProgressIndicator(
+                  value: null,
+                  minHeight: 2,
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+                  backgroundColor: Colors.transparent,
+                ),
+              ] else ...[
+                const SizedBox(height: 2),
+              ],
+              const SizedBox(height: 8),
+            ],
+
+            // Header
+            SizedBox(
+              height: widget.headerHeight,
+              child: Row(
                 children: [
-                  // Search
-                  if (widget.canSearch) ...[
+                  /// Multiselect
+                  if (widget.hasMultiselect) ...[
                     SizedBox(
-                      width: double.infinity,
-                      child: ThemedSearchInput(
-                        value: _search,
-                        onSearch: _onSearchChanged,
-                        asField: true,
+                      width: 50,
+                      child: Checkbox(
+                        value: _selected.length == widget.items.length && widget.items.isNotEmpty,
+                        onChanged: (val) {
+                          if (val == true) {
+                            _selected = List.generate(widget.items.length, (index) => index);
+                          } else {
+                            _selected = [];
+                          }
+                          setState(() {});
+                        },
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const VerticalDivider(width: 1),
                   ],
 
-                  // Header
-                  SizedBox(
-                    height: widget.headerHeight,
-                    child: Row(
-                      children: [
-                        /// Multiselect
-                        if (widget.hasMultiselect) ...[
-                          SizedBox(
-                            width: 50,
-                            child: Checkbox(
-                              value: _selected.length == _computedData.length && _computedData.isNotEmpty,
-                              onChanged: (val) {
-                                if (val == true) {
-                                  _selected = List.generate(_computedData.length, (index) => index);
-                                } else {
-                                  _selected = [];
-                                }
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                          const VerticalDivider(width: 1),
-                        ],
+                  /// Items
+                  ScrollConfiguration(
+                    behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                    child: Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        controller: _horizontalHeaderController,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: widget.columns.length,
+                        itemBuilder: (context, index) {
+                          final ThemedColumn2<T> entry = widget.columns[index];
+                          final bool isSelected = entry == colSelected;
 
-                        /// Items
-                        ScrollConfiguration(
-                          behavior: const ScrollBehavior().copyWith(scrollbars: false),
-                          child: Expanded(
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              controller: _horizontalHeaderController,
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: widget.columns.length,
-                              itemBuilder: (context, index) {
-                                final ThemedColumn2<T> entry = widget.columns[index];
-                                final bool isSelected = entry == colSelected;
+                          return Row(
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    debugPrint("layrz_theme/ThemedTable2: Entry: ${entry.headerText}");
+                                    if (isSelected) {
+                                      isReversed = !isReversed;
+                                    } else {
+                                      colSelected = entry;
+                                      isReversed = false;
+                                    }
 
-                                return Row(
-                                  children: [
-                                    Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () {
-                                          debugPrint("layrz_theme/ThemedTable2: Entry: ${entry.headerText}");
-                                          if (isSelected) {
-                                            isReversed = !isReversed;
-                                          } else {
-                                            colSelected = entry;
-                                            isReversed = false;
-                                          }
-                                          _future = _sortDataAsync();
-                                          setState(() {});
-                                        },
-                                        child: Container(
-                                          width: _sizes[index] - (index < widget.columns.length - 1 ? 1 : 0),
-                                          padding: _padding,
-                                          alignment: entry.alignment,
-                                          child: RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                if (isSelected) ...[
-                                                  WidgetSpan(
-                                                    alignment: PlaceholderAlignment.middle,
-                                                    child: Icon(
-                                                      isReversed
-                                                          ? LayrzIcons.solarBoldSortFromBottomToTop
-                                                          : LayrzIcons.solarBoldSortFromTopToBottom,
-                                                      size: _sortIconSize,
-                                                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                                                    ),
-                                                  ),
-                                                  const WidgetSpan(child: SizedBox(width: 5)),
-                                                ],
-
-                                                TextSpan(
-                                                  text: entry.headerText,
-                                                  style: Theme.of(
-                                                    context,
-                                                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                                                ),
-                                              ],
+                                    _filterAndSort();
+                                  },
+                                  child: Container(
+                                    width: sizes[index]! - (index < widget.columns.length - 1 ? 1 : 0),
+                                    padding: _padding,
+                                    alignment: entry.alignment,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          if (isSelected) ...[
+                                            WidgetSpan(
+                                              alignment: PlaceholderAlignment.middle,
+                                              child: Icon(
+                                                isReversed
+                                                    ? LayrzIcons.solarBoldSortFromBottomToTop
+                                                    : LayrzIcons.solarBoldSortFromTopToBottom,
+                                                size: _sortIconSize,
+                                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                                              ),
                                             ),
+                                            const WidgetSpan(child: SizedBox(width: 5)),
+                                          ],
+
+                                          TextSpan(
+                                            text: entry.headerText,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ),
-                                    if (index < widget.columns.length - 1) const VerticalDivider(width: 1),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-
-                        /// Actions
-                        if (widget.hasActions) ...[
-                          const VerticalDivider(width: 1),
-                          Container(
-                            width: _actionSize,
-                            padding: _padding,
-                            alignment: Alignment.centerRight,
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  WidgetSpan(
-                                    alignment: PlaceholderAlignment.middle,
-                                    child: Icon(
-                                      LayrzIcons.solarOutlineTuningSquare2,
-                                      size: _sortIconSize,
-                                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                                    ),
                                   ),
-                                  const WidgetSpan(child: SizedBox(width: 5)),
-                                  TextSpan(
-                                    text: widget.actionsLabelText,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ],
+                              if (index < widget.columns.length - 1) const VerticalDivider(width: 1),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  // /Header
-                  const Divider(height: 1),
-                  // Content
+
+                  /// Actions
+                  if (widget.actionsCount > 0) ...[
+                    const VerticalDivider(width: 1),
+                    Container(
+                      width: actionsSize,
+                      padding: _padding,
+                      alignment: Alignment.centerRight,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Icon(
+                                LayrzIcons.solarOutlineTuningSquare2,
+                                size: _sortIconSize,
+                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                              ),
+                            ),
+                            const WidgetSpan(child: SizedBox(width: 5)),
+                            TextSpan(
+                              text: widget.actionsLabelText,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            // /Header
+            const Divider(height: 1),
+            // Content
+            Expanded(
+              child: Row(
+                children: [
+                  if (widget.hasMultiselect) ...[
+                    SizedBox(
+                      width: 50,
+                      child: ScrollConfiguration(
+                        behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                        child: ListView.builder(
+                          itemCount: _filteredData.length,
+                          itemExtent: 50,
+                          controller: _multiselectController,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: _padding,
+                              color: index % 2 == 0 ? null : _stripColor,
+                              child: Checkbox(
+                                value: _selected.contains(index),
+                                onChanged: (val) {
+                                  if (val == true) {
+                                    if (!_selected.contains(index)) _selected.add(index);
+                                  } else {
+                                    if (_selected.contains(index)) _selected.remove(index);
+                                  }
+                                  setState(() {});
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    const VerticalDivider(width: 1),
+                  ],
+
+                  /// Items.value
                   Expanded(
-                    child: Row(
-                      children: [
-                        if (widget.hasMultiselect) ...[
-                          SizedBox(
-                            width: 50,
-                            child: ScrollConfiguration(
-                              behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      controller: _horizontalContentController,
+                      child: ScrollConfiguration(
+                        behavior: const ScrollBehavior().copyWith(scrollbars: true),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          controller: _horizontalContentController,
+
+                          child: ScrollConfiguration(
+                            behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                            child: SizedBox(
+                              width: sizes.values.sum,
                               child: ListView.builder(
                                 itemCount: _filteredData.length,
                                 itemExtent: 50,
-                                controller: _multiselectController,
+                                controller: _contentController,
                                 itemBuilder: (context, index) {
-                                  return Container(
-                                    padding: _padding,
-                                    color: index % 2 == 0 ? null : _stripColor,
-                                    child: Checkbox(
-                                      value: _selected.contains(index),
-                                      onChanged: (val) {
-                                        if (val == true) {
-                                          if (!_selected.contains(index)) _selected.add(index);
-                                        } else {
-                                          if (_selected.contains(index)) _selected.remove(index);
-                                        }
-                                        setState(() {});
-                                      },
-                                    ),
-                                  );
+                                  final data = _filteredData[index];
+                                  List<Widget> children = [];
+
+                                  for (final entry in widget.columns.asMap().entries) {
+                                    final header = entry.value;
+                                    final colIndex = entry.key;
+
+                                    String text =
+                                        _itemsStrings[data.hashCode]?[header.hashCode] ?? header.valueBuilder(data);
+
+                                    Widget child;
+                                    if (header.richTextBuilder != null) {
+                                      child = RichText(
+                                        text: TextSpan(
+                                          children: header.richTextBuilder!.call(data),
+                                          style: _style,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      );
+                                    } else {
+                                      child = Text(
+                                        text,
+                                        style: _style,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      );
+                                    }
+
+                                    children.add(
+                                      Material(
+                                        color: index % 2 == 0 ? null : _stripColor,
+                                        child: InkWell(
+                                          onTap: header.onTap != null ? () => header.onTap?.call(data) : null,
+                                          child: Container(
+                                            width: sizes[colIndex]! - (colIndex < widget.columns.length - 1 ? 1 : 0),
+                                            padding: _padding,
+                                            alignment: header.alignment,
+                                            child: child,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                    if (colIndex < widget.columns.length - 1) {
+                                      children.add(const VerticalDivider(width: 1));
+                                    }
+                                  }
+
+                                  return Row(children: children);
                                 },
                               ),
                             ),
                           ),
-                          const VerticalDivider(width: 1),
-                        ],
-
-                        /// Items.value
-                        Expanded(
-                          child: ScrollConfiguration(
-                            behavior: const ScrollBehavior().copyWith(scrollbars: true),
-
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              controller: _horizontalContentController,
-
-                              child: ScrollConfiguration(
-                                behavior: const ScrollBehavior().copyWith(scrollbars: false),
-                                child: SizedBox(
-                                  width: _totalSize,
-                                  child: ListView.builder(
-                                    itemCount: _filteredData.length,
-                                    itemExtent: 50,
-                                    controller: _contentController,
-                                    itemBuilder: (context, index) {
-                                      final data = _filteredData[index];
-
-                                      return Row(
-                                        children: [
-                                          for (final entry in widget.columns.asMap().entries) ...[
-                                            Material(
-                                              color: index % 2 == 0 ? null : _stripColor,
-                                              child: InkWell(
-                                                onTap: entry.value.onTap != null
-                                                    ? () => entry.value.onTap?.call(data.item)
-                                                    : null,
-                                                child: Container(
-                                                  width:
-                                                      _sizes[entry.key] -
-                                                      (entry.key < widget.columns.length - 1 ? 1 : 0),
-                                                  padding: _padding,
-                                                  alignment: entry.value.alignment,
-                                                  child: data.richTextValues[entry.key] != null
-                                                      ? RichText(
-                                                          text: TextSpan(
-                                                            children: data.richTextValues[entry.key],
-                                                            style: _style,
-                                                          ),
-                                                          maxLines: 1,
-                                                        )
-                                                      : Text(
-                                                          data.values[entry.key],
-                                                          style: _style,
-                                                          maxLines: 1,
-                                                        ),
-                                                ),
-                                              ),
-                                            ),
-                                            if (entry.key < _sizes.length - 1) const VerticalDivider(width: 1),
-                                          ],
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
                         ),
-
-                        /// Actions.value
-                        if (widget.hasActions) ...[
-                          const VerticalDivider(width: 1),
-                          SizedBox(
-                            width: _actionSize,
-                            child: ListView.builder(
-                              itemCount: _filteredData.length,
-                              itemExtent: 50,
-                              controller: _actionsController,
-                              itemBuilder: (context, index) {
-                                final data = _filteredData[index];
-                                return Container(
-                                  padding: _padding,
-                                  alignment: Alignment.centerRight,
-                                  color: index % 2 == 0 ? null : _stripColor,
-                                  child: ThemedActionsButtons(
-                                    actions: data.actions,
-                                    mobileBreakpoint: widget.actionsMobileBreakpoint,
-                                    actionPadding: EdgeInsets.only(left: 5),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ],
+                      ),
                     ),
                   ),
-                ],
-              );
-            }
 
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 10),
-                    Text(widget.loadingLabelText, style: Theme.of(context).textTheme.bodyMedium),
+                  /// Actions.value
+                  if (widget.actionsCount > 0) ...[
+                    const VerticalDivider(width: 1),
+                    SizedBox(
+                      width: actionsSize,
+                      child: ListView.builder(
+                        itemCount: _filteredData.length,
+                        itemExtent: 50,
+                        controller: _actionsController,
+                        itemBuilder: (context, index) {
+                          final data = _filteredData[index];
+                          return Container(
+                            padding: _padding,
+                            alignment: Alignment.centerRight,
+                            color: index % 2 == 0 ? null : _stripColor,
+                            child: ThemedActionsButtons(
+                              actions: (widget.actionsBuilder?.call(data) ?? []).map((action) {
+                                if (isMobile) return action;
+                                return action.copyWith(onlyIcon: true);
+                              }).toList(),
+                              mobileBreakpoint: widget.actionsMobileBreakpoint,
+                              actionPadding: _actionsPadding,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
-                ),
+                ],
               ),
-            );
-          },
+            ),
+          ],
         );
       },
     );
   }
 
-  double _computeTextWidth(String text) {
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: _style),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0, maxWidth: double.infinity);
-    return textPainter.size.width + _padding.horizontal;
-  }
+  void _filterAndSort() async {
+    _filteredData = widget.items;
+    debugPrint("layrz_theme/ThemedTable2: Precomputing data...");
+    _itemsStrings = {};
+    for (final item in widget.items) {
+      int rowHashCode = item.hashCode;
+      _itemsStrings[rowHashCode] = {};
 
-  double _computeRichTextWidth(List<InlineSpan> richText) {
-    final filtered = richText.whereType<TextSpan>().toList();
+      for (final col in widget.columns) {
+        final colHashCode = col.hashCode;
+        _itemsStrings[rowHashCode]![colHashCode] = col.valueBuilder(item);
+      }
+    }
 
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(children: filtered, style: _style),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0, maxWidth: double.infinity);
-    return textPainter.size.width + _padding.horizontal;
+    if (_search.isNotEmpty) {
+      debugPrint("layrz_theme/ThemedTable2: Filtering data...");
+      final searchLower = _search.toLowerCase();
+      _filteredData = _filteredData.where((row) {
+        final rowHashCode = row.hashCode;
+        final cols = _itemsStrings[rowHashCode];
+        if (cols == null) return false;
+        for (final entry in cols.entries) {
+          if (entry.value.toLowerCase().contains(searchLower)) return true;
+        }
+        return false;
+      }).toList();
+    }
+
+    debugPrint("layrz_theme/ThemedTable2: Sorting data...");
+    _filteredData.sort(colSelected.customSort ?? _defaultSort);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   void _onSearchChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       _search = value;
-      _filterData();
-      setState(() {});
+      _filterAndSort();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
     });
   }
 
-  void _filterData() {
-    if (_search.isEmpty) {
-      _filteredData = _computedData;
-    } else {
-      _filteredData = _computedData.where((item) {
-        return widget.columns.any((col) => col.valueBuilder(item.item).toLowerCase().contains(_search.toLowerCase()));
-      }).toList();
-    }
-  }
+  int _defaultSort(T a, T b) {
+    final colHashCode = colSelected.hashCode;
+    final rowAHashCode = a.hashCode;
+    final rowBHashCode = b.hashCode;
 
-  Future<void> _sortDataAsync() async {
-    final pairs = _filteredData.map((item) => [colSelected.valueBuilder(item.item), item]).toList();
-    final sortedPairs = await compute(
-      sortPairsInIsolate,
-      {
-        'pairs': pairs,
-        'isReversed': isReversed,
-      },
-    );
-    _filteredData = sortedPairs.map((pair) => pair[1] as _ThemedData<T>).toList();
-  }
-}
+    final valueA = _itemsStrings[rowAHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(a);
+    final valueB = _itemsStrings[rowBHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(b);
 
-List sortPairsInIsolate(Map<String, dynamic> params) {
-  final List pairs = List.from(params['pairs']);
-  final bool isReversed = params['isReversed'];
-
-  int compare(a, b) {
-    final valueA = a[0];
-    final valueB = b[0];
-
-    // Try to parse as number
     final numA = num.tryParse(valueA);
     final numB = num.tryParse(valueB);
     if (numA != null && numB != null) {
-      return isReversed ? numB.compareTo(numA) : numA.compareTo(numB);
+      if (numB == numA) return 0;
+      if (isReversed) {
+        return numB > numA ? 1 : -1;
+      }
+      return numA > numB ? 1 : -1;
     }
 
-    // Try to parse as Duration (format HH:mm:ss)
     Duration? parseDuration(String s) {
       final parts = s.split(':');
       if (parts.length == 3) {
@@ -703,7 +613,4 @@ List sortPairsInIsolate(Map<String, dynamic> params) {
         ? valueB.toLowerCase().compareTo(valueA.toLowerCase())
         : valueA.toLowerCase().compareTo(valueB.toLowerCase());
   }
-
-  pairs.sort(compare);
-  return pairs;
 }
