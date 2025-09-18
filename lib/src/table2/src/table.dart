@@ -54,6 +54,9 @@ class ThemedTable2<T> extends StatefulWidget {
   /// Consider that the list will be appened with the clear button
   final List<ThemedActionButton> multiselectActions;
 
+  /// [multiselectValue] is the value change listener for the multi-select checkbox list.
+  final ValueNotifier<List<T>>? multiselectValue;
+
   const ThemedTable2({
     required this.items,
     required this.columns,
@@ -71,7 +74,18 @@ class ThemedTable2<T> extends StatefulWidget {
     this.multiSelectionTitleText = "Multiple items selected",
     this.multiSelectionContentText = "You have selected multiple items. What do you want to do?",
     this.multiSelectionCancelLabelText = "Clear",
-  }) : assert(columns.length > 0, 'Columns cant be empty');
+    this.multiselectValue,
+  }) : assert(columns.length > 0, 'Columns cant be empty'),
+       assert(actionsCount >= 0, 'Actions count cant be negative'),
+       assert(minColumnWidth > 0, 'Min column width must be greater than 0'),
+       assert(
+         actionsCount == 0 || actionsBuilder != null,
+         'If actionsCount is greater than 0, actionsBuilder must be provided',
+       ),
+       assert(
+         multiselectActions.length > 0 && hasMultiselect && multiselectValue != null,
+         'If hasMultiselect is true, multiselectActions and multiselectValue must be provided',
+       );
 
   @override
   State<ThemedTable2<T>> createState() => _ThemedTable2State<T>();
@@ -565,6 +579,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                     Center(
                       child: SingleChildScrollView(
                         child: Row(
+                          spacing: 5,
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -578,6 +593,16 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                 setState(() {});
                               },
                             ),
+                            ...widget.multiselectActions.map((action) {
+                              return ThemedButton(
+                                labelText: action.labelText,
+                                icon: action.icon,
+                                color: action.color,
+                                onTap: action.onTap,
+                                isLoading: action.isLoading,
+                                isCooldown: action.isCooldown,
+                              );
+                            }),
                           ],
                         ),
                       ),

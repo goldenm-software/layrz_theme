@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.4.0-prerelease4
+
+- Added multi selection support to `ThemedTable2` with `ValueNotifier` to handle the selected items.
+- Updates on `ThemedSnackbar` to prevent issues with multiple snackbars in the queue.
+
 ## 7.4.0-prerelease3
 
 - Added multi selection support to `ThemedTable2` with actions
