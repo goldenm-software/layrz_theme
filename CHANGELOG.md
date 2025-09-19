@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.4.0-prerelease5
+
+- Added external `ValueNotifier` support to `ThemedMapToolbar` to listen to zoom changes externally.
+- New `VxStateUtilsMixin` to handle `VxState` changes in a more generic way.
+
 ## 7.4.0-prerelease4
 
 - Added multi selection support to `ThemedTable2` with `ValueNotifier` to handle the selected items.

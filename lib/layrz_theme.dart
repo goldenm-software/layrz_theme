@@ -30,3 +30,4 @@ export 'src/colorblindness/colorblindness.dart';
 export 'src/alerts/alerts.dart';
 export 'src/chips/chips.dart';
 export 'src/table2/table2.dart';
+export 'src/mixins/mixins.dart';

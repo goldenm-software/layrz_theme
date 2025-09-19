@@ -92,6 +92,9 @@ class ThemedMapToolbar extends StatefulWidget {
   /// [minZoom] defines the minimum zoom level of the map.
   final double minZoom;
 
+  /// [zoomListenable] is a ValueNotifier that notifies when the zoom level changes.
+  final ValueNotifier<double>? zoomListenable;
+
   /// [ThemedMapToolbar] is a widget that builds a toolbar for the map.
   /// The position of the toolbar is on the right-bottom corner of the map but you can change it.
   /// The toolbar is composed by a layer toggler and a zoom in/out buttons.
@@ -142,12 +145,12 @@ class ThemedMapToolbar extends StatefulWidget {
     this.saveLabelText = 'Save',
     this.cancelLabelText = 'Cancel',
     this.enableGoogleStreetView = false,
-
     this.mapKey,
     this.zoomSlider = false,
     required this.animatedMapController,
     this.maxZoom = kMaxZoom,
     this.minZoom = kMinZoom,
+    this.zoomListenable,
   });
 
   @override
@@ -171,14 +174,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     ...fixedButtons,
   ];
 
-  final ValueNotifier<double> _zoomListenable = ValueNotifier<double>(0);
-
-  // bool get _canStreetView =>
-  //     widget.enableGoogleStreetView &&
-  //     _selected?.source == MapSource.google &&
-  //     widget.controller != null &&
-  //     widget.mapController != null &&
-  //     widget.mapKey != null;
+  late ValueNotifier<double> _zoomListenable;
 
   List<ThemedMapButton> get fixedButtons => [
     if (layers.isNotEmpty) ...[
@@ -213,12 +209,8 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   double get _dividerIndent => 4;
 
   Widget get _divider {
-    if (fixedButtons.isEmpty) {
-      return const SizedBox();
-    }
-    if (widget.additionalButtons.isEmpty) {
-      return const SizedBox();
-    }
+    if (fixedButtons.isEmpty) return const SizedBox();
+    if (widget.additionalButtons.isEmpty) return const SizedBox();
 
     return widget.flow == ThemedMapToolbarFlow.horizontal
         ? VerticalDivider(
@@ -324,6 +316,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
   @override
   void initState() {
     super.initState();
+    _zoomListenable = widget.zoomListenable ?? ValueNotifier<double>(0);
 
     final validated = layers.firstWhereOrNull((layer) => layer.id == widget.selectedLayer?.id);
     _selected = validated;
@@ -347,6 +340,13 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
         _selected ??= layers.first;
       }
       _notify();
+    }
+
+    if (oldWidget.zoomListenable != widget.zoomListenable && widget.zoomListenable != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _zoomListenable = widget.zoomListenable!;
+        setState(() {});
+      });
     }
   }
 
