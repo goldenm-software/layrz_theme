@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0-prerelease9
+
+- Some optimizations on `ThemedTable2`, and some props that supports development environment tools.
+
 ## 7.4.0-prerelease8
 
 - Changes on `ThemedCheckboxInput` to support a more compact design when used `ThemedCheckboxInputStyle.asField`.

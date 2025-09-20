@@ -54,6 +54,13 @@ class _InfinityTableViewState extends State<InfinityTableView> {
       body: ThemedTable2<Asset>(
         items: _items,
         actionsCount: 3,
+        multiselectActions: [
+          ThemedActionButton(
+            icon: LayrzIcons.faSolidLayerGroup,
+            labelText: "Multi Test",
+            onTap: () {},
+          ),
+        ],
         actionsBuilder: (Asset item) => [
           ThemedActionButton(
             icon: LayrzIcons.faSolidLayerGroup,

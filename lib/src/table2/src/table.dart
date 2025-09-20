@@ -57,6 +57,16 @@ class ThemedTable2<T> extends StatefulWidget {
   /// [multiselectValue] is the value change listener for the multi-select checkbox list.
   final ValueNotifier<List<T>>? multiselectValue;
 
+  /// [populateDelay] is the delay in milliseconds before populating the table with data.
+  final Duration populateDelay;
+
+  /// [reloadOnDidUpdate] if true, the table will reload its data when the widget is updated.
+  /// This is useful on development stages to see changes on hot reload.
+  /// Defaults to false.
+  ///
+  /// Note: This property is ignored on production builds.
+  final bool reloadOnDidUpdate;
+
   const ThemedTable2({
     required this.items,
     required this.columns,
@@ -75,6 +85,8 @@ class ThemedTable2<T> extends StatefulWidget {
     this.multiSelectionContentText = "You have selected multiple items. What do you want to do?",
     this.multiSelectionCancelLabelText = "Clear",
     this.multiselectValue,
+    this.populateDelay = const Duration(milliseconds: 150),
+    this.reloadOnDidUpdate = false,
   }) : assert(columns.length > 0, 'Columns cant be empty'),
        assert(actionsCount >= 0, 'Actions count cant be negative'),
        assert(minColumnWidth > 0, 'Min column width must be greater than 0'),
@@ -83,8 +95,8 @@ class ThemedTable2<T> extends StatefulWidget {
          'If actionsCount is greater than 0, actionsBuilder must be provided',
        ),
        assert(
-         multiselectActions.length > 0 && hasMultiselect && multiselectValue != null,
-         'If hasMultiselect is true, multiselectActions and multiselectValue must be provided',
+         multiselectActions.length > 0 && hasMultiselect,
+         'If hasMultiselect is true, multiselectActions must be provided',
        );
 
   @override
@@ -148,6 +160,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [isReversed] indicates whether the current sort order is descending (true) or ascending (false).
   bool isReversed = false;
 
+  /// [_isLoading] indicates whether the table is currently loading or computing data.
+  bool _isLoading = false;
+
+  /// [_selectedItems] holds the list of currently selected items in multi-select mode.
   late ValueNotifier<List<T>> _selectedItems;
 
   @override
@@ -166,21 +182,32 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
     _selectedItems = widget.multiselectValue ?? ValueNotifier<List<T>>([]);
 
-    _filterAndSort('INIT_STATE');
+    _filterAndSortAsync('INIT_STATE');
   }
 
   @override
   void didUpdateWidget(covariant ThemedTable2<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     final eq = const DeepCollectionEquality().equals;
-    if (!eq(oldWidget.items, widget.items) ||
-        !eq(oldWidget.columns, widget.columns) ||
-        oldWidget.actionsCount != widget.actionsCount ||
-        oldWidget.canSearch != widget.canSearch ||
-        kDebugMode) {
-      _filterAndSort('DID_UPDATE');
-      WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-    }
+    final bool c1 = !eq(oldWidget.items, widget.items);
+    final bool c2 = !eq(oldWidget.columns, widget.columns);
+    final bool c3 = oldWidget.actionsCount != widget.actionsCount;
+    final bool c4 = oldWidget.canSearch != widget.canSearch;
+    bool c5 = false;
+    if (kDebugMode && widget.reloadOnDidUpdate) c5 = true;
+
+    if (c1 || c2 || c3 || c4 || c5) _filterAndSortAsync('DID_UPDATE');
+  }
+
+  Future<void> _filterAndSortAsync(String source) async {
+    _isLoading = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    await Future.delayed(widget.populateDelay);
+    if (!mounted) return;
+    _filterAndSort(source);
+
+    _isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -199,6 +226,22 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 10),
+            Text(
+              widget.loadingLabelText,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isMobile = constraints.maxWidth < widget.actionsMobileBreakpoint;
@@ -657,9 +700,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     debugPrint("layrz_theme/ThemedTable2: Sorting data...");
     _filteredData.sort(colSelected.customSort ?? _defaultSort);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) setState(() {});
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   void _onSearchChanged(String value) {
