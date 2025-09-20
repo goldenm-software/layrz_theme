@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0-prerelease6
+
+- Changed behavior of multiselection on `ThemedTable2`, now will use internally also the `ValueNotifier` to handle the selected items.
+
 ## 7.4.0-prerelease5
 
 - Added external `ValueNotifier` support to `ThemedMapToolbar` to listen to zoom changes externally.

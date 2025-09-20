@@ -127,9 +127,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [_style] represents the standard text style for the cells
   TextStyle? get _style => Theme.of(context).textTheme.bodyMedium;
 
-  /// [_selected] is the index of the selected column for sorting
-  List<int> _selected = [];
-
   /// [_sortIconSize] is the size of the sort icon
   double get _sortIconSize => 16;
 
@@ -151,8 +148,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [isReversed] indicates whether the current sort order is descending (true) or ascending (false).
   bool isReversed = false;
 
-  /// [_shouldShowActions] indicates whether action buttons should be shown based on selection state.
-  bool _shouldShowActions = false;
+  late ValueNotifier<List<T>> _selectedItems;
 
   @override
   void initState() {
@@ -168,7 +164,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _contentController = _verticalScrollControllerGroup.addAndGet();
     _actionsController = _verticalScrollControllerGroup.addAndGet();
 
-    _filterAndSort();
+    _selectedItems = widget.multiselectValue ?? ValueNotifier<List<T>>([]);
+
+    _filterAndSort('INIT_STATE');
   }
 
   @override
@@ -180,8 +178,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         oldWidget.actionsCount != widget.actionsCount ||
         oldWidget.canSearch != widget.canSearch ||
         kDebugMode) {
-      _filterAndSort();
-      setState(() {});
+      _filterAndSort('DID_UPDATE');
+      WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
     }
   }
 
@@ -283,17 +281,19 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                   if (widget.hasMultiselect) ...[
                     SizedBox(
                       width: 50,
-                      child: Checkbox(
-                        value: _selected.length == widget.items.length && widget.items.isNotEmpty,
-                        onChanged: (val) {
-                          if (val == true) {
-                            _selected = List.generate(widget.items.length, (index) => index);
-                          } else {
-                            _selected = [];
-                          }
-
-                          _shouldShowActions = _selected.isNotEmpty;
-                          setState(() {});
+                      child: ValueListenableBuilder(
+                        valueListenable: _selectedItems,
+                        builder: (context, value, child) {
+                          return Checkbox(
+                            value: value.length == widget.items.length && widget.items.isNotEmpty,
+                            onChanged: (val) {
+                              if (val == true) {
+                                _selectedItems.value = List<T>.from(widget.items);
+                              } else {
+                                _selectedItems.value = [];
+                              }
+                            },
+                          );
                         },
                       ),
                     ),
@@ -327,7 +327,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                       isReversed = false;
                                     }
 
-                                    _filterAndSort();
+                                    _filterAndSort('SORT');
                                   },
                                   child: Container(
                                     width: sizes[index]! - (index < widget.columns.length - 1 ? 1 : 0),
@@ -419,20 +419,25 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                           itemExtent: 50,
                           controller: _multiselectController,
                           itemBuilder: (context, index) {
+                            final item = _filteredData[index];
                             return Container(
                               padding: _padding,
                               color: index % 2 == 0 ? null : _stripColor,
-                              child: Checkbox(
-                                value: _selected.contains(index),
-                                onChanged: (val) {
-                                  if (val == true) {
-                                    if (!_selected.contains(index)) _selected.add(index);
-                                  } else {
-                                    if (_selected.contains(index)) _selected.remove(index);
-                                  }
-
-                                  _shouldShowActions = _selected.isNotEmpty;
-                                  setState(() {});
+                              child: ValueListenableBuilder(
+                                valueListenable: _selectedItems,
+                                builder: (context, value, child) {
+                                  return Checkbox(
+                                    value: value.contains(item),
+                                    onChanged: (val) {
+                                      if (val == true) {
+                                        if (!value.contains(item)) _selectedItems.value = [...value, item];
+                                      } else {
+                                        if (value.contains(item)) {
+                                          _selectedItems.value = value.where((i) => i != item).toList();
+                                        }
+                                      }
+                                    },
+                                  );
                                 },
                               ),
                             );
@@ -555,62 +560,63 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
             // /Content
             // Actions
-            if (_shouldShowActions) ...[
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.all(5),
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).inputDecorationTheme.fillColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      widget.multiSelectionTitleText,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                      maxLines: 1,
-                    ),
-                    Text(
-                      widget.multiSelectionContentText,
-                      maxLines: 1,
-                    ),
-                    const SizedBox(height: 10),
-                    Center(
-                      child: SingleChildScrollView(
-                        child: Row(
-                          spacing: 5,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ThemedButton(
-                              labelText: widget.multiSelectionCancelLabelText,
-                              color: Colors.orange,
-                              icon: LayrzIcons.solarOutlineEraser,
-                              onTap: () {
-                                _selected = [];
-                                _shouldShowActions = false;
-                                setState(() {});
-                              },
-                            ),
-                            ...widget.multiselectActions.map((action) {
-                              return ThemedButton(
-                                labelText: action.labelText,
-                                icon: action.icon,
-                                color: action.color,
-                                onTap: action.onTap,
-                                isLoading: action.isLoading,
-                                isCooldown: action.isCooldown,
-                              );
-                            }),
-                          ],
+            ValueListenableBuilder(
+              valueListenable: _selectedItems,
+              builder: (context, value, child) {
+                if (value.isEmpty) return const SizedBox.shrink();
+
+                return Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).inputDecorationTheme.fillColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.multiSelectionTitleText,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                      ),
+                      Text(
+                        widget.multiSelectionContentText,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: SingleChildScrollView(
+                          child: Row(
+                            spacing: 5,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ThemedButton(
+                                labelText: widget.multiSelectionCancelLabelText,
+                                color: Colors.orange,
+                                icon: LayrzIcons.solarOutlineEraser,
+                                onTap: () => _selectedItems.value = [],
+                              ),
+                              ...widget.multiselectActions.map((action) {
+                                return ThemedButton(
+                                  labelText: action.labelText,
+                                  icon: action.icon,
+                                  color: action.color,
+                                  onTap: action.onTap,
+                                  isLoading: action.isLoading,
+                                  isCooldown: action.isCooldown,
+                                );
+                              }),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                    ],
+                  ),
+                );
+              },
+            ),
             // /Actions
           ],
         );
@@ -618,9 +624,11 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     );
   }
 
-  void _filterAndSort() async {
+  void _filterAndSort(String source) async {
     _filteredData = widget.items;
-    debugPrint("layrz_theme/ThemedTable2: Precomputing data...");
+    if (widget.items.isEmpty) return;
+
+    debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
     _itemsStrings = {};
     for (final item in widget.items) {
       int rowHashCode = item.hashCode;
@@ -658,7 +666,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       _search = value;
-      _filterAndSort();
+      _filterAndSort('SEARCH');
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) setState(() {});

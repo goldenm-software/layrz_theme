@@ -366,7 +366,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.4.0-prerelease4"
+    version: "7.4.0-prerelease6"
   leak_tracker:
     dependency: transitive
     description:
