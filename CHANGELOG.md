@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.4.0-prerelease8
+
+- Changes on `ThemedCheckboxInput` to support a more compact design when used `ThemedCheckboxInputStyle.asField`.
+- Changed default value of `ThemedCheckboxInput.style` to `ThemedCheckboxInputStyle.asFlutterCheckbox` instead of `ThemedCheckboxInputStyle.asCheckbox2` to avoid some issues of performance on high number of checkboxes.
+
 ## 7.4.0-prerelease7
 
 - Updated `ThemedDurationInput` to be precise on sizing, and allow two col selectors

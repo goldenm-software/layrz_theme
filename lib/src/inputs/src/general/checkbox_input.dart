@@ -61,7 +61,7 @@ class ThemedCheckboxInput extends StatefulWidget {
     this.hideDetails = false,
     this.padding = const EdgeInsets.all(10),
     this.dense = false,
-    this.style = ThemedCheckboxInputStyle.asCheckbox2,
+    this.style = ThemedCheckboxInputStyle.asFlutterCheckbox,
   }) : assert(label == null || labelText == null);
 
   @override
@@ -122,6 +122,8 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
       enableSearch: false,
       hideTitle: true,
       hideButtons: true,
+      overrideHeightDialog: 120,
+
       items: [
         ThemedSelectItem(
           value: true,
