@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0-prerelease7
+
+- Updated `ThemedDurationInput` to be precise on sizing, and allow two col selectors
+
 ## 7.4.0-prerelease6
 
 - Changed behavior of multiselection on `ThemedTable2`, now will use internally also the `ValueNotifier` to handle the selected items.

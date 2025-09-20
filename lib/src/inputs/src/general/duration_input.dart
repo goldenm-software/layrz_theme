@@ -1,5 +1,12 @@
 part of '../../inputs.dart';
 
+const kThemedDurationSupported = [
+  ThemedUnits.day,
+  ThemedUnits.hour,
+  ThemedUnits.minute,
+  ThemedUnits.second,
+];
+
 class ThemedDurationInput extends StatefulWidget {
   /// [value] is the value of the input
   final Duration? value;
@@ -32,7 +39,7 @@ class ThemedDurationInput extends StatefulWidget {
   final List<ThemedUnits> visibleValues;
 
   /// [ThemedDurationInput] is a duration input.
-  const ThemedDurationInput({
+  ThemedDurationInput({
     super.key,
     this.value,
     this.onChanged,
@@ -43,13 +50,12 @@ class ThemedDurationInput extends StatefulWidget {
     this.prefixIcon,
     this.padding,
     this.disabled = false,
-    this.visibleValues = const [
-      ThemedUnits.day,
-      ThemedUnits.hour,
-      ThemedUnits.minute,
-      ThemedUnits.second,
-    ],
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+    this.visibleValues = kThemedDurationSupported,
+  }) : assert((label == null && labelText != null) || (label != null && labelText == null)),
+       assert(
+         visibleValues.every(kThemedDurationSupported.contains),
+         'The visible values provided has an unsupported value',
+       );
 
   @override
   State<ThemedDurationInput> createState() => _ThemedDurationInputState();
@@ -111,24 +117,62 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
         int minutes = value == null ? 0 : value!.inMinutes % 60;
         int seconds = value == null ? 0 : value!.inSeconds % 60;
 
-        double height = 0;
-
-        if (visibleValues.contains(ThemedUnits.day)) height += 80 + 10;
-        if (visibleValues.contains(ThemedUnits.hour)) height += 80 + 10;
-        if (visibleValues.contains(ThemedUnits.minute)) height += 80 + 10;
-        if (visibleValues.contains(ThemedUnits.second)) height += 80;
-
-        height += 100;
-
         bool isMobile = MediaQuery.of(context).size.width < kSmallGrid;
 
         return StatefulBuilder(
           builder: (context, setState) {
+            List<ResponsiveCol> items = [];
+
+            Sizes size = Sizes.col12;
+            if (visibleValues.length >= 2) {
+              size = Sizes.col6;
+            }
+
+            for (final entry in visibleValues.asMap().entries) {
+              final visibleValue = entry.value;
+              final index = entry.key;
+
+              Sizes? overrideSize;
+              if (index == visibleValues.length - 1 && index % 2 == 0) overrideSize = Sizes.col12;
+
+              items.add(
+                ResponsiveCol(
+                  xs: overrideSize ?? size,
+                  child: ThemedNumberInput(
+                    padding: const EdgeInsets.all(5),
+                    labelText: visibleValue.translate(i18n),
+                    suffixText: visibleValue.translate(i18n),
+                    value: days,
+                    hideDetails: true,
+                    onChanged: (value) {
+                      if (value == null) return;
+                      if (value < 0) return;
+                      switch (visibleValue) {
+                        case ThemedUnits.day:
+                          days = value.toInt();
+                          break;
+                        case ThemedUnits.hour:
+                          hours = value.toInt();
+                          break;
+                        case ThemedUnits.minute:
+                          minutes = value.toInt();
+                          break;
+                        case ThemedUnits.second:
+                          seconds = value.toInt();
+                          break;
+                        default:
+                          break;
+                      }
+                      setState(() {});
+                    },
+                  ),
+                ),
+              );
+            }
+
             return Dialog(
               backgroundColor: Colors.transparent,
               child: Container(
-                height: height,
-                width: MediaQuery.of(context).size.width * 0.8,
                 constraints: const BoxConstraints(maxWidth: 400),
                 padding: const EdgeInsets.all(20),
                 decoration: generateContainerElevation(context: context, elevation: 3),
@@ -144,109 +188,45 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                           ),
                         ),
                     const SizedBox(height: 10),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            if (visibleValues.contains(ThemedUnits.day)) ...[
-                              ThemedNumberInput(
-                                labelText: i18n?.t('helpers.days') ?? 'Days',
-                                suffixText: i18n?.t('helpers.days') ?? 'Days',
-                                value: days,
-                                hideDetails: true,
-                                onChanged: (value) {
-                                  if (value == null) return;
-                                  if (value < 0) return;
-                                  setState(() => days = value.toInt());
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                            if (visibleValues.contains(ThemedUnits.hour)) ...[
-                              ThemedNumberInput(
-                                labelText: i18n?.t('helpers.hours') ?? 'Hours',
-                                suffixText: i18n?.t('helpers.hours') ?? 'Hours',
-                                value: hours,
-                                hideDetails: true,
-                                onChanged: (value) {
-                                  if (value == null) return;
-                                  if (value < 0) return;
-                                  setState(() => hours = value.toInt());
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                            if (visibleValues.contains(ThemedUnits.minute)) ...[
-                              ThemedNumberInput(
-                                labelText: i18n?.t('helpers.minutes') ?? 'Minutes',
-                                suffixText: i18n?.t('helpers.minutes') ?? 'Minutes',
-                                value: minutes,
-                                hideDetails: true,
-                                onChanged: (value) {
-                                  if (value == null) return;
-                                  if (value < 0) return;
-                                  setState(() => minutes = value.toInt());
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                            if (visibleValues.contains(ThemedUnits.second))
-                              ThemedNumberInput(
-                                labelText: i18n?.t('helpers.seconds') ?? 'Seconds',
-                                suffixText: i18n?.t('helpers.seconds') ?? 'Seconds',
-                                value: seconds,
-                                hideDetails: true,
-                                onChanged: (value) {
-                                  if (value == null) return;
-                                  if (value < 0) return;
-                                  setState(() => seconds = value.toInt());
-                                },
-                              ),
-                          ],
+                    ResponsiveRow(children: items),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ThemedButton.cancel(
+                          isMobile: isMobile,
+                          labelText: i18n?.t('actions.cancel') ?? 'Cancel',
+                          onTap: () => Navigator.of(context).pop(),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ThemedButton.cancel(
-                            isMobile: isMobile,
-                            labelText: i18n?.t('actions.cancel') ?? 'Cancel',
-                            onTap: () => Navigator.of(context).pop(),
-                          ),
-                          ThemedButton(
-                            style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
-                            icon: LayrzIcons.solarOutlineRefreshSquare,
-                            color: Colors.orange,
-                            labelText: i18n?.t('actions.reset') ?? 'Reset',
-                            onTap: () {
-                              setState(() {
-                                days = 0;
-                                hours = 0;
-                                minutes = 0;
-                                seconds = 0;
-                              });
-                            },
-                          ),
-                          ThemedButton.save(
-                            isMobile: isMobile,
-                            labelText: i18n?.t('actions.save') ?? 'Save',
-                            onTap: () {
-                              Navigator.of(context).pop(
-                                _parseDuration(
-                                  days: days,
-                                  hours: hours,
-                                  minutes: minutes,
-                                  seconds: seconds,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                        ThemedButton(
+                          style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+                          icon: LayrzIcons.solarOutlineRefreshSquare,
+                          color: Colors.orange,
+                          labelText: i18n?.t('actions.reset') ?? 'Reset',
+                          onTap: () {
+                            setState(() {
+                              days = 0;
+                              hours = 0;
+                              minutes = 0;
+                              seconds = 0;
+                            });
+                          },
+                        ),
+                        ThemedButton.save(
+                          isMobile: isMobile,
+                          labelText: i18n?.t('actions.save') ?? 'Save',
+                          onTap: () {
+                            Navigator.of(context).pop(
+                              _parseDuration(
+                                days: days,
+                                hours: hours,
+                                minutes: minutes,
+                                seconds: seconds,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -291,5 +271,28 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
       minutes: minutes,
       seconds: seconds,
     );
+  }
+}
+
+extension ThemedUnitTranslation on ThemedUnits {
+  String translate(LayrzAppLocalizations? i18n) {
+    switch (this) {
+      case ThemedUnits.year:
+        return i18n?.t('helpers.year') ?? 'Year';
+      case ThemedUnits.month:
+        return i18n?.t('helpers.month') ?? 'Months';
+      case ThemedUnits.week:
+        return i18n?.t('helpers.weeks') ?? 'Weeks';
+      case ThemedUnits.day:
+        return i18n?.t('helpers.days') ?? 'Days';
+      case ThemedUnits.hour:
+        return i18n?.t('helpers.hours') ?? 'Hours';
+      case ThemedUnits.minute:
+        return i18n?.t('helpers.minutes') ?? 'Minutes';
+      case ThemedUnits.second:
+        return i18n?.t('helpers.seconds') ?? 'Seconds';
+      case ThemedUnits.millisecond:
+        return i18n?.t('helpers.milliseconds') ?? 'Milliseconds';
+    }
   }
 }
