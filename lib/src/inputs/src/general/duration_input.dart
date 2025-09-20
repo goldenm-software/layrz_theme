@@ -142,7 +142,13 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                     padding: const EdgeInsets.all(5),
                     labelText: visibleValue.translate(i18n),
                     suffixText: visibleValue.translate(i18n),
-                    value: days,
+                    value: switch (visibleValue) {
+                      ThemedUnits.day => days,
+                      ThemedUnits.hour => hours,
+                      ThemedUnits.minute => minutes,
+                      ThemedUnits.second => seconds,
+                      _ => 0,
+                    },
                     hideDetails: true,
                     onChanged: (value) {
                       if (value == null) return;
@@ -248,11 +254,13 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
   String _getFormattedDuration(Duration? durationValue) {
     if (durationValue == null) return '';
 
+    String conjunction = i18n?.t('helpers.and') ?? 'and';
+    conjunction = ' ${conjunction.trim()} ';
     return durationValue.humanize(
       options: ThemedHumanizeOptions(
         units: visibleValues,
         spacer: ' ',
-        conjunction: i18n?.t('helpers.and') ?? ' and ',
+        conjunction: conjunction,
       ),
       language: ThemedHumanizedDurationLanguage(i18n: i18n),
     );
