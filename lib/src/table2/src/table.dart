@@ -95,7 +95,7 @@ class ThemedTable2<T> extends StatefulWidget {
          'If actionsCount is greater than 0, actionsBuilder must be provided',
        ),
        assert(
-         multiselectActions.length > 0 && hasMultiselect,
+         (multiselectActions.length > 0 && hasMultiselect) || !hasMultiselect,
          'If hasMultiselect is true, multiselectActions must be provided',
        );
 

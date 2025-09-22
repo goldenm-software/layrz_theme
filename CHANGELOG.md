@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0-prerelease10
+
+- Fixed an issue with the `assert` in `ThemedTable2` that was causing issues when `multiselectActions` is empty and `hasMultiselect` is false.
+
 ## 7.4.0-prerelease9
 
 - Some optimizations on `ThemedTable2`, and some props that supports development environment tools.
