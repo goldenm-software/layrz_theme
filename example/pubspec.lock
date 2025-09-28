@@ -360,13 +360,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.30"
+  layrz_state:
+    dependency: "direct main"
+    description:
+      name: layrz_state
+      sha256: e3c4c433990442b7b9b083293218f7b4be6d7a336cc95016b0225ac5d06dc816
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1+1"
   layrz_theme:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "7.4.0-prerelease10"
+    version: "7.4.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -940,14 +948,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.0.2"
-  vxstate:
-    dependency: "direct main"
-    description:
-      name: vxstate
-      sha256: ed5a880018191c5cfed8528bd77f2a942b04847168ca12636a306c323d311086
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.0"
   web:
     dependency: transitive
     description:

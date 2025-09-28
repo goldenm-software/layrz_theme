@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0
+
+- Stable release of 7.4.0 with all the prerelease changes included.
+
 ## 7.4.0-prerelease10
 
 - Fixed an issue with the `assert` in `ThemedTable2` that was causing issues when `multiselectActions` is empty and `hasMultiselect` is false.

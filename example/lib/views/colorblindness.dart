@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/store/store.dart';
-import 'package:vxstate/vxstate.dart';
+import 'package:layrz_state/layrz_state.dart';
 
 const kCode = '''
 return ColorFiltered(
@@ -30,7 +30,7 @@ class ColorblindnessView extends StatefulWidget {
 }
 
 class _ColorblindnessViewState extends State<ColorblindnessView> {
-  AppStore get store => VxState.store as AppStore;
+  AppStore get store => LayrzState.store as AppStore;
 
   @override
   Widget build(BuildContext context) {

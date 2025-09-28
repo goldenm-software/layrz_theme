@@ -7,7 +7,7 @@ import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vxstate/vxstate.dart';
+import 'package:layrz_state/layrz_state.dart';
 
 const font = AppFont(source: FontSource.google, name: 'Ubuntu');
 Future<void> main() async {
@@ -41,7 +41,7 @@ Future<void> main() async {
   }
 
   runApp(
-    VxState(
+    LayrzState(
       store: AppStore(
         themeMode: themeMode ?? ThemeMode.system,
         mapboxToken: mapboxToken,
@@ -65,11 +65,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return VxConsumer<AppStore>(
+    return StateConsumer<AppStore>(
       mutations: const {SetColorblindMode, SetColorblindStrength, SetTheme},
       notifications: {
         SetTheme: (context, mutation, {status}) {
-          if (status == VxStatus.success) {
+          if (status == StateStatus.success) {
             setState(() {});
             WidgetsBinding.instance.addPostFrameCallback((_) {
               final mut = mutation as SetTheme;

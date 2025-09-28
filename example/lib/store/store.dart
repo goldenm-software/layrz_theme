@@ -7,11 +7,11 @@ import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:vxstate/vxstate.dart';
+import 'package:layrz_state/layrz_state.dart';
 
 part 'wrapper.dart';
 
-class AppStore extends VxStore {
+class AppStore extends LayrzStore {
   ThemeMode themeMode;
   ThemedLayoutStyle layoutStyle = ThemedLayoutStyle.mini;
   String? mapboxToken;
@@ -65,7 +65,7 @@ class AppStore extends VxStore {
   ];
 }
 
-class SetTheme extends VxMutation<AppStore> {
+class SetTheme extends StateMutation<AppStore> {
   final ThemeMode themeMode;
 
   SetTheme(this.themeMode);
@@ -79,7 +79,7 @@ class SetTheme extends VxMutation<AppStore> {
   }
 }
 
-class GetTheme extends VxMutation<AppStore> {
+class GetTheme extends StateMutation<AppStore> {
   @override
   Future<void> perform() async {
     final prefs = await SharedPreferences.getInstance();
@@ -93,7 +93,7 @@ class GetTheme extends VxMutation<AppStore> {
   }
 }
 
-class SetLayout extends VxMutation<AppStore> {
+class SetLayout extends StateMutation<AppStore> {
   final ThemedLayoutStyle layoutStyle;
 
   SetLayout(this.layoutStyle);
@@ -107,7 +107,7 @@ class SetLayout extends VxMutation<AppStore> {
   }
 }
 
-class GetLayout extends VxMutation<AppStore> {
+class GetLayout extends StateMutation<AppStore> {
   @override
   Future<void> perform() async {
     final prefs = await SharedPreferences.getInstance();
@@ -121,7 +121,7 @@ class GetLayout extends VxMutation<AppStore> {
   }
 }
 
-class SetColorblindMode extends VxMutation<AppStore> {
+class SetColorblindMode extends StateMutation<AppStore> {
   final ColorblindMode colorblindMode;
 
   SetColorblindMode(this.colorblindMode);
@@ -135,7 +135,7 @@ class SetColorblindMode extends VxMutation<AppStore> {
   }
 }
 
-class SetColorblindStrength extends VxMutation<AppStore> {
+class SetColorblindStrength extends StateMutation<AppStore> {
   final double colorblindStrength;
 
   SetColorblindStrength(this.colorblindStrength);

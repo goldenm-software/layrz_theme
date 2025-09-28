@@ -11,7 +11,7 @@ class MapLayerView extends StatefulWidget {
 
 class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMixin {
   late AnimatedMapController _mapController;
-  AppStore get store => VxState.store as AppStore;
+  AppStore get store => LayrzState.store as AppStore;
   List<MapLayer> get layers => store.availableLayers;
   MapLayer? selectedLayer;
   final ThemedMapController _controller = ThemedMapController();

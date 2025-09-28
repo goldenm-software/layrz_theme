@@ -10,7 +10,7 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  AppStore get store => VxState.store as AppStore;
+  AppStore get store => LayrzState.store as AppStore;
   ThemedLayoutStyle get layoutStyle => store.layoutStyle;
 
   AppThemedAsset get logo => const AppThemedAsset(
