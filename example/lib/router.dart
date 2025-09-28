@@ -108,6 +108,10 @@ final goRoutes = [
     path: '/table/basic',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const BasicTableView()),
   ),
+  GoRoute(
+    path: '/table/infinite',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const InfinityTableView()),
+  ),
 
   // Tooltip
   GoRoute(
@@ -137,7 +141,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/alerts' : '/',
+  initialLocation: kDebugMode ? '/table/infinite' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

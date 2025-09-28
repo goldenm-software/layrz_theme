@@ -2,7 +2,12 @@ name: Publish to pub.dev
 
 on:
   push:
-    branches: [ "main" ]
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-dev[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-alpha[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-beta[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-prerelease[0-9]+'
 
 permissions:
   contents: read
@@ -15,7 +20,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/goldenm-software/flutter-web-builder:x86-flutter3.32.0-uv-python3.13
+      image: ghcr.io/goldenm-software/flutter-web-builder:flutter3.35.3-uv-python3.13
       options: --user root
       credentials:
         username: ${{ github.repository_owner }}
@@ -27,6 +32,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Get tag version
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Authenticate
         run: |
@@ -43,7 +52,7 @@ jobs:
   buils-site:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/goldenm-software/flutter-web-builder:x86-flutter3.32.0-uv-python3.13
+      image: ghcr.io/goldenm-software/flutter-web-builder:flutter3.35.3-uv-python3.13
       options: --user root
       credentials:
         username: ${{ github.repository_owner }}

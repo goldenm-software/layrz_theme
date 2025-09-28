@@ -1,14 +1,72 @@
 # Changelog
 
+## 7.4.0
+
+- Stable release of 7.4.0 with all the prerelease changes included.
+
+## 7.4.0-prerelease10
+
+- Fixed an issue with the `assert` in `ThemedTable2` that was causing issues when `multiselectActions` is empty and `hasMultiselect` is false.
+
+## 7.4.0-prerelease9
+
+- Some optimizations on `ThemedTable2`, and some props that supports development environment tools.
+
+## 7.4.0-prerelease8
+
+- Changes on `ThemedCheckboxInput` to support a more compact design when used `ThemedCheckboxInputStyle.asField`.
+- Changed default value of `ThemedCheckboxInput.style` to `ThemedCheckboxInputStyle.asFlutterCheckbox` instead of `ThemedCheckboxInputStyle.asCheckbox2` to avoid some issues of performance on high number of checkboxes.
+
+## 7.4.0-prerelease7
+
+- Updated `ThemedDurationInput` to be precise on sizing, and allow two col selectors
+
+## 7.4.0-prerelease6
+
+- Changed behavior of multiselection on `ThemedTable2`, now will use internally also the `ValueNotifier` to handle the selected items.
+
+## 7.4.0-prerelease5
+
+- Added external `ValueNotifier` support to `ThemedMapToolbar` to listen to zoom changes externally.
+- New `VxStateUtilsMixin` to handle `VxState` changes in a more generic way.
+
+## 7.4.0-prerelease4
+
+- Added multi selection support to `ThemedTable2` with `ValueNotifier` to handle the selected items.
+- Updates on `ThemedSnackbar` to prevent issues with multiple snackbars in the queue.
+
+## 7.4.0-prerelease3
+
+- Added multi selection support to `ThemedTable2` with actions
+- Fixes on `ThemedMapToolbar` to prevent oversize.
+
+## 7.4.0-prerelease2
+
+- Massive changes on `ThemedTable2` to improve performance and reduce the number of `setState`s.
+- Changes on `ThemedMapToolbar` to now depend on `AnimatedMapController` from `flutter_map_animations`.
+
+## 7.4.0-prerelease1
+
+- Small adjustments on `ThemedTable2` to prevent actions to be non `onlyIcon`
+- Renamed from `additionalActions` to `actionsBuilder` on `ThemedTable2` to be more descriptive
+
+## 7.4.0-beta1
+
+- Fix generateContainerElevation in dark mode
+- Add `ThemedTable2` with `ThemedColum2` to support infinity items
+
 ## 7.3.12
+
 - Updated `ThemedPlatform` to use `defaultTargetPlatform` instead of `Platform` to prevent issues on native builds.
 - Added `useViewInsetsBottom` property to `ThemedSnackbarMessenger` to allow the snackbar to consider the virtual keyboard height when showing the snackbar on mobile devices.
 
 ## 7.3.11
+
 - Removed dependency on `flutter_map_cancellable_tile_provider` due to deprecation
 - Updated `flutter_map` to `8.2.1` and updated `ThemedTileLayer` accordingly
 
 ## 7.3.10
+
 - Rework `ThemedSelectInput` to support `canUnselect`, `returnNullOnClose` and `autoClose`
 
 ## 7.3.9

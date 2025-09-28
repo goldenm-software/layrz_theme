@@ -1,0 +1,764 @@
+part of '../table2.dart';
+
+class ThemedTable2<T> extends StatefulWidget {
+  /// [items] is the list of data objects to display in the table.
+  final List<T> items;
+
+  /// [columns] defines the columns of the table, including their headers and value builders.
+  final List<ThemedColumn2<T>> columns;
+
+  /// [actionsBuilder] is an optional function that returns a list of action buttons for each item.
+  final List<ThemedActionButton> Function(T item)? actionsBuilder;
+
+  /// [actionsMobileBreakpoint] sets the screen width at which the actions column switches to mobile layout.
+  final double actionsMobileBreakpoint;
+
+  /// [headerHeight] sets the height of the table header row.
+  final double headerHeight;
+
+  /// [actionsLabelText] is the label shown for the actions column.
+  final String actionsLabelText;
+
+  /// [hasMultiselect] enables or disables the multi-select checkbox column.
+  final bool hasMultiselect;
+
+  /// [actionsCount] is the maximum number of actions per row. if you expect 5 actions in a single row, the expected
+  /// value is 5.
+  ///
+  /// If the supplied value is 0, it will be ignored as column.
+  final int actionsCount;
+
+  /// [loadingLabelText] is the text shown while the table is loading or computing data.
+  final String loadingLabelText;
+
+  /// [canSearch] enables or disables the search input above the table.
+  final bool canSearch;
+
+  /// [minColumnWidth] sets the minimum width for each column when calculating flexible widths.
+  final double minColumnWidth;
+
+  /// [multiSelectionTitleText] replaces the text of the multi selection title.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionTitleText;
+
+  /// [multiSelectionContentText] replaces the text of the multi selection content.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionContentText;
+
+  /// [multiSelectionCancelLabelText] replaces the text of the multi selection cancel button.
+  /// This property only will work when `LayrzAppLocalizations` is null.
+  final String multiSelectionCancelLabelText;
+
+  /// [multiselectActions] is a list of action buttons that will be shown when one or more items are selected.
+  ///
+  /// Consider that the list will be appened with the clear button
+  final List<ThemedActionButton> multiselectActions;
+
+  /// [multiselectValue] is the value change listener for the multi-select checkbox list.
+  final ValueNotifier<List<T>>? multiselectValue;
+
+  /// [populateDelay] is the delay in milliseconds before populating the table with data.
+  final Duration populateDelay;
+
+  /// [reloadOnDidUpdate] if true, the table will reload its data when the widget is updated.
+  /// This is useful on development stages to see changes on hot reload.
+  /// Defaults to false.
+  ///
+  /// Note: This property is ignored on production builds.
+  final bool reloadOnDidUpdate;
+
+  const ThemedTable2({
+    required this.items,
+    required this.columns,
+    super.key,
+    this.actionsBuilder,
+    this.actionsMobileBreakpoint = kSmallGrid,
+    this.headerHeight = 40,
+    this.actionsLabelText = "Actions",
+    this.hasMultiselect = true,
+    this.actionsCount = 0,
+    this.loadingLabelText = "Computing data, please wait...",
+    this.canSearch = true,
+    this.minColumnWidth = 250,
+    this.multiselectActions = const [],
+    this.multiSelectionTitleText = "Multiple items selected",
+    this.multiSelectionContentText = "You have selected multiple items. What do you want to do?",
+    this.multiSelectionCancelLabelText = "Clear",
+    this.multiselectValue,
+    this.populateDelay = const Duration(milliseconds: 150),
+    this.reloadOnDidUpdate = false,
+  }) : assert(columns.length > 0, 'Columns cant be empty'),
+       assert(actionsCount >= 0, 'Actions count cant be negative'),
+       assert(minColumnWidth > 0, 'Min column width must be greater than 0'),
+       assert(
+         actionsCount == 0 || actionsBuilder != null,
+         'If actionsCount is greater than 0, actionsBuilder must be provided',
+       ),
+       assert(
+         (multiselectActions.length > 0 && hasMultiselect) || !hasMultiselect,
+         'If hasMultiselect is true, multiselectActions must be provided',
+       );
+
+  @override
+  State<ThemedTable2<T>> createState() => _ThemedTable2State<T>();
+}
+
+class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+
+  /// [_stripColor] represents the color of the strip item.
+  Color get _stripColor => isDark ? Colors.grey.shade900 : Colors.grey.shade100;
+
+  /// [_verticalScrollControllerGroup] groups the vertical scroll controllers
+  late final SyncScrollControllerGroup _verticalScrollControllerGroup;
+
+  /// [_multiselectController] controls the multi-select checkbox list scroll
+  late final ScrollController _multiselectController;
+
+  /// [_contentController] controls the main content scroll
+  late final ScrollController _contentController;
+
+  /// [_actionsController] controls the actions scroll
+  late final ScrollController _actionsController;
+
+  /// [_horizontalScrollControllerGroup] groups the horizontal scroll controllers
+  late final SyncScrollControllerGroup _horizontalScrollControllerGroup;
+
+  /// [_horizontalHeaderController] controls the horizontal scroll
+  late final ScrollController _horizontalHeaderController;
+
+  /// [_horizontalContentController] controls the horizontal scroll
+  late final ScrollController _horizontalContentController;
+
+  /// [_padding] represents the standard padding for the cells
+  EdgeInsets get _padding => const EdgeInsets.symmetric(horizontal: 10);
+
+  /// [_actionsPadding] represents the standard padding for the action cells
+  EdgeInsets get _actionsPadding => const EdgeInsets.only(left: 5);
+
+  /// [_style] represents the standard text style for the cells
+  TextStyle? get _style => Theme.of(context).textTheme.bodyMedium;
+
+  /// [_sortIconSize] is the size of the sort icon
+  double get _sortIconSize => 16;
+
+  /// [_search] holds the current search query used to filter items.
+  String _search = '';
+
+  /// [_filteredData] holds the filtered and sorted data currently displayed in the table.
+  List<T> _filteredData = [];
+
+  /// [_itemsStrings] holds a precomputed list of string representations of the items for efficient searching.
+  Map<int, Map<int, String>> _itemsStrings = {};
+
+  /// [colSelected] is the currently selected column used for sorting.
+  late ThemedColumn2<T> colSelected;
+
+  /// [_debounce] is a timer used to debounce the search input.
+  Timer? _debounce;
+
+  /// [isReversed] indicates whether the current sort order is descending (true) or ascending (false).
+  bool isReversed = false;
+
+  /// [_isLoading] indicates whether the table is currently loading or computing data.
+  bool _isLoading = false;
+
+  /// [_selectedItems] holds the list of currently selected items in multi-select mode.
+  late ValueNotifier<List<T>> _selectedItems;
+
+  @override
+  void initState() {
+    super.initState();
+    colSelected = widget.columns.first;
+
+    _horizontalScrollControllerGroup = SyncScrollControllerGroup();
+    _horizontalContentController = _horizontalScrollControllerGroup.addAndGet();
+    _horizontalHeaderController = _horizontalScrollControllerGroup.addAndGet();
+
+    _verticalScrollControllerGroup = SyncScrollControllerGroup();
+    _multiselectController = _verticalScrollControllerGroup.addAndGet();
+    _contentController = _verticalScrollControllerGroup.addAndGet();
+    _actionsController = _verticalScrollControllerGroup.addAndGet();
+
+    _selectedItems = widget.multiselectValue ?? ValueNotifier<List<T>>([]);
+
+    _filterAndSortAsync('INIT_STATE');
+  }
+
+  @override
+  void didUpdateWidget(covariant ThemedTable2<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final eq = const DeepCollectionEquality().equals;
+    final bool c1 = !eq(oldWidget.items, widget.items);
+    final bool c2 = !eq(oldWidget.columns, widget.columns);
+    final bool c3 = oldWidget.actionsCount != widget.actionsCount;
+    final bool c4 = oldWidget.canSearch != widget.canSearch;
+    bool c5 = false;
+    if (kDebugMode && widget.reloadOnDidUpdate) c5 = true;
+
+    if (c1 || c2 || c3 || c4 || c5) _filterAndSortAsync('DID_UPDATE');
+  }
+
+  Future<void> _filterAndSortAsync(String source) async {
+    _isLoading = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    await Future.delayed(widget.populateDelay);
+    if (!mounted) return;
+    _filterAndSort(source);
+
+    _isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+
+    _multiselectController.dispose();
+    _contentController.dispose();
+    _actionsController.dispose();
+
+    _horizontalHeaderController.dispose();
+    _horizontalContentController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 10),
+            Text(
+              widget.loadingLabelText,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isMobile = constraints.maxWidth < widget.actionsMobileBreakpoint;
+        Map<int, double> sizes = {};
+        double actionsSize;
+        if (isMobile) {
+          actionsSize = ThemedButton.defaultHeight + _padding.horizontal;
+        } else {
+          actionsSize = widget.actionsCount * (ThemedButton.defaultHeight + _actionsPadding.horizontal);
+          actionsSize += _padding.horizontal;
+        }
+
+        double maxWidth = constraints.maxWidth;
+        if (widget.hasMultiselect) {
+          maxWidth -= 50;
+          maxWidth -= 1; // Divider
+        }
+        if (widget.actionsCount > 0) {
+          maxWidth -= actionsSize;
+          maxWidth -= 1; // Divider
+        }
+
+        double availableWidth = maxWidth;
+
+        int fixedColumns = 0;
+        for (final entry in widget.columns.asMap().entries) {
+          final col = entry.value;
+
+          if (col.width != null) {
+            fixedColumns++;
+            sizes[entry.key] = col.width! - 1; // Divider
+            availableWidth -= col.width! - 1; // Divider
+          }
+        }
+
+        int flexColumns = widget.columns.length - fixedColumns;
+        double flexWidth = flexColumns > 0 ? availableWidth / flexColumns : 0;
+        if (flexWidth < widget.minColumnWidth) flexWidth = widget.minColumnWidth;
+
+        for (final entry in widget.columns.asMap().entries) {
+          final col = entry.value;
+
+          if (col.width == null) {
+            sizes[entry.key] = flexWidth - 1; // Divider
+          }
+        }
+
+        return Column(
+          children: [
+            // Search
+            if (widget.canSearch) ...[
+              SizedBox(
+                width: double.infinity,
+                child: ThemedSearchInput(
+                  value: _search,
+                  onSearch: _onSearchChanged,
+                  asField: true,
+                ),
+              ),
+              const SizedBox(height: 8),
+              if (_debounce?.isActive ?? false) ...[
+                LinearProgressIndicator(
+                  value: null,
+                  minHeight: 2,
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+                  backgroundColor: Colors.transparent,
+                ),
+              ] else ...[
+                const SizedBox(height: 2),
+              ],
+              const SizedBox(height: 8),
+            ],
+
+            // Header
+            SizedBox(
+              height: widget.headerHeight,
+              child: Row(
+                children: [
+                  /// Multiselect
+                  if (widget.hasMultiselect) ...[
+                    SizedBox(
+                      width: 50,
+                      child: ValueListenableBuilder(
+                        valueListenable: _selectedItems,
+                        builder: (context, value, child) {
+                          return Checkbox(
+                            value: value.length == widget.items.length && widget.items.isNotEmpty,
+                            onChanged: (val) {
+                              if (val == true) {
+                                _selectedItems.value = List<T>.from(widget.items);
+                              } else {
+                                _selectedItems.value = [];
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    const VerticalDivider(width: 1),
+                  ],
+
+                  /// Items
+                  ScrollConfiguration(
+                    behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                    child: Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        controller: _horizontalHeaderController,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: widget.columns.length,
+                        itemBuilder: (context, index) {
+                          final ThemedColumn2<T> entry = widget.columns[index];
+                          final bool isSelected = entry == colSelected;
+
+                          return Row(
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    debugPrint("layrz_theme/ThemedTable2: Entry: ${entry.headerText}");
+                                    if (isSelected) {
+                                      isReversed = !isReversed;
+                                    } else {
+                                      colSelected = entry;
+                                      isReversed = false;
+                                    }
+
+                                    _filterAndSort('SORT');
+                                  },
+                                  child: Container(
+                                    width: sizes[index]! - (index < widget.columns.length - 1 ? 1 : 0),
+                                    padding: _padding,
+                                    alignment: entry.alignment,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          if (isSelected) ...[
+                                            WidgetSpan(
+                                              alignment: PlaceholderAlignment.middle,
+                                              child: Icon(
+                                                isReversed
+                                                    ? LayrzIcons.solarBoldSortFromBottomToTop
+                                                    : LayrzIcons.solarBoldSortFromTopToBottom,
+                                                size: _sortIconSize,
+                                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                                              ),
+                                            ),
+                                            const WidgetSpan(child: SizedBox(width: 5)),
+                                          ],
+
+                                          TextSpan(
+                                            text: entry.headerText,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (index < widget.columns.length - 1) const VerticalDivider(width: 1),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+                  /// Actions
+                  if (widget.actionsCount > 0) ...[
+                    const VerticalDivider(width: 1),
+                    Container(
+                      width: actionsSize,
+                      padding: _padding,
+                      alignment: Alignment.centerRight,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Icon(
+                                LayrzIcons.solarOutlineTuningSquare2,
+                                size: _sortIconSize,
+                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                              ),
+                            ),
+                            const WidgetSpan(child: SizedBox(width: 5)),
+                            TextSpan(
+                              text: widget.actionsLabelText,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            // /Header
+            const Divider(height: 1),
+            // Content
+            Expanded(
+              child: Row(
+                children: [
+                  if (widget.hasMultiselect) ...[
+                    SizedBox(
+                      width: 50,
+                      child: ScrollConfiguration(
+                        behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                        child: ListView.builder(
+                          itemCount: _filteredData.length,
+                          itemExtent: 50,
+                          controller: _multiselectController,
+                          itemBuilder: (context, index) {
+                            final item = _filteredData[index];
+                            return Container(
+                              padding: _padding,
+                              color: index % 2 == 0 ? null : _stripColor,
+                              child: ValueListenableBuilder(
+                                valueListenable: _selectedItems,
+                                builder: (context, value, child) {
+                                  return Checkbox(
+                                    value: value.contains(item),
+                                    onChanged: (val) {
+                                      if (val == true) {
+                                        if (!value.contains(item)) _selectedItems.value = [...value, item];
+                                      } else {
+                                        if (value.contains(item)) {
+                                          _selectedItems.value = value.where((i) => i != item).toList();
+                                        }
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    const VerticalDivider(width: 1),
+                  ],
+
+                  /// Items.value
+                  Expanded(
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      controller: _horizontalContentController,
+                      child: ScrollConfiguration(
+                        behavior: const ScrollBehavior().copyWith(scrollbars: true),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          controller: _horizontalContentController,
+
+                          child: ScrollConfiguration(
+                            behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                            child: SizedBox(
+                              width: sizes.values.sum,
+                              child: ListView.builder(
+                                itemCount: _filteredData.length,
+                                itemExtent: 50,
+                                controller: _contentController,
+                                itemBuilder: (context, index) {
+                                  final data = _filteredData[index];
+                                  List<Widget> children = [];
+
+                                  for (final entry in widget.columns.asMap().entries) {
+                                    final header = entry.value;
+                                    final colIndex = entry.key;
+
+                                    String text =
+                                        _itemsStrings[data.hashCode]?[header.hashCode] ?? header.valueBuilder(data);
+
+                                    Widget child;
+                                    if (header.richTextBuilder != null) {
+                                      child = RichText(
+                                        text: TextSpan(
+                                          children: header.richTextBuilder!.call(data),
+                                          style: _style,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      );
+                                    } else {
+                                      child = Text(
+                                        text,
+                                        style: _style,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      );
+                                    }
+
+                                    children.add(
+                                      Material(
+                                        color: index % 2 == 0 ? null : _stripColor,
+                                        child: InkWell(
+                                          onTap: header.onTap != null ? () => header.onTap?.call(data) : null,
+                                          child: Container(
+                                            width: sizes[colIndex]! - (colIndex < widget.columns.length - 1 ? 1 : 0),
+                                            padding: _padding,
+                                            alignment: header.alignment,
+                                            child: child,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                    if (colIndex < widget.columns.length - 1) {
+                                      children.add(const VerticalDivider(width: 1));
+                                    }
+                                  }
+
+                                  return Row(children: children);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// Actions.value
+                  if (widget.actionsCount > 0) ...[
+                    const VerticalDivider(width: 1),
+                    SizedBox(
+                      width: actionsSize,
+                      child: ListView.builder(
+                        itemCount: _filteredData.length,
+                        itemExtent: 50,
+                        controller: _actionsController,
+                        itemBuilder: (context, index) {
+                          final data = _filteredData[index];
+                          return Container(
+                            padding: _padding,
+                            alignment: Alignment.centerRight,
+                            color: index % 2 == 0 ? null : _stripColor,
+                            child: ThemedActionsButtons(
+                              actions: (widget.actionsBuilder?.call(data) ?? []).map((action) {
+                                if (isMobile) return action;
+                                return action.copyWith(onlyIcon: true);
+                              }).toList(),
+                              mobileBreakpoint: widget.actionsMobileBreakpoint,
+                              actionPadding: _actionsPadding,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+
+            // /Content
+            // Actions
+            ValueListenableBuilder(
+              valueListenable: _selectedItems,
+              builder: (context, value, child) {
+                if (value.isEmpty) return const SizedBox.shrink();
+
+                return Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).inputDecorationTheme.fillColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.multiSelectionTitleText,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                      ),
+                      Text(
+                        widget.multiSelectionContentText,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: SingleChildScrollView(
+                          child: Row(
+                            spacing: 5,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ThemedButton(
+                                labelText: widget.multiSelectionCancelLabelText,
+                                color: Colors.orange,
+                                icon: LayrzIcons.solarOutlineEraser,
+                                onTap: () => _selectedItems.value = [],
+                              ),
+                              ...widget.multiselectActions.map((action) {
+                                return ThemedButton(
+                                  labelText: action.labelText,
+                                  icon: action.icon,
+                                  color: action.color,
+                                  onTap: action.onTap,
+                                  isLoading: action.isLoading,
+                                  isCooldown: action.isCooldown,
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            // /Actions
+          ],
+        );
+      },
+    );
+  }
+
+  void _filterAndSort(String source) async {
+    _filteredData = widget.items;
+    if (widget.items.isEmpty) return;
+
+    debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
+    _itemsStrings = {};
+    for (final item in widget.items) {
+      int rowHashCode = item.hashCode;
+      _itemsStrings[rowHashCode] = {};
+
+      for (final col in widget.columns) {
+        final colHashCode = col.hashCode;
+        _itemsStrings[rowHashCode]![colHashCode] = col.valueBuilder(item);
+      }
+    }
+
+    if (_search.isNotEmpty) {
+      debugPrint("layrz_theme/ThemedTable2: Filtering data...");
+      final searchLower = _search.toLowerCase();
+      _filteredData = _filteredData.where((row) {
+        final rowHashCode = row.hashCode;
+        final cols = _itemsStrings[rowHashCode];
+        if (cols == null) return false;
+        for (final entry in cols.entries) {
+          if (entry.value.toLowerCase().contains(searchLower)) return true;
+        }
+        return false;
+      }).toList();
+    }
+
+    debugPrint("layrz_theme/ThemedTable2: Sorting data...");
+    _filteredData.sort(colSelected.customSort ?? _defaultSort);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  void _onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      _search = value;
+      _filterAndSort('SEARCH');
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  int _defaultSort(T a, T b) {
+    final colHashCode = colSelected.hashCode;
+    final rowAHashCode = a.hashCode;
+    final rowBHashCode = b.hashCode;
+
+    final valueA = _itemsStrings[rowAHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(a);
+    final valueB = _itemsStrings[rowBHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(b);
+
+    final numA = num.tryParse(valueA);
+    final numB = num.tryParse(valueB);
+    if (numA != null && numB != null) {
+      if (numB == numA) return 0;
+      if (isReversed) {
+        return numB > numA ? 1 : -1;
+      }
+      return numA > numB ? 1 : -1;
+    }
+
+    Duration? parseDuration(String s) {
+      final parts = s.split(':');
+      if (parts.length == 3) {
+        final h = int.tryParse(parts[0]) ?? 0;
+        final m = int.tryParse(parts[1]) ?? 0;
+        final sec = int.tryParse(parts[2]) ?? 0;
+        return Duration(hours: h, minutes: m, seconds: sec);
+      }
+      return null;
+    }
+
+    final durA = parseDuration(valueA);
+    final durB = parseDuration(valueB);
+    if (durA != null && durB != null) {
+      return isReversed ? durB.compareTo(durA) : durA.compareTo(durB);
+    }
+
+    // Try to parse as DateTime
+    final dateA = DateTime.tryParse(valueA);
+    final dateB = DateTime.tryParse(valueB);
+    if (dateA != null && dateB != null) {
+      return isReversed ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
+    }
+
+    // Default: compare as string (case insensitive)
+    return isReversed
+        ? valueB.toLowerCase().compareTo(valueA.toLowerCase())
+        : valueA.toLowerCase().compareTo(valueB.toLowerCase());
+  }
+}

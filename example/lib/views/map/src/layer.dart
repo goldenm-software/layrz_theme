@@ -11,7 +11,7 @@ class MapLayerView extends StatefulWidget {
 
 class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMixin {
   late AnimatedMapController _mapController;
-  AppStore get store => VxState.store as AppStore;
+  AppStore get store => LayrzState.store as AppStore;
   List<MapLayer> get layers => store.availableLayers;
   MapLayer? selectedLayer;
   final ThemedMapController _controller = ThemedMapController();
@@ -121,39 +121,30 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
                   //     ),
                   //   ],
                   // ),
-                  ThemedMapToolbar(
-                    layers: layers,
-                    selectedLayer: selectedLayer,
-                    onLayerChanged: (layer) => setState(() => selectedLayer = layer),
-                    enableGoogleStreetView: true,
-                    controller: _controller,
-                    mapController: _mapController.mapController,
-                    mapKey: _mapKey,
-                    // position: Alignment.bottomLeft,
-                    // flow: ThemedMapToolbarFlow.horizontal,
-                    onZoomIn: () {
-                      debugPrint('Zoom in');
-                    },
-                    onZoomOut: () {
-                      debugPrint('Zoom out');
-                    },
-                    additionalButtons: [
-                      ThemedMapButton(
-                        labelText: "My custom button",
-                        icon: Icons.house,
-                        onTap: () {
-                          debugPrint('My custom button');
-                        },
-                      ),
-                      ThemedMapButton(
-                        labelText: "Beurre Gatún",
-                        icon: Icons.abc,
-                        onTap: () {
-                          debugPrint('My custom button');
-                        },
-                      ),
-                    ],
-                  ),
+                  // ThemedMapToolbar(
+                  //   layers: layers,
+                  //   selectedLayer: selectedLayer,
+                  //   onLayerChanged: (layer) => setState(() => selectedLayer = layer),
+                  //   enableGoogleStreetView: true,
+
+                  //   mapKey: _mapKey,
+                  //   additionalButtons: [
+                  //     ThemedMapButton(
+                  //       labelText: "My custom button",
+                  //       icon: Icons.house,
+                  //       onTap: () {
+                  //         debugPrint('My custom button');
+                  //       },
+                  //     ),
+                  //     ThemedMapButton(
+                  //       labelText: "Beurre Gatún",
+                  //       icon: Icons.abc,
+                  //       onTap: () {
+                  //         debugPrint('My custom button');
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

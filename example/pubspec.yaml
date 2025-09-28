@@ -4,8 +4,8 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.8.0 <4.0.0"
-  flutter: ">=3.32.0"
+  sdk: ">=3.9.0 <4.0.0"
+  flutter: ">=3.35.0"
 
 dependencies:
   flutter:
@@ -13,12 +13,13 @@ dependencies:
 
   collection: any
   go_router: ^12.1.1
-  vxstate: ^2.3.0
   shared_preferences: ^2.2.0
   url_launcher: ^6.1.12
   flutter_dotenv: ^5.1.0
   flutter_map: any
   flutter_map_animations: any
+
+  layrz_state: any
   layrz_icons: any
   layrz_models: any
   layrz_theme:

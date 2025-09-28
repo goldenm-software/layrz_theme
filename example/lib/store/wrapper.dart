@@ -10,7 +10,7 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  AppStore get store => VxState.store as AppStore;
+  AppStore get store => LayrzState.store as AppStore;
   ThemedLayoutStyle get layoutStyle => store.layoutStyle;
 
   AppThemedAsset get logo => const AppThemedAsset(
@@ -164,8 +164,21 @@ class _LayoutState extends State<Layout> {
         ),
         ThemedNavigatorPage(
           labelText: 'Table',
-          path: '/table/basic',
+          path: '/table',
+          useDefaultRedirect: false,
           icon: LayrzIcons.solarOutlineSliderMinimalisticHorizontal,
+          children: [
+            ThemedNavigatorPage(
+              labelText: 'Basic table',
+              path: '/table/basic',
+              icon: LayrzIcons.solarOutlineSliderMinimalisticHorizontal,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Infinite table',
+              path: '/table/infinite',
+              icon: LayrzIcons.solarOutlineDocumentsMinimalistic,
+            ),
+          ],
         ),
         ThemedNavigatorPage(
           labelText: 'Snackbars',

@@ -94,6 +94,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
 
+      if (_timerController.isAnimating || _fadeController.isAnimating) return;
       _resetControllers();
     });
   }
