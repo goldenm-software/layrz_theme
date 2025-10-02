@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0+1
+
+- Fixed dispose of `_zoomListenable` in `ThemedMapToolbar` to prevent memory leaks when an external `ValueNotifier` is not provided.
+
 ## 7.4.0
 
 - Stable release of 7.4.0 with all the prerelease changes included.
