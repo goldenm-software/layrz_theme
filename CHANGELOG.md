@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.0+2
+
+- Added `locatorLink` function on LML language and `ThemedCodeEditor`.
+
 ## 7.4.0+1
 
 - Fixed dispose of `_zoomListenable` in `ThemedMapToolbar` to prevent memory leaks when an external `ValueNotifier` is not provided.
