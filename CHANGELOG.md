@@ -2,7 +2,8 @@
 
 ## 7.4.1
 
-- Fix visual issues on `ThemedCalendar` when you select a date outside of the current month 
+- Fix visual issues on `ThemedCalendar` when you select a date outside of the current month
+
 ## 7.4.0+2
 
 - Added `locatorLink` function on LML language and `ThemedCodeEditor`.
