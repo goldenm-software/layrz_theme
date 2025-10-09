@@ -1,5 +1,17 @@
 # Changelog
 
+## 7.4.1
+
+- Fix visual issues on `ThemedCalendar` when you select a date outside of the current month
+
+## 7.4.0+2
+
+- Added `locatorLink` function on LML language and `ThemedCodeEditor`.
+
+## 7.4.0+1
+
+- Fixed dispose of `_zoomListenable` in `ThemedMapToolbar` to prevent memory leaks when an external `ValueNotifier` is not provided.
+
 ## 7.4.0
 
 - Stable release of 7.4.0 with all the prerelease changes included.

@@ -352,7 +352,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
 
   @override
   void dispose() {
-    _zoomListenable.dispose();
+    if (widget.zoomListenable == null) _zoomListenable.dispose();
     super.dispose();
   }
 

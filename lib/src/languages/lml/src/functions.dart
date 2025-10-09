@@ -23,6 +23,7 @@ List<String> functions = [
   'caseCommentUserName',
   'caseCommentContent',
   'caseCommentAt',
+  'locatorLink',
 ];
 
 // Example
