@@ -643,7 +643,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
 
                       bool hightlight = highlightedDays.contains(now);
 
-                      Color? containerColor = (hightlight || isFocusDay) && isCurrentMonth ? primaryColor : null;
+                      Color? containerColor = (hightlight || isFocusDay) ? primaryColor : null;
 
                       return Opacity(
                         opacity: isDisabled
