@@ -86,6 +86,31 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: widget.actions.map<Widget>((ThemedActionButton action) {
+          if (action.notifier != null) {
+            return ValueListenableBuilder(
+              valueListenable: action.notifier!,
+              builder: (context, value, child) {
+                return Padding(
+                  padding: widget.actionPadding,
+                  child: ThemedButton(
+                    style: action.onlyIcon ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+                    icon: action.iconBuilder?.call(value) ?? action.icon,
+                    label: action.label,
+                    labelText: action.labelTextBuilder?.call(value) ?? action.labelText,
+                    color: action.colorBuilder?.call(value) ?? action.color,
+                    onTap: action.onTap,
+                    tooltipPosition: action.tooltipPosition,
+                    isLoading: action.isLoading,
+                    cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
+                    isCooldown: action.isCooldown,
+                    onCooldownFinish: action.onCooldownFinish,
+                    isDisabled: action.isDisabled,
+                  ),
+                );
+              },
+            );
+          }
+
           return Padding(
             padding: widget.actionPadding,
             child: ThemedButton(
@@ -301,6 +326,18 @@ class ThemedActionButton {
   /// [isDisabled] forces the button to be displayed as disabled.
   final bool isDisabled;
 
+  /// [notifier] is the ValueNotifier to be used to update the button.
+  final ValueNotifier<dynamic>? notifier;
+
+  /// [iconBuilder] is the function to be used to build the icon based on the notifier value.
+  final IconData Function(dynamic value)? iconBuilder;
+
+  /// [labelTextBuilder] is the function to be used to build the label text based on the notifier value.
+  final String Function(dynamic value)? labelTextBuilder;
+
+  /// [colorBuilder] is the function to be used to build the color based on the notifier value.
+  final Color Function(dynamic value)? colorBuilder;
+
   const ThemedActionButton({
     this.label,
     this.labelText,
@@ -314,7 +351,15 @@ class ThemedActionButton {
     this.onCooldownFinish,
     this.tooltipPosition = ThemedTooltipPosition.bottom,
     this.isDisabled = false,
-  }) : assert(label != null || labelText != null);
+    this.notifier,
+    this.iconBuilder,
+    this.labelTextBuilder,
+    this.colorBuilder,
+  }) : assert(label != null || labelText != null),
+       assert(
+         notifier == null || (iconBuilder != null || labelTextBuilder != null || colorBuilder != null),
+         "If notifier is provided, at least one of iconBuilder, labelTextBuilder or colorBuilder must be provided.",
+       );
 
   factory ThemedActionButton.save({
     bool isMobile = false,
@@ -474,6 +519,10 @@ class ThemedActionButton {
     VoidCallback? onCooldownFinish,
     ThemedTooltipPosition? tooltipPosition,
     bool? isDisabled,
+    ValueNotifier<dynamic>? notifier,
+    IconData Function(dynamic value)? iconBuilder,
+    String Function(dynamic value)? labelTextBuilder,
+    Color Function(dynamic value)? colorBuilder,
   }) {
     return ThemedActionButton(
       label: label ?? this.label,
@@ -488,6 +537,10 @@ class ThemedActionButton {
       onCooldownFinish: onCooldownFinish ?? this.onCooldownFinish,
       tooltipPosition: tooltipPosition ?? this.tooltipPosition,
       isDisabled: isDisabled ?? this.isDisabled,
+      notifier: notifier ?? this.notifier,
+      iconBuilder: iconBuilder ?? this.iconBuilder,
+      labelTextBuilder: labelTextBuilder ?? this.labelTextBuilder,
+      colorBuilder: colorBuilder ?? this.colorBuilder,
     );
   }
 }

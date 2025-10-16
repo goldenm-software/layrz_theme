@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.2
+
+- Added `notifier` and other props on `ThemedActionButton` to support dynamic coloring, labeling and iconing of the button based on the notifier.
+
 ## 7.4.1
 
 - Fix visual issues on `ThemedCalendar` when you select a date outside of the current month
