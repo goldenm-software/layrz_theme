@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.3
+
+- Added `ThemedTable2OnTapBehavior` enum to define the default behavior of onTap events on table cells.
+
 ## 7.4.2
 
 - Added `notifier` and other props on `ThemedActionButton` to support dynamic coloring, labeling and iconing of the button based on the notifier.

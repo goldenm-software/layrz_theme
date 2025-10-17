@@ -1,6 +1,6 @@
 name: layrz_theme
 description: Layrz standard styling library for Flutter. Widget library following the Material Design 3 guidelines, with a focus on reliavility and functionality.
-version: "7.4.2"
+version: "7.4.3"
 homepage: https://theme.layrz.com
 repository: https://github.com/goldenm-software/layrz_theme
 

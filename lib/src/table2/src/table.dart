@@ -67,6 +67,15 @@ class ThemedTable2<T> extends StatefulWidget {
   /// Note: This property is ignored on production builds.
   final bool reloadOnDidUpdate;
 
+  /// [onTapDefaultBehavior] sets the default behavior for onTap events on table cells.
+  final ThemedTable2OnTapBehavior onTapDefaultBehavior;
+
+  /// [copyToClipboardText] is the title shown when copying to clipboard.
+  /// By default, it will uses the translation key `helpers.copiedToClipboard`.
+  /// In case the translation does not exists, it will fallback to this property, and if is not supplied,
+  /// it will fallback to the constant text `"Copied to clipboard"`.
+  final String? copyToClipboardText;
+
   const ThemedTable2({
     required this.items,
     required this.columns,
@@ -87,6 +96,8 @@ class ThemedTable2<T> extends StatefulWidget {
     this.multiselectValue,
     this.populateDelay = const Duration(milliseconds: 150),
     this.reloadOnDidUpdate = false,
+    this.onTapDefaultBehavior = ThemedTable2OnTapBehavior.copyToClipboard,
+    this.copyToClipboardText,
   }) : assert(columns.length > 0, 'Columns cant be empty'),
        assert(actionsCount >= 0, 'Actions count cant be negative'),
        assert(minColumnWidth > 0, 'Min column width must be greater than 0'),
@@ -540,11 +551,33 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                       );
                                     }
 
+                                    void Function(T)? onTap;
+                                    if (header.onTap != null) {
+                                      onTap = header.onTap;
+                                    } else if (widget.onTapDefaultBehavior ==
+                                        ThemedTable2OnTapBehavior.copyToClipboard) {
+                                      onTap = (item) {
+                                        Clipboard.setData(ClipboardData(text: text));
+                                        String copiedText =
+                                            widget.copyToClipboardText ??
+                                            LayrzAppLocalizations.maybeOf(context)?.t('helpers.copiedToClipboard') ??
+                                            "Copied to clipboard";
+
+                                        ThemedSnackbarMessenger.maybeOf(context)?.show(
+                                          ThemedSnackbar(
+                                            message: copiedText,
+                                            icon: LayrzIcons.solarOutlineClipboard,
+                                            color: Colors.green,
+                                          ),
+                                        );
+                                      };
+                                    }
+
                                     children.add(
                                       Material(
                                         color: index % 2 == 0 ? null : _stripColor,
                                         child: InkWell(
-                                          onTap: header.onTap != null ? () => header.onTap?.call(data) : null,
+                                          onTap: onTap != null ? () => onTap!.call(data) : null,
                                           child: Container(
                                             width: sizes[colIndex]! - (colIndex < widget.columns.length - 1 ? 1 : 0),
                                             padding: _padding,
