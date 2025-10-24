@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.4
+
+- Solved extremely weird bug using the `ThemedTable2`, now creates a copy of the items list to prevent issues when filtering and sorting the data. (Discovered by @ManuelRomeroA)
+
 ## 7.4.3
 
 - Added `ThemedTable2OnTapBehavior` enum to define the default behavior of onTap events on table cells.
