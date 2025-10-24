@@ -30,6 +30,12 @@ class ThemedTabView extends StatefulWidget {
   /// If the previous position is not available, it will default to the first tab.
   final bool persistTabPosition;
 
+  /// [initialPosition] is
+  final int initialPosition;
+
+  /// [onTabIndex]
+  final Function(int tabIndex)? onTabIndex;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -45,6 +51,8 @@ class ThemedTabView extends StatefulWidget {
     this.separatorPadding = const EdgeInsets.only(top: 10),
     this.showArrows = false,
     this.persistTabPosition = true,
+    this.initialPosition = 0,
+    this.onTabIndex,
   });
 
   @override
@@ -61,10 +69,19 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
     super.initState();
 
     _tabController = TabController(
+      initialIndex: widget.initialPosition,
       length: widget.tabs.length,
       vsync: this,
       animationDuration: widget.animationDuration,
     );
+    if (widget.onTabIndex != null) {
+      _tabController.addListener(() {
+        if (_tabController.indexIsChanging) {
+          widget.onTabIndex!(_tabController.index);
+          debugPrint("tab change: ${_tabController.index}");
+        }
+      });
+    }
   }
 
   @override

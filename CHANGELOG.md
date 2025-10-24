@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.4.4
+- Added `initialPosition` and `onTabIndex` in `ThemedTabView` 
+
 ## 7.4.3
 
 - Added `ThemedTable2OnTapBehavior` enum to define the default behavior of onTap events on table cells.
