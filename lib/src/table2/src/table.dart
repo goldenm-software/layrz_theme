@@ -206,8 +206,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     bool c5 = false;
     if (kDebugMode && widget.reloadOnDidUpdate) c5 = true;
 
-    debugPrint("c1: $c1, c2: $c2, c3: $c3, c4: $c4, c5: $c5");
-
     if (c1 || c2 || c3 || c4 || c5) _filterAndSortAsync('DID_UPDATE');
     super.didUpdateWidget(oldWidget);
   }
@@ -381,7 +379,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: () {
-                                        debugPrint("layrz_theme/ThemedTable2: Entry: ${entry.headerText}");
                                         if (isSelected) {
                                           isReversed = !isReversed;
                                         } else {
