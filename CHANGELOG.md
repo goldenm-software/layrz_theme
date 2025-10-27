@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.6+1
+
+- Fix on filtering items on `ThemedTable2` when it's empty.
+
 ## 7.4.6
 
 - Fixed an issue with the `ThemedTable2` where the filtering was not working correctly after the last changes.

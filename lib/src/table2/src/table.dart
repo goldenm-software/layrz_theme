@@ -251,10 +251,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
               children: [
                 const CircularProgressIndicator(),
                 const SizedBox(height: 10),
-                Text(
-                  widget.loadingLabelText,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
+                Text(widget.loadingLabelText, style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           );
@@ -454,9 +451,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                 const WidgetSpan(child: SizedBox(width: 5)),
                                 TextSpan(
                                   text: widget.actionsLabelText,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -685,10 +680,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                             maxLines: 1,
                           ),
-                          Text(
-                            widget.multiSelectionContentText,
-                            maxLines: 1,
-                          ),
+                          Text(widget.multiSelectionContentText, maxLines: 1),
                           const SizedBox(height: 10),
                           Center(
                             child: SingleChildScrollView(
@@ -734,7 +726,11 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   void _filterAndSort(String source) async {
     try {
       List<T> items = List<T>.from(widget.items, growable: true);
-      if (widget.items.isEmpty) return;
+      if (items.isEmpty) {
+        debugPrint("layrz_theme/ThemedTable2: No items to filter and sort from $source.");
+        _filteredData.value = items;
+        return;
+      }
 
       debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
       _itemsStrings = {};
