@@ -201,8 +201,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   @override
   void dispose() {
     _entry?.remove();
-    _controller.dispose();
-    _focusNode.dispose();
+    if (widget.controller == null) _controller.dispose();
+    if (widget.focusNode == null) _focusNode.dispose();
     _animationController.dispose();
     super.dispose();
   }

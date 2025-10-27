@@ -153,8 +153,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [_sortIconSize] is the size of the sort icon
   double get _sortIconSize => 16;
 
-  /// [_search] holds the current search query used to filter items.
-  String _search = '';
+  /// [_searchController] holds the current search query used to filter items.
+  final TextEditingController _searchController = TextEditingController();
 
   /// [_filteredData] holds the filtered and sorted data currently displayed in the table.
   final ValueNotifier<List<T>> _filteredData = ValueNotifier<List<T>>([]);
@@ -225,6 +225,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   void dispose() {
     _isLoading.dispose();
     _filteredData.dispose();
+    _searchController.dispose();
 
     _debounce?.cancel();
 
@@ -312,10 +313,13 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                 if (widget.canSearch) ...[
                   SizedBox(
                     width: double.infinity,
-                    child: ThemedSearchInput(
-                      value: _search,
-                      onSearch: _onSearchChanged,
-                      asField: true,
+                    child: ThemedTextInput(
+                      labelText: LayrzAppLocalizations.maybeOf(context)?.t('actions.search') ?? 'Search...',
+                      prefixIcon: LayrzIcons.solarOutlineMagnifier,
+                      padding: EdgeInsets.zero,
+                      controller: _searchController,
+                      onChanged: _onSearchChanged,
+                      dense: true,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -728,44 +732,50 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   void _filterAndSort(String source) async {
-    List<T> items = List<T>.from(widget.items, growable: true);
-    if (widget.items.isEmpty) return;
+    try {
+      List<T> items = List<T>.from(widget.items, growable: true);
+      if (widget.items.isEmpty) return;
 
-    debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
-    _itemsStrings = {};
-    for (final item in widget.items) {
-      int rowHashCode = item.hashCode;
-      _itemsStrings[rowHashCode] = {};
+      debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
+      _itemsStrings = {};
+      for (final item in widget.items) {
+        int rowHashCode = item.hashCode;
+        _itemsStrings[rowHashCode] = {};
 
-      for (final col in widget.columns) {
-        final colHashCode = col.hashCode;
-        _itemsStrings[rowHashCode]![colHashCode] = col.valueBuilder(item);
-      }
-    }
-
-    if (_search.isNotEmpty) {
-      debugPrint("layrz_theme/ThemedTable2: Filtering data...");
-      final searchLower = _search.toLowerCase();
-      items = items.where((row) {
-        final rowHashCode = row.hashCode;
-        final cols = _itemsStrings[rowHashCode];
-        if (cols == null) return false;
-        for (final entry in cols.entries) {
-          if (entry.value.toLowerCase().contains(searchLower)) return true;
+        for (final col in widget.columns) {
+          final colHashCode = col.hashCode;
+          _itemsStrings[rowHashCode]![colHashCode] = col.valueBuilder(item);
         }
-        return false;
-      }).toList();
-    }
+      }
 
-    debugPrint("layrz_theme/ThemedTable2: Sorting data...");
-    items.sort(colSelected.customSort ?? _defaultSort);
-    _filteredData.value = items;
+      debugPrint("layrz_theme/ThemedTable2: Filtering data from $source - ${_searchController.text}...");
+      if (_searchController.text.isNotEmpty) {
+        debugPrint("layrz_theme/ThemedTable2: Filtering data...");
+        final searchLower = _searchController.text.toLowerCase();
+        items = items.where((row) {
+          final rowHashCode = row.hashCode;
+          final cols = _itemsStrings[rowHashCode];
+          if (cols == null) return false;
+          for (final entry in cols.entries) {
+            if (entry.value.toLowerCase().contains(searchLower)) return true;
+          }
+          return false;
+        }).toList();
+      }
+
+      debugPrint("layrz_theme/ThemedTable2: Sorting data...");
+      items.sort(colSelected.customSort ?? _defaultSort);
+      _filteredData.value = items;
+    } finally {
+      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source, removing debouncer...");
+      _debounce?.cancel();
+      _debounce = null;
+      if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    }
   }
 
   void _onSearchChanged(String value) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
-      _search = value;
       _filterAndSort('SEARCH');
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {

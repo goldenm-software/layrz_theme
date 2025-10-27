@@ -1,8 +1,16 @@
 # Changelog
 
+## 7.4.6
+
+- Fixed an issue with the `ThemedTable2` where the filtering was not working correctly after the last changes.
+- Changed behavior on `dispose()` on `ThemedTextInput` to only dispose the internal controller and focus node when they are not provided externally.
+
 ## 7.4.5
+
 - Added `initialPosition` and `onTabIndex` in `ThemedTabView` 
+
 ## 7.4.4
+
 - Solved extremely weird bug using the `ThemedTable2`, now creates a copy of the items list to prevent issues when filtering and sorting the data. (Discovered by @ManuelRomeroA)
 
 ## 7.4.3
