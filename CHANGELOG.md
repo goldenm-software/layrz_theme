@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.7
+
+- Added `customConfirm` and `customDismiss` parameters to the `deleteConfirmationDialog` utility.
+
 ## 7.4.6+1
 
 - Fix on filtering items on `ThemedTable2` when it's empty.
@@ -11,7 +15,7 @@
 
 ## 7.4.5
 
-- Added `initialPosition` and `onTabIndex` in `ThemedTabView` 
+- Added `initialPosition` and `onTabIndex` in `ThemedTabView`
 
 ## 7.4.4
 

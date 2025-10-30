@@ -17,6 +17,8 @@ Future<bool> deleteConfirmationDialog({
   VoidCallback? onCooldown,
   String? customTitle,
   String? customContent,
+  String? customConfirm,
+  String? customDismiss,
 }) async {
   LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
 
@@ -31,11 +33,21 @@ Future<bool> deleteConfirmationDialog({
     content = i18n?.t('actions.confirmation.content') ?? 'Once deleted, you will not be able to recover it.';
   }
 
+  String dismissLabel = i18n?.t('actions.confirmation.dismiss') ?? 'Nevermind';
+
+  String confirmLabel = i18n?.t('actions.confirmation.confirm') ?? 'Do it!';
+
   if (customTitle != null) {
     title = customTitle;
   }
   if (customContent != null) {
     content = customContent;
+  }
+  if (customConfirm != null) {
+    confirmLabel = customConfirm;
+  }
+  if (customDismiss != null) {
+    dismissLabel = customDismiss;
   }
 
   bool? result = await showDialog(
@@ -71,13 +83,13 @@ Future<bool> deleteConfirmationDialog({
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ThemedButton.cancel(
-                    labelText: i18n?.t('actions.confirmation.dismiss') ?? 'Nevermind',
+                    labelText: dismissLabel,
                     onTap: () => Navigator.of(context).pop(false),
                     isCooldown: isCooldown,
                     isLoading: isLoading,
                   ),
                   ThemedButton.save(
-                    labelText: i18n?.t('actions.confirmation.confirm') ?? 'Do it!',
+                    labelText: confirmLabel,
                     onTap: () => Navigator.of(context).pop(true),
                     isCooldown: isCooldown,
                     isLoading: isLoading,
