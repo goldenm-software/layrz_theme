@@ -219,7 +219,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                               ThemedActionButton action = widget.actions[index];
                               Color color = action.color ?? (isDark ? Colors.white : Colors.black);
                               if (action.isDisabled) {
-                                color = ThemedButton.getDisabledColor(isDark, ThemedButtonStyle.filledTonal);
+                                color = Theme.of(context).inputDecorationTheme.fillColor ?? Colors.grey;
                               }
 
                               return Material(

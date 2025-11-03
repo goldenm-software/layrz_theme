@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.4.8
+
+- Updated design of `ThemedButton` to support new styling when loading or in cooldown.
+- Added factory on `ThemedButton.legacyLoading` to support the previous loading design.
+
 ## 7.4.7
 
 - Added `customConfirm` and `customDismiss` parameters to the `deleteConfirmationDialog` utility.

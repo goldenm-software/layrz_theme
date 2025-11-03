@@ -101,6 +101,20 @@ class ThemedButton extends StatefulWidget {
   /// defaults to `8`
   final double iconSeparatorSize;
 
+  /// [loadingBackgroundColor] is used to set the background color of the loading indicator.
+  ///
+  /// By default uses `Colors.transparent`.
+  final Color? loadingBackgroundColor;
+
+  /// [loadingForegroundColor] is used to set the foreground color of the loading indicator.
+  ///
+  /// By default uses the `Theme.of(context).inputDecorationTheme.fillColor`
+  final Color? loadingForegroundColor;
+
+  /// [legacyLoadingColors] is used to determine if the loading indicator should use the legacy colors.
+  /// By default, will use `false`.
+  final bool legacyLoadingColors;
+
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -124,6 +138,9 @@ class ThemedButton extends StatefulWidget {
     this.height = defaultHeight,
     this.iconSize = 22,
     this.iconSeparatorSize = 8,
+    this.loadingBackgroundColor,
+    this.loadingForegroundColor,
+    this.legacyLoadingColors = false,
   }) : assert(label != null || labelText != null, "You must provide a label or labelText, not both or none."),
        assert(height >= 30, "Height must be greater than 30u"),
        assert(iconSize >= 0, "Icon size must be greater than 0"),
@@ -263,6 +280,52 @@ class ThemedButton extends StatefulWidget {
     );
   }
 
+  factory ThemedButton.legacyLoading({
+    Widget? label,
+    String? labelText,
+    IconData? icon,
+    VoidCallback? onTap,
+    bool isLoading = false,
+    Color? color,
+    ThemedButtonStyle style = ThemedButtonStyle.filledTonal,
+    bool isCooldown = false,
+    String? hintText,
+    double? width,
+    bool isDisabled = false,
+    Duration cooldownDuration = const Duration(seconds: 5),
+    VoidCallback? onCooldownFinish,
+    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
+    double fontSize = 14,
+    bool tooltipEnabled = true,
+    bool showCooldownRemainingDuration = true,
+    double height = ThemedButton.defaultHeight,
+    double iconSize = 22,
+    double iconSeparatorSize = 8,
+  }) {
+    return ThemedButton(
+      label: label,
+      labelText: labelText,
+      icon: icon,
+      onTap: onTap,
+      isLoading: isLoading,
+      color: color,
+      style: style,
+      isCooldown: isCooldown,
+      hintText: hintText,
+      width: width,
+      isDisabled: isDisabled,
+      cooldownDuration: cooldownDuration,
+      onCooldownFinish: onCooldownFinish,
+      tooltipPosition: tooltipPosition,
+      fontSize: fontSize,
+      tooltipEnabled: tooltipEnabled,
+      showCooldownRemainingDuration: showCooldownRemainingDuration,
+      height: height,
+      iconSize: iconSize,
+      iconSeparatorSize: iconSeparatorSize,
+      legacyLoadingColors: true,
+    );
+  }
   @override
   State<ThemedButton> createState() => _ThemedButtonState();
 
@@ -379,17 +442,28 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// Also, the font color will change depending of the [style] of the button.
   TextStyle? get textStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: widget.fontSize);
 
-  Color get disabledColor => ThemedButton.getDisabledColor(isDark, style);
+  // Color get disabledColor => ThemedButton.getDisabledColor(isDark, style);
+  Color get disabledColor => widget.legacyLoadingColors
+      ? ThemedButton.getDisabledColor(isDark, style)
+      : (widget.loadingForegroundColor ?? Theme.of(context).inputDecorationTheme.fillColor ?? Colors.grey);
 
   /// [contentColor] is used to know the color of the content of the button.
   Color get contentColor => isDisabled ? disabledColor : (widget.color ?? defaultColor);
 
   /// [loadingColor] defines the color of the loading indicator.
-  Color get loadingColor => isDark ? Colors.grey.shade500 : Colors.grey.shade400;
+  Color get loadingColor => widget.legacyLoadingColors
+      ? isDark
+            ? Colors.grey.shade500
+            : Colors.grey.shade400
+      : widget.loadingForegroundColor ?? contentColor;
 
   /// [colorOverride] allows to set a new color when the button is loading, on cooldown or disabled.
   /// Otherwise, will return `null`.
-  Color? get colorOverride => isLoading || isCooldown ? disabledColor : null;
+  Color? get colorOverride => isLoading || isCooldown
+      ? widget.legacyLoadingColors
+            ? disabledColor
+            : Colors.transparent
+      : null;
 
   /// [iconSize] is used to know the size of the icon.
   double get iconSize => widget.iconSize;
@@ -514,9 +588,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_handleHint] is used to handle the hint of the button.
   /// This hint is only used when the button is style as any non-FAB style
   Widget _handleHint({required Widget child}) {
-    if (hintText == null) {
-      return child;
-    }
+    if (hintText == null) return child;
+    if (isLoading || isCooldown) return child;
 
     return ThemedTooltip(
       position: widget.tooltipPosition,
@@ -529,9 +602,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [_handleTooltip] is used to handle the tooltip of the button when the button is a FAB.
   /// This tooltip is only used when the button is style as any FAB style
   Widget _handleTooltip({required Widget child}) {
-    if (!widget.tooltipEnabled) {
-      return child;
-    }
+    if (!widget.tooltipEnabled) return child;
+    if (isLoading || isCooldown) return child;
 
     return ThemedTooltip(
       position: widget.tooltipPosition,
@@ -1157,8 +1229,8 @@ class _ThemedButtonState extends State<ThemedButton> {
                 int remaining = (cooldownDuration.inSeconds * (1 - value)).round() + 1;
 
                 Widget progress = LinearProgressIndicator(
-                  backgroundColor: Colors.transparent,
-                  valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+                  backgroundColor: widget.loadingBackgroundColor ?? Colors.transparent,
+                  color: loadingColor,
                   value: value,
                 );
 
@@ -1188,8 +1260,8 @@ class _ThemedButtonState extends State<ThemedButton> {
               children: [
                 Positioned.fill(
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.transparent,
-                    valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+                    backgroundColor: widget.loadingBackgroundColor ?? Colors.transparent,
+                    color: loadingColor,
                   ),
                 ),
               ],
