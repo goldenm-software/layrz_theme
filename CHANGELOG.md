@@ -1,6 +1,11 @@
 # Changelog
 
+## 7.4.10
+
+- New `ThemedTabStyle` enum to define the style of the `ThemedTabView` tabs.
+
 ## 7.4.9
+
 - Add `additionalWidgets` in `ThemedTabView`.
 
 ## 7.4.8

@@ -39,6 +39,9 @@ class ThemedTabView extends StatefulWidget {
   /// [additionalWidgets] are additional widgets to display in the tab bar view
   final List<Widget> additionalWidgets;
 
+  /// [style] is the style of the tab view
+  final ThemedTabStyle style;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -57,6 +60,7 @@ class ThemedTabView extends StatefulWidget {
     this.initialPosition = 0,
     this.onTabIndex,
     this.additionalWidgets = const [],
+    this.style = ThemedTabStyle.filledTonal,
   });
 
   @override
@@ -122,7 +126,10 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
         children: [
           Theme(
             data: Theme.of(context).copyWith(
-              tabBarTheme: Theme.of(context).tabBarTheme.copyWith(tabAlignment: TabAlignment.start),
+              tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
+                tabAlignment: TabAlignment.start,
+                indicatorColor: widget.style == ThemedTabStyle.filledTonal ? Colors.transparent : null,
+              ),
             ),
             child: Row(
               children: [
@@ -146,7 +153,9 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                 Expanded(
                   child: TabBar(
                     isScrollable: true,
-                    tabs: widget.tabs,
+                    tabs: widget.tabs.map((e) => e.overrideStyle(widget.style)).toList(),
+                    labelPadding: EdgeInsets.zero,
+                    splashBorderRadius: widget.style == ThemedTabStyle.filledTonal ? BorderRadius.circular(8) : null,
                     controller: _tabController,
                   ),
                 ),
