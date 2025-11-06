@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.4.9
+- Add `additionalWidgets` in `ThemedTabView`.
+
 ## 7.4.8
 
 - Updated design of `ThemedButton` to support new styling when loading or in cooldown.
