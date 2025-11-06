@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.11
+
+- Added `padding` prop to `ThemedDateTimePicker` to handle the padding of the input field.
+
 ## 7.4.10
 
 - New `ThemedTabStyle` enum to define the style of the `ThemedTabView` tabs.

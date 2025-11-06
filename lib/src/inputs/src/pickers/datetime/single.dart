@@ -210,6 +210,7 @@ class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with Single
     }
 
     return ThemedTextInput(
+      padding: widget.padding,
       controller: _controller,
       value: _parsedName ?? '',
       labelText: widget.labelText,
