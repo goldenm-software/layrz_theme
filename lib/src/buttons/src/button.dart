@@ -111,10 +111,6 @@ class ThemedButton extends StatefulWidget {
   /// By default uses the `Theme.of(context).inputDecorationTheme.fillColor`
   final Color? loadingForegroundColor;
 
-  /// [legacyLoadingColors] is used to determine if the loading indicator should use the legacy colors.
-  /// By default, will use `false`.
-  final bool legacyLoadingColors;
-
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -140,7 +136,6 @@ class ThemedButton extends StatefulWidget {
     this.iconSeparatorSize = 8,
     this.loadingBackgroundColor,
     this.loadingForegroundColor,
-    this.legacyLoadingColors = false,
   }) : assert(label != null || labelText != null, "You must provide a label or labelText, not both or none."),
        assert(height >= 30, "Height must be greater than 30u"),
        assert(iconSize >= 0, "Icon size must be greater than 0"),
@@ -280,6 +275,10 @@ class ThemedButton extends StatefulWidget {
     );
   }
 
+  @Deprecated(
+    'Deprecated due to removal of legacyLoadingColors. '
+    'Use ThemedButton constructor without legacyLoadingColors instead.',
+  )
   factory ThemedButton.legacyLoading({
     Widget? label,
     String? labelText,
@@ -323,7 +322,6 @@ class ThemedButton extends StatefulWidget {
       height: height,
       iconSize: iconSize,
       iconSeparatorSize: iconSeparatorSize,
-      legacyLoadingColors: true,
     );
   }
   @override
@@ -344,9 +342,9 @@ class ThemedButton extends StatefulWidget {
       ThemedButtonStyle.outlinedTonal,
       ThemedButtonStyle.outlinedTonalFab,
     ].contains(style)) {
-      return isDark ? Colors.grey.shade600 : Colors.grey.shade500;
+      return isDark ? Colors.grey.shade800 : Colors.grey.shade400;
     }
-    return isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+    return isDark ? Colors.grey.shade900 : Colors.grey.shade100;
   }
 }
 
@@ -443,27 +441,17 @@ class _ThemedButtonState extends State<ThemedButton> {
   TextStyle? get textStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: widget.fontSize);
 
   // Color get disabledColor => ThemedButton.getDisabledColor(isDark, style);
-  Color get disabledColor => widget.legacyLoadingColors
-      ? ThemedButton.getDisabledColor(isDark, style)
-      : (widget.loadingForegroundColor ?? Theme.of(context).inputDecorationTheme.fillColor ?? Colors.grey);
+  Color get disabledColor => widget.loadingForegroundColor ?? ThemedButton.getDisabledColor(isDark, style);
 
   /// [contentColor] is used to know the color of the content of the button.
   Color get contentColor => isDisabled ? disabledColor : (widget.color ?? defaultColor);
 
   /// [loadingColor] defines the color of the loading indicator.
-  Color get loadingColor => widget.legacyLoadingColors
-      ? isDark
-            ? Colors.grey.shade500
-            : Colors.grey.shade400
-      : widget.loadingForegroundColor ?? contentColor;
+  Color get loadingColor => widget.loadingForegroundColor ?? (isDark ? Colors.grey.shade700 : Colors.grey.shade300);
 
   /// [colorOverride] allows to set a new color when the button is loading, on cooldown or disabled.
   /// Otherwise, will return `null`.
-  Color? get colorOverride => isLoading || isCooldown
-      ? widget.legacyLoadingColors
-            ? disabledColor
-            : Colors.transparent
-      : null;
+  Color? get colorOverride => isLoading || isCooldown ? disabledColor : null;
 
   /// [iconSize] is used to know the size of the icon.
   double get iconSize => widget.iconSize;
@@ -1259,9 +1247,12 @@ class _ThemedButtonState extends State<ThemedButton> {
           : Stack(
               children: [
                 Positioned.fill(
-                  child: LinearProgressIndicator(
-                    backgroundColor: widget.loadingBackgroundColor ?? Colors.transparent,
-                    color: loadingColor,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(borderRadius - 1),
+                    child: LinearProgressIndicator(
+                      backgroundColor: widget.loadingBackgroundColor ?? Colors.transparent,
+                      color: loadingColor,
+                    ),
                   ),
                 ),
               ],

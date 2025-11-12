@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.4.12
+
+- Changed `ThemedButton` loading and disabled behavior to use the original coloring of the button style instead of from context.
+
 ## 7.4.11
 
 - Added `padding` prop to `ThemedDateTimePicker` to handle the padding of the input field.
