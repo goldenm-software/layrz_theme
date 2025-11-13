@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.5.0 (UNRELEASED)
+
+- Updated constraint of Dart SDK to `>=3.10.0 <4.0.0`
+- Updated constraint of Flutter SDK to `>=3.38.0`
+- Dot shorthands everywhere!
+- Added `ThemedTable2Controller` to handle programmatically sorting, filtering and refreshing the table data.
+
 ## 7.4.12
 
 - Changed `ThemedButton` loading and disabled behavior to use the original coloring of the button style instead of from context.

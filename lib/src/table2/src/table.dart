@@ -76,6 +76,9 @@ class ThemedTable2<T> extends StatefulWidget {
   /// it will fallback to the constant text `"Copied to clipboard"`.
   final String? copyToClipboardText;
 
+  /// [controller] is an optional controller to programmatically control the table.
+  final ThemedTable2Controller<T>? controller;
+
   const ThemedTable2({
     required this.items,
     required this.columns,
@@ -98,6 +101,7 @@ class ThemedTable2<T> extends StatefulWidget {
     this.reloadOnDidUpdate = false,
     this.onTapDefaultBehavior = .copyToClipboard,
     this.copyToClipboardText,
+    this.controller,
   }) : assert(columns.length > 0, 'Columns cant be empty'),
        assert(actionsCount >= 0, 'Actions count cant be negative'),
        assert(minColumnWidth > 0, 'Min column width must be greater than 0'),
@@ -162,14 +166,14 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [_itemsStrings] holds a precomputed list of string representations of the items for efficient searching.
   Map<int, Map<int, String>> _itemsStrings = {};
 
-  /// [colSelected] is the currently selected column used for sorting.
-  late ThemedColumn2<T> colSelected;
+  /// [_colSelected] is the currently selected column used for sorting.
+  late ThemedColumn2<T> _colSelected;
 
   /// [_debounce] is a timer used to debounce the search input.
   Timer? _debounce;
 
-  /// [isReversed] indicates whether the current sort order is descending (true) or ascending (false).
-  bool isReversed = false;
+  /// [_isReversed] indicates whether the current sort order is descending (true) or ascending (false).
+  bool _isReversed = false;
 
   /// [_isLoading] indicates whether the table is currently loading or computing data.
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
@@ -180,7 +184,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   @override
   void initState() {
     super.initState();
-    colSelected = widget.columns.first;
+    _colSelected = widget.columns.first;
 
     _horizontalScrollControllerGroup = SyncScrollControllerGroup();
     _horizontalContentController = _horizontalScrollControllerGroup.addAndGet();
@@ -194,6 +198,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _selectedItems = widget.multiselectValue ?? .new([]);
 
     _filterAndSortAsync('INIT_STATE');
+
+    widget.controller?.addListener(_onControllerEvent);
   }
 
   @override
@@ -238,7 +244,34 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _horizontalHeaderController.dispose();
     _horizontalContentController.dispose();
 
+    widget.controller?.removeListener(_onControllerEvent);
+
     super.dispose();
+  }
+
+  void _onControllerEvent(ThemedTable2Event event) {
+    if (event is ThemedTable2SortEvent<T>) {
+      final columnIndex = event.columnIndex;
+      final ascending = event.ascending;
+
+      if (columnIndex < 0 || columnIndex >= widget.columns.length) {
+        debugPrint('layrz_theme/ThemedTable2: Invalid column index $columnIndex for sorting');
+        return;
+      }
+
+      _colSelected = widget.columns[columnIndex];
+      _isReversed = !ascending;
+
+      _filterAndSortAsync('CONTROLLER_SORT');
+      return;
+    }
+
+    if (event is ThemedTable2RefreshEvent<T>) {
+      _filterAndSortAsync('CONTROLLER_REFRESH');
+      return;
+    }
+
+    debugPrint('layrz_theme/ThemedTable2: Unknown controller event type: ${event.runtimeType}');
   }
 
   @override
@@ -374,7 +407,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                             itemCount: widget.columns.length,
                             itemBuilder: (context, index) {
                               final ThemedColumn2<T> entry = widget.columns[index];
-                              final bool isSelected = entry == colSelected;
+                              final bool isSelected = entry == _colSelected;
 
                               return Row(
                                 children: [
@@ -383,10 +416,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                     child: InkWell(
                                       onTap: () {
                                         if (isSelected) {
-                                          isReversed = !isReversed;
+                                          _isReversed = !_isReversed;
                                         } else {
-                                          colSelected = entry;
-                                          isReversed = false;
+                                          _colSelected = entry;
+                                          _isReversed = false;
                                         }
 
                                         _filterAndSort('SORT');
@@ -402,7 +435,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                                 WidgetSpan(
                                                   alignment: .middle,
                                                   child: Icon(
-                                                    isReversed
+                                                    _isReversed
                                                         ? LayrzIcons.solarBoldSortFromBottomToTop
                                                         : LayrzIcons.solarBoldSortFromTopToBottom,
                                                     size: _sortIconSize,
@@ -761,7 +794,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       }
 
       debugPrint("layrz_theme/ThemedTable2: Sorting data...");
-      items.sort(colSelected.customSort ?? _defaultSort);
+      items.sort(_colSelected.customSort ?? _defaultSort);
       _filteredData.value = items;
     } finally {
       debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source, removing debouncer...");
@@ -781,18 +814,18 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   int _defaultSort(T a, T b) {
-    final colHashCode = colSelected.hashCode;
+    final colHashCode = _colSelected.hashCode;
     final rowAHashCode = a.hashCode;
     final rowBHashCode = b.hashCode;
 
-    final valueA = _itemsStrings[rowAHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(a);
-    final valueB = _itemsStrings[rowBHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(b);
+    final valueA = _itemsStrings[rowAHashCode]?[colHashCode] ?? _colSelected.valueBuilder.call(a);
+    final valueB = _itemsStrings[rowBHashCode]?[colHashCode] ?? _colSelected.valueBuilder.call(b);
 
     final numA = num.tryParse(valueA);
     final numB = num.tryParse(valueB);
     if (numA != null && numB != null) {
       if (numB == numA) return 0;
-      if (isReversed) {
+      if (_isReversed) {
         return numB > numA ? 1 : -1;
       }
       return numA > numB ? 1 : -1;
@@ -812,18 +845,18 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     final durA = parseDuration(valueA);
     final durB = parseDuration(valueB);
     if (durA != null && durB != null) {
-      return isReversed ? durB.compareTo(durA) : durA.compareTo(durB);
+      return _isReversed ? durB.compareTo(durA) : durA.compareTo(durB);
     }
 
     // Try to parse as DateTime
     final dateA = DateTime.tryParse(valueA);
     final dateB = DateTime.tryParse(valueB);
     if (dateA != null && dateB != null) {
-      return isReversed ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
+      return _isReversed ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
     }
 
     // Default: compare as string (case insensitive)
-    return isReversed
+    return _isReversed
         ? valueB.toLowerCase().compareTo(valueA.toLowerCase())
         : valueA.toLowerCase().compareTo(valueB.toLowerCase());
   }
