@@ -433,7 +433,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                       height: 35,
                       decoration: BoxDecoration(
                         color: Colors.red,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: Material(
@@ -452,7 +452,11 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                     )
                                   : Text(
                                       _totalSnackbars > 9 ? '+9' : _totalSnackbars.toString(),
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white),
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
                                     ),
                             ),
                           ),

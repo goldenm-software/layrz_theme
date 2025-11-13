@@ -69,8 +69,8 @@ class ThemedTab extends StatelessWidget {
       trailingIcon: trailingIcon,
       padding: padding,
       color: color,
-      child: child,
       style: newStyle,
+      child: child,
     );
   }
 

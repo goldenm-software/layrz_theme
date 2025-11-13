@@ -72,10 +72,10 @@ class SetTheme extends StateMutation<AppStore> {
 
   @override
   Future<void> perform() async {
-    store!.themeMode = themeMode;
+    store.themeMode = themeMode;
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('layrz.theme.mode', store!.themeMode.name);
+    prefs.setString('layrz.theme.mode', store.themeMode.name);
   }
 }
 
@@ -85,7 +85,7 @@ class GetTheme extends StateMutation<AppStore> {
     final prefs = await SharedPreferences.getInstance();
     final themeMode = prefs.getString('layrz.theme.mode');
     if (themeMode != null) {
-      store!.themeMode = ThemeMode.values.firstWhere(
+      store.themeMode = ThemeMode.values.firstWhere(
         (e) => e.name == themeMode,
         orElse: () => ThemeMode.system,
       );
@@ -100,10 +100,10 @@ class SetLayout extends StateMutation<AppStore> {
 
   @override
   Future<void> perform() async {
-    store!.layoutStyle = layoutStyle;
+    store.layoutStyle = layoutStyle;
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('layrz.layout.style', store!.layoutStyle.name);
+    prefs.setString('layrz.layout.style', store.layoutStyle.name);
   }
 }
 
@@ -113,7 +113,7 @@ class GetLayout extends StateMutation<AppStore> {
     final prefs = await SharedPreferences.getInstance();
     final layoutStyle = prefs.getString('layrz.layout.style');
     if (layoutStyle != null) {
-      store!.layoutStyle = ThemedLayoutStyle.values.firstWhere(
+      store.layoutStyle = ThemedLayoutStyle.values.firstWhere(
         (e) => e.name == layoutStyle,
         orElse: () => ThemedLayoutStyle.mini,
       );
@@ -128,10 +128,10 @@ class SetColorblindMode extends StateMutation<AppStore> {
 
   @override
   Future<void> perform() async {
-    store!.colorblindMode = colorblindMode;
+    store.colorblindMode = colorblindMode;
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('layrz.colorblind.mode', store!.colorblindMode.name);
+    prefs.setString('layrz.colorblind.mode', store.colorblindMode.name);
   }
 }
 
@@ -142,9 +142,9 @@ class SetColorblindStrength extends StateMutation<AppStore> {
 
   @override
   Future<void> perform() async {
-    store!.colorblindStrength = colorblindStrength;
+    store.colorblindStrength = colorblindStrength;
 
     final prefs = await SharedPreferences.getInstance();
-    prefs.setDouble('layrz.colorblind.strength', store!.colorblindStrength);
+    prefs.setDouble('layrz.colorblind.strength', store.colorblindStrength);
   }
 }

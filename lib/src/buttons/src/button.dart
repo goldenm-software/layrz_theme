@@ -464,7 +464,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   double get iconSeparatorSize => widget.iconSeparatorSize;
 
   WidgetSpan get iconSeparator => WidgetSpan(
-    alignment: PlaceholderAlignment.middle,
+    alignment: .middle,
     child: SizedBox(width: iconSeparatorSize),
   );
 
@@ -514,7 +514,7 @@ class _ThemedButtonState extends State<ThemedButton> {
         text: labelText,
         style: textStyle,
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: .ltr,
     )..layout();
 
     double predicted = textPainter.width + defaultPadding.horizontal;
@@ -546,29 +546,29 @@ class _ThemedButtonState extends State<ThemedButton> {
   @override
   Widget build(BuildContext context) {
     switch (style) {
-      case ThemedButtonStyle.filledTonal:
+      case .filledTonal:
         return _handleHint(child: _buildFilledTonal());
-      case ThemedButtonStyle.filledTonalFab:
+      case .filledTonalFab:
         return _buildFilledTonalFab();
-      case ThemedButtonStyle.text:
+      case .text:
         return _handleHint(child: _buildText());
-      case ThemedButtonStyle.fab:
+      case .fab:
         return _buildFab();
-      case ThemedButtonStyle.outlined:
+      case .outlined:
         return _handleHint(child: _buildOutlined());
-      case ThemedButtonStyle.outlinedFab:
+      case .outlinedFab:
         return _buildOutlinedFab();
-      case ThemedButtonStyle.filled:
+      case .filled:
         return _handleHint(child: _buildFilled());
-      case ThemedButtonStyle.filledFab:
+      case .filledFab:
         return _builFilledFab();
-      case ThemedButtonStyle.elevated:
+      case .elevated:
         return _handleHint(child: _buildElevated());
-      case ThemedButtonStyle.elevatedFab:
+      case .elevatedFab:
         return _builElevatedFab();
-      case ThemedButtonStyle.outlinedTonal:
+      case .outlinedTonal:
         return _handleHint(child: _buildOutlinedTonal());
-      case ThemedButtonStyle.outlinedTonalFab:
+      case .outlinedTonalFab:
         return _buildOutlinedTonalFab();
     }
   }
@@ -608,10 +608,10 @@ class _ThemedButtonState extends State<ThemedButton> {
     return Container(
       height: height,
       width: width,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       decoration: BoxDecoration(
         color: color.withValues(alpha: kHoverOpacity),
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: .circular(borderRadius),
       ),
       child: Material(
         color: Colors.transparent,
@@ -622,12 +622,12 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: _buildLoadingOrChild(
               child: Center(
                 child: RichText(
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   text: TextSpan(
                     children: [
                       if (icon != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: Icon(
                             icon,
                             color: color,
@@ -638,7 +638,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                       ],
                       if (label != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: label!,
                         ),
                       ] else ...[
@@ -665,10 +665,10 @@ class _ThemedButtonState extends State<ThemedButton> {
 
     return _handleTooltip(
       child: Container(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         decoration: BoxDecoration(
           color: color.withValues(alpha: kHoverOpacity),
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: .circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -704,11 +704,11 @@ class _ThemedButtonState extends State<ThemedButton> {
     return Container(
       height: height,
       width: width,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       decoration: BoxDecoration(
         color: color.withValues(alpha: kOutlinedTonalOpacity),
-        border: Border.all(color: color, width: kBorderWidth),
-        borderRadius: BorderRadius.circular(borderRadius),
+        border: .all(color: color, width: kBorderWidth),
+        borderRadius: .circular(borderRadius),
       ),
       child: Material(
         color: Colors.transparent,
@@ -719,12 +719,12 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: _buildLoadingOrChild(
               child: Center(
                 child: RichText(
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   text: TextSpan(
                     children: [
                       if (icon != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: Icon(
                             icon,
                             color: color,
@@ -735,7 +735,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                       ],
                       if (label != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: label!,
                         ),
                       ] else ...[
@@ -762,11 +762,11 @@ class _ThemedButtonState extends State<ThemedButton> {
 
     return _handleTooltip(
       child: Container(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         decoration: BoxDecoration(
           color: color.withValues(alpha: kOutlinedTonalOpacity),
-          border: Border.all(color: color, width: kBorderWidth),
-          borderRadius: BorderRadius.circular(borderRadius),
+          border: .all(color: color, width: kBorderWidth),
+          borderRadius: .circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -798,12 +798,12 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// This button is used when the [style] is [ThemedButtonStyle.text].
   Widget _buildText() {
     return Container(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       height: height,
       width: width,
       decoration: BoxDecoration(
         color: colorOverride ?? Colors.transparent,
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: .circular(borderRadius),
       ),
       child: Material(
         color: Colors.transparent,
@@ -814,12 +814,12 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: _buildLoadingOrChild(
               child: Center(
                 child: RichText(
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   text: TextSpan(
                     children: [
                       if (icon != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: Icon(
                             icon,
                             color: contentColor,
@@ -830,7 +830,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                       ],
                       if (label != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: label!,
                         ),
                       ] else ...[
@@ -855,10 +855,10 @@ class _ThemedButtonState extends State<ThemedButton> {
   Widget _buildFab() {
     return _handleTooltip(
       child: Container(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         decoration: BoxDecoration(
           color: colorOverride ?? Colors.transparent,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: .circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -890,13 +890,13 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// This button is used when the [style] is [ThemedButtonStyle.outlined].
   Widget _buildOutlined() {
     return Container(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       height: height,
       width: width,
       decoration: BoxDecoration(
         color: colorOverride ?? Colors.transparent,
-        borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(color: contentColor, width: kBorderWidth),
+        borderRadius: .circular(borderRadius),
+        border: .all(color: contentColor, width: kBorderWidth),
       ),
       child: Material(
         color: Colors.transparent,
@@ -908,12 +908,12 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: _buildLoadingOrChild(
               child: Center(
                 child: RichText(
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   text: TextSpan(
                     children: [
                       if (icon != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: Icon(
                             icon,
                             color: contentColor,
@@ -924,7 +924,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                       ],
                       if (label != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: label!,
                         ),
                       ] else ...[
@@ -949,11 +949,11 @@ class _ThemedButtonState extends State<ThemedButton> {
   Widget _buildOutlinedFab() {
     return _handleTooltip(
       child: Container(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         decoration: BoxDecoration(
-          border: Border.all(color: contentColor, width: kBorderWidth),
+          border: .all(color: contentColor, width: kBorderWidth),
           color: colorOverride ?? Colors.transparent,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: .circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -989,10 +989,10 @@ class _ThemedButtonState extends State<ThemedButton> {
     return Container(
       height: height,
       width: width,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: .circular(borderRadius),
       ),
       child: Material(
         color: Colors.transparent,
@@ -1003,12 +1003,12 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: _buildLoadingOrChild(
               child: Center(
                 child: RichText(
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   text: TextSpan(
                     children: [
                       if (icon != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: Icon(
                             icon,
                             color: validateColor(color: color),
@@ -1019,7 +1019,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                       ],
                       if (label != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: label!,
                         ),
                       ] else ...[
@@ -1046,10 +1046,10 @@ class _ThemedButtonState extends State<ThemedButton> {
 
     return _handleTooltip(
       child: Container(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: .circular(borderRadius),
         ),
         child: Material(
           color: Colors.transparent,
@@ -1085,10 +1085,10 @@ class _ThemedButtonState extends State<ThemedButton> {
     return Container(
       height: height,
       width: width,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: .circular(borderRadius),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withAlpha((255 * 0.2).toInt()),
@@ -1106,12 +1106,12 @@ class _ThemedButtonState extends State<ThemedButton> {
             child: _buildLoadingOrChild(
               child: Center(
                 child: RichText(
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   text: TextSpan(
                     children: [
                       if (icon != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: Icon(
                             icon,
                             color: validateColor(color: color),
@@ -1122,7 +1122,7 @@ class _ThemedButtonState extends State<ThemedButton> {
                       ],
                       if (label != null) ...[
                         WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
+                          alignment: .middle,
                           child: label!,
                         ),
                       ] else ...[
@@ -1149,10 +1149,10 @@ class _ThemedButtonState extends State<ThemedButton> {
 
     return _handleTooltip(
       child: Container(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: .circular(borderRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withAlpha((255 * 0.2).toInt()),
@@ -1216,10 +1216,13 @@ class _ThemedButtonState extends State<ThemedButton> {
               builder: (context, value, _) {
                 int remaining = (cooldownDuration.inSeconds * (1 - value)).round() + 1;
 
-                Widget progress = LinearProgressIndicator(
-                  backgroundColor: widget.loadingBackgroundColor ?? Colors.transparent,
-                  color: loadingColor,
-                  value: value,
+                Widget progress = ClipRRect(
+                  borderRadius: .circular(borderRadius - 1),
+                  child: LinearProgressIndicator(
+                    backgroundColor: widget.loadingBackgroundColor ?? Colors.transparent,
+                    color: loadingColor,
+                    value: value,
+                  ),
                 );
 
                 return Stack(
@@ -1248,7 +1251,7 @@ class _ThemedButtonState extends State<ThemedButton> {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(borderRadius - 1),
+                    borderRadius: .circular(borderRadius - 1),
                     child: LinearProgressIndicator(
                       backgroundColor: widget.loadingBackgroundColor ?? Colors.transparent,
                       color: loadingColor,
@@ -1313,4 +1316,39 @@ enum ThemedButtonStyle {
   /// [ThemedButtonStyle.outlinedTonalFab] refers to a button with a outlined border with an constant
   /// opacity of `0.2`.
   outlinedTonalFab,
+}
+
+PreviewThemeData generateTheme() {
+  return PreviewThemeData(materialLight: generateLightTheme(), materialDark: generateDarkTheme());
+}
+
+@Preview(
+  group: 'Buttons',
+  name: 'Standard',
+  theme: generateTheme,
+  brightness: Brightness.light,
+)
+Widget previewStandard() {
+  return Container(
+    padding: const EdgeInsets.all(10),
+    child: ThemedButton(
+      labelText: 'Preview',
+    ),
+  );
+}
+
+@Preview(
+  group: 'Buttons',
+  name: 'Loading',
+  theme: generateTheme,
+  brightness: Brightness.light,
+)
+Widget previeLoading() {
+  return Container(
+    padding: const EdgeInsets.all(10),
+    child: ThemedButton(
+      labelText: 'Preview',
+      isLoading: true,
+    ),
+  );
 }

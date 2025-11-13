@@ -27,7 +27,7 @@ class Layo extends StatelessWidget {
   const Layo({
     super.key,
     required this.size,
-    this.emotion = LayoEmotions.standard,
+    this.emotion = .standard,
     double? radius,
     this.elevation = 1,
     this.shadowColor,
