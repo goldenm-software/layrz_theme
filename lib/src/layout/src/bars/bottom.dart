@@ -71,8 +71,8 @@ class ThemedBottomBar extends StatefulWidget {
 }
 
 class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderStateMixin {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get backgroundColor => isDark
       ? Theme.of(context).scaffoldBackgroundColor
       : widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
@@ -147,15 +147,15 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
               children: [
                 if (_children.isNotEmpty) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const .symmetric(horizontal: 10),
                     color: activeColor.withValues(alpha: 0.2),
                     height: kBottomBarHeight,
                     child: Center(
                       child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
+                        scrollDirection: .horizontal,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: .center,
+                          crossAxisAlignment: .center,
                           children: [
                             ..._children.map((item) => _buildItem(item, depth: 1)),
                           ],
@@ -168,17 +168,17 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   height: kBottomBarHeight,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: .center,
+                    crossAxisAlignment: .center,
                     children: [
                       Expanded(
                         child: Center(
                           child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
+                            scrollDirection: .horizontal,
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: .center,
+                              crossAxisAlignment: .center,
+                              mainAxisSize: .min,
                               children: [
                                 if (widget.items.isNotEmpty) ...widget.items.map((item) => _buildItem(item)),
                                 if (widget.persistentItems.isNotEmpty)
@@ -202,10 +202,10 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
   Widget _buildItem(ThemedNavigatorItem item, {int depth = 0}) {
     if (item is ThemedNavigatorLabel) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.top,
+        position: .top,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: kBottomBarHeight,
           height: actionSize,
           child: Center(
@@ -227,16 +227,10 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
           bool highlightTop = isExpanded && item.children.isNotEmpty;
 
           Widget baseWidget = ThemedTooltip(
-            position: ThemedTooltipPosition.top,
+            position: .top,
             message: item.labelText ?? item.label?.toString() ?? '',
             child: Container(
-              margin: highlightTop
-                  ? const EdgeInsets.only(
-                      bottom: 5,
-                      left: 5,
-                      right: 5,
-                    )
-                  : const EdgeInsets.all(5),
+              margin: highlightTop ? const .only(bottom: 5, left: 5, right: 5) : const .all(5),
               width: actionSize + (highlightTop ? 5 : 0),
               height: actionSize + (highlightTop ? 5 : 0),
               decoration: BoxDecoration(
@@ -246,13 +240,10 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
                     ? activeColor
                     : Colors.transparent,
                 borderRadius: highlightTop
-                    ? BorderRadius.only(
-                        bottomLeft: Radius.circular(actionSize),
-                        bottomRight: Radius.circular(actionSize),
-                      )
-                    : BorderRadius.circular(actionSize),
+                    ? .only(bottomLeft: .circular(actionSize), bottomRight: .circular(actionSize))
+                    : .circular(actionSize),
               ),
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: .antiAlias,
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -283,20 +274,20 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
 
     if (item is ThemedNavigatorAction) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.top,
+        position: .top,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize,
           height: actionSize,
           decoration: BoxDecoration(
             // color: validateColor(color: backgroundColor).withValues(alpha:0.2),
-            borderRadius: BorderRadius.circular(actionSize),
+            borderRadius: .circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Center(
@@ -314,27 +305,24 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
 
     if (item is ThemedNavigatorSeparator) {
       Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
-      if (item.type == ThemedSeparatorType.line) {
+      if (item.type == .line) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const .symmetric(horizontal: 10),
           height: actionSize,
           child: VerticalDivider(color: dividerColor),
         );
       }
 
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const .symmetric(horizontal: 10),
         height: actionSize,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(5, (_) {
+          mainAxisAlignment: .spaceBetween,
+          children: .generate(5, (_) {
             return Container(
               width: 3,
               height: 3,
-              decoration: BoxDecoration(
-                color: dividerColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: dividerColor, shape: .circle),
             );
           }),
         ),
@@ -343,27 +331,24 @@ class _ThemedBottomBarState extends State<ThemedBottomBar> with TickerProviderSt
 
     if (item is ThemedNavigatorWidget) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(actionSize),
+            borderRadius: .circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Container(
-                alignment: Alignment.center,
-                constraints: const BoxConstraints(
-                  minWidth: 30,
-                  minHeight: 30,
-                ),
+                alignment: .center,
+                constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
                 child: item.widget,
               ),
             ),

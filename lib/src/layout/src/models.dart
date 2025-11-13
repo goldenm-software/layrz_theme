@@ -16,13 +16,13 @@ abstract class ThemedNavigatorItem {
   });
 
   /// [topBarItemPadding] is the padding applied of the element when is rendered using [toAppBarItem].
-  static EdgeInsets get topBarItemPadding => const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10);
+  static EdgeInsets get topBarItemPadding => const .symmetric(vertical: 2.5, horizontal: 10);
 
   /// [sidebarItemPadding] is the padding applied of the element when is rendered using [toSidebarItem].
-  static EdgeInsets get sidebarItemPadding => const EdgeInsets.symmetric(vertical: 5);
+  static EdgeInsets get sidebarItemPadding => const .symmetric(vertical: 5);
 
   /// [drawerItemPadding] is the padding applied of the element when is rendered using [toDrawerItem].
-  static EdgeInsets get drawerItemPadding => const EdgeInsets.symmetric(vertical: 5);
+  static EdgeInsets get drawerItemPadding => const .symmetric(vertical: 5);
 
   /// [sidebarSize] is the size of the elements in the sidebar.
   static double get sidebarSize => 35;
@@ -122,9 +122,7 @@ class ThemedNavigatorSeparator extends ThemedNavigatorItem {
   final ThemedSeparatorType type;
 
   /// [ThemedNavigatorSeparator] is a visual separator of the items in a [ThemedAppBar.items] or [ThemedSidebar.items].
-  ThemedNavigatorSeparator({
-    this.type = ThemedSeparatorType.line,
-  });
+  ThemedNavigatorSeparator({this.type = .line});
 }
 
 class ThemedNavigatorLabel extends ThemedNavigatorItem {

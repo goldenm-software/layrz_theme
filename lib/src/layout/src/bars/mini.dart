@@ -124,7 +124,7 @@ class ThemedMiniBar extends StatefulWidget {
 }
 
 class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateMixin {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get backgroundColor =>
       isDark ? Theme.of(context).scaffoldBackgroundColor : widget.backgroundColor ?? Theme.of(context).primaryColor;
   String get favicon => useBlack(color: backgroundColor) ? widget.favicon.normal : widget.favicon.white;
@@ -141,7 +141,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Container(
       width: 70,
-      padding: const EdgeInsets.all(10),
+      padding: const .all(10),
       decoration: BoxDecoration(
         color: backgroundColor,
         boxShadow: [
@@ -170,10 +170,10 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
+                      _buildItem(ThemedNavigatorSeparator(type: .dots)),
                       ThemedAppBarAvatar(
                         asTaskBar: false,
-                        tooltipPosition: ThemedTooltipPosition.right,
+                        tooltipPosition: .right,
                         appTitle: widget.appTitle,
                         logo: widget.logo,
                         favicon: widget.favicon,
@@ -193,7 +193,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                         avatarRadius: widget.avatarRadius,
                       ),
                       if (widget.persistentItems.isNotEmpty) ...[
-                        _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
+                        _buildItem(ThemedNavigatorSeparator(type: .dots)),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: widget.persistentItems.length,
@@ -203,7 +203,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                         ),
                       ],
                       if (widget.items.isNotEmpty) ...[
-                        _buildItem(ThemedNavigatorSeparator(type: ThemedSeparatorType.dots)),
+                        _buildItem(ThemedNavigatorSeparator(type: .dots)),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: widget.items.length,
@@ -224,7 +224,7 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                 dense: true,
                 notifications: widget.notifications,
                 backgroundColor: backgroundColor,
-                location: ThemedNotificationLocation.miniBar,
+                location: .miniBar,
                 expandToLeft: false,
                 forceFullSize: false,
               ),
@@ -238,10 +238,10 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
   Widget _buildItem(ThemedNavigatorItem item, {int depth = 0}) {
     if (item is ThemedNavigatorLabel) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
           child: Center(
@@ -269,10 +269,10 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
           bool highlightTop = isExpanded && item.children.isNotEmpty;
 
           Widget baseWidget = ThemedTooltip(
-            position: ThemedTooltipPosition.right,
+            position: .right,
             message: item.labelText ?? item.label?.toString() ?? '',
             child: Container(
-              margin: const EdgeInsets.all(5),
+              margin: const .all(5),
               // margin: highlight && depth == 0 ? EdgeInsets.zero : const EdgeInsets.all(5),
               // padding: highlight && depth == 0 ? const EdgeInsets.all(5) : EdgeInsets.zero,
               width: actionSize - 10,
@@ -283,9 +283,9 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
                     : highlight
                     ? activeColor
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(actionSize),
+                borderRadius: .circular(actionSize),
               ),
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: .antiAlias,
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -323,14 +323,14 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
           bool display = isExpanded && item.children.isNotEmpty;
 
           return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
             children: [
               AnimatedContainer(
                 duration: kHoverDuration,
                 decoration: BoxDecoration(
                   color: activeColor.withValues(alpha: display ? widget.depthColorFactor : 0),
-                  borderRadius: BorderRadius.circular(actionSize),
+                  borderRadius: .circular(actionSize),
                 ),
                 child: Column(
                   children: [
@@ -362,20 +362,20 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
 
     if (item is ThemedNavigatorAction) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
           decoration: BoxDecoration(
             // color: validateColor(color: backgroundColor).withValues(alpha:0.2),
-            borderRadius: BorderRadius.circular(actionSize),
+            borderRadius: .circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Center(
@@ -393,29 +393,22 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
 
     if (item is ThemedNavigatorSeparator) {
       Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
-      if (item.type == ThemedSeparatorType.line) {
+      if (item.type == .line) {
         return Padding(
-          padding: const EdgeInsets.all(5),
-          child: Divider(
-            indent: 2,
-            endIndent: 2,
-            color: dividerColor,
-          ),
+          padding: const .all(5),
+          child: Divider(indent: 2, endIndent: 2, color: dividerColor),
         );
       }
 
       return Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const .all(10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(5, (_) {
+          mainAxisAlignment: .spaceBetween,
+          children: .generate(5, (_) {
             return Container(
               width: 3,
               height: 3,
-              decoration: BoxDecoration(
-                color: dividerColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: dividerColor, shape: .circle),
             );
           }),
         ),
@@ -424,27 +417,22 @@ class _ThemedMiniBarState extends State<ThemedMiniBar> with TickerProviderStateM
 
     if (item is ThemedNavigatorWidget) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(actionSize),
-          ),
+          decoration: BoxDecoration(borderRadius: .circular(actionSize)),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Container(
-                alignment: Alignment.center,
-                constraints: const BoxConstraints(
-                  minWidth: 30,
-                  minHeight: 30,
-                ),
+                alignment: .center,
+                constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
                 child: item.widget,
               ),
             ),

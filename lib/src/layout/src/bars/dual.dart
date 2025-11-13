@@ -37,7 +37,7 @@ class ThemedDualBar extends StatefulWidget {
 }
 
 class _ThemedDualBarState extends State<ThemedDualBar> {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get backgroundColor =>
       widget.backgroundColor ?? (isDark ? Colors.grey.shade900 : Theme.of(context).primaryColor);
 
@@ -90,8 +90,8 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
   Widget build(BuildContext context) {
     return Container(
       width: ThemedDualBar.width,
-      height: double.infinity,
-      padding: const EdgeInsets.all(10),
+      height: .infinity,
+      padding: const .all(10),
       decoration: BoxDecoration(
         color: backgroundColor,
         boxShadow: [
@@ -104,7 +104,7 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
       ),
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Expanded(
               child: ListView.builder(
@@ -148,24 +148,21 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
       Color backgroundColor = highlight ? validateColor(color: Theme.of(context).primaryColor) : Colors.transparent;
 
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: 30,
           height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: backgroundColor,
-          ),
-          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(borderRadius: .circular(5), color: backgroundColor),
+          clipBehavior: .antiAlias,
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: () => item.onTap(onNavigatorPush),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const .all(8),
                 child: Icon(
                   item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                   size: 15,
@@ -180,24 +177,21 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
 
     if (item is ThemedNavigatorAction) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: 30,
           height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: backgroundColor,
-          ),
-          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(borderRadius: .circular(5), color: backgroundColor),
+          clipBehavior: .antiAlias,
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: item.onTap,
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const .all(8),
                 child: Icon(
                   item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
                   size: 15,
@@ -212,26 +206,19 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
 
     if (item is ThemedNavigatorSeparator) {
       Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
-      if (item.type == ThemedSeparatorType.line) {
-        return Divider(
-          indent: 5,
-          endIndent: 5,
-          color: dividerColor,
-        );
+      if (item.type == .line) {
+        return Divider(indent: 5, endIndent: 5, color: dividerColor);
       }
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const .symmetric(horizontal: 5),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(6, (_) {
+          mainAxisAlignment: .spaceBetween,
+          children: .generate(6, (_) {
             return Container(
               width: 3,
               height: 3,
-              decoration: BoxDecoration(
-                color: dividerColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: dividerColor, shape: .circle),
             );
           }),
         ),
@@ -239,27 +226,22 @@ class _ThemedDualBarState extends State<ThemedDualBar> {
     }
     if (item is ThemedNavigatorWidget) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(actionSize),
-          ),
+          decoration: BoxDecoration(borderRadius: .circular(actionSize)),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Container(
-                alignment: Alignment.center,
-                constraints: const BoxConstraints(
-                  minWidth: 30,
-                  minHeight: 30,
-                ),
+                alignment: .center,
+                constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
                 child: item.widget,
               ),
             ),

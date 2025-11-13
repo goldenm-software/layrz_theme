@@ -51,7 +51,7 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
     this.padding,
 
     /// [enabledTypes] is the list of enabled types of the field.
-    this.enabledTypes = const [AvatarType.url, AvatarType.base64, AvatarType.icon, AvatarType.emoji],
+    this.enabledTypes = const [.url, .base64, .icon, .emoji],
 
     /// [heightFactor] is the height factor of the field.
     this.heightFactor = 0.7,
@@ -66,8 +66,8 @@ class ThemedDynamicAvatarInput extends StatefulWidget {
 
 class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> {
   final TextEditingController _textController = TextEditingController();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get containerColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
   Color get iconColor => isDark ? Colors.grey.shade300 : Colors.grey.shade600;
 
@@ -75,7 +75,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> {
   EdgeInsets get padding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get disabled => widget.disabled;
 
-  List<AvatarType> get enabledTypes => [AvatarType.none, ...widget.enabledTypes];
+  List<AvatarType> get enabledTypes => [.none, ...widget.enabledTypes];
 
   @override
   void initState() {
@@ -88,8 +88,8 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> {
     return ThemedTextInput(
       key: widget.key,
       prefixWidget: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ThemedAvatar(dynamicAvatar: Avatar.fromJson(_value.toJson())),
+        padding: const .all(10),
+        child: ThemedAvatar(dynamicAvatar: .fromJson(_value.toJson())),
       ),
       suffixIcon: widget.disabled ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineAlbum,
       labelText: widget.labelText,
@@ -139,7 +139,7 @@ class _ThemedDynamicAvatarDialog extends StatefulWidget {
 }
 
 class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
   AvatarInput get _value => widget.value;
 
   final ScrollController _emojiController = ScrollController();
@@ -152,7 +152,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
       backgroundColor: Colors.transparent,
       child: Container(
         constraints: const BoxConstraints(maxWidth: 600, maxHeight: 500),
-        padding: const EdgeInsets.all(10),
+        padding: const .all(10),
         decoration: generateContainerElevation(context: context, elevation: 5, radius: 10),
         child: DefaultTabController(
           length: widget.types.length,
@@ -179,24 +179,24 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
   Widget _buildContent({required BoxConstraints constraints, dynamic setState, required AvatarType type}) {
     Widget content;
     switch (type) {
-      case AvatarType.emoji:
+      case .emoji:
         content = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: .start,
+          mainAxisAlignment: .start,
           children: [
             SizedBox(
-              width: double.infinity,
+              width: .infinity,
               child: SingleChildScrollView(
                 controller: _emojiController,
-                scrollDirection: Axis.horizontal,
+                scrollDirection: .horizontal,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const .symmetric(horizontal: 10, vertical: 5),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: .start,
+                    mainAxisAlignment: .start,
                     children: [null, ...EmojiGroup.values].map((group) {
                       return Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
+                        padding: const .only(left: 8.0),
                         child: _EmojiGroupButton(
                           group: group,
                           onTap: () {
@@ -211,7 +211,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                 ),
               ),
             ),
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Divider()),
+            const Padding(padding: .symmetric(horizontal: 10), child: Divider()),
             Expanded(
               child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
@@ -225,7 +225,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                         _value.icon = null;
                         _value.url = null;
                         _value.emoji = emoji.char;
-                        _value.type = AvatarType.emoji;
+                        _value.type = .emoji;
                       });
                       widget.onChanged.call(_value);
                     },
@@ -237,7 +237,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
           ],
         );
         break;
-      case AvatarType.icon:
+      case .icon:
         content = _IconGrid(
           selected: _value.icon,
           constraints: constraints,
@@ -247,17 +247,17 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
               _value.emoji = null;
               _value.url = null;
               _value.icon = icon;
-              _value.type = AvatarType.icon;
+              _value.type = .icon;
             });
             widget.onChanged.call(_value);
           },
         );
         break;
-      case AvatarType.url:
+      case .url:
         content = SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: .start,
+            crossAxisAlignment: .start,
             children: [
               ThemedTextInput(
                 labelText: i18n?.t('helpers.dynamicAvatar.types.URL.url') ?? "URL",
@@ -269,7 +269,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                     _value.emoji = null;
                     _value.base64 = null;
                     _value.url = value;
-                    _value.type = AvatarType.url;
+                    _value.type = .url;
                     widget.onChanged.call(_value);
                   });
                 },
@@ -278,11 +278,11 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
           ),
         );
         break;
-      case AvatarType.base64:
+      case .base64:
         content = SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: .start,
+            crossAxisAlignment: .center,
             children: [
               ThemedAvatarPicker(
                 labelText: i18n?.t('helpers.dynamicAvatar.types.BASE64') ?? type.readableName,
@@ -293,7 +293,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
                     _value.emoji = null;
                     _value.url = null;
                     _value.base64 = base64;
-                    _value.type = AvatarType.base64;
+                    _value.type = .base64;
                   });
                   widget.onChanged.call(_value);
                 },
@@ -305,13 +305,13 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
 
       default:
         content = Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const .all(20),
           child: Center(
             child: Text(
               i18n?.t('helpers.dynamicAvatar.types.NONE.hint') ??
                   "This type does not support any content, to change that, select other option in the tab bar.",
-              overflow: TextOverflow.visible,
-              textAlign: TextAlign.center,
+              overflow: .visible,
+              textAlign: .center,
               maxLines: 8,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -321,8 +321,8 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
     }
 
     return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(10)),
+      padding: const .all(10),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: .circular(10)),
       child: content,
     );
   }
@@ -331,30 +331,30 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
 extension on AvatarType {
   IconData? get icon {
     switch (this) {
-      case AvatarType.none:
+      case .none:
         return LayrzIcons.solarOutlineCloseSquare;
-      case AvatarType.url:
+      case .url:
         return LayrzIcons.solarOutlineLinkMinimalistic2;
-      case AvatarType.base64:
+      case .base64:
         return LayrzIcons.solarOutlineGallery;
-      case AvatarType.icon:
+      case .icon:
         return LayrzIcons.solarOutlineEmojiFunnySquare;
-      case AvatarType.emoji:
+      case .emoji:
         return LayrzIcons.solarOutlineEmojiFunnySquare;
     }
   }
 
   String get readableName {
     switch (this) {
-      case AvatarType.none:
+      case .none:
         return "Without avatar";
-      case AvatarType.url:
+      case .url:
         return "Direct URL";
-      case AvatarType.base64:
+      case .base64:
         return "Upload your image";
-      case AvatarType.icon:
+      case .icon:
         return "Layrz Icon";
-      case AvatarType.emoji:
+      case .emoji:
         return "Emoji";
     }
   }

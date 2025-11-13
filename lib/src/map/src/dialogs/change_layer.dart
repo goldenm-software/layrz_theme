@@ -50,19 +50,16 @@ class _ThemedChangeLayerDialogState extends State<ThemedChangeLayerDialog> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const .all(20),
         decoration: generateContainerElevation(context: context, elevation: 4),
         constraints: const BoxConstraints(maxWidth: 500),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             Text(
               widget.title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold, fontSize: 20),
             ),
             const SizedBox(height: 10),
 
@@ -75,7 +72,7 @@ class _ThemedChangeLayerDialogState extends State<ThemedChangeLayerDialog> {
                 );
               }).toList(),
               labelText: widget.title,
-              padding: EdgeInsets.zero,
+              padding: .zero,
               value: selectedLayer,
               onChanged: (value) => setState(() => selectedLayer = value?.value),
               hideDetails: true,
@@ -83,10 +80,10 @@ class _ThemedChangeLayerDialogState extends State<ThemedChangeLayerDialog> {
 
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 ThemedButton(
-                  style: ThemedButtonStyle.text,
+                  style: .text,
                   labelText: widget.cancelLabelText,
                   color: Colors.red,
                   onTap: () => Navigator.of(context).pop(),

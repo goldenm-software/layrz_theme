@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.5.0 (UNRELEASED)
+## 7.5.0 (BETA)
 
 - Updated constraint of Dart SDK to `>=3.10.0 <4.0.0`
 - Updated constraint of Flutter SDK to `>=3.38.0`

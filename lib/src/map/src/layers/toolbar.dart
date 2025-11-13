@@ -158,12 +158,12 @@ class ThemedMapToolbar extends StatefulWidget {
 }
 
 class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   double get _buttonSize => ThemedMapButton.size;
   Color get buttonColor => isDark ? Colors.white : Colors.black;
 
   MapLayer? _selected;
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
 
   double get _sliderSizeFactor => 5;
 
@@ -212,7 +212,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     if (fixedButtons.isEmpty) return const SizedBox();
     if (widget.additionalButtons.isEmpty) return const SizedBox();
 
-    return widget.flow == ThemedMapToolbarFlow.horizontal
+    return widget.flow == .horizontal
         ? VerticalDivider(
             width: _dividerSize,
             indent: _dividerIndent,
@@ -247,10 +247,10 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
         },
       ),
       SizedBox(
-        height: widget.flow == ThemedMapToolbarFlow.horizontal ? _buttonSize : _buttonSize * _sliderSizeFactor,
-        width: widget.flow == ThemedMapToolbarFlow.horizontal ? _buttonSize * _sliderSizeFactor : _buttonSize,
+        height: widget.flow == .horizontal ? _buttonSize : _buttonSize * _sliderSizeFactor,
+        width: widget.flow == .horizontal ? _buttonSize * _sliderSizeFactor : _buttonSize,
         child: RotatedBox(
-          quarterTurns: widget.flow == ThemedMapToolbarFlow.horizontal ? 0 : 3,
+          quarterTurns: widget.flow == .horizontal ? 0 : 3,
           child: ValueListenableBuilder(
             valueListenable: _zoomListenable,
             builder: (context, value, _) {
@@ -364,10 +364,10 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
 
   @override
   Widget build(BuildContext context) {
-    EdgeInsetsGeometry margin = const EdgeInsets.all(10);
+    EdgeInsetsGeometry margin = const .all(10);
 
-    if (widget.position == Alignment.bottomLeft) {
-      margin = margin.add(EdgeInsets.only(bottom: ThemedTileLayer.reservedAttributionHeight));
+    if (widget.position == .bottomLeft) {
+      margin = margin.add(.only(bottom: ThemedTileLayer.reservedAttributionHeight));
     }
     return Align(
       alignment: widget.position,
@@ -377,16 +377,10 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
           context: context,
           radius: 8,
         ),
-        clipBehavior: Clip.antiAlias,
-        width: widget.flow == ThemedMapToolbarFlow.horizontal ? calculatedSize : _buttonSize,
-        height: widget.flow == ThemedMapToolbarFlow.horizontal ? _buttonSize : calculatedSize,
-        child: widget.flow == ThemedMapToolbarFlow.horizontal
-            ? Row(
-                children: items,
-              )
-            : Column(
-                children: items,
-              ),
+        clipBehavior: .antiAlias,
+        width: widget.flow == .horizontal ? calculatedSize : _buttonSize,
+        height: widget.flow == .horizontal ? _buttonSize : calculatedSize,
+        child: widget.flow == .horizontal ? Row(children: items) : Column(children: items),
       ),
     );
   }

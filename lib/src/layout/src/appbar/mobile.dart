@@ -141,8 +141,8 @@ class ThemedMobileAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProviderStateMixin {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get activeColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   String get logo => isDark ? widget.logo.white : widget.logo.normal;
@@ -171,7 +171,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const .symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: backgroundColor,
       ),
@@ -184,7 +184,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                 children: [
                   if (widget.isBackEnabled && !isHome) ...[
                     ThemedButton(
-                      style: ThemedButtonStyle.fab,
+                      style: .fab,
                       icon: LayrzIcons.solarOutlineAltArrowLeft,
                       labelText: 'Back',
                       tooltipEnabled: false,
@@ -195,7 +195,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                     child: ThemedImage(
                       path: isDark ? widget.logo.white : widget.logo.normal,
                       height: 40,
-                      alignment: Alignment.centerLeft,
+                      alignment: .centerLeft,
                     ),
                   ),
                   Row(
@@ -208,7 +208,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                     ThemedNotificationIcon(
                       notifications: widget.notifications,
                       backgroundColor: backgroundColor,
-                      location: ThemedNotificationLocation.appBar,
+                      location: .appBar,
                     ),
                   ],
                   const SizedBox(width: 10),
@@ -243,10 +243,10 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
   Widget _buildItem(ThemedNavigatorItem item) {
     if (item is ThemedNavigatorLabel) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
           child: Center(
@@ -268,12 +268,12 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
         builder: (context, setState) {
           bool highlightTop = isExpanded && item.children.isNotEmpty;
           return ThemedTooltip(
-            position: ThemedTooltipPosition.right,
+            position: .right,
             message: item.labelText ?? item.label?.toString() ?? '',
             child: Container(
-              margin: const EdgeInsets.all(5),
-              // margin: highlight && depth == 0 ? EdgeInsets.zero : const EdgeInsets.all(5),
-              // padding: highlight && depth == 0 ? const EdgeInsets.all(5) : EdgeInsets.zero,
+              margin: const .all(5),
+              // margin: highlight && depth == 0 ? .zero : const .all(5),
+              // padding: highlight && depth == 0 ? const .all(5) : .zero,
               width: actionSize - 10,
               height: actionSize - 10,
               decoration: BoxDecoration(
@@ -282,9 +282,9 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                     : highlight
                     ? activeColor
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(actionSize),
+                borderRadius: .circular(actionSize),
               ),
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: .antiAlias,
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -322,20 +322,20 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
 
     if (item is ThemedNavigatorAction) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
           decoration: BoxDecoration(
             // color: validateColor(color: backgroundColor).withValues(alpha:0.2),
-            borderRadius: BorderRadius.circular(actionSize),
+            borderRadius: .circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Center(
@@ -352,24 +352,24 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
     }
 
     if (item is ThemedNavigatorSeparator) {
-      if (item.type == ThemedSeparatorType.line) {
+      if (item.type == .line) {
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5),
+          margin: const .symmetric(horizontal: 2.5, vertical: 5),
           child: const VerticalDivider(),
         );
       }
 
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5),
+        margin: const .symmetric(horizontal: 2.5, vertical: 5),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(6, (_) {
+          mainAxisAlignment: .spaceBetween,
+          children: .generate(6, (_) {
             return Container(
               width: 3,
               height: 3,
               decoration: BoxDecoration(
                 color: Theme.of(context).dividerColor,
-                shape: BoxShape.circle,
+                shape: .circle,
               ),
             );
           }),
@@ -379,23 +379,23 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
 
     if (item is ThemedNavigatorWidget) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(actionSize),
+            borderRadius: .circular(actionSize),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Container(
-                alignment: Alignment.center,
+                alignment: .center,
                 constraints: const BoxConstraints(
                   minWidth: 30,
                   minHeight: 30,
