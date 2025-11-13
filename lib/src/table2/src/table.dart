@@ -96,7 +96,7 @@ class ThemedTable2<T> extends StatefulWidget {
     this.multiselectValue,
     this.populateDelay = const Duration(milliseconds: 150),
     this.reloadOnDidUpdate = false,
-    this.onTapDefaultBehavior = ThemedTable2OnTapBehavior.copyToClipboard,
+    this.onTapDefaultBehavior = .copyToClipboard,
     this.copyToClipboardText,
   }) : assert(columns.length > 0, 'Columns cant be empty'),
        assert(actionsCount >= 0, 'Actions count cant be negative'),
@@ -115,7 +115,7 @@ class ThemedTable2<T> extends StatefulWidget {
 }
 
 class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   /// [_stripColor] represents the color of the strip item.
   Color get _stripColor => isDark ? Colors.grey.shade900 : Colors.grey.shade100;
@@ -142,10 +142,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   late final ScrollController _horizontalContentController;
 
   /// [_padding] represents the standard padding for the cells
-  EdgeInsets get _padding => const EdgeInsets.symmetric(horizontal: 10);
+  EdgeInsets get _padding => const .symmetric(horizontal: 10);
 
   /// [_actionsPadding] represents the standard padding for the action cells
-  EdgeInsets get _actionsPadding => const EdgeInsets.only(left: 5);
+  EdgeInsets get _actionsPadding => const .only(left: 5);
 
   /// [_style] represents the standard text style for the cells
   TextStyle? get _style => Theme.of(context).textTheme.bodyMedium;
@@ -157,7 +157,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   final TextEditingController _searchController = TextEditingController();
 
   /// [_filteredData] holds the filtered and sorted data currently displayed in the table.
-  final ValueNotifier<List<T>> _filteredData = ValueNotifier<List<T>>([]);
+  final ValueNotifier<List<T>> _filteredData = ValueNotifier([]);
 
   /// [_itemsStrings] holds a precomputed list of string representations of the items for efficient searching.
   Map<int, Map<int, String>> _itemsStrings = {};
@@ -172,7 +172,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   bool isReversed = false;
 
   /// [_isLoading] indicates whether the table is currently loading or computing data.
-  final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   /// [_selectedItems] holds the list of currently selected items in multi-select mode.
   late ValueNotifier<List<T>> _selectedItems;
@@ -191,7 +191,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _contentController = _verticalScrollControllerGroup.addAndGet();
     _actionsController = _verticalScrollControllerGroup.addAndGet();
 
-    _selectedItems = widget.multiselectValue ?? ValueNotifier<List<T>>([]);
+    _selectedItems = widget.multiselectValue ?? .new([]);
 
     _filterAndSortAsync('INIT_STATE');
   }
@@ -213,7 +213,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   Future<void> _filterAndSortAsync(String source) async {
     if (_isLoading.value) {
       debugPrint('layrz_theme/ThemedTable2: Skipping _filterAndSortAsync from $source because is already loading');
+      return;
     }
+
     _isLoading.value = true;
     await Future.delayed(widget.populateDelay);
     _filterAndSort(source);
@@ -247,7 +249,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         if (value) {
           return Center(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 const CircularProgressIndicator(),
                 const SizedBox(height: 10),
@@ -313,7 +315,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                     child: ThemedTextInput(
                       labelText: LayrzAppLocalizations.maybeOf(context)?.t('actions.search') ?? 'Search...',
                       prefixIcon: LayrzIcons.solarOutlineMagnifier,
-                      padding: EdgeInsets.zero,
+                      padding: .zero,
                       controller: _searchController,
                       onChanged: _onSearchChanged,
                       dense: true,
@@ -349,7 +351,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                 value: value.length == widget.items.length && widget.items.isNotEmpty,
                                 onChanged: (val) {
                                   if (val == true) {
-                                    _selectedItems.value = List<T>.from(widget.items);
+                                    _selectedItems.value = .from(widget.items);
                                   } else {
                                     _selectedItems.value = [];
                                   }
@@ -366,7 +368,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                         behavior: const ScrollBehavior().copyWith(scrollbars: false),
                         child: Expanded(
                           child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
+                            scrollDirection: .horizontal,
                             controller: _horizontalHeaderController,
                             physics: const ClampingScrollPhysics(),
                             itemCount: widget.columns.length,
@@ -398,7 +400,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                             children: [
                                               if (isSelected) ...[
                                                 WidgetSpan(
-                                                  alignment: PlaceholderAlignment.middle,
+                                                  alignment: .middle,
                                                   child: Icon(
                                                     isReversed
                                                         ? LayrzIcons.solarBoldSortFromBottomToTop
@@ -414,7 +416,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                                 text: entry.headerText,
                                                 style: Theme.of(
                                                   context,
-                                                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                                ).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
                                               ),
                                             ],
                                           ),
@@ -436,12 +438,12 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                         Container(
                           width: actionsSize,
                           padding: _padding,
-                          alignment: Alignment.centerRight,
+                          alignment: .centerRight,
                           child: RichText(
                             text: TextSpan(
                               children: [
                                 WidgetSpan(
-                                  alignment: PlaceholderAlignment.middle,
+                                  alignment: .middle,
                                   child: Icon(
                                     LayrzIcons.solarOutlineTuningSquare2,
                                     size: _sortIconSize,
@@ -451,7 +453,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                 const WidgetSpan(child: SizedBox(width: 5)),
                                 TextSpan(
                                   text: widget.actionsLabelText,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
                                 ),
                               ],
                             ),
@@ -519,7 +521,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                           child: ScrollConfiguration(
                             behavior: const ScrollBehavior().copyWith(scrollbars: true),
                             child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
+                              scrollDirection: .horizontal,
                               controller: _horizontalContentController,
 
                               child: ScrollConfiguration(
@@ -553,22 +555,21 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                                   style: _style,
                                                 ),
                                                 maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
+                                                overflow: .ellipsis,
                                               );
                                             } else {
                                               child = Text(
                                                 text,
                                                 style: _style,
                                                 maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
+                                                overflow: .ellipsis,
                                               );
                                             }
 
                                             void Function(T)? onTap;
                                             if (header.onTap != null) {
                                               onTap = header.onTap;
-                                            } else if (widget.onTapDefaultBehavior ==
-                                                ThemedTable2OnTapBehavior.copyToClipboard) {
+                                            } else if (widget.onTapDefaultBehavior == .copyToClipboard) {
                                               onTap = (item) {
                                                 Clipboard.setData(ClipboardData(text: text));
                                                 String copiedText =
@@ -637,7 +638,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                   final data = value[index];
                                   return Container(
                                     padding: _padding,
-                                    alignment: Alignment.centerRight,
+                                    alignment: .centerRight,
                                     color: index % 2 == 0 ? null : _stripColor,
                                     child: ThemedActionsButtons(
                                       actions: (widget.actionsBuilder?.call(data) ?? []).map((action) {
@@ -666,18 +667,18 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                     if (value.isEmpty) return const SizedBox.shrink();
 
                     return Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(5),
-                      padding: const EdgeInsets.all(10),
+                      width: .infinity,
+                      margin: const .all(5),
+                      padding: const .all(10),
                       decoration: BoxDecoration(
                         color: Theme.of(context).inputDecorationTheme.fillColor,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: .circular(8),
                       ),
                       child: Column(
                         children: [
                           Text(
                             widget.multiSelectionTitleText,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                             maxLines: 1,
                           ),
                           Text(widget.multiSelectionContentText, maxLines: 1),
@@ -686,8 +687,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                             child: SingleChildScrollView(
                               child: Row(
                                 spacing: 5,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: .center,
+                                crossAxisAlignment: .center,
                                 children: [
                                   ThemedButton(
                                     labelText: widget.multiSelectionCancelLabelText,
@@ -725,7 +726,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   void _filterAndSort(String source) async {
     try {
-      List<T> items = List<T>.from(widget.items, growable: true);
+      List<T> items = .from(widget.items, growable: true);
       if (items.isEmpty) {
         debugPrint("layrz_theme/ThemedTable2: No items to filter and sort from $source.");
         _filteredData.value = items;

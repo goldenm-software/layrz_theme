@@ -75,7 +75,7 @@ class ThemedColumn<T> {
     this.label,
     this.labelText,
     this.isSortable = true,
-    this.alignment = Alignment.centerLeft,
+    this.alignment = .centerLeft,
     this.widgetBuilder,
     this.customSortingFunction,
     required this.valueBuilder,
@@ -89,7 +89,7 @@ class ThemedColumn<T> {
   }) : assert(label != null || labelText != null);
 
   /// [padding] is the padding of the column.
-  static EdgeInsets get padding => const EdgeInsets.symmetric(horizontal: 10);
+  static EdgeInsets get padding => const .symmetric(horizontal: 10);
 
   /// [sortIconSize] is the size of the sort icon.
   static double get sortIconSize => 15;
@@ -113,7 +113,7 @@ class ThemedColumn<T> {
         text: children.isEmpty ? valueBuilder.call(context, item) : null,
         style: style,
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: .ltr,
     )..layout();
 
     return Size(
@@ -137,7 +137,7 @@ class ThemedColumn<T> {
         text: labelText,
         style: style,
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: .ltr,
     )..layout();
 
     return Size(

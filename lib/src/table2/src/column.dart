@@ -33,7 +33,7 @@ class ThemedColumn2<T> {
     required this.headerText,
     required this.valueBuilder,
     this.richTextBuilder,
-    this.alignment = Alignment.centerLeft,
+    this.alignment = .centerLeft,
     this.isSortable = true,
     this.width,
     this.onTap,

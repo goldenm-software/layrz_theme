@@ -302,7 +302,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   late AnimationController _animation;
 
   /// [isDark] predicts if the device is in dark mode.
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   /// [primaryColor] predicts the primary color for buttons, icons, etc.
   ///
@@ -361,7 +361,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   Color get paginatorColor => isDark ? Colors.white : Colors.black;
 
   /// [_headerStyle] represents the style of the header.
-  TextStyle? get _headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold);
+  TextStyle? get _headerStyle => Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold);
 
   /// [_rowStyle] represents the style of the header.
   TextStyle? get _rowStyle => Theme.of(context).textTheme.bodyMedium;
@@ -413,7 +413,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   double get _actionSize => ThemedButton.defaultHeight;
 
   /// [_actionsPadding] represents the padding of the action buttons.
-  EdgeInsets get _actionsPadding => const EdgeInsets.symmetric(horizontal: 5);
+  EdgeInsets get _actionsPadding => const .symmetric(horizontal: 5);
 
   /// [_columns] represents the columns of the table.
   List<ThemedColumn<T>> get _columns => [
@@ -793,11 +793,11 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                       ),
                       // alignment: Alignment.topCenter,
                       child: Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const .all(10),
                         width: width,
                         decoration: BoxDecoration(
                           color: Theme.of(ctx).inputDecorationTheme.fillColor,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: .circular(10),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.2),
@@ -807,20 +807,18 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                           ],
                         ),
                         child: StatefulBuilder(
-                          builder: (BuildContext context2, setLocalState) {
+                          builder: (context2, setLocalState) {
                             return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: .min,
+                              mainAxisAlignment: .start,
+                              crossAxisAlignment: .start,
                               children: [
                                 Row(
                                   children: [
                                     Expanded(
                                       child: Text(
                                         t('helpers.multipleSelection.title'),
-                                        style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: Theme.of(ctx).textTheme.titleMedium?.copyWith(fontWeight: .bold),
                                       ),
                                     ),
                                     const SizedBox(width: 5),
@@ -849,7 +847,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                   width: width,
                                   child: SingleChildScrollView(
                                     reverse: true,
-                                    scrollDirection: Axis.horizontal,
+                                    scrollDirection: .horizontal,
                                     child: Row(
                                       children: [
                                         const SizedBox(width: 5),
@@ -876,7 +874,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                         ],
                                         if (widget.onMultiDelete != null)
                                           ThemedButton(
-                                            style: ThemedButtonStyle.outlinedTonal,
+                                            style: .outlinedTonal,
                                             color: Colors.red,
                                             icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
                                             labelText: t('helpers.multipleSelection.actions.delete'),
@@ -960,7 +958,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     asField: !isMobile,
                     maxWidth: isMobile ? 300 : searchLength,
                     value: _searchText,
-                    inputPadding: const EdgeInsets.symmetric(vertical: 2),
+                    inputPadding: const .symmetric(vertical: 2),
                     labelText: t('helpers.search'),
                     onSearch: (value) {
                       _searchText = value;
@@ -979,7 +977,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     ThemedButton(
                       labelText: t('$module.title.new'),
                       icon: LayrzIcons.solarOutlineAddSquare,
-                      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+                      style: isMobile ? .filledTonalFab : .filledTonal,
                       color: primaryColor,
                       onTap: widget.onAdd,
                       isLoading: widget.isLoading,
@@ -992,7 +990,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     ThemedButton(
                       labelText: t('helpers.refresh'),
                       icon: LayrzIcons.solarOutlineRefreshSquare,
-                      style: ThemedButtonStyle.filledTonalFab,
+                      style: .filledTonalFab,
                       color: primaryColor,
                       onTap: widget.onRefresh,
                       isLoading: widget.isLoading,
@@ -1010,7 +1008,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                   thumbVisibility: !isMobile,
                   thickness: 8,
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 12),
+                    margin: const .only(bottom: 12),
                     child: Container(
                       key: _tableKey,
                       child: Row(
@@ -1052,8 +1050,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                   backgroundDecoration: SpanDecoration(
                                     color: isHovering ? _hoverColor : color,
                                     border: SpanBorder(
-                                      leading: index == 0 ? BorderSide.none : border,
-                                      trailing: index == items.length ? BorderSide.none : border,
+                                      leading: index == 0 ? .none : border,
+                                      trailing: index == items.length ? .none : border,
                                     ),
                                   ),
                                 );
@@ -1093,9 +1091,9 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                           padding: ThemedColumn.padding,
                                           child: column.isSortable
                                               ? Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisSize: .min,
+                                                  mainAxisAlignment: .center,
+                                                  crossAxisAlignment: .center,
                                                   children: [
                                                     if (_sortBy == vicinity.column) ...[
                                                       Icon(
@@ -1128,7 +1126,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                         padding: ThemedColumn.padding,
                                         child: column.richTextBuilder != null
                                             ? RichText(
-                                                overflow: TextOverflow.ellipsis,
+                                                overflow: .ellipsis,
                                                 text: TextSpan(
                                                   children: column.richTextBuilder!.call(context, item),
                                                   style: _rowStyle,
@@ -1156,7 +1154,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                         left: border,
                                       ),
                                     ),
-                                    alignment: Alignment.centerRight,
+                                    alignment: .centerRight,
                                     padding: ThemedColumn.padding,
                                     child: Icon(LayrzIcons.solarOutlineTuning4, size: 20),
                                   ),
@@ -1178,14 +1176,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 : null,
                                             border: Border(
                                               top: border,
-                                              bottom: index == items.length - 1 ? BorderSide.none : border,
+                                              bottom: index == items.length - 1 ? .none : border,
                                               left: border,
                                             ),
                                           ),
-                                          alignment: Alignment.centerRight,
+                                          alignment: .centerRight,
                                           padding: ThemedColumn.padding,
                                           child: Container(
-                                            alignment: Alignment.centerRight,
+                                            alignment: .centerRight,
                                             child: ThemedActionsButtons(
                                               actionsLabel: t('helpers.actions'),
                                               actionPadding: _actionsPadding,
@@ -1194,7 +1192,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 if (widget.onShow != null)
                                                   ThemedActionButton.show(
                                                     isMobile: true,
-                                                    tooltipPosition: ThemedTooltipPosition.left,
+                                                    tooltipPosition: .left,
                                                     labelText: t('helpers.buttons.show'),
                                                     isLoading: widget.isLoading,
                                                     isCooldown: widget.isCooldown,
@@ -1204,7 +1202,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 if (widget.onEdit != null && widget.canEdit.call(context, item))
                                                   ThemedActionButton.edit(
                                                     isMobile: true,
-                                                    tooltipPosition: ThemedTooltipPosition.left,
+                                                    tooltipPosition: .left,
                                                     labelText: t('helpers.buttons.edit'),
                                                     isLoading: widget.isLoading,
                                                     isCooldown: widget.isCooldown,
@@ -1214,7 +1212,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                 if (widget.onDelete != null && widget.canDelete.call(context, item))
                                                   ThemedActionButton.delete(
                                                     isMobile: true,
-                                                    tooltipPosition: ThemedTooltipPosition.left,
+                                                    tooltipPosition: .left,
                                                     labelText: t('helpers.buttons.delete'),
                                                     isLoading: widget.isLoading,
                                                     isCooldown: widget.isCooldown,
@@ -1276,16 +1274,16 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.rowsPerPage'),
         dense: true,
         customChild: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const .all(8),
           decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(8),
+            shape: .rectangle,
+            borderRadius: .circular(8),
             color: backgrondFilterColor,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .center,
+            mainAxisSize: .min,
             children: [
               Icon(
                 LayrzIcons.solarOutlineFilter,
@@ -1321,7 +1319,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         text: currentPageStr,
         style: pageInfoStyle,
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: .ltr,
     )..layout();
 
     double currentPageWidth = painter.width;
@@ -1335,7 +1333,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
           text: pageInfoStr,
           style: pageInfoStyle,
         ),
-        textDirection: TextDirection.ltr,
+        textDirection: .ltr,
       )..layout();
 
       availableWidth -= painter2.width;
@@ -1350,7 +1348,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       ThemedButton(
         labelText: t('layrz.table.paginator.start'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineDoubleAltArrowLeft,
         onTap: () => setState(() => _currentPage = 0),
       ),
@@ -1359,7 +1357,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       ThemedButton(
         labelText: t('layrz.table.paginator.previous'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineAltArrowLeft,
         isDisabled: _currentPage == 0,
         onTap: () {
@@ -1378,7 +1376,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       ThemedButton(
         labelText: t('layrz.table.paginator.next'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineAltArrowRight,
         isDisabled: _currentPage == maxPages,
         onTap: () {
@@ -1392,7 +1390,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       ThemedButton(
         labelText: t('layrz.table.paginator.end'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineDoubleAltArrowRight,
         onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
       ),
@@ -1512,14 +1510,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       ThemedButton(
         labelText: t('layrz.table.paginator.start'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineDoubleAltArrowLeft,
         onTap: () => setState(() => _currentPage = 0),
       ),
       ThemedButton(
         labelText: t('layrz.table.paginator.previous'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineAltArrowLeft,
         isDisabled: _currentPage == 0,
         onTap: () {
@@ -1534,7 +1532,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       ThemedButton(
         labelText: t('layrz.table.paginator.next'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineAltArrowRight,
         isDisabled: _currentPage == maxPages,
         onTap: () {
@@ -1546,7 +1544,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
       ThemedButton(
         labelText: t('layrz.table.paginator.end'),
         color: paginatorColor,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         icon: LayrzIcons.solarOutlineDoubleAltArrowRight,
         onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
       ),
@@ -1555,21 +1553,15 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
     if (constraints.maxWidth < widget.mobileBreakpoint) {
       return Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: pageInfo,
-          ),
+          Row(mainAxisAlignment: .center, children: pageInfo),
           const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: navigator,
-          ),
+          Row(mainAxisAlignment: .center, children: navigator),
         ],
       );
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: .end,
       children: [
         ...pageInfo,
         const SizedBox(width: 5),
@@ -1611,7 +1603,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   /// You can replace variables in the translation using the following format: `{variableName}`
   /// The variables changes depending of the implementation in this component.
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
+    LayrzAppLocalizations? i18n = .maybeOf(context);
 
     if (i18n != null) {
       return i18n.t(key, args);
@@ -1638,7 +1630,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
   ///
   /// For example: `You have {count} item | You have {count} items`
   String tc(String key, int count, {Map<String, dynamic> args = const {}}) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
+    LayrzAppLocalizations? i18n = .maybeOf(context);
 
     if (i18n != null) {
       return i18n.tc(key, count, args);
