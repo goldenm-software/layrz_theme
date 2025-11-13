@@ -40,24 +40,24 @@ class RoundedRectangleSeekbarShape extends SliderComponentShape {
   }) {
     final Canvas canvas = context.canvas;
 
-    final rect = Rect.fromCircle(center: center, radius: thumbRadius);
+    final Rect rect = .fromCircle(center: center, radius: thumbRadius);
 
-    final roundedRectangle = RRect.fromRectAndRadius(
-      Rect.fromPoints(
+    final RRect roundedRectangle = .fromRectAndRadius(
+      .fromPoints(
         Offset(rect.left, rect.top),
         Offset(rect.right, rect.bottom),
       ),
-      Radius.circular(roundness),
+      .circular(roundness),
     );
 
     final fillPaint = Paint()
       ..color = Colors.white
-      ..style = PaintingStyle.fill;
+      ..style = .fill;
 
     final borderPaint = Paint()
       ..color = sliderTheme.thumbColor!
       ..strokeWidth = thickness
-      ..style = PaintingStyle.stroke;
+      ..style = .stroke;
 
     canvas.drawRRect(roundedRectangle, fillPaint);
     canvas.drawRRect(roundedRectangle, borderPaint);

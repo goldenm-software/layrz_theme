@@ -26,32 +26,32 @@ class ThemedCodeSnippet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(minHeight: 10),
-      padding: const EdgeInsets.all(10),
+      padding: const .all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).inputDecorationTheme.fillColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: .circular(10),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: .start,
+        crossAxisAlignment: .start,
         children: [
           Expanded(
             child: Text(
               code,
               maxLines: maxLines,
               style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.left,
+              textAlign: .left,
             ),
           ),
           const SizedBox(width: 10),
           ThemedTooltip(
             message: copyToClipboardTooltip,
-            position: ThemedTooltipPosition.left,
+            position: .left,
             child: InkWell(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: code));
                 ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(
-                  ThemedSnackbar(
+                  .new(
                     message: copyToClipboardText,
                     icon: LayrzIcons.solarOutlineClipboardCheck,
                     color: Colors.green,

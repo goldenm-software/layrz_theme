@@ -1,11 +1,9 @@
 part of '../theme.dart';
 
 class ThemedInputBorder extends InputBorder {
-  const ThemedInputBorder({
-    super.borderSide = BorderSide.none,
-  });
+  const ThemedInputBorder({super.borderSide = .none});
 
-  BorderRadius get borderRadius => BorderRadius.circular(10);
+  BorderRadius get borderRadius => .circular(10);
 
   @override
   InputBorder copyWith({BorderSide? borderSide}) => ThemedInputBorder(borderSide: borderSide ?? this.borderSide);
@@ -15,8 +13,7 @@ class ThemedInputBorder extends InputBorder {
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    return Path()
-      ..addRect(Rect.fromLTWH(rect.left, rect.top, rect.width, math.max(0.0, rect.height - borderSide.width)));
+    return Path()..addRect(.fromLTWH(rect.left, rect.top, rect.width, math.max(0.0, rect.height - borderSide.width)));
   }
 
   @override

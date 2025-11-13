@@ -46,11 +46,11 @@ ThemeData generateLightTheme({
     textTheme: textTheme,
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: color,
-      brightness: Brightness.light,
+      brightness: .light,
     ).copyWith(onPrimaryContainer: kLightBackgroundColor, onSurface: kLightBackgroundColor),
     useMaterial3: true,
   ).copyWith(
-    brightness: Brightness.light,
+    brightness: .light,
     scaffoldBackgroundColor: kLightBackgroundColor,
     primaryColor: color,
     canvasColor: kLightBackgroundColor,
@@ -59,14 +59,14 @@ ThemeData generateLightTheme({
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: .circular(5),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 5, offset: const Offset(0, 3))],
       ),
       textStyle: textTheme.bodySmall?.copyWith(color: kLightBackgroundColor, fontSize: 12),
     ),
     // Input
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const EdgeInsets.all(10),
+      contentPadding: const .all(10),
       filled: true,
       fillColor: Colors.grey.shade200,
       border: const ThemedInputBorder(),
@@ -87,7 +87,7 @@ ThemeData generateLightTheme({
     dialogTheme: const DialogThemeData(
       backgroundColor: kLightBackgroundColor,
       surfaceTintColor: kLightBackgroundColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+      shape: RoundedRectangleBorder(borderRadius: .all(.circular(10))),
     ),
 
     // Header / AppBar
@@ -102,7 +102,7 @@ ThemeData generateLightTheme({
 
     // Bottom Navigation Bar / Bottom sheet theme
     bottomSheetTheme: const BottomSheetThemeData(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: RoundedRectangleBorder(borderRadius: .vertical(top: .circular(20))),
     ),
 
     // Divider
@@ -115,14 +115,14 @@ ThemeData generateLightTheme({
       endIndent: 0,
     ),
     scrollbarTheme: ScrollbarThemeData(
-      trackVisibility: WidgetStateProperty.all(true),
-      thumbVisibility: WidgetStateProperty.all(true),
-      thumbColor: WidgetStateColor.resolveWith((states) {
+      trackVisibility: .all(true),
+      thumbVisibility: .all(true),
+      thumbColor: .resolveWith((states) {
         return Colors.black.withValues(alpha: 0.4);
       }),
-      trackColor: WidgetStateProperty.all(Colors.transparent),
-      trackBorderColor: WidgetStateProperty.all(Colors.transparent),
-      thickness: WidgetStateProperty.all(7),
+      trackColor: .all(Colors.transparent),
+      trackBorderColor: .all(Colors.transparent),
+      thickness: .all(7),
     ),
 
     // Slider
@@ -141,17 +141,17 @@ ThemeData generateLightTheme({
 
     // Inputs
     checkboxTheme: CheckboxThemeData(
-      visualDensity: VisualDensity.compact,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      fillColor: WidgetStateColor.resolveWith((states) {
+      visualDensity: .compact,
+      shape: RoundedRectangleBorder(borderRadius: .circular(5)),
+      fillColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return color;
         return Colors.transparent;
       }),
-      checkColor: WidgetStateColor.resolveWith((states) {
+      checkColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return validateColor(color: color);
         return Colors.transparent;
       }),
-      overlayColor: WidgetStateColor.resolveWith((states) {
+      overlayColor: .resolveWith((states) {
         if (states.contains(WidgetState.hovered)) return Colors.grey.shade200;
         return Colors.transparent;
       }),
@@ -159,25 +159,25 @@ ThemeData generateLightTheme({
       side: BorderSide(color: Colors.grey.shade500, width: 2),
     ),
     switchTheme: SwitchThemeData(
-      thumbIcon: WidgetStateProperty.resolveWith((states) {
+      thumbIcon: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckCircle);
         return Icon(LayrzIcons.solarOutlineCloseCircle);
       }),
       trackOutlineWidth: const WidgetStatePropertyAll(1),
-      trackColor: WidgetStateColor.resolveWith((states) {
+      trackColor: .resolveWith((states) {
         return Colors.transparent;
       }),
-      thumbColor: WidgetStateColor.resolveWith((states) {
+      thumbColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return color;
         return Colors.grey;
       }),
-      trackOutlineColor: WidgetStateColor.resolveWith((states) {
+      trackOutlineColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return color;
         return Colors.grey;
       }),
     ),
     radioTheme: RadioThemeData(
-      fillColor: WidgetStateColor.resolveWith((states) {
+      fillColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return color;
         }
@@ -188,7 +188,7 @@ ThemeData generateLightTheme({
     listTileTheme: ListTileThemeData(selectedTileColor: color.withValues(alpha: 0.3), selectedColor: color),
     cardTheme: const CardThemeData(color: kLightBackgroundColor, surfaceTintColor: kLightBackgroundColor),
     dataTableTheme: const DataTableThemeData(
-      decoration: BoxDecoration(boxShadow: [], borderRadius: BorderRadius.zero),
+      decoration: BoxDecoration(boxShadow: [], borderRadius: .zero),
     ),
   );
 }

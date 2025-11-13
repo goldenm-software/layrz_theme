@@ -4,7 +4,7 @@ extension HumanizeDuration on Duration {
   /// [humanize] returns a human readable string of the [Duration].
   /// It uses the [ThemedHumanizeOptions] to define the format.
   String humanize({ThemedHumanizeOptions? options, ThemedHumanizeLanguage? language}) {
-    ThemedHumanizeOptions newOptions = options ?? const ThemedHumanizeOptions();
+    ThemedHumanizeOptions newOptions = options ?? const .new();
     ThemedHumanizeLanguage newLanguage = language ?? const ThemedHumanizedDurationLanguage();
 
     int i, len;
@@ -30,23 +30,23 @@ extension HumanizeDuration on Duration {
     if (result.isEmpty) {
       ThemedUnits smallestUnit;
       if (newOptions.units.contains(ThemedUnits.millisecond)) {
-        smallestUnit = ThemedUnits.millisecond;
+        smallestUnit = .millisecond;
       } else if (newOptions.units.contains(ThemedUnits.second)) {
-        smallestUnit = ThemedUnits.second;
+        smallestUnit = .second;
       } else if (newOptions.units.contains(ThemedUnits.minute)) {
-        smallestUnit = ThemedUnits.minute;
+        smallestUnit = .minute;
       } else if (newOptions.units.contains(ThemedUnits.hour)) {
-        smallestUnit = ThemedUnits.hour;
+        smallestUnit = .hour;
       } else if (newOptions.units.contains(ThemedUnits.day)) {
-        smallestUnit = ThemedUnits.day;
+        smallestUnit = .day;
       } else if (newOptions.units.contains(ThemedUnits.week)) {
-        smallestUnit = ThemedUnits.week;
+        smallestUnit = .week;
       } else if (newOptions.units.contains(ThemedUnits.month)) {
-        smallestUnit = ThemedUnits.month;
+        smallestUnit = .month;
       } else if (newOptions.units.contains(ThemedUnits.year)) {
-        smallestUnit = ThemedUnits.year;
+        smallestUnit = .year;
       } else {
-        smallestUnit = ThemedUnits.second;
+        smallestUnit = .second;
       }
 
       return _ThemedHumanizePiece(smallestUnit, 0, newLanguage).format(newOptions.spacer);

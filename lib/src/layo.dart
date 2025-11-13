@@ -63,16 +63,16 @@ class Layo extends StatelessWidget {
         reverse: reverse,
         radius: radius,
       ),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       child: Center(
         child: Container(
           width: innerSize,
           height: innerSize,
           decoration: BoxDecoration(
             color: emotion.backgroundColor,
-            borderRadius: BorderRadius.circular(radius),
+            borderRadius: .circular(radius),
           ),
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           child: Stack(
             children: [
               Positioned(
@@ -112,32 +112,33 @@ enum LayoEmotions {
   warning,
   bolivariano,
   mrLayo,
-  layo404;
+  layo404
+  ;
 
   String get svg {
     switch (this) {
-      case LayoEmotions.angry:
+      case .angry:
         return 'assets/layo/angry.svg';
-      case LayoEmotions.dead:
+      case .dead:
         return 'assets/layo/dead.svg';
-      case LayoEmotions.happy:
+      case .happy:
         return 'assets/layo/happy.svg';
-      case LayoEmotions.idea:
+      case .idea:
         return 'assets/layo/idea.svg';
-      case LayoEmotions.love:
+      case .love:
         return 'assets/layo/love.svg';
-      case LayoEmotions.question:
+      case .question:
         return 'assets/layo/question.svg';
-      case LayoEmotions.sleep:
+      case .sleep:
         return 'assets/layo/sleep.svg';
-      case LayoEmotions.warning:
+      case .warning:
         return 'assets/layo/warning.svg';
-      case LayoEmotions.bolivariano:
+      case .bolivariano:
         return 'assets/layo/layo-bolivariano.svg';
-      case LayoEmotions.layo404:
+      case .layo404:
         return 'assets/layo/404.svg';
-      case LayoEmotions.mrLayo:
-      case LayoEmotions.standard:
+      case .mrLayo:
+      case .standard:
         // default:
         return 'assets/layo/mr-layo.svg';
     }
@@ -145,28 +146,28 @@ enum LayoEmotions {
 
   Color get borderColor {
     switch (this) {
-      case LayoEmotions.angry:
-      case LayoEmotions.bolivariano:
+      case .angry:
+      case .bolivariano:
         return Colors.red.shade900;
 
-      case LayoEmotions.idea:
+      case .idea:
         return Colors.orange.shade900;
 
-      case LayoEmotions.love:
+      case .love:
         return Colors.pink.shade900;
 
-      case LayoEmotions.warning:
+      case .warning:
         return Colors.orange.shade900;
 
-      case LayoEmotions.sleep:
-      case LayoEmotions.dead:
-      case LayoEmotions.layo404:
+      case .sleep:
+      case .dead:
+      case .layo404:
         return Colors.grey.shade800;
 
-      case LayoEmotions.question:
-      case LayoEmotions.happy:
-      case LayoEmotions.mrLayo:
-      case LayoEmotions.standard:
+      case .question:
+      case .happy:
+      case .mrLayo:
+      case .standard:
         // default:
         return const Color.fromARGB(255, 0, 15, 45);
     }
@@ -174,28 +175,28 @@ enum LayoEmotions {
 
   Color get backgroundColor {
     switch (this) {
-      case LayoEmotions.angry:
-      case LayoEmotions.bolivariano:
+      case .angry:
+      case .bolivariano:
         return Colors.red.shade700;
 
-      case LayoEmotions.idea:
+      case .idea:
         return Colors.orange.shade700;
 
-      case LayoEmotions.love:
+      case .love:
         return Colors.pink.shade700;
 
-      case LayoEmotions.warning:
+      case .warning:
         return Colors.orange.shade600;
 
-      case LayoEmotions.sleep:
-      case LayoEmotions.dead:
-      case LayoEmotions.layo404:
+      case .sleep:
+      case .dead:
+      case .layo404:
         return Colors.grey.shade600;
 
-      case LayoEmotions.question:
-      case LayoEmotions.happy:
-      case LayoEmotions.mrLayo:
-      case LayoEmotions.standard:
+      case .question:
+      case .happy:
+      case .mrLayo:
+      case .standard:
         // default:
         return kPrimaryColor;
     }

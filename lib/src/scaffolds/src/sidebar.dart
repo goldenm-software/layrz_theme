@@ -159,15 +159,15 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
         border: isMobile
             ? null
             : Border(
-                left: BorderSide(
+                left: .new(
                   color: Theme.of(context).dividerColor,
                   width: 1,
                 ),
               ),
-        borderRadius: isMobile ? BorderRadius.circular(10) : BorderRadius.zero,
+        borderRadius: isMobile ? .circular(10) : .zero,
         boxShadow: isMobile
             ? [
-                BoxShadow(
+                .new(
                   color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   spreadRadius: 5,
@@ -177,7 +177,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
             : [],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             t('${widget.module}.title.list', {'count': widget.items.length}),
@@ -189,7 +189,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
             value: search,
             onSearch: (value) => setState(() => search = value),
             asField: true,
-            maxWidth: double.infinity,
+            maxWidth: .infinity,
           ),
           const SizedBox(height: 5),
           Expanded(
@@ -206,12 +206,12 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
                 IconData? prefixIcon = widget.prefixIconBuilder?.call(context, item);
 
                 return Container(
-                  margin: const EdgeInsets.only(bottom: 5),
+                  margin: const .only(bottom: 5),
                   decoration: BoxDecoration(
                     color: isSelected ? Theme.of(context).inputDecorationTheme.fillColor : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: .circular(10),
                   ),
-                  clipBehavior: Clip.antiAlias,
+                  clipBehavior: .antiAlias,
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
@@ -224,7 +224,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
                               widget.onTap(item);
                             },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const .symmetric(horizontal: 5),
                         child: Row(
                           children: [
                             ThemedAvatar(
@@ -241,7 +241,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: .start,
                                 children: [
                                   Row(
                                     children: [

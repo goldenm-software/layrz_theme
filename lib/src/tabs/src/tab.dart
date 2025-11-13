@@ -54,7 +54,7 @@ class ThemedTab extends StatelessWidget {
     this.padding = const EdgeInsets.all(10),
     this.color,
     this.child = const SizedBox(),
-    this.style = ThemedTabStyle.filledTonal,
+    this.style = .filledTonal,
   }) : assert(labelText != null || label != null);
 
   ThemedTab overrideStyle(ThemedTabStyle newStyle) {
@@ -87,20 +87,20 @@ class ThemedTab extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       padding: padding,
-      decoration: style == ThemedTabStyle.filledTonal
+      decoration: style == .filledTonal
           ? BoxDecoration(
               color: isActive ? backgroundColor.withAlpha((255 * 0.2).toInt()) : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: .circular(8),
             )
           : null,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const .symmetric(horizontal: 10),
         child: RichText(
           text: TextSpan(
             children: [
               if (leading != null || leadingIcon != null) ...[
                 WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
+                  alignment: .middle,
                   child: leading ?? Icon(leadingIcon!, size: iconSize, color: backgroundColor),
                 ),
                 const WidgetSpan(child: SizedBox(width: 10)),
@@ -116,7 +116,7 @@ class ThemedTab extends StatelessWidget {
               if (trailing != null || trailingIcon != null) ...[
                 const WidgetSpan(child: SizedBox(width: 10)),
                 WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
+                  alignment: .middle,
                   child: trailing ?? Icon(trailingIcon!, size: iconSize, color: backgroundColor),
                 ),
               ],

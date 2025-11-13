@@ -7,15 +7,13 @@ class WorkInProgressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: .center,
+      crossAxisAlignment: .center,
       children: [
         Icon(LayrzIcons.solarOutlineShockAbsorber, size: 60),
         Text(
           'Work in progress',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: .bold),
         ),
       ],
     );

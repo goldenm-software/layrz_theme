@@ -49,18 +49,18 @@ class ThemedTabView extends StatefulWidget {
   const ThemedTabView({
     super.key,
     required this.tabs,
-    this.padding = const EdgeInsets.all(10),
-    this.crossAxisAlignment = CrossAxisAlignment.start,
-    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.padding = const .all(10),
+    this.crossAxisAlignment = .start,
+    this.mainAxisAlignment = .start,
     this.animationDuration = const Duration(milliseconds: 250),
     this.physics,
-    this.separatorPadding = const EdgeInsets.only(top: 10),
+    this.separatorPadding = const .only(top: 10),
     this.showArrows = false,
     this.persistTabPosition = true,
     this.initialPosition = 0,
     this.onTabIndex,
     this.additionalWidgets = const [],
-    this.style = ThemedTabStyle.filledTonal,
+    this.style = .filledTonal,
   });
 
   @override
@@ -127,15 +127,15 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
           Theme(
             data: Theme.of(context).copyWith(
               tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
-                tabAlignment: TabAlignment.start,
-                indicatorColor: widget.style == ThemedTabStyle.filledTonal ? Colors.transparent : null,
+                tabAlignment: .start,
+                indicatorColor: widget.style == .filledTonal ? Colors.transparent : null,
               ),
             ),
             child: Row(
               children: [
                 if (widget.showArrows) ...[
                   ThemedButton(
-                    style: ThemedButtonStyle.filledTonalFab,
+                    style: .filledTonalFab,
                     labelText: '',
                     tooltipEnabled: false,
                     height: 40,
@@ -154,8 +154,8 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                   child: TabBar(
                     isScrollable: true,
                     tabs: widget.tabs.map((e) => e.overrideStyle(widget.style)).toList(),
-                    labelPadding: EdgeInsets.zero,
-                    splashBorderRadius: widget.style == ThemedTabStyle.filledTonal ? BorderRadius.circular(8) : null,
+                    labelPadding: .zero,
+                    splashBorderRadius: widget.style == .filledTonal ? BorderRadius.circular(8) : null,
                     controller: _tabController,
                   ),
                 ),
@@ -167,7 +167,7 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                 ],
                 if (widget.showArrows) ...[
                   ThemedButton(
-                    style: ThemedButtonStyle.filledTonalFab,
+                    style: .filledTonalFab,
                     labelText: '',
                     tooltipEnabled: false,
                     height: 40,
