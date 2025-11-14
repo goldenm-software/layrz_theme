@@ -8,6 +8,9 @@
 - Added `ThemedTable2Controller` to handle programmatically sorting, filtering and refreshing the table data.
 - Added `debounce` property to `ThemedSearchInput` to handle debounced search inputs.
 - Improvements over `ThemedImage` base64 caching to prevent memory leaks.
+- Updated `ThemedChip` to support more styles and configurations.
+- New `ThemedChipStyle` enum to define the style of the `ThemedChip`.
+- New `ThemedChipGroup` widget to handle groups of chips with selection support.
 
 ## 7.4.12
 
