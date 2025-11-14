@@ -144,7 +144,7 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
@@ -158,8 +158,8 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
 class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   late TabController _tabController;
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   String get timePattern => widget.timePattern ?? (widget.use24HourFormat ? '%H:%M' : '%I:%M %p');
   String get pattern => '${widget.datePattern}${widget.patternSeparator}$timePattern';

@@ -25,7 +25,7 @@ class ResponsiveCol extends StatelessWidget {
   /// Read the documentation of each field for more information.
   const ResponsiveCol({
     super.key,
-    this.xs = Sizes.col12,
+    this.xs = .col12,
     this.sm,
     this.md,
     this.lg,

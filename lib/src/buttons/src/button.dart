@@ -25,11 +25,11 @@ class ThemedButton extends StatefulWidget {
   /// be the content of the [label].
   ///
   /// FAB styles are:
-  /// - [ThemedButtonStyle.fab]
-  /// - [ThemedButtonStyle.outlinedFab]
-  /// - [ThemedButtonStyle.filledFab]
-  /// - [ThemedButtonStyle.filledTonalFab]
-  /// - [ThemedButtonStyle.elevatedFab]
+  /// - [.fab]
+  /// - [.outlinedFab]
+  /// - [.filledFab]
+  /// - [.filledTonalFab]
+  /// - [.elevatedFab]
   final IconData? icon;
 
   /// [onTap] is called when the button is tapped.
@@ -54,8 +54,8 @@ class ThemedButton extends StatefulWidget {
 
   /// [hintText] is the hint text of the button, will display as tooltip.
   /// This property only will appear when the button is style as any non-FAB style
-  /// ([ThemedButtonStyle.text], [ThemedButtonStyle.outlined], [ThemedButtonStyle.filled],
-  /// [ThemedButtonStyle.filledTonal] or [ThemedButtonStyle.elevated]).
+  /// ([.text], [.outlined], [.filled],
+  /// [.filledTonal] or [.elevated]).
   final String? hintText;
 
   /// [width] is the width of the button. If this property is null, the width will be calculated
@@ -120,14 +120,14 @@ class ThemedButton extends StatefulWidget {
     this.onTap,
     this.isLoading = false,
     this.color,
-    this.style = ThemedButtonStyle.filledTonal,
+    this.style = .filledTonal,
     this.isCooldown = false,
     this.cooldownDuration = const Duration(seconds: 5),
     this.onCooldownFinish,
     this.hintText,
     this.width,
     this.isDisabled = false,
-    this.tooltipPosition = ThemedTooltipPosition.bottom,
+    this.tooltipPosition = .bottom,
     this.fontSize = 14,
     this.tooltipEnabled = true,
     this.showCooldownRemainingDuration = true,
@@ -160,7 +160,7 @@ class ThemedButton extends StatefulWidget {
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineInboxIn,
-      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      style: isMobile ? .filledTonalFab : .filledTonal,
       color: Colors.green,
     );
   }
@@ -182,7 +182,7 @@ class ThemedButton extends StatefulWidget {
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineCloseSquare,
-      style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+      style: isMobile ? .fab : .text,
       color: Colors.red,
     );
   }
@@ -204,7 +204,7 @@ class ThemedButton extends StatefulWidget {
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineInfoSquare,
-      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      style: isMobile ? .filledTonalFab : .filledTonal,
       color: Colors.blue,
     );
   }
@@ -226,7 +226,7 @@ class ThemedButton extends StatefulWidget {
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineEyeScan,
-      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      style: isMobile ? .filledTonalFab : .filledTonal,
       color: Colors.blue,
     );
   }
@@ -248,7 +248,7 @@ class ThemedButton extends StatefulWidget {
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlinePenNewSquare,
-      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      style: isMobile ? .filledTonalFab : .filledTonal,
       color: Colors.orange,
     );
   }
@@ -270,7 +270,7 @@ class ThemedButton extends StatefulWidget {
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
-      style: isMobile ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+      style: isMobile ? .filledTonalFab : .filledTonal,
       color: Colors.red,
     );
   }
@@ -286,7 +286,7 @@ class ThemedButton extends StatefulWidget {
     VoidCallback? onTap,
     bool isLoading = false,
     Color? color,
-    ThemedButtonStyle style = ThemedButtonStyle.filledTonal,
+    ThemedButtonStyle style = .filledTonal,
     bool isCooldown = false,
     String? hintText,
     double? width,
@@ -349,7 +349,7 @@ class ThemedButton extends StatefulWidget {
 }
 
 class _ThemedButtonState extends State<ThemedButton> {
-  /// [icon] is the icon of the button, when [style] is ThemedButtonStyle.fab, will only shows the icon and use
+  /// [icon] is the icon of the button, when [style] is .fab, will only shows the icon and use
   /// the [labelText] as tooltip.
   /// Otherwise, the icon will be displayed at the left of the label.
   /// It's a shortcut to [widget.icon].
@@ -425,8 +425,8 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [kHoverOpacity] defines the opacity of the button when is hovered.
   double get kHoverOpacity => 0.2;
 
-  /// [kOutlinedTonalOpacity] defines the opacity only for [ThemedButtonStyle.outlinedTonal] and
-  /// [ThemedButtonStyle.outlinedTonalFab].
+  /// [kOutlinedTonalOpacity] defines the opacity only for [.outlinedTonal] and
+  /// [.outlinedTonalFab].
   double get kOutlinedTonalOpacity => 0.15;
 
   /// [kBorderWidth] defines the border width of the button.
@@ -470,8 +470,8 @@ class _ThemedButtonState extends State<ThemedButton> {
 
   /// [message] is used to know the message of the button.
   /// This message is only used when the button uses [label] instead of [labelText] and
-  /// the [style] is [ThemedButtonStyle.fab], [ThemedButtonStyle.outlinedFab], [ThemedButtonStyle.filledFab],
-  /// [ThemedButtonStyle.filledTonalFab] or [ThemedButtonStyle.elevatedFab].
+  /// the [style] is [.fab], [.outlinedFab], [.filledFab],
+  /// [.filledTonalFab] or [.elevatedFab].
   String get message {
     String msg = "";
     if (labelText != null) {
@@ -602,7 +602,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildFilledTonal] is used to build a filled tonal button.
-  /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
+  /// This button is used when the [style] is [.filledTonal].
   Widget _buildFilledTonal() {
     Color color = colorOverride ?? contentColor;
     return Container(
@@ -659,7 +659,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildFilledTonalFab] is used to build a filled tonal FAB button.
-  /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
+  /// This button is used when the [style] is [.filledTonalFab].
   Widget _buildFilledTonalFab() {
     Color color = colorOverride ?? contentColor;
 
@@ -697,7 +697,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildOutlinedTonal] is used to build a filled tonal button.
-  /// This button is used when the [style] is [ThemedButtonStyle.filledTonal].
+  /// This button is used when the [style] is [.filledTonal].
   Widget _buildOutlinedTonal() {
     Color color = colorOverride ?? contentColor;
 
@@ -756,7 +756,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildOutlinedTonalFab] is used to build a filled tonal FAB button.
-  /// This button is used when the [style] is [ThemedButtonStyle.filledTonalFab].
+  /// This button is used when the [style] is [.filledTonalFab].
   Widget _buildOutlinedTonalFab() {
     Color color = colorOverride ?? contentColor;
 
@@ -795,7 +795,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildText] is used to build a text button.
-  /// This button is used when the [style] is [ThemedButtonStyle.text].
+  /// This button is used when the [style] is [.text].
   Widget _buildText() {
     return Container(
       clipBehavior: .antiAlias,
@@ -851,7 +851,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildFab] is used to build a FAB button.
-  /// This button is used when the [style] is [ThemedButtonStyle.fab].
+  /// This button is used when the [style] is [.fab].
   Widget _buildFab() {
     return _handleTooltip(
       child: Container(
@@ -887,7 +887,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildOutlined] is used to build a outlined button.
-  /// This button is used when the [style] is [ThemedButtonStyle.outlined].
+  /// This button is used when the [style] is [.outlined].
   Widget _buildOutlined() {
     return Container(
       clipBehavior: .antiAlias,
@@ -945,7 +945,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildOutlinedFab] is used to build a outlined FAB button.
-  /// This button is used when the [style] is [ThemedButtonStyle.outlinedFab].
+  /// This button is used when the [style] is [.outlinedFab].
   Widget _buildOutlinedFab() {
     return _handleTooltip(
       child: Container(
@@ -982,7 +982,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildFilled] is used to build a filled button.
-  /// This button is used when the [style] is [ThemedButtonStyle.filled].
+  /// This button is used when the [style] is [.filled].
   Widget _buildFilled() {
     Color color = colorOverride ?? contentColor;
 
@@ -1040,7 +1040,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildFilledFab] is used to build a filled FAB button.
-  /// This button is used when the [style] is [ThemedButtonStyle.filledFab].
+  /// This button is used when the [style] is [.filledFab].
   Widget _builFilledFab() {
     Color color = colorOverride ?? contentColor;
 
@@ -1078,7 +1078,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildElevated] is used to build a elevated button.
-  /// This button is used when the [style] is [ThemedButtonStyle.elevated].
+  /// This button is used when the [style] is [.elevated].
   Widget _buildElevated() {
     Color color = colorOverride ?? contentColor;
 
@@ -1143,7 +1143,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   }
 
   /// [_buildElevatedFab] is used to build a elevated FAB button.
-  /// This button is used when the [style] is [ThemedButtonStyle.elevatedFab].
+  /// This button is used when the [style] is [.elevatedFab].
   Widget _builElevatedFab() {
     Color color = colorOverride ?? contentColor;
 
@@ -1269,51 +1269,51 @@ class _ThemedButtonState extends State<ThemedButton> {
 /// The styles are based on Material 3 rules. For more info go to
 /// https://m3.material.io/components/all-buttons.
 enum ThemedButtonStyle {
-  /// [ThemedButtonStyle.elevated] refers to a button with a filled background and a shadow.
+  /// [.elevated] refers to a button with a filled background and a shadow.
   /// The shadow is generated using the helper function `generateContainerElevation` with
   /// an elevation of `1`.
   elevated,
 
-  /// [ThemedButtonStyle.elevatedFab] refers to a button with a filled background and a shadow.
+  /// [.elevatedFab] refers to a button with a filled background and a shadow.
   /// The shadow is generated using the helper function `generateContainerElevation` with
   /// an elevation of `1`.
   elevatedFab,
 
-  /// [ThemedButtonStyle.filled] refers to a button with a filled background.
-  /// Works similar as a [ThemedButtonStyle.elevated] but without the shadow.
+  /// [.filled] refers to a button with a filled background.
+  /// Works similar as a [.elevated] but without the shadow.
   filled,
 
-  /// [ThemedButtonStyle.filledFab] refers to a button with a filled background.
-  /// Works similar as a [ThemedButtonStyle.elevatedFab] but without the shadow.
+  /// [.filledFab] refers to a button with a filled background.
+  /// Works similar as a [.elevatedFab] but without the shadow.
   filledFab,
 
-  /// [ThemedButtonStyle.filledTonal] refers to a button with a filled background with an constant
+  /// [.filledTonal] refers to a button with a filled background with an constant
   /// opacity of `0.2`.
   filledTonal,
 
-  /// [ThemedButtonStyle.filledTonalFab] refers to a button with a filled background with an constant
+  /// [.filledTonalFab] refers to a button with a filled background with an constant
   /// opacity of `0.2`.
   filledTonalFab,
 
-  /// [ThemedButtonStyle.outlined] refers to a button with a outlined border.
+  /// [.outlined] refers to a button with a outlined border.
   /// The border color is the same as the text color.
   outlined,
 
-  /// [ThemedButtonStyle.outlinedFab] refers to a button with a outlined border.
+  /// [.outlinedFab] refers to a button with a outlined border.
   /// The border color is the same as the text color.
   outlinedFab,
 
-  /// [ThemedButtonStyle.text] refers to a button with a transparent background.
+  /// [.text] refers to a button with a transparent background.
   text,
 
-  /// [ThemedButtonStyle.fab] refers to a button with a transparent background.
+  /// [.fab] refers to a button with a transparent background.
   fab,
 
-  /// [ThemedButtonStyle.outlinedTonal] refers to a button with a outlined border with an constant
+  /// [.outlinedTonal] refers to a button with a outlined border with an constant
   /// opacity of `0.2`.
   outlinedTonal,
 
-  /// [ThemedButtonStyle.outlinedTonalFab] refers to a button with a outlined border with an constant
+  /// [.outlinedTonalFab] refers to a button with a outlined border with an constant
   /// opacity of `0.2`.
   outlinedTonalFab,
 }

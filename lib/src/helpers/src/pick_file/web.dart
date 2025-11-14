@@ -34,7 +34,7 @@ Future<List<ThemedFile>?> pickFile({
     dialogTitle: pickDialogTitle ?? i18n?.t('layrz.file.pick') ?? "Pick a file",
     allowMultiple: allowMultiple,
     type: type,
-    allowedExtensions: type == FileType.custom ? allowedExtensions : [],
+    allowedExtensions: type == .custom ? allowedExtensions : [],
   );
 
   if (result != null) {

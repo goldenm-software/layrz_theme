@@ -119,7 +119,7 @@ class ThemedTimePicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
     this.disableBlink = false,
@@ -133,7 +133,7 @@ class ThemedTimePicker extends StatefulWidget {
 
 class _ThemedTimePickerState extends State<ThemedTimePicker> {
   final TextEditingController _controller = TextEditingController();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
   String get pattern => widget.pattern ?? (widget.use24HourFormat ? '%H:%M' : '%I:%M %p');
 
   String? get _parsedName {

@@ -18,7 +18,7 @@ class ThemedFieldDisplayError extends StatelessWidget {
     super.key,
     this.errors = const [],
     this.hideDetails = false,
-    this.padding = const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+    this.padding = const .symmetric(vertical: 10, horizontal: 5),
     this.maxLines = 1,
   });
 
@@ -29,14 +29,12 @@ class ThemedFieldDisplayError extends StatelessWidget {
         : Padding(
             padding: padding,
             child: SizedBox(
-              width: double.infinity,
+              width: .infinity,
               child: errors.isEmpty
                   ? const SizedBox()
                   : Text(
                       errors.join(', '),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.red.shade800,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.red),
                       maxLines: maxLines,
                     ),
             ),

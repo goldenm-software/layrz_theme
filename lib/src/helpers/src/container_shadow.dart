@@ -26,7 +26,7 @@ BoxDecoration generateContainerElevation({
   assert(radius >= 0, 'The radius must be greater than or equal to 0');
 
   final theme = Theme.of(context);
-  final isDark = theme.brightness == Brightness.dark;
+  final isDark = theme.brightness == .dark;
 
   // Base background color
   final surfaceColor = color ?? theme.cardColor;
@@ -72,9 +72,9 @@ BoxDecoration generateContainerElevation({
 
   return BoxDecoration(
     color: surfaceColor,
-    borderRadius: BorderRadius.circular(radius),
+    borderRadius: .circular(radius),
     border: addOutline
-        ? Border.all(
+        ? .all(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.06)
                 : (shadowColor ?? Colors.black.withValues(alpha: 0.10)),

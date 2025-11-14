@@ -61,7 +61,7 @@ class ThemedAvatarPicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -99,10 +99,10 @@ class _ThemedAvatarPickerState extends State<ThemedAvatarPicker> with SingleTick
 
     Color cardColor = widget.disabled ? Colors.grey.shade300 : Theme.of(context).primaryColor;
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const .all(10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .center,
         children: [
           widget.label ?? Text(widget.labelText ?? ""),
           AnimatedContainer(
@@ -115,7 +115,7 @@ class _ThemedAvatarPickerState extends State<ThemedAvatarPicker> with SingleTick
               elevation: 3,
               radius: 20,
             ),
-            clipBehavior: Clip.antiAlias,
+            clipBehavior: .antiAlias,
             child: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -126,7 +126,7 @@ class _ThemedAvatarPickerState extends State<ThemedAvatarPicker> with SingleTick
                       child: _value?.isNotEmpty ?? false
                           ? ThemedImage(
                               path: _value!,
-                              fit: BoxFit.cover,
+                              fit: .cover,
                               width: 100,
                               height: 100,
                             )
@@ -147,10 +147,10 @@ class _ThemedAvatarPickerState extends State<ThemedAvatarPicker> with SingleTick
                                 curve: Curves.easeInOut,
                               ),
                               child: InkWell(
-                                borderRadius: BorderRadius.circular(50),
+                                borderRadius: .circular(50),
                                 child: ClipOval(
                                   child: Container(
-                                    padding: const EdgeInsets.all(5),
+                                    padding: const .all(5),
                                     color: Colors.red.shade800,
                                     child: Icon(
                                       LayrzIcons.solarOutlineCloseSquare,

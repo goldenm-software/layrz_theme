@@ -78,7 +78,7 @@ class ThemedFilePicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.allowedExtensions,
     this.padding,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));

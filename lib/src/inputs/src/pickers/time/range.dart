@@ -119,7 +119,7 @@ class ThemedTimeRangePicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
     this.disableBlink = false,
@@ -133,7 +133,7 @@ class ThemedTimeRangePicker extends StatefulWidget {
 
 class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
   final TextEditingController _controller = TextEditingController();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
   String get pattern => widget.pattern ?? (widget.use24HourFormat ? '%H:%M' : '%I:%M %p');
 
   String? get _parsedName {
@@ -215,30 +215,26 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
       builder: (context) {
         return Dialog(
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const .all(20),
             constraints: BoxConstraints(maxWidth: 400, maxHeight: widget.use24HourFormat ? 430 : 550),
             decoration: generateContainerElevation(context: context, elevation: 3),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   widget.labelText ?? '',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                 ),
                 const SizedBox(height: 10),
                 Expanded(
                   child: StatefulBuilder(
                     builder: (context, setState) {
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: .start,
                         children: [
                           Text(
                             t('layrz.timePicker.start'),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
                           ),
                           _ThemedTimeUtility(
                             value: start,
@@ -255,9 +251,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                           const SizedBox(height: 10),
                           Text(
                             t('layrz.timePicker.end'),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
                           ),
                           _ThemedTimeUtility(
                             value: end,
@@ -278,7 +272,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
                 ),
                 const SizedBox(height: 10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: .spaceBetween,
                   children: [
                     ThemedButton.cancel(
                       labelText: t('actions.cancel'),

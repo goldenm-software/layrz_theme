@@ -144,7 +144,7 @@ class ThemedMultiSelectInput<T> extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.waitUntilClosedToSubmit = false,
     this.dialogConstraints = const BoxConstraints(maxWidth: 500, maxHeight: 500),
     this.itemExtent = 50,
@@ -272,13 +272,13 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                     builder: (context, constraints) {
                       double availableHeight = constraints.maxHeight - (60 * 2);
                       return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .start,
                         children: [
                           if (!widget.hideTitle) ...[
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10).add(
-                                const EdgeInsets.only(
+                                const .only(
                                   top: 14,
                                   left: 5,
                                 ),
@@ -288,16 +288,14 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                   Expanded(
                                     child: Text(
                                       widget.labelText ?? '',
-                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                                     ),
                                   ),
                                   if (widget.enableSearch) ...[
                                     const SizedBox(height: 10),
                                     Expanded(
                                       child: ThemedTextInput(
-                                        padding: EdgeInsets.zero,
+                                        padding: .zero,
                                         labelText: t('layrz.select.search'),
                                         onChanged: (value) => setState(() => searchText = value),
                                         prefixIcon: LayrzIcons.solarOutlineMagnifier,
@@ -318,10 +316,8 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                             Center(
                               child: Text(
                                 t('layrz.select.empty'),
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
+                                textAlign: .center,
                               ),
                             ),
                           ] else ...[
@@ -329,7 +325,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                               constraints: BoxConstraints(maxHeight: availableHeight),
                               child: ListView.builder(
                                 itemCount: items.length,
-                                padding: const EdgeInsets.all(10),
+                                padding: const .all(10),
                                 itemExtent: widget.itemExtent,
                                 itemBuilder: (context, index) {
                                   final itm = items[index];
@@ -363,9 +359,9 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                             ),
                           ],
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 14)),
+                            padding: const EdgeInsets.symmetric(horizontal: 10).add(const .only(bottom: 14)),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: .spaceBetween,
                               children: [
                                 ThemedButton.cancel(
                                   isMobile: isMobile,
@@ -373,7 +369,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                   onTap: () => Navigator.of(context).pop(null),
                                 ),
                                 ThemedButton(
-                                  style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+                                  style: isMobile ? .fab : .text,
                                   icon: temp.length == items.length
                                       ? LayrzIcons.solarOutlineCheckSquare
                                       : LayrzIcons.solarBoldMinusSquare,

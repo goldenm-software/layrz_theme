@@ -92,16 +92,13 @@ class ThemedColorPicker extends StatefulWidget {
     this.placeholder,
     this.saveText = "OK",
     this.cancelText = "Cancel",
-    this.enabledTypes = const [
-      ColorPickerType.both,
-      ColorPickerType.wheel,
-    ],
+    this.enabledTypes = const [.both, .wheel],
     this.customChild,
     this.hoverColor = Colors.transparent,
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.maxWidth = 400,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
@@ -142,14 +139,14 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
       label: widget.label,
       labelText: widget.labelText,
       prefixWidget: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        padding: const .symmetric(vertical: 10, horizontal: 15),
         child: SizedBox(
           width: 20,
           height: 20,
           child: Container(
             decoration: BoxDecoration(
               color: _value,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: .circular(5),
             ),
             child: const SizedBox(),
           ),
@@ -178,23 +175,23 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
           child: Container(
             decoration: generateContainerElevation(context: context, elevation: 3),
             constraints: BoxConstraints(maxWidth: widget.maxWidth),
-            padding: const EdgeInsets.all(10),
+            padding: const .all(10),
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     ColorPicker(
                       color: currentColor,
                       copyPasteBehavior: const ColorPickerCopyPasteBehavior(
-                        copyFormat: ColorPickerCopyFormat.numHexRRGGBB,
+                        copyFormat: .numHexRRGGBB,
                         pasteButton: true,
                       ),
                       actionButtons: ColorPickerActionButtons(
                         dialogActionButtons: true,
                         dialogActionIcons: false,
-                        dialogOkButtonType: ColorPickerActionButtonType.outlined,
-                        dialogCancelButtonType: ColorPickerActionButtonType.text,
+                        dialogOkButtonType: .outlined,
+                        dialogCancelButtonType: .text,
                         dialogOkButtonLabel: widget.saveText,
                         dialogCancelButtonLabel: widget.cancelText,
                       ),
@@ -205,12 +202,12 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
                       colorCodeHasColor: true,
                       showColorValue: false,
                       pickersEnabled: {
-                        ColorPickerType.both: widget.enabledTypes.contains(ColorPickerType.both),
-                        ColorPickerType.primary: widget.enabledTypes.contains(ColorPickerType.primary),
-                        ColorPickerType.accent: widget.enabledTypes.contains(ColorPickerType.accent),
-                        ColorPickerType.bw: widget.enabledTypes.contains(ColorPickerType.bw),
-                        ColorPickerType.custom: widget.enabledTypes.contains(ColorPickerType.custom),
-                        ColorPickerType.wheel: widget.enabledTypes.contains(ColorPickerType.wheel),
+                        .both: widget.enabledTypes.contains(ColorPickerType.both),
+                        .primary: widget.enabledTypes.contains(ColorPickerType.primary),
+                        .accent: widget.enabledTypes.contains(ColorPickerType.accent),
+                        .bw: widget.enabledTypes.contains(ColorPickerType.bw),
+                        .custom: widget.enabledTypes.contains(ColorPickerType.custom),
+                        .wheel: widget.enabledTypes.contains(ColorPickerType.wheel),
                       },
                       onColorChanged: (value) {
                         setState(() {
@@ -220,7 +217,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: .spaceBetween,
                       children: [
                         ThemedButton.cancel(
                           labelText: widget.cancelText,

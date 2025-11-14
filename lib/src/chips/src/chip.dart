@@ -22,7 +22,7 @@ class ThemedChip extends StatelessWidget {
     required this.content,
     this.style,
     this.color = Colors.blue,
-    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    this.padding = const .symmetric(horizontal: 10, vertical: 5),
   });
 
   @override
@@ -31,7 +31,7 @@ class ThemedChip extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: color.withAlpha((255 * 0.1).toInt()),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: .circular(10),
       ),
       child: Text(
         content,

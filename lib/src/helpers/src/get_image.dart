@@ -26,15 +26,15 @@ class ThemedImage extends StatelessWidget {
   /// [alignment] is the alignment of the image. By default, it is `Alignment.center`.
   final Alignment alignment;
 
-  const ThemedImage({
+  ThemedImage({
     super.key,
     this.path,
     this.height = 30,
     this.width = 100,
-    this.fit = BoxFit.contain,
-    this.filterQuality = FilterQuality.medium,
+    this.fit = .contain,
+    this.filterQuality = .medium,
     this.customProvider,
-    this.alignment = Alignment.center,
+    this.alignment = .center,
   }) : assert(path != null || customProvider != null, 'You must provide a path or a custom provider'),
        assert(path == null || customProvider == null, 'You must provide a path or a custom provider, not both');
 
@@ -74,6 +74,8 @@ class ThemedImage extends StatelessWidget {
     return AssetImage(path!);
   }
 
+  final Map<int, Uint8List> _svgCache = {};
+
   @override
   Widget build(BuildContext context) {
     if (isSvg) {
@@ -88,8 +90,12 @@ class ThemedImage extends StatelessWidget {
       }
 
       if (isBase64) {
+        if (!_svgCache.containsKey(path.hashCode)) {
+          _svgCache[path.hashCode] = base64Decode(path!.split(',').last);
+        }
+
         return SvgPicture.memory(
-          base64Decode(path!.split(',').last),
+          _svgCache[path.hashCode]!,
           height: height,
           width: width,
           fit: fit,

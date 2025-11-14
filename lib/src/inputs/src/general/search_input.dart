@@ -53,7 +53,7 @@ class ThemedSearchInput extends StatefulWidget {
 }
 
 class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProviderStateMixin {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   late AnimationController animation;
   OverlayEntry? overlay;
   final GlobalKey _key = GlobalKey();
@@ -69,7 +69,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
     animation = AnimationController(vsync: this, duration: kHoverDuration);
 
     if (mounted) _controller.text = widget.value;
-    _controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.value.length));
+    _controller.selection = .fromPosition(TextPosition(offset: widget.value.length));
   }
 
   @override
@@ -88,11 +88,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         if (value.length <= previousCursorOffset) {
           previousCursorOffset = value.length;
         }
-        _controller.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: previousCursorOffset,
-          ),
-        );
+        _controller.selection = .fromPosition(TextPosition(offset: previousCursorOffset));
       });
     }
   }
@@ -121,7 +117,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
       width: height,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: .circular(10),
       ),
       clipBehavior: Clip.antiAlias,
       child: Material(
@@ -129,7 +125,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         child: InkWell(
           key: _key,
           onTap: _handleTap,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: .circular(10),
           child: Center(
             child: Icon(
               LayrzIcons.solarOutlineMagnifier,
@@ -149,8 +145,8 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
       controller: _controller,
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
+          borderRadius: .circular(10),
+          borderSide: .none,
         ),
         hintText: widget.labelText,
         labelStyle: Theme.of(context).textTheme.labelSmall,
@@ -185,7 +181,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
     double left = 0;
     double right = 0;
 
-    if (position == ThemedSearchPosition.right) {
+    if (position == .right) {
       left = offset.dx;
       right = screenWidth - (left + maxWidth);
 
@@ -209,7 +205,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
 
   void _buildOverlay() {
     RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
-    Offset offset = box.localToGlobal(Offset.zero);
+    Offset offset = box.localToGlobal(.zero);
     double screenWidth = MediaQuery.of(context).size.width;
 
     _PredictedPosition position = _predictPosition(
@@ -239,9 +235,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                     children: [
                       ScaleTransition(
                         scale: Tween<double>(begin: 0, end: 1).animate(animation),
-                        alignment: widget.position == ThemedSearchPosition.left
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
+                        alignment: widget.position == .left ? .centerRight : .centerLeft,
                         child: Actions(
                           actions: {
                             DismissIntent: CallbackAction<DismissIntent>(
@@ -257,9 +251,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                             child: KeyboardListener(
                               focusNode: FocusNode(),
                               onKeyEvent: (ev) {
-                                if (ev.logicalKey == LogicalKeyboardKey.escape) {
-                                  _destroyOverlay();
-                                }
+                                if (ev.logicalKey == .escape) _destroyOverlay();
                               },
                               child: _buildField(autofocus: true),
                             ),
