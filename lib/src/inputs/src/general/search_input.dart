@@ -34,6 +34,10 @@ class ThemedSearchInput extends StatefulWidget {
   /// [inputPadding] is the padding of the search input, only will work when [asField] is `true`.
   final EdgeInsets inputPadding;
 
+  /// [debounce] is the debounce duration of the search input.
+  /// Defaults to `Duration(milliseconds: 300)` but if is `null`, no debounce will be applied.
+  final Duration? debounce;
+
   /// [ThemedSearchInput] is a search input.
   const ThemedSearchInput({
     super.key,
@@ -43,9 +47,10 @@ class ThemedSearchInput extends StatefulWidget {
     this.labelText = 'Search',
     this.customChild,
     this.disabled = false,
-    this.position = ThemedSearchPosition.left,
+    this.position = .left,
     this.asField = false,
-    this.inputPadding = EdgeInsets.zero,
+    this.inputPadding = .zero,
+    this.debounce = const Duration(milliseconds: 300),
   });
 
   @override
@@ -59,6 +64,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
   final GlobalKey _key = GlobalKey();
   bool isHovering = false;
 
+  Timer? _debounceTimer;
   final TextEditingController _controller = TextEditingController();
 
   double get height => 40;
@@ -91,6 +97,14 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         _controller.selection = .fromPosition(TextPosition(offset: previousCursorOffset));
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    animation.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -141,7 +155,18 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
   Widget _buildField({required bool autofocus}) {
     return TextField(
       autofocus: autofocus,
-      onChanged: widget.onSearch,
+      onChanged: (value) {
+        if (widget.debounce == null) {
+          widget.onSearch.call(value);
+          return;
+        }
+
+        _debounceTimer?.cancel();
+        _debounceTimer = Timer(widget.debounce!, () {
+          // debugPrint("Debounced Search: $value");
+          widget.onSearch.call(value);
+        });
+      },
       controller: _controller,
       decoration: InputDecoration(
         border: OutlineInputBorder(
@@ -155,8 +180,17 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         isDense: true,
       ),
       onSubmitted: (value) {
-        widget.onSearch.call(value);
-        _destroyOverlay();
+        if (widget.debounce != null) {
+          _debounceTimer?.cancel();
+          _debounceTimer = Timer(widget.debounce!, () {
+            // debugPrint("Debounced Search: $value");
+            widget.onSearch.call(value);
+            _destroyOverlay();
+          });
+        } else {
+          widget.onSearch.call(value);
+          _destroyOverlay();
+        }
       },
     );
   }

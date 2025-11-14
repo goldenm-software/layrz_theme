@@ -6,6 +6,7 @@
 - Updated constraint of Flutter SDK to `>=3.38.0`
 - Dot shorthands everywhere!
 - Added `ThemedTable2Controller` to handle programmatically sorting, filtering and refreshing the table data.
+- Added `debounce` property to `ThemedSearchInput` to handle debounced search inputs.
 
 ## 7.4.12
 
