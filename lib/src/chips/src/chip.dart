@@ -64,9 +64,9 @@ class ThemedChip extends StatelessWidget {
       width += 18 + 5; // Icon size + spacing
     }
 
-    debugPrint("Computed width before padding: $width");
+    // debugPrint("Computed width before padding: $width");
     width += padding.horizontal;
-    debugPrint("Computed width after padding: $width");
+    // debugPrint("Computed width after padding: $width");
 
     return width;
   }

@@ -14,14 +14,19 @@ class ThemedChipGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (behavior == .scrollable) {
-      return SingleChildScrollView(
-        child: Row(spacing: spacing, children: chips),
-      );
-    }
-
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
+        assert(
+          constraints.maxWidth != double.infinity,
+          'ThemedChipGroup with clampWidth behavior requires a finite maxWidth constraint.',
+        );
+
+        if (behavior == .scrollable) {
+          return SingleChildScrollView(
+            child: Row(spacing: spacing, children: chips),
+          );
+        }
+
         double takenWidth = 0;
 
         List<Widget> visibleChips = [];
