@@ -124,7 +124,7 @@ class _ChipsViewState extends State<ChipsView> {
                   border: Border.all(color: Colors.red, width: 1),
                 ),
                 child: ThemedChipGroup(
-                  chips: List.generate(30, (index) {
+                  chips: List.generate(10, (index) {
                     return ThemedChip(
                       labelText: 'Chip $index',
                       leadingIcon: LayrzIcons.solarOutlinePlain3,
