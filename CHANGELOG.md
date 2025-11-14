@@ -7,6 +7,7 @@
 - Dot shorthands everywhere!
 - Added `ThemedTable2Controller` to handle programmatically sorting, filtering and refreshing the table data.
 - Added `debounce` property to `ThemedSearchInput` to handle debounced search inputs.
+- Improvements over `ThemedImage` base64 caching to prevent memory leaks.
 
 ## 7.4.12
 

@@ -1,5 +1,9 @@
 part of '../helpers.dart';
 
+class _ThemedImageCache {
+  static final Map<int, Uint8List> cache = {};
+}
+
 class ThemedImage extends StatelessWidget {
   /// [path] is the path of the image. Can be a local file path, a network url or a base64 string.
   /// It's important to clarify that the base64 string must be in the format `data:image/png;base64,base64String`
@@ -26,7 +30,7 @@ class ThemedImage extends StatelessWidget {
   /// [alignment] is the alignment of the image. By default, it is `Alignment.center`.
   final Alignment alignment;
 
-  ThemedImage({
+  const ThemedImage({
     super.key,
     this.path,
     this.height = 30,
@@ -69,12 +73,14 @@ class ThemedImage extends StatelessWidget {
       return NetworkImage(path!);
     }
     if (isBase64) {
-      return MemoryImage(base64Decode(path!.split(',').last));
+      if (!_ThemedImageCache.cache.containsKey(path.hashCode)) {
+        _ThemedImageCache.cache[path.hashCode] = base64Decode(path!.split(',').last);
+      }
+
+      return MemoryImage(_ThemedImageCache.cache[path.hashCode]!);
     }
     return AssetImage(path!);
   }
-
-  final Map<int, Uint8List> _svgCache = {};
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +96,12 @@ class ThemedImage extends StatelessWidget {
       }
 
       if (isBase64) {
-        if (!_svgCache.containsKey(path.hashCode)) {
-          _svgCache[path.hashCode] = base64Decode(path!.split(',').last);
+        if (!_ThemedImageCache.cache.containsKey(path.hashCode)) {
+          _ThemedImageCache.cache[path.hashCode] = base64Decode(path!.split(',').last);
         }
 
         return SvgPicture.memory(
-          _svgCache[path.hashCode]!,
+          _ThemedImageCache.cache[path.hashCode]!,
           height: height,
           width: width,
           fit: fit,
@@ -111,6 +117,7 @@ class ThemedImage extends StatelessWidget {
         alignment: alignment,
       );
     }
+
     return Image(
       image: provider,
       height: height,
