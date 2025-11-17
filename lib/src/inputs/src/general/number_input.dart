@@ -129,13 +129,13 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
   RegExp get _regex => RegExp(r'[-0-9\,.]');
   final _controller = TextEditingController();
   bool get isDense => widget.dense;
-  Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
+  Color get color => Theme.of(context).brightness == .dark ? Colors.white : Theme.of(context).primaryColor;
   NumberFormat get format {
     if (widget.format != null) return widget.format!;
-    var formatToUse = NumberFormat.decimalPattern();
+    NumberFormat formatToUse = .decimalPattern();
 
     if (widget.decimalSeparator == ThemedDecimalSeparator.comma) {
-      formatToUse = NumberFormat.decimalPattern('pt');
+      formatToUse = .decimalPattern('pt');
     }
 
     formatToUse.significantDigitsInUse = false;
@@ -148,7 +148,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
   void initState() {
     super.initState();
     _controller.text = widget.value == null ? '' : format.format(widget.value);
-    _controller.selection = TextSelection.fromPosition(TextPosition(offset: _controller.text.length));
+    _controller.selection = .fromPosition(TextPosition(offset: _controller.text.length));
   }
 
   @override
@@ -169,7 +169,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       String oldValue = oldWidget.value != null ? format.format(oldWidget.value) : '';
       String newValue = format.format(widget.value);
 
-      String thousandSeparator = ThemedDecimalSeparator.comma == widget.decimalSeparator ? '.' : ',';
+      String thousandSeparator = widget.decimalSeparator == .comma ? '.' : ',';
 
       // Count how many separators are before the cursor in the old text
       int oldSeparatorsBeforeCursor = 0;
@@ -198,7 +198,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       // update the current value in the controller
       _controller.text = newValue;
       // update the cursor offset
-      _controller.selection = TextSelection.fromPosition(TextPosition(offset: adjustedPosition));
+      _controller.selection = .fromPosition(TextPosition(offset: adjustedPosition));
     }
   }
 

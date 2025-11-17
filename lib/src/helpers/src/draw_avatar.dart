@@ -48,10 +48,10 @@ class ThemedAvatar extends StatelessWidget {
     /// [color] is the color of the avatar. By default, it is [Theme.of(context).primaryColor].
     /// Only when [dynamicAvatar] is not null, the default value of the color is based on the
     /// different types of avatars.
-    /// For [AvatarType.emoji], the default color is [Colors.grey.shade900].
-    /// For [AvatarType.icon], the default color is [Theme.of(context).primaryColor].
-    /// For [AvatarType.base64] and [AvatarType.url], the default color is [Colors.transparent].
-    /// For [AvatarType.none], the default color is [Theme.of(context).primaryColor].
+    /// For [.emoji], the default color is [Colors.grey.shade900].
+    /// For [.icon], the default color is [Theme.of(context).primaryColor].
+    /// For [.base64] and [.url], the default color is [Colors.transparent].
+    /// For [.none], the default color is [Theme.of(context).primaryColor].
     this.color,
 
     /// [elevation] is the elevation of the avatar. By default, it is 1.
@@ -140,13 +140,13 @@ class ThemedAvatar extends StatelessWidget {
       shadowColor: shadowColor,
       color: color,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(radius),
-        clipBehavior: Clip.antiAlias,
+        borderRadius: .circular(radius),
+        clipBehavior: .antiAlias,
         child: ThemedImage(
           path: image,
           width: size,
           height: size,
-          fit: BoxFit.cover,
+          fit: .cover,
         ),
       ),
     );
@@ -177,7 +177,7 @@ class ThemedAvatar extends StatelessWidget {
     required Avatar avatar,
   }) {
     switch (avatar.type) {
-      case AvatarType.emoji:
+      case .emoji:
         return _generateCircle(
           context: context,
           shadowColor: shadowColor,
@@ -187,7 +187,7 @@ class ThemedAvatar extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: size * 0.6),
           ),
         );
-      case AvatarType.icon:
+      case .icon:
         return _renderIcon(
           context: context,
           shadowColor: shadowColor,
@@ -195,7 +195,7 @@ class ThemedAvatar extends StatelessWidget {
           icon: avatar.icon?.iconData,
         );
 
-      case AvatarType.base64:
+      case .base64:
         return _renderImage(
           image: avatar.base64 ?? '',
           context: context,
@@ -203,7 +203,7 @@ class ThemedAvatar extends StatelessWidget {
           color: color,
         );
 
-      case AvatarType.url:
+      case .url:
         return _renderImage(
           image: avatar.url ?? '',
           context: context,
@@ -255,8 +255,8 @@ class ThemedAvatar extends StatelessWidget {
         radius: radius,
         hideOnElevationZero: true,
       ),
-      alignment: Alignment.center,
-      clipBehavior: Clip.antiAlias,
+      alignment: .center,
+      clipBehavior: .antiAlias,
       child: Material(
         color: Colors.transparent,
         child: InkWell(

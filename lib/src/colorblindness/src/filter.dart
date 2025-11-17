@@ -3,19 +3,19 @@ part of '../colorblindness.dart';
 extension ColorblindFilter on ColorblindMode {
   ColorFilter filter(double strength) {
     switch (this) {
-      case ColorblindMode.protanopia:
+      case .protanopia:
         return ColorFilter.matrix(protanopiaFilter(strength));
-      case ColorblindMode.protanomaly:
+      case .protanomaly:
         return ColorFilter.matrix(protanomalyFilter(strength));
-      case ColorblindMode.deuteranopia:
+      case .deuteranopia:
         return ColorFilter.matrix(deuteranopiaFilter(strength));
-      case ColorblindMode.deuteranomaly:
+      case .deuteranomaly:
         return ColorFilter.matrix(deuteranomalyFilter(strength));
-      case ColorblindMode.tritanopia:
+      case .tritanopia:
         return ColorFilter.matrix(tritanopiaFilter(strength));
-      case ColorblindMode.tritanomaly:
+      case .tritanomaly:
         return ColorFilter.matrix(tritanomalyFilter(strength));
-      case ColorblindMode.normal:
+      case .normal:
         return const ColorFilter.matrix([
           // ✅ Corrected to identity matrix
           1, 0, 0, 0, 0,

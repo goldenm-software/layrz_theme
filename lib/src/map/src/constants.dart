@@ -8,7 +8,7 @@ const kGoldenMHeadquarters = LatLng(8.982740428124941, -79.5097236128305);
 const kDefaultLayer = MapLayer(
   id: 'osm',
   name: 'OpenStreetMap',
-  source: MapSource.osm,
+  source: .osm,
 );
 
 /// [kMinZoom] is the minimum zoom level for the map.

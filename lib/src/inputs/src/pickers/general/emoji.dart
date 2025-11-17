@@ -115,7 +115,7 @@ class ThemedEmojiPicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -140,7 +140,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
   double get iconSize => 16;
   EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
-  Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
+  Color get color => Theme.of(context).brightness == .dark ? Colors.white : Theme.of(context).primaryColor;
   final GlobalKey key = GlobalKey();
 
   @override
@@ -213,19 +213,17 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
         String search = '';
         return Dialog(
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const .all(20),
             constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
             decoration: generateContainerElevation(context: context, elevation: 3),
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       widget.labelText ?? '',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                     ),
                     const SizedBox(height: 10),
                     ThemedTextInput(
@@ -238,14 +236,14 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
                       },
                     ),
                     Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      width: .infinity,
+                      padding: const .symmetric(vertical: 10),
                       child: SingleChildScrollView(
                         controller: _filtersController,
-                        scrollDirection: Axis.horizontal,
+                        scrollDirection: .horizontal,
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: .start,
+                          mainAxisAlignment: .start,
                           children: groups.map((group) {
                             return Padding(
                               padding: const EdgeInsets.only(left: 8.0),
@@ -265,7 +263,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
                     const Divider(),
                     Expanded(
                       child: LayoutBuilder(
-                        builder: (BuildContext context, BoxConstraints constraints) {
+                        builder: (context, constraints) {
                           return _EmojiGrid(
                             iconSize: iconSize,
                             selected: emojiResult,
@@ -282,7 +280,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: .spaceBetween,
                       children: [
                         ThemedButton(
                           labelText: t('actions.cancel'),
@@ -352,7 +350,7 @@ class __EmojiGroupButtonState extends State<_EmojiGroupButton> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    bool isDark = Theme.of(context).brightness == .dark;
     Color hoverColor = isDark ? Colors.grey.shade700 : Colors.grey.shade200;
     Widget child;
 
@@ -375,10 +373,10 @@ class __EmojiGroupButtonState extends State<_EmojiGroupButton> {
         duration: kHoverDuration,
         width: iconSize * 2.5,
         height: iconSize * 2.5,
-        padding: const EdgeInsets.all(5),
+        padding: const .all(5),
         decoration: BoxDecoration(
           color: widget.isSelected || isHover ? hoverColor : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: .circular(10),
         ),
         child: Center(child: child),
       ),
@@ -502,7 +500,7 @@ class __EmojiButtonState extends State<_EmojiButton> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    bool isDark = Theme.of(context).brightness == .dark;
     Color hoverColor = isDark ? Colors.grey.shade700 : Colors.grey.shade200;
     return InkWell(
       onHover: (value) => setState(() {
@@ -513,10 +511,10 @@ class __EmojiButtonState extends State<_EmojiButton> {
         duration: kHoverDuration,
         width: iconSize * 2.5,
         height: iconSize * 2.5,
-        padding: const EdgeInsets.all(5),
+        padding: const .all(5),
         decoration: BoxDecoration(
           color: widget.isSelected || isHover ? hoverColor : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: .circular(10),
         ),
         child: Center(
           child: Text(widget.emoji.char, style: TextStyle(fontSize: iconSize)),

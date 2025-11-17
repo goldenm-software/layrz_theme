@@ -15,12 +15,12 @@ enum ThemedUnits {
 const arabicDigits = ["۰", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
 
 const Map<ThemedUnits, int> unitMeasures = {
-  ThemedUnits.year: 31557600000,
-  ThemedUnits.month: 2629800000,
-  ThemedUnits.week: 604800000,
-  ThemedUnits.day: 86400000,
-  ThemedUnits.hour: 3600000,
-  ThemedUnits.minute: 60000,
-  ThemedUnits.second: 1000,
-  ThemedUnits.millisecond: 1,
+  .year: 31557600000,
+  .month: 2629800000,
+  .week: 604800000,
+  .day: 86400000,
+  .hour: 3600000,
+  .minute: 60000,
+  .second: 1000,
+  .millisecond: 1,
 };

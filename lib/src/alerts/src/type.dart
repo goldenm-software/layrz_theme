@@ -22,19 +22,20 @@ enum ThemedAlertType {
   context,
 
   /// [custom] is the type of alert that allows for custom icons and colors.
-  custom;
+  custom
+  ;
 
   IconData? get icon {
     switch (this) {
-      case ThemedAlertType.info:
+      case .info:
         return LayrzIcons.solarOutlineInfoSquare;
-      case ThemedAlertType.success:
+      case .success:
         return LayrzIcons.solarOutlineCheckSquare;
-      case ThemedAlertType.warning:
+      case .warning:
         return LayrzIcons.solarOutlineDangerSquare;
-      case ThemedAlertType.danger:
+      case .danger:
         return LayrzIcons.solarOutlineCloseSquare;
-      case ThemedAlertType.context:
+      case .context:
         return LayrzIcons.solarOutlineMenuDotsSquare;
       default:
         return null; // For custom type, no default icon is provided
@@ -43,15 +44,15 @@ enum ThemedAlertType {
 
   Color? get color {
     switch (this) {
-      case ThemedAlertType.info:
+      case .info:
         return Colors.blue;
-      case ThemedAlertType.success:
+      case .success:
         return Colors.green;
-      case ThemedAlertType.warning:
+      case .warning:
         return Colors.orange;
-      case ThemedAlertType.danger:
+      case .danger:
         return Colors.red;
-      case ThemedAlertType.context:
+      case .context:
         return Colors.grey;
       default:
         return null; // For custom type, no default color is provided

@@ -85,7 +85,7 @@ class ThemedAppBarAvatar extends StatefulWidget {
     this.asTaskBar = false,
     this.onNavigatorPush,
     this.onNavigatorPop,
-    this.tooltipPosition = ThemedTooltipPosition.right,
+    this.tooltipPosition = .right,
     this.avatarRadius = 5,
   });
 
@@ -97,7 +97,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
   late AnimationController _animationController;
   OverlayEntry? _overlayEntry;
   final GlobalKey _userMenuKey = GlobalKey();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
   final FocusNode _focusNode = FocusNode();
 
   ThemedNavigatorPushFunction get onNavigatorPush =>
@@ -177,7 +177,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
     RenderBox renderBox = _userMenuKey.currentContext?.findRenderObject() as RenderBox;
     Offset offset = renderBox.localToGlobal(Offset.zero);
     Size size = renderBox.size;
-    EdgeInsets padding = MediaQuery.of(context).padding;
+    EdgeInsets padding = MediaQuery.paddingOf(context);
 
     double? top = offset.dy;
     double? left = offset.dx + size.width + 10;
@@ -185,18 +185,18 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
     double? bottom;
     double? right;
 
-    double width = MediaQuery.of(context).size.width * 0.4;
+    double width = MediaQuery.sizeOf(context).width * 0.4;
     if (width > 300) {
       width = 300;
     }
 
-    if (left + width > MediaQuery.of(context).size.width) {
+    if (left + width > MediaQuery.sizeOf(context).width) {
       left = null;
       right = 10;
       top = offset.dy + size.height + padding.top + 5;
     }
 
-    if (top + 200 > MediaQuery.of(context).size.height) {
+    if (top + 200 > MediaQuery.sizeOf(context).height) {
       top = null;
       bottom = 20 + padding.bottom + size.height;
     }
@@ -216,11 +216,8 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       }
 
       TextPainter textPainter = TextPainter(
-        text: TextSpan(
-          text: labelText,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        textDirection: TextDirection.ltr,
+        text: TextSpan(text: labelText, style: Theme.of(context).textTheme.bodyMedium),
+        textDirection: .ltr,
       )..layout(maxWidth: width - 50);
       predictedWidths.add(textPainter.width + 50);
     }
@@ -244,19 +241,17 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                 child: KeyboardListener(
                   focusNode: _focusNode,
                   onKeyEvent: (event) {
-                    if (event.logicalKey == LogicalKeyboardKey.escape) {
-                      _destroyOverlay();
-                    }
+                    if (event.logicalKey == .escape) _destroyOverlay();
                   },
                   child: ScaleTransition(
                     scale: _animationController,
                     alignment: bottom != null
                         ? left == null
-                              ? Alignment.bottomRight
-                              : Alignment.bottomLeft
+                              ? .bottomRight
+                              : .bottomLeft
                         : left == null
-                        ? Alignment.topRight
-                        : Alignment.topLeft,
+                        ? .topRight
+                        : .topLeft,
                     child: StatefulBuilder(
                       builder: (context, setState) {
                         return Container(
@@ -265,19 +260,19 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                           child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: actions.length,
-                            padding: EdgeInsets.zero,
+                            padding: .zero,
                             itemBuilder: (context, index) {
                               final item = actions[index];
 
                               if (item is ThemedNavigatorLabel) {
                                 return Padding(
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const .all(10),
                                   child:
                                       item.label ??
                                       Text(
                                         item.labelText ?? '',
                                         style: Theme.of(context).textTheme.bodyMedium,
-                                        textAlign: right != null ? TextAlign.right : TextAlign.left,
+                                        textAlign: right != null ? .right : .left,
                                       ),
                                 );
                               }
@@ -288,7 +283,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                   child: InkWell(
                                     onTap: () => _destroyOverlay(onTap: () => item.onTap(onNavigatorPush)),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(10),
+                                      padding: const .all(10),
                                       child: Row(
                                         children: [
                                           if (item.icon != null && right == null) ...[
@@ -304,7 +299,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                                 Text(
                                                   item.labelText ?? '',
                                                   style: Theme.of(context).textTheme.bodyMedium,
-                                                  textAlign: right != null ? TextAlign.right : TextAlign.left,
+                                                  textAlign: right != null ? .right : .left,
                                                 ),
                                           ),
                                           if (item.icon != null && right != null) ...[
@@ -327,7 +322,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                   child: InkWell(
                                     onTap: () => _destroyOverlay(onTap: item.onTap),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(10),
+                                      padding: const .all(10),
                                       child: Row(
                                         children: [
                                           if (item.icon != null && right == null) ...[
@@ -343,7 +338,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                                 Text(
                                                   item.labelText ?? '',
                                                   style: Theme.of(context).textTheme.bodyMedium,
-                                                  textAlign: right != null ? TextAlign.right : TextAlign.left,
+                                                  textAlign: right != null ? .right : .left,
                                                 ),
                                           ),
                                           if (item.icon != null && right != null) ...[
@@ -361,21 +356,21 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                               }
 
                               if (item is ThemedNavigatorSeparator) {
-                                if (item.type == ThemedSeparatorType.line) {
+                                if (item.type == .line) {
                                   return const Divider(indent: 5, endIndent: 5);
                                 }
 
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  padding: const .symmetric(horizontal: 5),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: List.generate(45, (_) {
+                                    mainAxisAlignment: .spaceBetween,
+                                    children: .generate(45, (_) {
                                       return Container(
                                         width: 3,
                                         height: 3,
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).dividerColor,
-                                          shape: BoxShape.circle,
+                                          shape: .circle,
                                         ),
                                       );
                                     }),

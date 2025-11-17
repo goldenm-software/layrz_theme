@@ -51,7 +51,7 @@ class _ThemedTimeUtility extends StatefulWidget {
 }
 
 class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get primaryColor => isDark ? Colors.white : Theme.of(context).primaryColor;
   late TextEditingController _hoursController;
   late TextEditingController _minutesController;
@@ -103,8 +103,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
     _minutesController.text = _value.minute.toString();
 
     // Set cursor position
-    _hoursController.selection = TextSelection.fromPosition(TextPosition(offset: _hoursController.text.length));
-    _minutesController.selection = TextSelection.fromPosition(TextPosition(offset: _minutesController.text.length));
+    _hoursController.selection = .fromPosition(TextPosition(offset: _hoursController.text.length));
+    _minutesController.selection = .fromPosition(TextPosition(offset: _minutesController.text.length));
     setState(() {});
   }
 
@@ -116,7 +116,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.sizeOf(context).width;
     bool isMobile = width < kSmallGrid;
 
     Widget content = Container(
@@ -124,21 +124,19 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
       decoration: widget.inDialog ? generateContainerElevation(context: context, elevation: 3) : null,
       padding: const EdgeInsets.all(20),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           if (widget.inDialog) ...[
             Text(
               widget.titleText,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
             ),
             const SizedBox(height: 10),
           ],
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .center,
             children: [
               Expanded(
                 child: TextField(
@@ -148,8 +146,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                     fontSize: 40,
                     color: _blinkState ? Colors.grey.shade500 : null,
                   ),
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
+                  textAlign: .center,
+                  keyboardType: .number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(2),
@@ -221,7 +219,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
               SizedBox(
                 width: 30,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: .center,
                   children: [
                     Icon(LayrzIcons.mdiCircleSmall, size: 30),
                     Icon(LayrzIcons.mdiCircleSmall, size: 30),
@@ -237,8 +235,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                     fontSize: 40,
                     color: _blinkState ? Colors.grey.shade500 : null,
                   ),
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
+                  textAlign: .center,
+                  keyboardType: .number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(2),
@@ -294,16 +292,14 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .center,
             children: [
               Expanded(
                 child: Text(
                   widget.hoursText,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+                  textAlign: .center,
                 ),
               ),
               const SizedBox(width: 10 + 30 + 10),
@@ -311,10 +307,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
               Expanded(
                 child: Text(
                   widget.minutesText,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+                  textAlign: .center,
                 ),
               ),
             ],
@@ -323,19 +317,17 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
             const SizedBox(height: 10),
             Container(
               height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(borderRadius: .circular(10)),
+              clipBehavior: .antiAlias,
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
-                      color: _value.period == DayPeriod.am
+                      color: _value.period == .am
                           ? (isDark ? Colors.white : primaryColor).withValues(alpha: 0.3)
                           : Theme.of(context).dividerColor,
                       child: InkWell(
-                        onTap: _value.period == DayPeriod.am
+                        onTap: _value.period == .am
                             ? null
                             : () {
                                 _value = TimeOfDay(
@@ -349,8 +341,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                           child: Text(
                             'AM',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: _value.period == DayPeriod.am ? (isDark ? Colors.white : primaryColor) : null,
-                              fontWeight: FontWeight.bold,
+                              color: _value.period == .am ? (isDark ? Colors.white : primaryColor) : null,
+                              fontWeight: .bold,
                             ),
                           ),
                         ),
@@ -359,11 +351,11 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                   ),
                   Expanded(
                     child: Container(
-                      color: _value.period == DayPeriod.pm
+                      color: _value.period == .pm
                           ? (isDark ? Colors.white : primaryColor).withValues(alpha: 0.3)
                           : Colors.transparent,
                       child: InkWell(
-                        onTap: _value.period == DayPeriod.pm
+                        onTap: _value.period == .pm
                             ? null
                             : () {
                                 _value = TimeOfDay(
@@ -377,8 +369,8 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                           child: Text(
                             'PM',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: _value.period == DayPeriod.pm ? (isDark ? Colors.white : primaryColor) : null,
-                              fontWeight: FontWeight.bold,
+                              color: _value.period == .pm ? (isDark ? Colors.white : primaryColor) : null,
+                              fontWeight: .bold,
                             ),
                           ),
                         ),
@@ -392,7 +384,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
           if (widget.inDialog) ...[
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 ThemedButton.cancel(
                   labelText: widget.cancelText,

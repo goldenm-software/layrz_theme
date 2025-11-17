@@ -1,5 +1,9 @@
 part of '../helpers.dart';
 
+class _ThemedImageCache {
+  static final Map<int, Uint8List> cache = {};
+}
+
 class ThemedImage extends StatelessWidget {
   /// [path] is the path of the image. Can be a local file path, a network url or a base64 string.
   /// It's important to clarify that the base64 string must be in the format `data:image/png;base64,base64String`
@@ -31,10 +35,10 @@ class ThemedImage extends StatelessWidget {
     this.path,
     this.height = 30,
     this.width = 100,
-    this.fit = BoxFit.contain,
-    this.filterQuality = FilterQuality.medium,
+    this.fit = .contain,
+    this.filterQuality = .medium,
     this.customProvider,
-    this.alignment = Alignment.center,
+    this.alignment = .center,
   }) : assert(path != null || customProvider != null, 'You must provide a path or a custom provider'),
        assert(path == null || customProvider == null, 'You must provide a path or a custom provider, not both');
 
@@ -69,7 +73,11 @@ class ThemedImage extends StatelessWidget {
       return NetworkImage(path!);
     }
     if (isBase64) {
-      return MemoryImage(base64Decode(path!.split(',').last));
+      if (!_ThemedImageCache.cache.containsKey(path.hashCode)) {
+        _ThemedImageCache.cache[path.hashCode] = base64Decode(path!.split(',').last);
+      }
+
+      return MemoryImage(_ThemedImageCache.cache[path.hashCode]!);
     }
     return AssetImage(path!);
   }
@@ -88,8 +96,12 @@ class ThemedImage extends StatelessWidget {
       }
 
       if (isBase64) {
+        if (!_ThemedImageCache.cache.containsKey(path.hashCode)) {
+          _ThemedImageCache.cache[path.hashCode] = base64Decode(path!.split(',').last);
+        }
+
         return SvgPicture.memory(
-          base64Decode(path!.split(',').last),
+          _ThemedImageCache.cache[path.hashCode]!,
           height: height,
           width: width,
           fit: fit,
@@ -105,6 +117,7 @@ class ThemedImage extends StatelessWidget {
         alignment: alignment,
       );
     }
+
     return Image(
       image: provider,
       height: height,

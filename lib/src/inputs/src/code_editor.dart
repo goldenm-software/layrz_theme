@@ -60,10 +60,10 @@ class ThemedCodeEditor extends StatefulWidget {
     this.value,
     this.disabled = false,
     this.errors = const [],
-    this.padding = const EdgeInsets.all(10),
+    this.padding = const .all(10),
     this.focusNode,
     this.onSubmitted,
-    this.language = LayrzSupportedLanguage.lcl,
+    this.language = .lcl,
     this.constraints,
     this.customInserts = const [],
     this.onLintTap,
@@ -74,13 +74,13 @@ class ThemedCodeEditor extends StatefulWidget {
   State<ThemedCodeEditor> createState() => _ThemedCodeEditorState();
 
   static AppFont get font => AppFont(
-    source: FontSource.google,
+    source: .google,
     name: GoogleFonts.jetBrainsMono().fontFamily ?? 'Ubuntu',
   );
 }
 
 class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
 
   String _value = '';
   bool get _isLoading => _isLinting || _isRunning;
@@ -114,13 +114,13 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
 
   Map<String, TextStyle> get _theme {
     switch (widget.language) {
-      case LayrzSupportedLanguage.lml:
+      case .lml:
         return lml.theme;
-      case LayrzSupportedLanguage.lcl:
+      case .lcl:
         return lcl.theme;
-      case LayrzSupportedLanguage.mjml:
+      case .mjml:
         return mjml.theme;
-      case LayrzSupportedLanguage.python:
+      case .python:
         return python.theme;
       default:
         return const {
@@ -131,13 +131,13 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
 
   Mode get _mode {
     switch (widget.language) {
-      case LayrzSupportedLanguage.lml:
+      case .lml:
         return lml.lml;
-      case LayrzSupportedLanguage.lcl:
+      case .lcl:
         return lcl.lcl;
-      case LayrzSupportedLanguage.mjml:
+      case .mjml:
         return mjml.mjml;
-      case LayrzSupportedLanguage.python:
+      case .python:
         return python.python;
       default:
         return Mode();
@@ -146,12 +146,12 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
 
   List<String> get _options {
     switch (widget.language) {
-      case LayrzSupportedLanguage.lml:
+      case .lml:
         return lml.functions;
-      case LayrzSupportedLanguage.lcl:
+      case .lcl:
         return lcl.functions;
-      case LayrzSupportedLanguage.mjml:
-      case LayrzSupportedLanguage.python:
+      case .mjml:
+      case .python:
       default:
         return [];
     }
@@ -159,12 +159,12 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
 
   String? get _basePath {
     switch (widget.language) {
-      case LayrzSupportedLanguage.lml:
+      case .lml:
         return 'https://developers.layrz.com/lml/variables';
-      case LayrzSupportedLanguage.lcl:
+      case .lcl:
         return 'https://developers.layrz.com/lcl/functions';
-      case LayrzSupportedLanguage.mjml:
-      case LayrzSupportedLanguage.python:
+      case .mjml:
+      case .python:
       default:
         return null;
     }
@@ -209,7 +209,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
       }
 
       // update the cursor offset
-      _controller.selection = TextSelection.fromPosition(
+      _controller.selection = .fromPosition(
         TextPosition(
           offset: previousCursorOffset,
         ),
@@ -233,12 +233,12 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
         child: ConstrainedBox(
           constraints: widget.constraints ?? const BoxConstraints(maxHeight: 400),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: .min,
+            mainAxisAlignment: .start,
+            crossAxisAlignment: .start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const .all(10),
                 child: Row(
                   children: [
                     Expanded(
@@ -336,7 +336,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                                 elevation: 3,
                                               ),
                                               constraints: const BoxConstraints(maxWidth: 400),
-                                              padding: const EdgeInsets.all(20),
+                                              padding: const .all(20),
                                               child: Text(
                                                 result,
                                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -344,7 +344,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                                   fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                                                 ),
                                                 maxLines: 4,
-                                                textAlign: TextAlign.center,
+                                                textAlign: .center,
                                               ),
                                             ),
                                           );
@@ -362,7 +362,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                       opacity: _isRunning ? 0.5 : 1,
                                       duration: kHoverDuration,
                                       child: Padding(
-                                        padding: const EdgeInsets.only(left: 2, bottom: 2),
+                                        padding: const .only(left: 2, bottom: 2),
                                         child: Icon(
                                           LayrzIcons.solarOutlinePlay,
                                           color: textColor,
@@ -392,7 +392,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const .symmetric(horizontal: 10),
                 child: LinearProgressIndicator(
                   value: _isLoading ? null : 0,
                   minHeight: 1,
@@ -402,7 +402,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
               ),
               Expanded(
                 child: Theme(
-                  data: ThemeData.dark(),
+                  data: .dark(),
                   child: CodeTheme(
                     data: CodeThemeData(styles: _theme),
                     child: CodeField(
@@ -415,7 +415,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                           text: '$lineNumber',
                           style: style?.copyWith(
                             color: hasError ? Colors.red : textColor.withValues(alpha: 0.5),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         );
                       },
@@ -435,7 +435,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
               ),
               if (!widget.disabled) ...[
                 ThemedFieldDisplayError(
-                  padding: const EdgeInsets.all(10),
+                  padding: const .all(10),
                   errors: widget.errors + globalErrors,
                   maxLines: 10,
                 ),
@@ -444,9 +444,9 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                     options: _options,
                     basePath: _basePath,
                     onTap: (suggestion) {
-                      if (widget.language == LayrzSupportedLanguage.lml) {
+                      if (widget.language == .lml) {
                         suggestion = '{{$suggestion}}';
-                      } else if (widget.language == LayrzSupportedLanguage.lcl) {
+                      } else if (widget.language == .lcl) {
                         suggestion = '$suggestion()';
                       }
                       // Define cursor position
@@ -585,7 +585,7 @@ class _ThemedCodeSuggestions extends StatelessWidget {
     return SizedBox(
       height: 30,
       child: ListView.builder(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: .horizontal,
         itemCount: options.length,
         itemBuilder: (context, index) {
           Widget content = Material(
@@ -596,7 +596,7 @@ class _ThemedCodeSuggestions extends StatelessWidget {
               onSecondaryTap: basePath == null ? null : () => _launchSite(options[index]),
               hoverColor: Colors.white.withValues(alpha: 0.1),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+                padding: const .symmetric(vertical: 5, horizontal: 7),
                 child: Text(
                   options[index],
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -610,7 +610,7 @@ class _ThemedCodeSuggestions extends StatelessWidget {
           if (basePath == null) return content;
 
           return ThemedTooltip(
-            position: ThemedTooltipPosition.top,
+            position: .top,
             color: Colors.white,
             message:
                 LayrzAppLocalizations.maybeOf(context)?.t('layrz.editor.documentation') ??
@@ -626,7 +626,7 @@ class _ThemedCodeSuggestions extends StatelessWidget {
     String subpath = option.replaceAll('_', '-').toLowerCase();
     launchUrlString(
       '$basePath#$subpath',
-      mode: LaunchMode.externalApplication,
+      mode: .externalApplication,
     );
   }
 }

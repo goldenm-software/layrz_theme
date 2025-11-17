@@ -119,15 +119,15 @@ class ThemedNotificationIcon extends StatefulWidget {
     this.badgeLabelBuilder,
     required this.location,
     this.customLocation,
-  }) : assert(location != ThemedNotificationLocation.custom || customLocation != null);
+  }) : assert(location != .custom || customLocation != null);
 
   @override
   State<ThemedNotificationIcon> createState() => _ThemedNotificationIconState();
 }
 
 class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with SingleTickerProviderStateMixin {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get backgroundColor => widget.backgroundColor;
   List<ThemedNotificationItem> get notifications => widget.notifications;
 
@@ -151,12 +151,12 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: .circular(30),
         hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
         key: _key,
         onTap: _buildOverlay,
         child: Padding(
-          padding: EdgeInsets.all(widget.dense ? 5 : 10),
+          padding: .all(widget.dense ? 5 : 10),
           child: Badge(
             isLabelVisible: notifications.isNotEmpty,
             backgroundColor: widget.badgeColor ?? Colors.orange,
@@ -184,8 +184,8 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
 
     RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
     Offset offset = renderBox.localToGlobal(Offset.zero);
-    Size screenSize = MediaQuery.of(context).size;
-    EdgeInsets padding = MediaQuery.of(context).padding;
+    Size screenSize = MediaQuery.sizeOf(context);
+    EdgeInsets padding = MediaQuery.paddingOf(context);
     Size iconSize = renderBox.size;
 
     double? bottom;
@@ -196,16 +196,16 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
     late Alignment alignment;
 
     switch (widget.location) {
-      case ThemedNotificationLocation.custom:
+      case .custom:
         top = widget.customLocation!.top;
         bottom = widget.customLocation!.bottom;
         left = widget.customLocation!.left;
         right = widget.customLocation!.right;
         width = widget.customLocation!.width;
-        alignment = Alignment.topLeft;
+        alignment = .topLeft;
         break;
-      case ThemedNotificationLocation.appBar:
-        alignment = Alignment.topRight;
+      case .appBar:
+        alignment = .topRight;
         top = padding.top + iconSize.width + offset.dy + 10;
         right = (screenSize.width - offset.dx - iconSize.width - padding.right);
         width = screenSize.width * 0.5;
@@ -216,16 +216,16 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
           width = null;
         }
         break;
-      case ThemedNotificationLocation.miniBar:
-        alignment = Alignment.bottomLeft;
+      case .miniBar:
+        alignment = .bottomLeft;
         left = padding.left + iconSize.width + offset.dx + 10;
         bottom = padding.bottom + 10;
 
         width = screenSize.width * 0.5;
         if (width > 400) width = 400;
         break;
-      case ThemedNotificationLocation.bottomBar:
-        alignment = Alignment.bottomRight;
+      case .bottomBar:
+        alignment = .bottomRight;
         bottom = 20 + iconSize.height + padding.bottom;
         right = 10 + padding.right;
         width = screenSize.width * 0.5;
@@ -236,8 +236,8 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
           width = null;
         }
         break;
-      case ThemedNotificationLocation.sideBar:
-        alignment = Alignment.topLeft;
+      case .sideBar:
+        alignment = .topLeft;
         top = padding.top + iconSize.width + offset.dy + 10;
         left = padding.left + iconSize.width + offset.dx + 10;
         width = screenSize.width * 0.5;
@@ -274,11 +274,8 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                         minHeight: 56,
                         maxWidth: 400,
                       ),
-                      decoration: generateContainerElevation(
-                        context: context,
-                        elevation: 3,
-                      ),
-                      clipBehavior: Clip.antiAlias,
+                      decoration: generateContainerElevation(context: context, elevation: 3),
+                      clipBehavior: .antiAlias,
                       child: notifications.isEmpty
                           ? SizedBox(
                               height: 56,
@@ -304,9 +301,9 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                           }
                                         : null,
                                     child: Container(
-                                      padding: const EdgeInsets.all(10),
+                                      padding: const .all(10),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        crossAxisAlignment: .center,
                                         children: [
                                           ThemedAvatar(
                                             icon: item.icon ?? LayrzIcons.solarOutlineBellBing,
@@ -315,21 +312,19 @@ class _ThemedNotificationIconState extends State<ThemedNotificationIcon> with Si
                                           const SizedBox(width: 10),
                                           Expanded(
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: .center,
+                                              crossAxisAlignment: .start,
                                               children: [
                                                 Text(
                                                   item.title,
                                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                    fontWeight: FontWeight.bold,
+                                                    fontWeight: .bold,
                                                   ),
                                                 ),
                                                 Text(
                                                   item.content,
-                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                    fontSize: 13,
-                                                  ),
-                                                  textAlign: TextAlign.justify,
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 13),
+                                                  textAlign: .justify,
                                                   maxLines: 2,
                                                 ),
                                                 Text(

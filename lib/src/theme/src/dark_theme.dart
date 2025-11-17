@@ -60,7 +60,7 @@ ThemeData generateDarkTheme({
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
         color: kDarkBackgroundColor,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: .circular(5),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 5, offset: const Offset(0, 3))],
       ),
       textStyle: textTheme.bodySmall?.copyWith(color: kLightBackgroundColor, fontSize: 12),
@@ -68,7 +68,7 @@ ThemeData generateDarkTheme({
 
     // Input
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const EdgeInsets.all(10),
+      contentPadding: const .all(10),
       filled: true,
       fillColor: Colors.grey.shade800,
       border: const ThemedInputBorder(),
@@ -90,7 +90,7 @@ ThemeData generateDarkTheme({
     dialogTheme: const DialogThemeData(
       backgroundColor: kDarkBackgroundColor,
       surfaceTintColor: kDarkBackgroundColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+      shape: RoundedRectangleBorder(borderRadius: .all(.circular(10))),
     ),
 
     // Header / AppBar
@@ -105,21 +105,21 @@ ThemeData generateDarkTheme({
 
     // Bottom Navigation Bar / Bottom sheet theme
     bottomSheetTheme: const BottomSheetThemeData(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: RoundedRectangleBorder(borderRadius: .vertical(top: .circular(20))),
     ),
 
     // Divider
     dividerColor: Colors.grey.shade800,
     dividerTheme: DividerThemeData(color: Colors.grey.shade800, thickness: 1, space: 3, indent: 0, endIndent: 0),
     scrollbarTheme: ScrollbarThemeData(
-      trackVisibility: WidgetStateProperty.all(true),
-      thumbVisibility: WidgetStateProperty.all(true),
-      thumbColor: WidgetStateColor.resolveWith((states) {
+      trackVisibility: .all(true),
+      thumbVisibility: .all(true),
+      thumbColor: .resolveWith((states) {
         return Colors.grey.shade500.withValues(alpha: 0.4);
       }),
-      trackColor: WidgetStateProperty.all(Colors.transparent),
-      trackBorderColor: WidgetStateProperty.all(Colors.transparent),
-      thickness: WidgetStateProperty.all(7),
+      trackColor: .all(Colors.transparent),
+      trackBorderColor: .all(Colors.transparent),
+      thickness: .all(7),
     ),
 
     // Slider
@@ -139,15 +139,15 @@ ThemeData generateDarkTheme({
     // Inputs
     checkboxTheme: CheckboxThemeData(
       visualDensity: VisualDensity.compact,
-      fillColor: WidgetStateColor.resolveWith((states) {
+      fillColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return Colors.grey.shade600;
         return Colors.transparent;
       }),
-      checkColor: WidgetStateColor.resolveWith((states) {
+      checkColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return Colors.white;
         return Colors.transparent;
       }),
-      overlayColor: WidgetStateColor.resolveWith((states) {
+      overlayColor: .resolveWith((states) {
         if (states.contains(WidgetState.hovered)) return Colors.grey.shade800;
         return Colors.transparent;
       }),
@@ -155,24 +155,24 @@ ThemeData generateDarkTheme({
       side: const BorderSide(color: Colors.grey, width: 2),
     ),
     switchTheme: SwitchThemeData(
-      thumbIcon: WidgetStateProperty.resolveWith((states) {
+      thumbIcon: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckSquare, color: color);
         return Icon(LayrzIcons.solarOutlineCloseSquare, color: color);
       }),
-      trackColor: WidgetStateColor.resolveWith((states) {
+      trackColor: .resolveWith((states) {
         return Colors.transparent;
       }),
-      thumbColor: WidgetStateColor.resolveWith((states) {
+      thumbColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return Colors.white;
         return Colors.grey;
       }),
-      trackOutlineColor: WidgetStateColor.resolveWith((states) {
+      trackOutlineColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) return Colors.white;
         return Colors.grey;
       }),
     ),
     radioTheme: RadioThemeData(
-      fillColor: WidgetStateColor.resolveWith((states) {
+      fillColor: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return Colors.white;
         }
@@ -183,7 +183,7 @@ ThemeData generateDarkTheme({
     listTileTheme: ListTileThemeData(selectedTileColor: color.withValues(alpha: 0.3), selectedColor: color),
     cardTheme: const CardThemeData(color: kDarkBackgroundColor, surfaceTintColor: kDarkBackgroundColor),
     dataTableTheme: const DataTableThemeData(
-      decoration: BoxDecoration(boxShadow: [], borderRadius: BorderRadius.zero),
+      decoration: BoxDecoration(boxShadow: [], borderRadius: .zero),
     ),
   );
 }

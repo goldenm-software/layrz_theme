@@ -8,10 +8,10 @@ part of '../theme.dart';
 class ThemedFontHandler {
   /// [preloadFont] is a helper function to preload a [AppFont] from the network.
   static Future<void> preloadFont(AppFont font) async {
-    if (font.source == FontSource.local) return;
+    if (font.source == .local) return;
     debugPrint("layrz_theme/ThemedFontHandler.preloadFont(): Preloading font ${font.name}");
 
-    if (font.source == FontSource.uri && font.uri != null) {
+    if (font.source == .uri && font.uri != null) {
       final response = await Dio().get(font.uri!, options: Options(responseType: ResponseType.bytes));
       if (response.statusCode == 200) {
         final loader = FontLoader(font.name);
@@ -49,7 +49,7 @@ class ThemedFontHandler {
     final defaultTextTheme = (isDark ? ThemeData.dark() : ThemeData.light()).textTheme;
 
     String titleFontName = titleFont?.name ?? 'Ubuntu';
-    if (titleFont?.source == FontSource.google) {
+    if (titleFont?.source == .google) {
       try {
         titleFontName = GoogleFonts.getFont(titleFontName).fontFamily!;
       } catch (e) {
@@ -58,7 +58,7 @@ class ThemedFontHandler {
     }
 
     String bodyFontName = bodyFont?.name ?? 'Ubuntu';
-    if (bodyFont?.source == FontSource.google) {
+    if (bodyFont?.source == .google) {
       try {
         bodyFontName = GoogleFonts.getFont(bodyFontName).fontFamily!;
       } catch (e) {
@@ -74,7 +74,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       displayMedium: defaultTextTheme.displayMedium?.copyWith(
         color: isDark ? Colors.white : titleTextColor,
@@ -83,7 +83,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       displaySmall: defaultTextTheme.displaySmall?.copyWith(
         color: isDark ? Colors.white : titleTextColor,
@@ -92,7 +92,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       headlineLarge: defaultTextTheme.headlineLarge?.copyWith(
         color: isDark ? Colors.white : titleTextColor,
@@ -101,7 +101,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       headlineMedium: defaultTextTheme.headlineMedium?.copyWith(
         color: isDark ? Colors.white : titleTextColor,
@@ -110,7 +110,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       headlineSmall: defaultTextTheme.headlineSmall?.copyWith(
         color: isDark ? Colors.white : titleTextColor,
@@ -119,7 +119,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       titleLarge: defaultTextTheme.titleLarge?.copyWith(
         fontFamily: titleFontName,
@@ -127,7 +127,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       titleMedium: defaultTextTheme.titleMedium?.copyWith(
         fontFamily: titleFontName,
@@ -135,7 +135,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       titleSmall: defaultTextTheme.titleSmall?.copyWith(
         fontFamily: titleFontName,
@@ -143,7 +143,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       bodyLarge: defaultTextTheme.bodyLarge?.copyWith(
         fontFamily: bodyFontName,
@@ -151,7 +151,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       bodyMedium: defaultTextTheme.bodyMedium?.copyWith(
         fontFamily: bodyFontName,
@@ -159,7 +159,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       bodySmall: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
@@ -167,7 +167,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       labelLarge: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
@@ -175,7 +175,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       labelMedium: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
@@ -183,7 +183,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
       labelSmall: defaultTextTheme.bodySmall?.copyWith(
         fontFamily: bodyFontName,
@@ -191,7 +191,7 @@ class ThemedFontHandler {
           GoogleFonts.ubuntu().fontFamily!,
           'Roboto',
         ],
-        overflow: TextOverflow.ellipsis,
+        overflow: .ellipsis,
       ),
     );
   }

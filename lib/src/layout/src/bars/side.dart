@@ -126,7 +126,7 @@ class ThemedSidebar extends StatefulWidget {
 }
 
 class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateMixin {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get backgroundColor =>
       widget.backgroundColor ??
       (isDark
@@ -264,24 +264,24 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
           ),
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: .start,
+          mainAxisAlignment: .start,
           children: [
             if (isMacOS) ...[
               const SizedBox(height: 40),
             ],
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15).add(const EdgeInsets.only(top: 10)),
+              padding: const EdgeInsets.symmetric(horizontal: 15).add(const .only(top: 10)),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   Expanded(
                     child: ThemedImage(
                       path: useBlack(color: backgroundColor) ? widget.logo.normal : widget.logo.white,
-                      width: double.infinity,
+                      width: .infinity,
                       height: 30,
-                      fit: BoxFit.contain,
-                      alignment: isMobile ? Alignment.center : Alignment.centerLeft,
+                      fit: .contain,
+                      alignment: isMobile ? .center : .centerLeft,
                     ),
                   ),
                   if (widget.enableNotifications) ...[
@@ -290,7 +290,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                       dense: true,
                       notifications: widget.notifications,
                       backgroundColor: backgroundColor,
-                      location: ThemedNotificationLocation.sideBar,
+                      location: .sideBar,
                       expandToLeft: true,
                     ),
                   ],
@@ -301,14 +301,14 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
             _buildItem(ThemedNavigatorSeparator(), removePadding: true),
             if (!widget.hideAvatar) ...[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const .symmetric(horizontal: 10),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5),
+                  margin: const .symmetric(horizontal: 2.5, vertical: 5),
                   decoration: BoxDecoration(
                     color: isExpanded ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: .circular(10),
                   ),
-                  clipBehavior: Clip.antiAlias,
+                  clipBehavior: .antiAlias,
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
@@ -321,9 +321,9 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                         }
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(5),
+                        padding: const .all(5),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: .center,
                           children: [
                             ThemedAvatar(
                               radius: widget.avatarRadius,
@@ -358,7 +358,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
               SizeTransition(
                 sizeFactor: CurvedAnimation(parent: _actionsAnimation, curve: Curves.easeInOut),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const .symmetric(horizontal: 10),
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: actions.length,
@@ -378,7 +378,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
               child: ScrollConfiguration(
                 behavior: const ScrollBehavior(),
                 child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const .symmetric(horizontal: 10),
                   itemCount: widget.items.length,
                   itemBuilder: (context, index) {
                     return _buildItem(widget.items[index]);
@@ -397,8 +397,8 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                   version: widget.version,
                 ),
                 child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 10).add(const EdgeInsets.only(top: 10)),
+                  width: .infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 10).add(const .only(top: 10)),
                   child: Center(
                     child: Text(
                       "v${widget.version!}",
@@ -418,11 +418,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
   Widget _buildItem(ThemedNavigatorItem item, {int depth = 0, bool removePadding = false}) {
     if (item is ThemedNavigatorLabel) {
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(
-          EdgeInsets.only(
-            left: 10 * depth.toDouble(),
-          ),
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(.only(left: 10 * depth.toDouble())),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child:
             item.label ??
@@ -452,16 +448,15 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(
-                  EdgeInsets.only(
-                    left: 10 * depth.toDouble(),
-                  ),
-                ),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 2.5,
+                  vertical: 5,
+                ).add(.only(left: 10 * depth.toDouble())),
                 decoration: BoxDecoration(
                   color: highlight ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: .circular(10),
                 ),
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: .antiAlias,
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -477,9 +472,9 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                           },
                     hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const .all(10),
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           if (item.icon != null) ...[
                             Icon(
@@ -533,24 +528,18 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
 
     if (item is ThemedNavigatorAction) {
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(
-          EdgeInsets.only(
-            left: 10 * depth.toDouble(),
-          ),
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        clipBehavior: Clip.antiAlias,
+        margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(.only(left: 10 * depth.toDouble())),
+        decoration: BoxDecoration(borderRadius: .circular(10)),
+        clipBehavior: .antiAlias,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () => handleOnTap(item.onTap),
             hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const .all(10),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   if (item.icon != null) ...[
                     Icon(
@@ -580,29 +569,22 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
 
     if (item is ThemedNavigatorSeparator) {
       Color dividerColor = validateColor(color: backgroundColor).withValues(alpha: 0.2);
-      if (item.type == ThemedSeparatorType.line) {
+      if (item.type == .line) {
         return Padding(
-          padding: removePadding ? EdgeInsets.zero : const EdgeInsets.symmetric(vertical: 5),
-          child: Divider(
-            indent: 5,
-            endIndent: 5,
-            color: dividerColor,
-          ),
+          padding: removePadding ? .zero : const .symmetric(vertical: 5),
+          child: Divider(indent: 5, endIndent: 5, color: dividerColor),
         );
       }
 
       return Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const .all(5),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(40, (_) {
+          mainAxisAlignment: .spaceBetween,
+          children: .generate(40, (_) {
             return Container(
               width: 3,
               height: 3,
-              decoration: BoxDecoration(
-                color: dividerColor,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: dividerColor, shape: .circle),
             );
           }),
         ),
@@ -611,27 +593,22 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
 
     if (item is ThemedNavigatorWidget) {
       return ThemedTooltip(
-        position: ThemedTooltipPosition.right,
+        position: .right,
         message: item.labelText ?? item.label?.toString() ?? '',
         child: Container(
-          margin: const EdgeInsets.all(5),
+          margin: const .all(5),
           width: actionSize - 10,
           height: actionSize - 10,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(actionSize),
-          ),
+          decoration: BoxDecoration(borderRadius: .circular(actionSize)),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(actionSize),
+              borderRadius: .circular(actionSize),
               hoverColor: validateColor(color: backgroundColor).withValues(alpha: 0.1),
               onTap: item.onTap,
               child: Container(
-                alignment: Alignment.center,
-                constraints: const BoxConstraints(
-                  minWidth: 30,
-                  minHeight: 30,
-                ),
+                alignment: .center,
+                constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
                 child: item.widget,
               ),
             ),

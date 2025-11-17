@@ -68,19 +68,19 @@ Future<ThemedFile?> saveFile({
 
     final parentDirectory = await getApplicationDocumentsDirectory();
 
-    FileType type = FileType.any;
+    FileType type = .any;
     List<String> allowedExtensions = [];
     final mime = lookupMimeType(filename);
 
     if (mime != null) {
       if (mime.startsWith('image/')) {
-        type = FileType.image;
+        type = .image;
       } else if (mime.startsWith('video/')) {
-        type = FileType.video;
+        type = .video;
       } else if (mime.startsWith('audio/')) {
-        type = FileType.audio;
+        type = .audio;
       } else {
-        type = FileType.custom;
+        type = .custom;
         final ext = extensionFromMime(mime);
         if (ext == null) return null;
         allowedExtensions = [ext];

@@ -98,6 +98,10 @@ final goRoutes = [
     path: '/inputs/code',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const CodeInputView()),
   ),
+  GoRoute(
+    path: '/inputs/chips',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const ChipsView()),
+  ),
 
   // Table
   GoRoute(
@@ -141,7 +145,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/table/infinite' : '/',
+  initialLocation: kDebugMode ? '/inputs/chips' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

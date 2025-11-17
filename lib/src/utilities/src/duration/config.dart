@@ -28,7 +28,7 @@ class ThemedHumanizeOptions {
 
   /// [ThemedHumanizeOptions] is the configuration for [Duration.humanize] function.
   const ThemedHumanizeOptions({
-    this.units = const [ThemedUnits.year, ThemedUnits.month, ThemedUnits.day, ThemedUnits.hour, ThemedUnits.minute],
+    this.units = const [.year, .month, .day, .hour, .minute],
     this.spacer = ' ',
     this.delimiter = ', ',
     this.conjunction = ' and ',
@@ -132,21 +132,21 @@ class _ThemedHumanizePiece {
 
   String get unitLanguage {
     switch (unitName) {
-      case ThemedUnits.day:
+      case .day:
         return language.day(unitCount);
-      case ThemedUnits.hour:
+      case .hour:
         return language.hour(unitCount);
-      case ThemedUnits.minute:
+      case .minute:
         return language.minute(unitCount);
-      case ThemedUnits.second:
+      case .second:
         return language.second(unitCount);
-      case ThemedUnits.millisecond:
+      case .millisecond:
         return language.millisecond(unitCount);
-      case ThemedUnits.year:
+      case .year:
         return language.year(unitCount);
-      case ThemedUnits.month:
+      case .month:
         return language.month(unitCount);
-      case ThemedUnits.week:
+      case .week:
         return language.week(unitCount);
     }
   }
@@ -154,7 +154,7 @@ class _ThemedHumanizePiece {
   String _toArabicDigits(String digit) {
     var character = '';
     for (var i = 0; i < digit.length; i++) {
-      character += arabicDigits[int.parse(digit[i])];
+      character += arabicDigits[.parse(digit[i])];
     }
     return character;
   }

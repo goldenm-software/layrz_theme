@@ -12,3 +12,5 @@ import 'package:sync_scroll_controller/sync_scroll_controller.dart';
 part 'src/table.dart';
 part 'src/column.dart';
 part 'src/on_tap_behavior.dart';
+part 'src/controller.dart';
+part 'src/events.dart';

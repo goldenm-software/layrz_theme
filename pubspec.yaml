@@ -1,6 +1,6 @@
 name: layrz_theme
 description: Layrz standard styling library for Flutter. Widget library following the Material Design 3 guidelines, with a focus on reliavility and functionality.
-version: "7.4.12"
+version: "7.5.0-prerelease2"
 homepage: https://theme.layrz.com
 repository: https://github.com/goldenm-software/layrz_theme
 
@@ -12,8 +12,8 @@ topics:
   - goldenm
 
 environment:
-  sdk: ">=3.9.0 <4.0.0"
-  flutter: ">=3.35.0"
+  sdk: ">=3.10.0 <4.0.0"
+  flutter: ">=3.38.1" # This weird constraint is due to Flutter 3.38.0 issue using Dart beta SDK. See https://github.com/flutter/flutter/issues/178400
 
 dependencies:
   flutter:
@@ -52,7 +52,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

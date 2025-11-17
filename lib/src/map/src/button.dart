@@ -48,7 +48,7 @@ class _ThemedMapButtonState extends State<ThemedMapButton> {
         child: InkWell(
           onTap: _isDisabled ? null : widget.onTap,
           child: ThemedTooltip(
-            position: ThemedTooltipPosition.right,
+            position: .right,
             message: widget.labelText,
             color: color,
             child: Icon(
@@ -172,7 +172,7 @@ class _ThemedMapDragButtonState extends State<ThemedMapDragButton> {
                     if (!_controller.isShowing) _controller.show();
                   },
             child: ThemedTooltip(
-              position: ThemedTooltipPosition.right,
+              position: .right,
               message: widget.labelText,
               color: color,
               child: Icon(

@@ -14,3 +14,4 @@ part 'src/radio.dart';
 part 'src/selectors/datetime.dart';
 part 'src/selectors/general.dart';
 part 'src/text.dart';
+part 'src/chips.dart';

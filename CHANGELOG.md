@@ -1,5 +1,18 @@
 # Changelog
 
+## 7.5.0 (PRE-RELEASE)
+
+- Updated constraint of Dart SDK to `>=3.10.0 <4.0.0`
+- Updated constraint of Flutter SDK to `>=3.38.0`
+- Dot shorthands everywhere!
+- Added `ThemedTable2Controller` to handle programmatically sorting, filtering and refreshing the table data.
+- Added `debounce` property to `ThemedSearchInput` to handle debounced search inputs.
+- Improvements over `ThemedImage` base64 caching to prevent memory leaks.
+- Updated `ThemedChip` to support more styles and configurations.
+- New `ThemedChipStyle` enum to define the style of the `ThemedChip`.
+- New `ThemedChipGroup` widget to handle groups of chips with selection support.
+- Optimizations on `ThemedTable2` to improve performance when handling large datasets.
+
 ## 7.4.12
 
 - Changed `ThemedButton` loading and disabled behavior to use the original coloring of the button style instead of from context.

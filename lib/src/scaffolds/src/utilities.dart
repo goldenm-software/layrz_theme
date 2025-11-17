@@ -20,7 +20,7 @@ Future<bool> deleteConfirmationDialog({
   String? customConfirm,
   String? customDismiss,
 }) async {
-  LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? i18n = .maybeOf(context);
 
   String title = '';
   String content = '';
@@ -61,26 +61,26 @@ Future<bool> deleteConfirmationDialog({
           decoration: generateContainerElevation(context: context, elevation: 5),
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: .start,
+            mainAxisAlignment: .start,
+            mainAxisSize: .min,
             children: [
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
                 maxLines: 10,
-                textAlign: TextAlign.justify,
+                textAlign: .justify,
               ),
               Text(
                 content,
-                textAlign: TextAlign.justify,
+                textAlign: .justify,
                 maxLines: 10,
               ),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
                   ThemedButton.cancel(
                     labelText: dismissLabel,

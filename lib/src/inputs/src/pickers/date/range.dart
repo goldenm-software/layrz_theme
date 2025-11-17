@@ -108,7 +108,7 @@ class ThemedDateRangePicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
@@ -121,8 +121,8 @@ class ThemedDateRangePicker extends StatefulWidget {
 
 class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
   final TextEditingController _controller = TextEditingController();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   String? get _parsedName {
     if (widget.value.isEmpty) {

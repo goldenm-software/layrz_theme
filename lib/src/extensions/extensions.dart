@@ -11,3 +11,4 @@ part 'src/grid_fixed_height.dart';
 part 'src/orm.dart';
 part 'src/styling.dart';
 part 'src/i18n.dart';
+part 'src/separator.dart';

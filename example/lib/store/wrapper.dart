@@ -116,6 +116,11 @@ class _LayoutState extends State<Layout> {
               icon: LayrzIcons.solarOutlinePinCircle,
             ),
             ThemedNavigatorPage(
+              labelText: 'Chips',
+              path: '/inputs/chips',
+              icon: LayrzIcons.solarOutlineTag,
+            ),
+            ThemedNavigatorPage(
               labelText: 'Selectors',
               path: '/inputs/selectors',
               icon: LayrzIcons.solarOutlineChecklistMinimalistic,
