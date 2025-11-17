@@ -13,7 +13,7 @@ topics:
 
 environment:
   sdk: ">=3.10.0 <4.0.0"
-  flutter: ">=3.38.0"
+  flutter: ">=3.38.1" # This weird constraint is due to Flutter 3.38.0 issue using Dart beta SDK. See https://github.com/flutter/flutter/issues/178400
 
 dependencies:
   flutter:
