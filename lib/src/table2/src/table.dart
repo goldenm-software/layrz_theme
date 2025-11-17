@@ -176,7 +176,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   bool _isReversed = false;
 
   /// [_isLoading] indicates whether the table is currently loading or computing data.
-  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  final ValueNotifier<bool> _isLoading = .new(false);
 
   /// [_selectedItems] holds the list of currently selected items in multi-select mode.
   late ValueNotifier<List<T>> _selectedItems;
@@ -199,7 +199,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
     widget.controller?.addListener(_onControllerEvent);
 
-    _filterAndSort('INIT_STATE');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _filterAndSort('INIT_STATE');
+    });
   }
 
   @override
@@ -395,7 +397,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                 // Search
                 if (widget.canSearch) ...[
                   SizedBox(
-                    width: double.infinity,
+                    width: .infinity,
                     child: ThemedTextInput(
                       labelText: LayrzAppLocalizations.maybeOf(context)?.t('actions.search') ?? 'Search...',
                       prefixIcon: LayrzIcons.solarOutlineMagnifier,
