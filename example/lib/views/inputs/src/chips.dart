@@ -76,9 +76,10 @@ class _ChipsViewState extends State<ChipsView> {
               ),
               Text("And finally, can be grouped, it means that you can display multiple chips in a row:"),
               ThemedChipGroup(
+                alignment: .center,
                 chips: [
                   ThemedChip(
-                    labelText: 'Chip 1',
+                    labelText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                     color: Colors.blue,
                   ),
                   ThemedChip(
@@ -88,6 +89,7 @@ class _ChipsViewState extends State<ChipsView> {
                   ThemedChip(
                     labelText: 'Chip 3',
                     color: Colors.red,
+                    // padding: const EdgeInsets.all(20),
                   ),
                   ThemedChip(
                     labelText: 'Chip 4',
@@ -117,21 +119,25 @@ class _ChipsViewState extends State<ChipsView> {
                   });
                 },
               ),
-              Container(
-                padding: const EdgeInsets.all(5),
-                constraints: BoxConstraints(maxWidth: width),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red, width: 1),
-                ),
-                child: ThemedChipGroup(
-                  chips: List.generate(10, (index) {
-                    return ThemedChip(
-                      labelText: 'Chip $index',
-                      leadingIcon: LayrzIcons.solarOutlinePlain3,
-                      color: Colors.blue,
-                    );
-                  }),
-                  behavior: ThemedChipGroupBehavior.clampWidth,
+              Align(
+                alignment: .centerRight,
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  constraints: BoxConstraints(maxWidth: width),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red, width: 1),
+                  ),
+                  child: ThemedChipGroup(
+                    alignment: .centerRight,
+                    chips: List.generate(10, (index) {
+                      return ThemedChip(
+                        labelText: 'Chip $index',
+                        leadingIcon: LayrzIcons.solarOutlinePlain3,
+                        color: Colors.blue,
+                      );
+                    }),
+                    behavior: ThemedChipGroupBehavior.clampWidth,
+                  ),
                 ),
               ),
             ],

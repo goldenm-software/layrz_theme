@@ -1,15 +1,28 @@
 part of '../chips.dart';
 
 class ThemedChipGroup extends StatelessWidget {
+  /// [chips] is the list of chips to display in the group.
   final List<ThemedChip> chips;
+
+  /// [behavior] defines how the chip group behaves when there are too many chips to fit in the available space.
   final ThemedChipGroupBehavior behavior;
+
+  /// [spacing] is the space between each chip in the group.
   final double spacing;
 
+  /// [alignment] defines the alignment of the chip group within its parent.
+  ///
+  /// This property only affects the [.scrollable] behavior.
+  final Alignment alignment;
+
+  /// [ThemedChipGroup] is a widget that displays a group of chips in a row. Simplifies the process of
+  /// displaying multiple chips together.
   const ThemedChipGroup({
     super.key,
     required this.chips,
     this.behavior = .scrollable,
     this.spacing = 10.0,
+    this.alignment = .centerLeft,
   });
 
   @override
@@ -22,8 +35,12 @@ class ThemedChipGroup extends StatelessWidget {
         );
 
         if (behavior == .scrollable) {
-          return SingleChildScrollView(
-            child: Row(spacing: spacing, children: chips),
+          return Align(
+            alignment: alignment,
+            child: SingleChildScrollView(
+              scrollDirection: .horizontal,
+              child: Row(spacing: spacing, children: chips),
+            ),
           );
         }
 
@@ -69,6 +86,7 @@ class ThemedChipGroup extends StatelessWidget {
         }
 
         return SingleChildScrollView(
+          scrollDirection: .horizontal,
           child: Row(spacing: spacing, children: visibleChips),
         );
       },

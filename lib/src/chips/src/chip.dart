@@ -31,7 +31,7 @@ class ThemedChip extends StatelessWidget {
   /// [ThemedChip] is a widget that displays a content in the chip style.
   const ThemedChip({
     super.key,
-    @Deprecated('Use label or richLabelText property') this.content = '',
+    @Deprecated('Use labelText property') this.content = '',
     this.color = Colors.blue,
     this.padding = const .symmetric(horizontal: 10, vertical: 5),
     this.labelText,
@@ -117,8 +117,6 @@ class ThemedChip extends StatelessWidget {
         break;
     }
 
-    child = Text(labelText ?? content, overflow: .ellipsis, style: textStyle);
-
     if (onDismiss != null) {
       child = RichText(
         overflow: .ellipsis,
@@ -159,19 +157,27 @@ class ThemedChip extends StatelessWidget {
         ),
       );
     } else {
-      child = Row(
-        mainAxisSize: .min,
-        children: [
-          if (leadingIcon != null) ...[
-            Icon(
-              leadingIcon,
-              color: textStyle?.color,
-              size: 18,
+      child = RichText(
+        overflow: .ellipsis,
+        text: TextSpan(
+          children: [
+            if (leadingIcon != null) ...[
+              WidgetSpan(
+                alignment: .middle,
+                child: Icon(
+                  leadingIcon,
+                  color: textStyle?.color,
+                  size: 18,
+                ),
+              ),
+              const WidgetSpan(child: SizedBox(width: 5)),
+            ],
+            TextSpan(
+              text: labelText ?? content,
+              style: textStyle,
             ),
-            5.w,
           ],
-          child,
-        ],
+        ),
       );
     }
 

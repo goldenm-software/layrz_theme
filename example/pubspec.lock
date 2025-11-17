@@ -374,7 +374,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.5.0-prerelease2"
+    version: "7.5.0-rc1"
   leak_tracker:
     dependency: transitive
     description:
@@ -982,4 +982,4 @@ packages:
     version: "6.6.1"
 sdks:
   dart: ">=3.10.0 <4.0.0"
-  flutter: ">=3.38.0"
+  flutter: ">=3.38.1"
