@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.5.0 (BETA)
+## 7.5.0 (PRE-RELEASE)
 
 - Updated constraint of Dart SDK to `>=3.10.0 <4.0.0`
 - Updated constraint of Flutter SDK to `>=3.38.0`
@@ -11,6 +11,7 @@
 - Updated `ThemedChip` to support more styles and configurations.
 - New `ThemedChipStyle` enum to define the style of the `ThemedChip`.
 - New `ThemedChipGroup` widget to handle groups of chips with selection support.
+- Optimizations on `ThemedTable2` to improve performance when handling large datasets.
 
 ## 7.4.12
 

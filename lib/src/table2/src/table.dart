@@ -197,9 +197,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
     _selectedItems = widget.multiselectValue ?? .new([]);
 
-    _filterAndSortAsync('INIT_STATE');
-
     widget.controller?.addListener(_onControllerEvent);
+
+    _filterAndSort('INIT_STATE');
   }
 
   @override
@@ -212,11 +212,12 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     bool c5 = false;
     if (kDebugMode && widget.reloadOnDidUpdate) c5 = true;
 
-    if (c1 || c2 || c3 || c4 || c5) _filterAndSortAsync('DID_UPDATE');
+    if (c1 || c2 || c3 || c4 || c5) _filterAndSort('DID_UPDATE');
     super.didUpdateWidget(oldWidget);
   }
 
-  Future<void> _filterAndSortAsync(String source) async {
+  Future<void> _filterAndSort(String source) async {
+    debugPrint("layrz_theme/ThemedTable2: Starting _filterAndSortAsync from $source...");
     if (_isLoading.value) {
       debugPrint('layrz_theme/ThemedTable2: Skipping _filterAndSortAsync from $source because is already loading');
       return;
@@ -224,7 +225,57 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
     _isLoading.value = true;
     await Future.delayed(widget.populateDelay);
-    _filterAndSort(source);
+    try {
+      List<T> items = .from(widget.items, growable: true);
+      if (items.isEmpty) {
+        debugPrint("layrz_theme/ThemedTable2: No items to filter and sort from $source.");
+        _filteredData.value = items;
+        return;
+      }
+
+      debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
+      _itemsStrings = {};
+      for (final item in widget.items) {
+        int rowHashCode = item.hashCode;
+        _itemsStrings[rowHashCode] = {};
+
+        for (final col in widget.columns) {
+          final colHashCode = col.hashCode;
+          _itemsStrings[rowHashCode]![colHashCode] = col.valueBuilder(item);
+        }
+      }
+
+      if (_searchController.text.isNotEmpty) {
+        debugPrint("layrz_theme/ThemedTable2: Filtering data from $source...");
+        final searchLower = _searchController.text.toLowerCase();
+        items = items.where((row) {
+          final rowHashCode = row.hashCode;
+          final cols = _itemsStrings[rowHashCode];
+          if (cols == null) return false;
+          for (final entry in cols.entries) {
+            if (entry.value.toLowerCase().contains(searchLower)) return true;
+          }
+          return false;
+        }).toList();
+      }
+
+      debugPrint("layrz_theme/ThemedTable2: Sorting data...");
+
+      _filteredData.value = await compute(
+        _sort,
+        _SortParams<T>(
+          items: items,
+          column: _colSelected,
+          isReversed: _isReversed,
+          itemsStrings: _itemsStrings,
+        ),
+      );
+    } finally {
+      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source, removing debouncer...");
+      _debounce?.cancel();
+      _debounce = null;
+      if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    }
     if (!mounted) return;
     _isLoading.value = false;
   }
@@ -262,12 +313,12 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       _colSelected = widget.columns[columnIndex];
       _isReversed = !ascending;
 
-      _filterAndSortAsync('CONTROLLER_SORT');
+      _filterAndSort('CONTROLLER_SORT');
       return;
     }
 
     if (event is ThemedTable2RefreshEvent<T>) {
-      _filterAndSortAsync('CONTROLLER_REFRESH');
+      _filterAndSort('CONTROLLER_REFRESH');
       return;
     }
 
@@ -757,53 +808,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     );
   }
 
-  void _filterAndSort(String source) async {
-    try {
-      List<T> items = .from(widget.items, growable: true);
-      if (items.isEmpty) {
-        debugPrint("layrz_theme/ThemedTable2: No items to filter and sort from $source.");
-        _filteredData.value = items;
-        return;
-      }
-
-      debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
-      _itemsStrings = {};
-      for (final item in widget.items) {
-        int rowHashCode = item.hashCode;
-        _itemsStrings[rowHashCode] = {};
-
-        for (final col in widget.columns) {
-          final colHashCode = col.hashCode;
-          _itemsStrings[rowHashCode]![colHashCode] = col.valueBuilder(item);
-        }
-      }
-
-      debugPrint("layrz_theme/ThemedTable2: Filtering data from $source - ${_searchController.text}...");
-      if (_searchController.text.isNotEmpty) {
-        debugPrint("layrz_theme/ThemedTable2: Filtering data...");
-        final searchLower = _searchController.text.toLowerCase();
-        items = items.where((row) {
-          final rowHashCode = row.hashCode;
-          final cols = _itemsStrings[rowHashCode];
-          if (cols == null) return false;
-          for (final entry in cols.entries) {
-            if (entry.value.toLowerCase().contains(searchLower)) return true;
-          }
-          return false;
-        }).toList();
-      }
-
-      debugPrint("layrz_theme/ThemedTable2: Sorting data...");
-      items.sort(_colSelected.customSort ?? _defaultSort);
-      _filteredData.value = items;
-    } finally {
-      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source, removing debouncer...");
-      _debounce?.cancel();
-      _debounce = null;
-      if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-    }
-  }
-
   void _onSearchChanged(String value) {
     _debounce = Timer(const Duration(milliseconds: 300), () {
       _filterAndSort('SEARCH');
@@ -812,52 +816,97 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       if (mounted) setState(() {});
     });
   }
+}
 
-  int _defaultSort(T a, T b) {
-    final colHashCode = _colSelected.hashCode;
-    final rowAHashCode = a.hashCode;
-    final rowBHashCode = b.hashCode;
+class _SortParams<T> {
+  final List<T> items;
+  final ThemedColumn2<T> column;
+  final bool isReversed;
+  final Map<int, Map<int, String>> itemsStrings;
 
-    final valueA = _itemsStrings[rowAHashCode]?[colHashCode] ?? _colSelected.valueBuilder.call(a);
-    final valueB = _itemsStrings[rowBHashCode]?[colHashCode] ?? _colSelected.valueBuilder.call(b);
+  _SortParams({
+    required this.items,
+    required this.column,
+    required this.isReversed,
+    this.itemsStrings = const {},
+  });
+}
 
-    final numA = num.tryParse(valueA);
-    final numB = num.tryParse(valueB);
-    if (numA != null && numB != null) {
-      if (numB == numA) return 0;
-      if (_isReversed) {
-        return numB > numA ? 1 : -1;
-      }
-      return numA > numB ? 1 : -1;
+/// [_sort] sorts the given list of items based on the specified column and order.
+///
+/// Requires the [_SortParams] containing:
+/// - [items]: The list of items to sort.
+/// - [column]: The column to sort by.
+/// - [isReversed]: Whether to sort in descending order.
+/// - [itemsStrings]: A precomputed map of string representations of items for efficient sorting.
+///
+/// This function runs on an Isolated thread to ensure non-blocking UI performance, the only issue with this
+/// is, you cannot use complexes objects or functions that are not sendable between isolates.
+List<T> _sort<T>(_SortParams<T> params) {
+  params.items.sort(
+    params.column.customSort ??
+        (a, b) => _defaultSort(
+          a,
+          b,
+          colSelected: params.column,
+          isReversed: params.isReversed,
+          itemsStrings: params.itemsStrings,
+        ),
+  );
+  return params.items;
+}
+
+/// [_defaultSort] is the default sorting function used when no custom sort is provided.
+int _defaultSort<T>(
+  T a,
+  T b, {
+  required ThemedColumn2<T> colSelected,
+  required bool isReversed,
+  required Map<int, Map<int, String>> itemsStrings,
+}) {
+  final colHashCode = colSelected.hashCode;
+  final rowAHashCode = a.hashCode;
+  final rowBHashCode = b.hashCode;
+
+  final valueA = itemsStrings[rowAHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(a);
+  final valueB = itemsStrings[rowBHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(b);
+
+  final numA = num.tryParse(valueA);
+  final numB = num.tryParse(valueB);
+  if (numA != null && numB != null) {
+    if (numB == numA) return 0;
+    if (isReversed) {
+      return numB > numA ? 1 : -1;
     }
-
-    Duration? parseDuration(String s) {
-      final parts = s.split(':');
-      if (parts.length == 3) {
-        final h = int.tryParse(parts[0]) ?? 0;
-        final m = int.tryParse(parts[1]) ?? 0;
-        final sec = int.tryParse(parts[2]) ?? 0;
-        return Duration(hours: h, minutes: m, seconds: sec);
-      }
-      return null;
-    }
-
-    final durA = parseDuration(valueA);
-    final durB = parseDuration(valueB);
-    if (durA != null && durB != null) {
-      return _isReversed ? durB.compareTo(durA) : durA.compareTo(durB);
-    }
-
-    // Try to parse as DateTime
-    final dateA = DateTime.tryParse(valueA);
-    final dateB = DateTime.tryParse(valueB);
-    if (dateA != null && dateB != null) {
-      return _isReversed ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
-    }
-
-    // Default: compare as string (case insensitive)
-    return _isReversed
-        ? valueB.toLowerCase().compareTo(valueA.toLowerCase())
-        : valueA.toLowerCase().compareTo(valueB.toLowerCase());
+    return numA > numB ? 1 : -1;
   }
+
+  Duration? parseDuration(String s) {
+    final parts = s.split(':');
+    if (parts.length == 3) {
+      final h = int.tryParse(parts[0]) ?? 0;
+      final m = int.tryParse(parts[1]) ?? 0;
+      final sec = int.tryParse(parts[2]) ?? 0;
+      return Duration(hours: h, minutes: m, seconds: sec);
+    }
+    return null;
+  }
+
+  final durA = parseDuration(valueA);
+  final durB = parseDuration(valueB);
+  if (durA != null && durB != null) {
+    return isReversed ? durB.compareTo(durA) : durA.compareTo(durB);
+  }
+
+  // Try to parse as DateTime
+  final dateA = DateTime.tryParse(valueA);
+  final dateB = DateTime.tryParse(valueB);
+  if (dateA != null && dateB != null) {
+    return isReversed ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
+  }
+
+  // Default: compare as string (case insensitive)
+  return isReversed
+      ? valueB.toLowerCase().compareTo(valueA.toLowerCase())
+      : valueA.toLowerCase().compareTo(valueB.toLowerCase());
 }
