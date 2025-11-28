@@ -156,15 +156,15 @@ class ThemedAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMixin {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get activeColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   String get logo => isDark ? widget.logo.white : widget.logo.normal;
   String get favicon => isDark ? widget.favicon.white : widget.favicon.normal;
 
   Color get backgroundColor => widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
-  double get width => MediaQuery.of(context).size.width;
+  double get width => MediaQuery.sizeOf(context).width;
   bool get isMobile => widget.isMobile ?? width < widget.mobileBreakpoint;
 
   String get currentPath => widget.currentPath ?? ModalRoute.of(context)?.settings.name ?? '';
@@ -185,7 +185,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const .symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: backgroundColor,
         boxShadow: [
@@ -229,10 +229,10 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(50),
+                        borderRadius: .circular(50),
                         onTap: () => Scaffold.of(context).openDrawer(),
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const .all(10),
                           child: Icon(
                             LayrzIcons.solarOutlineMenuDots,
                           ),
@@ -244,10 +244,10 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(50),
+                        borderRadius: .circular(50),
                         onTap: () => onNavigatorPop.call(),
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const .all(10),
                           child: Icon(
                             LayrzIcons.solarOutlineAltArrowLeft,
                           ),
@@ -259,15 +259,15 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                   InkWell(
                     onTap: (!isMobile && !isHome) ? () => onNavigatorPush.call(widget.homePath) : null,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const .symmetric(vertical: 5),
                       width: logoWidth,
                       height: logoHeight,
                       child: ThemedImage(
                         path: logoPath,
                         width: logoWidth,
                         height: logoHeight,
-                        fit: BoxFit.contain,
-                        alignment: Alignment.centerLeft,
+                        fit: .contain,
+                        alignment: .centerLeft,
                       ),
                     ),
                   ),
@@ -275,16 +275,16 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                     const SizedBox(width: 10),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const .symmetric(vertical: 10),
                         child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
+                          scrollDirection: .horizontal,
                           reverse: true,
                           child: Row(
                             children: widget.items.map((item) {
                               if (item is ThemedNavigatorLabel) {
                                 return Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  margin: const .symmetric(horizontal: 2.5),
+                                  padding: const .symmetric(horizontal: 10),
                                   child: item.label ?? Text(item.labelText ?? ''),
                                 );
                               }
@@ -293,20 +293,20 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                                 bool highlight = currentPath.startsWith(item.path);
 
                                 return Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                  margin: const .symmetric(horizontal: 2.5),
                                   decoration: BoxDecoration(
                                     color: highlight ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: .circular(10),
                                   ),
-                                  clipBehavior: Clip.antiAlias,
+                                  clipBehavior: .antiAlias,
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: () => item.onTap.call(onNavigatorPush),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        padding: const .symmetric(horizontal: 10, vertical: 5),
                                         child: Row(
-                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisSize: .min,
                                           children: [
                                             if (item.icon != null) ...[
                                               Icon(
@@ -327,19 +327,19 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
 
                               if (item is ThemedNavigatorAction) {
                                 return Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                  margin: const .symmetric(horizontal: 2.5),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: .circular(10),
                                   ),
-                                  clipBehavior: Clip.antiAlias,
+                                  clipBehavior: .antiAlias,
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: item.onTap,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        padding: const .symmetric(horizontal: 10, vertical: 5),
                                         child: Row(
-                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisSize: .min,
                                           children: [
                                             if (item.icon != null) ...[
                                               Icon(
@@ -358,24 +358,24 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                               }
 
                               if (item is ThemedNavigatorSeparator) {
-                                if (item.type == ThemedSeparatorType.line) {
+                                if (item.type == .line) {
                                   return Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                    margin: const .symmetric(horizontal: 2.5),
                                     child: const VerticalDivider(),
                                   );
                                 }
 
                                 return Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                                  margin: const .symmetric(horizontal: 2.5),
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: List.generate(6, (_) {
+                                    mainAxisAlignment: .spaceBetween,
+                                    children: .generate(6, (_) {
                                       return Container(
                                         width: 3,
                                         height: 3,
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).dividerColor,
-                                          shape: BoxShape.circle,
+                                          shape: .circle,
                                         ),
                                       );
                                     }),
@@ -397,7 +397,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                     ThemedNotificationIcon(
                       notifications: widget.notifications,
                       backgroundColor: backgroundColor,
-                      location: ThemedNotificationLocation.appBar,
+                      location: .appBar,
                     ),
                   ],
                   if (!widget.hideAvatar) ...[

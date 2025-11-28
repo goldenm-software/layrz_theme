@@ -12,18 +12,11 @@ List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
     }
 
     if (layer.source == MapSource.google) {
-      if (layer.googleToken == null) {
-        continue;
-      }
-
-      if (layer.googleToken!.isEmpty) {
-        continue;
-      }
+      if (layer.googleToken == null) continue;
+      if (layer.googleToken!.isEmpty) continue;
 
       final googleLayers = layer.googleLayers ?? [];
-      if (googleLayers.isEmpty) {
-        continue;
-      }
+      if (googleLayers.isEmpty) continue;
 
       for (int i = 0; i < googleLayers.length; i++) {
         GoogleMapLayer googleLayer = googleLayers[i];
@@ -41,19 +34,12 @@ List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
       continue;
     }
 
-    if (layer.source == MapSource.mapbox) {
-      if (layer.mapboxToken == null) {
-        continue;
-      }
-
-      if (layer.mapboxToken!.isEmpty) {
-        continue;
-      }
+    if (layer.source == .mapbox) {
+      if (layer.mapboxToken == null) continue;
+      if (layer.mapboxToken!.isEmpty) continue;
 
       final mapboxLayers = layer.mapboxLayers ?? [];
-      if (mapboxLayers.isEmpty) {
-        continue;
-      }
+      if (mapboxLayers.isEmpty) continue;
 
       for (int i = 0; i < mapboxLayers.length; i++) {
         MapboxStyle mapboxLayer = mapboxLayers[i];
@@ -71,19 +57,12 @@ List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
       continue;
     }
 
-    if (layer.source == MapSource.here) {
-      if (layer.hereToken == null) {
-        continue;
-      }
-
-      if (layer.hereToken!.isEmpty) {
-        continue;
-      }
+    if (layer.source == .here) {
+      if (layer.hereToken == null) continue;
+      if (layer.hereToken!.isEmpty) continue;
 
       final hereLayers = layer.hereLayers ?? [];
-      if (hereLayers.isEmpty) {
-        continue;
-      }
+      if (hereLayers.isEmpty) continue;
 
       for (int i = 0; i < hereLayers.length; i++) {
         HereStyle hereLayer = hereLayers[i];

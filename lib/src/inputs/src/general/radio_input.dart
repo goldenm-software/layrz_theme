@@ -54,12 +54,12 @@ class ThemedRadioInput<T> extends StatefulWidget {
     required this.items,
     this.errors = const [],
     this.hideDetails = false,
-    this.padding = const EdgeInsets.all(10),
-    this.xsSize = Sizes.col12,
-    this.smSize = Sizes.col6,
-    this.mdSize = Sizes.col4,
-    this.lgSize = Sizes.col3,
-    this.xlSize = Sizes.col2,
+    this.padding = const .all(10),
+    this.xsSize = .col12,
+    this.smSize = .col6,
+    this.mdSize = .col4,
+    this.lgSize = .col3,
+    this.xlSize = .col2,
   }) : assert(label == null || labelText == null);
 
   @override
@@ -82,11 +82,11 @@ class _ThemedRadioInputState<T> extends State<ThemedRadioInput<T>> {
     return Padding(
       padding: widgetPadding,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: .min,
+        crossAxisAlignment: .center,
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               widget.label ?? Text(widget.labelText ?? ''),
               RadioGroup<T>(
@@ -121,9 +121,7 @@ class _ThemedRadioInputState<T> extends State<ThemedRadioInput<T>> {
                                         setState(() => _value = item.value);
                                       }
                                     },
-                              child: Text(
-                                item.label,
-                              ),
+                              child: Text(item.label),
                             ),
                           ),
                         ],

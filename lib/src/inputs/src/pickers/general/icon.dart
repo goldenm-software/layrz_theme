@@ -101,7 +101,7 @@ class ThemedIconPicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -115,7 +115,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
   List<LayrzIcon>? selectedGroup;
   EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
-  Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
+  Color get color => Theme.of(context).brightness == .dark ? Colors.white : Theme.of(context).primaryColor;
 
   final GlobalKey key = GlobalKey();
 
@@ -154,7 +154,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
     return ThemedTextInput(
       key: key,
       prefixWidget: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const .all(10),
         child: ThemedAvatar(
           icon: _value?.iconData,
           size: isDense ? 20 : 30,
@@ -181,19 +181,17 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
         IconData? icon;
         return Dialog(
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const .all(20),
             constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
             decoration: generateContainerElevation(context: context, elevation: 3),
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       widget.labelText ?? '',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                     ),
                     const SizedBox(height: 10),
                     Expanded(
@@ -215,7 +213,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: .spaceBetween,
                       children: [
                         ThemedButton.cancel(
                           labelText: t('actions.cancel'),
@@ -282,8 +280,8 @@ class _IconGrid extends StatefulWidget {
 
 class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get activeColor => isDark ? Colors.grey.shade800 : Colors.grey.shade200;
   String search = '';
 
@@ -344,7 +342,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
     return Column(
       children: [
         ThemedTextInput(
-          padding: EdgeInsets.zero,
+          padding: .zero,
           dense: true,
           labelText: i18n?.t('helpers.search') ?? 'Search an icon',
           value: search,
@@ -362,15 +360,15 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
                 bool isSelected = widget.selected == icon;
 
                 return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  margin: const .symmetric(vertical: 5),
                   decoration: BoxDecoration(
                     color: isSelected ? activeColor : Colors.transparent,
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: .circular(5),
                   ),
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: .circular(5),
                       onTap: () {
                         widget.onTap?.call(icon);
 
@@ -379,7 +377,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
                         setState(() {});
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
+                        padding: const .all(10),
                         child: Row(
                           children: [
                             Icon(

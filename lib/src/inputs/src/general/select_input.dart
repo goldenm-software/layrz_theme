@@ -141,7 +141,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.isRequired = false,
     this.dense = false,
     this.padding,
-    this.searchKeyboardType = TextInputType.text,
+    this.searchKeyboardType = .text,
     this.translations = const {
       'actions.cancel': 'Cancel',
       'actions.save': 'Save',
@@ -155,7 +155,7 @@ class ThemedSelectInput<T> extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.canUnselect = false,
     this.returnNullOnClose = false,
     this.autoSelectFirst = false,
@@ -404,16 +404,16 @@ class _DialogSelectInputState extends State<DialogSelectInput> {
               return SizedBox(
                 height: widget.overrideHeightDialog,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
                   children: [
                     /// Title and Search
                     if (!widget.hideTitle) ...[
                       Padding(
                         padding: const EdgeInsets.only(right: 10, left: 15, top: 14),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: .start,
+                          crossAxisAlignment: .center,
                           spacing: 10,
                           children: [
                             /// Title
@@ -421,8 +421,8 @@ class _DialogSelectInputState extends State<DialogSelectInput> {
                               child: Text(
                                 widget.labelText ?? '',
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.visible,
+                                  fontWeight: .bold,
+                                  overflow: .visible,
                                 ),
                               ),
                             ),
@@ -445,8 +445,8 @@ class _DialogSelectInputState extends State<DialogSelectInput> {
                       Center(
                         child: Text(
                           t('layrz.select.empty'),
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
+                          textAlign: .center,
                         ),
                       ),
                     ] else ...[
@@ -455,7 +455,7 @@ class _DialogSelectInputState extends State<DialogSelectInput> {
                         child: ListView.builder(
                           itemCount: items.length,
                           itemExtent: widget.itemExtent,
-                          padding: const EdgeInsets.all(10),
+                          padding: const .all(10),
                           itemBuilder: (context, index) {
                             bool isSelected = selectedItem == items[index];
                             return _ThemedSelectItem(
@@ -485,11 +485,9 @@ class _DialogSelectInputState extends State<DialogSelectInput> {
                     /// Actions
                     if (!widget.hideButtons) ...[
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ).add(const EdgeInsets.only(bottom: 14)),
+                        padding: const EdgeInsets.symmetric(horizontal: 10).add(const .only(bottom: 14)),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: .spaceBetween,
                           children: [
                             ThemedButton.cancel(
                               isMobile: isMobile,
@@ -500,7 +498,7 @@ class _DialogSelectInputState extends State<DialogSelectInput> {
                             ),
                             if (widget.canUnselect && selectedItem?.value != null)
                               ThemedButton(
-                                style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+                                style: isMobile ? .fab : .text,
                                 icon: LayrzIcons.solarBoldMinusSquare,
                                 labelText: t('layrz.select.unselect'),
                                 color: Colors.orange,

@@ -33,7 +33,7 @@ class ThemedColumn2<T> {
     required this.headerText,
     required this.valueBuilder,
     this.richTextBuilder,
-    this.alignment = Alignment.centerLeft,
+    this.alignment = .centerLeft,
     this.isSortable = true,
     this.width,
     this.onTap,
@@ -52,4 +52,16 @@ class ThemedColumn2<T> {
 
   @override
   int get hashCode => headerText.hashCode;
+
+  /// [isolateSafety] returns a simplified version of the column without onTap and richTextBuilder
+  /// allowing to send the column to an isolated context.
+  ThemedColumn2<T> get isolateSafety {
+    return ThemedColumn2<T>(
+      headerText: headerText,
+      valueBuilder: valueBuilder,
+      isSortable: isSortable,
+      customSort: customSort,
+      width: width,
+    );
+  }
 }

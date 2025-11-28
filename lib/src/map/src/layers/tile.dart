@@ -76,51 +76,38 @@ class ThemedTileLayer extends StatefulWidget {
 
 class _ThemedTileLayerState extends State<ThemedTileLayer> {
   MapLayer get layer => widget.layer ?? kDefaultLayer;
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   String get _osmUrl => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
   // String get _osmUrl => 'http://127.0.0.1:5000/{z}/{x}/{y}.png';
 
   String get _mapboxUrl {
-    if (layer.source != MapSource.mapbox) {
-      return _osmUrl;
-    }
-
-    if (layer.mapboxToken == null) {
-      return _osmUrl;
-    }
-
-    if (layer.mapboxToken!.isEmpty) {
-      return _osmUrl;
-    }
-
+    if (layer.source != .mapbox) return _osmUrl;
+    if (layer.mapboxToken == null) return _osmUrl;
+    if (layer.mapboxToken!.isEmpty) return _osmUrl;
     final style = layer.mapboxLayers?.firstOrNull;
-
-    if (style == null) {
-      return _osmUrl;
-    }
-
+    if (style == null) return _osmUrl;
     String username;
     String styleId;
 
     switch (style) {
-      case MapboxStyle.navigation:
+      case .navigation:
         username = 'mapbox';
         styleId = isDark ? 'navigation-night-v1' : 'navigation-day-v1';
         break;
-      case MapboxStyle.satelliteHybrid:
+      case .satelliteHybrid:
         username = 'mapbox';
         styleId = 'satellite-streets-v12';
         break;
-      case MapboxStyle.satellite:
+      case .satellite:
         username = 'mapbox';
         styleId = 'satellite-v9';
         break;
-      case MapboxStyle.monochrome:
+      case .monochrome:
         username = 'mapbox';
         styleId = isDark ? 'dark-v11' : 'light-v11';
         break;
-      case MapboxStyle.custom:
+      case .custom:
         username = layer.mapboxCustomUsername ?? 'mapbox';
         if (layer.mapboxCustomUsername == null) {
           styleId = 'streets-v11';
@@ -128,7 +115,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
           styleId = layer.mapboxCustomStyleId ?? 'streets-v11';
         }
         break;
-      case MapboxStyle.streets:
+      case .streets:
         username = 'mapbox';
         styleId = 'streets-v11';
         break;
@@ -146,43 +133,31 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   }
 
   String get _hereUrl {
-    if (layer.source != MapSource.here) {
-      return _osmUrl;
-    }
-
-    if (layer.hereToken == null) {
-      return _osmUrl;
-    }
-
-    if (layer.hereToken!.isEmpty) {
-      return _osmUrl;
-    }
-
+    if (layer.source != .here) return _osmUrl;
+    if (layer.hereToken == null) return _osmUrl;
+    if (layer.hereToken!.isEmpty) return _osmUrl;
     final style = layer.hereLayers?.firstOrNull;
-
-    if (style == null) {
-      return _osmUrl;
-    }
+    if (style == null) return _osmUrl;
 
     String styleId;
 
     switch (style) {
-      case HereStyle.lite:
+      case .lite:
         styleId = isDark ? 'lite.night' : 'lite.day';
         break;
-      case HereStyle.topo:
+      case .topo:
         styleId = 'topo.day';
         break;
-      case HereStyle.satellite:
+      case .satellite:
         styleId = 'satellite.day';
         break;
-      case HereStyle.hybrid:
+      case .hybrid:
         styleId = 'lite.satellite.day';
         break;
-      case HereStyle.logistics:
+      case .logistics:
         styleId = 'logistics.day';
         break;
-      case HereStyle.explore:
+      case .explore:
         styleId = isDark ? 'explore.night' : 'explore.day';
         break;
     }
@@ -192,37 +167,24 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
 
   // Attributions
   String get _mapboxAttribution {
-    if (layer.source != MapSource.mapbox) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.mapboxToken == null) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.mapboxToken!.isEmpty) {
-      return _layrzAttributionLight;
-    }
-
+    if (layer.source != MapSource.mapbox) return _layrzAttributionLight;
+    if (layer.mapboxToken == null) return _layrzAttributionLight;
+    if (layer.mapboxToken!.isEmpty) return _layrzAttributionLight;
     final style = layer.mapboxLayers?.firstOrNull;
-
-    if (style == null) {
-      return _layrzAttributionLight;
-    }
-
+    if (style == null) return _layrzAttributionLight;
     String attribution;
 
     switch (style) {
-      case MapboxStyle.navigation:
-      case MapboxStyle.monochrome:
+      case .navigation:
+      case .monochrome:
         attribution = isDark ? _mapboxAttributionDark : _mapboxAttributionLight;
         break;
-      case MapboxStyle.satellite:
-      case MapboxStyle.satelliteHybrid:
+      case .satellite:
+      case .satelliteHybrid:
         attribution = _mapboxAttributionDark;
         break;
-      case MapboxStyle.custom:
-      case MapboxStyle.streets:
+      case .custom:
+      case .streets:
         attribution = _mapboxAttributionLight;
     }
 
@@ -230,35 +192,22 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   }
 
   String get _hereAttribution {
-    if (layer.source != MapSource.here) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.hereToken == null) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.hereToken!.isEmpty) {
-      return _layrzAttributionLight;
-    }
-
+    if (layer.source != .here) return _layrzAttributionLight;
+    if (layer.hereToken == null) return _layrzAttributionLight;
+    if (layer.hereToken!.isEmpty) return _layrzAttributionLight;
     final style = layer.hereLayers?.firstOrNull;
-
-    if (style == null) {
-      return _layrzAttributionLight;
-    }
-
+    if (style == null) return _layrzAttributionLight;
     String attribution;
 
     switch (style) {
-      case HereStyle.topo:
-      case HereStyle.satellite:
-      case HereStyle.hybrid:
-      case HereStyle.logistics:
+      case .topo:
+      case .satellite:
+      case .hybrid:
+      case .logistics:
         attribution = _hereAttributionLight;
         break;
-      case HereStyle.explore:
-      case HereStyle.lite:
+      case .explore:
+      case .lite:
         attribution = isDark ? _hereAttributionDark : _hereAttributionLight;
         break;
     }
@@ -267,24 +216,11 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   }
 
   String get _googleAttribution {
-    if (layer.source != MapSource.google) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.googleToken == null) {
-      return _layrzAttributionLight;
-    }
-
-    if (layer.googleToken!.isEmpty) {
-      return _layrzAttributionLight;
-    }
-
+    if (layer.source != .google) return _layrzAttributionLight;
+    if (layer.googleToken == null) return _layrzAttributionLight;
+    if (layer.googleToken!.isEmpty) return _layrzAttributionLight;
     final style = layer.googleLayers?.firstOrNull;
-
-    if (style == null) {
-      return _layrzAttributionLight;
-    }
-
+    if (style == null) return _layrzAttributionLight;
     return _googleAttributionLight;
   }
 
@@ -301,9 +237,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   String get _hereAttributionDark => 'https://cdn.layrz.com/resources/map_attributions/here_maps/white.png';
 
   String get _customUrl {
-    if (layer.source != MapSource.custom) {
-      return _osmUrl;
-    }
+    if (layer.source != .custom) return _osmUrl;
 
     if (isDark) {
       return layer.rasterServerDark ?? layer.rasterServerLight ?? _osmUrl;
@@ -313,10 +247,7 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   }
 
   String get _customAttribution {
-    if (layer.source != MapSource.custom) {
-      return _layrzAttributionLight;
-    }
-
+    if (layer.source != .custom) return _layrzAttributionLight;
     if (isDark) {
       return layer.attributionUrlDark ?? layer.attributionUrl;
     }
@@ -358,33 +289,33 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (layer.source == MapSource.osm) ...[
+        if (layer.source == .osm) ...[
           _buildTile(urlTemplate: _osmUrl),
           Align(
-            alignment: Alignment.bottomLeft,
+            alignment: .bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const .all(10),
               child: Image.network(
                 _layrzAttributionLight,
                 width: 80,
                 height: 20,
-                filterQuality: FilterQuality.medium,
-                alignment: Alignment.centerLeft,
+                filterQuality: .medium,
+                alignment: .centerLeft,
               ),
             ),
           ),
-        ] else if (layer.source == MapSource.mapbox) ...[
+        ] else if (layer.source == .mapbox) ...[
           _buildTile(urlTemplate: _mapboxUrl),
           Align(
-            alignment: Alignment.bottomLeft,
+            alignment: .bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const .all(10),
               child: Image.network(
                 _mapboxAttribution,
                 width: _scaleWidth(134, 30),
                 height: _attributionHeight,
-                filterQuality: FilterQuality.medium,
-                alignment: Alignment.centerLeft,
+                filterQuality: .medium,
+                alignment: .centerLeft,
               ),
             ),
           ),
@@ -393,17 +324,17 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const .all(10),
               child: Image.network(
                 _hereAttribution,
                 width: _scaleWidth(80, 80),
                 height: _attributionHeight,
-                filterQuality: FilterQuality.medium,
-                alignment: Alignment.centerLeft,
+                filterQuality: .medium,
+                alignment: .centerLeft,
               ),
             ),
           ),
-        ] else if (layer.source == MapSource.google) ...[
+        ] else if (layer.source == .google) ...[
           FutureBuilder<String?>(
             future: _fetchGoogleAuth(layer: layer),
             builder: (context, snapshot) {
@@ -417,30 +348,30 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             },
           ),
           Align(
-            alignment: Alignment.bottomLeft,
+            alignment: .bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const .all(10),
               child: Image.network(
                 _googleAttribution,
                 width: _scaleWidth(119, 36),
                 height: _attributionHeight,
-                filterQuality: FilterQuality.medium,
-                alignment: Alignment.centerLeft,
+                filterQuality: .medium,
+                alignment: .centerLeft,
               ),
             ),
           ),
         ] else ...[
           _buildTile(urlTemplate: _customUrl),
           Align(
-            alignment: Alignment.bottomLeft,
+            alignment: .bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const .all(10),
               child: Image.network(
                 _customAttribution,
                 width: 80,
                 height: 20,
-                filterQuality: FilterQuality.medium,
-                alignment: Alignment.centerLeft,
+                filterQuality: .medium,
+                alignment: .centerLeft,
               ),
             ),
           ),
@@ -517,24 +448,24 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
 
   String _convertGoogleStyle(GoogleMapLayer style) {
     switch (style) {
-      case GoogleMapLayer.roadmap:
+      case .roadmap:
         return 'roadmap';
-      case GoogleMapLayer.satellite:
+      case .satellite:
         return 'satellite';
-      case GoogleMapLayer.terrain:
+      case .terrain:
         return 'terrain';
-      case GoogleMapLayer.hybrid:
+      case .hybrid:
         return 'satellite';
     }
   }
 
   List<String> _convertGoogleTypes(GoogleMapLayer style) {
     switch (style) {
-      case GoogleMapLayer.terrain:
-      case GoogleMapLayer.hybrid:
+      case .terrain:
+      case .hybrid:
         return ['layerRoadmap'];
-      case GoogleMapLayer.satellite:
-      case GoogleMapLayer.roadmap:
+      case .satellite:
+      case .roadmap:
         return [];
     }
   }

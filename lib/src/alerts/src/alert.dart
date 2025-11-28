@@ -16,18 +16,18 @@ class ThemedAlert extends StatelessWidget {
   /// [style] is the style of the alert.
   final ThemedAlertStyle style;
 
-  /// [color] is the color of the alert, used only for [ThemedAlertType.custom].
+  /// [color] is the color of the alert, used only for [.custom].
   /// If not provided, the default color for the alert type will be used.
   final Color? color;
 
-  /// [icon] is the icon of the alert, used only for [ThemedAlertType.custom].
+  /// [icon] is the icon of the alert, used only for [.custom].
   /// If not provided, the default icon for the alert type will be used.
   final IconData? icon;
 
   /// [iconSize] is the size of the icon inside the alert.
   ///
-  /// By default, on [ThemedAlertStyle.filledIcon] it is set to 25 and on
-  /// [ThemedAlertStyle.layrz] it is set to 22.
+  /// By default, on [.filledIcon] it is set to 25 and on
+  /// [.layrz] it is set to 22.
   final double? iconSize;
 
   /// [ThemedAlert] is a widget that displays an alert with a specific type, title, and description.
@@ -36,11 +36,11 @@ class ThemedAlert extends StatelessWidget {
   /// defined by the parent widget.
   const ThemedAlert({
     super.key,
-    this.type = ThemedAlertType.info,
+    this.type = .info,
     required this.title,
     required this.description,
     this.maxLines = 3,
-    this.style = ThemedAlertStyle.layrz,
+    this.style = .layrz,
     this.color,
     this.icon,
     this.iconSize,
@@ -49,16 +49,16 @@ class ThemedAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color typeColor = type.color ?? Colors.blue;
-    if (type == ThemedAlertType.custom) {
+    if (type == .custom) {
       typeColor = color ?? type.color ?? Colors.blue;
     }
 
     IconData typeIcon = type.icon ?? LayrzIcons.solarOutlineInfoSquare;
-    if (type == ThemedAlertType.custom) {
+    if (type == .custom) {
       typeIcon = icon ?? type.icon ?? LayrzIcons.solarOutlineInfoSquare;
     }
 
-    if (style == ThemedAlertStyle.filledIcon) {
+    if (style == .filledIcon) {
       return Container(
         decoration: BoxDecoration(
           color: typeColor,
@@ -68,11 +68,11 @@ class ThemedAlert extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10),
         ),
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const .all(10),
               child: Center(
                 child: Icon(
                   typeIcon,
@@ -85,15 +85,12 @@ class ThemedAlert extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                  ),
+                  borderRadius: .only(topRight: .circular(8), bottomRight: .circular(8)),
                 ),
-                padding: const EdgeInsets.all(10),
+                padding: const .all(10),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: .center,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       title,
@@ -103,7 +100,7 @@ class ThemedAlert extends StatelessWidget {
                       description,
                       style: context.bodyStyle,
                       maxLines: maxLines,
-                      textAlign: TextAlign.justify,
+                      textAlign: .justify,
                     ),
                   ],
                 ),
@@ -118,33 +115,33 @@ class ThemedAlert extends StatelessWidget {
     Color? borderColor;
     Color? textColor;
 
-    if (style == ThemedAlertStyle.filledTonal) {
+    if (style == .filledTonal) {
       backgroundColor = typeColor.withAlpha((255 * 0.2).toInt());
       borderColor = Colors.transparent;
       textColor = typeColor;
-    } else if (style == ThemedAlertStyle.filled) {
+    } else if (style == .filled) {
       backgroundColor = typeColor;
       borderColor = typeColor;
       textColor = validateColor(color: typeColor);
-    } else if (style == ThemedAlertStyle.outlined) {
+    } else if (style == .outlined) {
       backgroundColor = Colors.transparent;
       borderColor = typeColor;
       textColor = typeColor;
     }
 
-    bool isLayrzStyle = style == ThemedAlertStyle.layrz;
+    bool isLayrzStyle = style == .layrz;
 
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const .all(10),
       decoration: BoxDecoration(
         color: backgroundColor,
-        border: Border.all(color: borderColor ?? Colors.transparent, width: 1),
-        borderRadius: BorderRadius.circular(10),
+        border: .all(color: borderColor ?? Colors.transparent, width: 1),
+        borderRadius: .circular(10),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: .start,
+        crossAxisAlignment: .start,
+        mainAxisSize: .min,
         children: [
           Row(
             children: [
@@ -152,10 +149,10 @@ class ThemedAlert extends StatelessWidget {
                 const SizedBox(width: 5),
               ],
               Container(
-                padding: EdgeInsets.all(isLayrzStyle ? 5 : 0),
+                padding: .all(isLayrzStyle ? 5 : 0),
                 decoration: BoxDecoration(
                   color: isLayrzStyle ? typeColor.withAlpha((255 * 0.2).toInt()) : null,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: .circular(10),
                 ),
                 child: Icon(
                   typeIcon,
@@ -177,7 +174,7 @@ class ThemedAlert extends StatelessWidget {
             description,
             style: context.bodyStyle?.copyWith(color: textColor),
             maxLines: maxLines,
-            textAlign: TextAlign.justify,
+            textAlign: .justify,
           ),
         ],
       ),

@@ -116,7 +116,7 @@ class ThemedMonthPicker extends StatefulWidget {
     this.focusColor = Colors.transparent,
     this.splashColor = Colors.transparent,
     this.highlightColor = Colors.transparent,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const .all(.circular(10)),
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
@@ -128,9 +128,9 @@ class ThemedMonthPicker extends StatefulWidget {
 
 class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
   final TextEditingController _controller = TextEditingController();
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
   late int _focusYear;
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
   Color get primaryColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   String? get _parsedName {
@@ -212,7 +212,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
 
   void _showPicker() async {
     int gridSize = 4;
-    double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.sizeOf(context).width;
     if (width < kSmallGrid) {
       gridSize = 2;
     } else if (width < kMediumGrid) {
@@ -236,12 +236,12 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
           child: StatefulBuilder(
             builder: (context, setState) {
               return Container(
-                padding: const EdgeInsets.all(20),
+                padding: const .all(20),
                 constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
                 height: height,
                 decoration: generateContainerElevation(context: context, elevation: 3),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Row(
                       children: [
@@ -250,14 +250,12 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                               widget.label ??
                               Text(
                                 widget.labelText ?? '',
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                               ),
                         ),
                         const SizedBox(width: 10),
                         ThemedButton(
-                          style: ThemedButtonStyle.fab,
+                          style: .fab,
                           labelText: t('layrz.monthPicker.back'),
                           color: isDark ? Colors.white : Colors.black,
                           icon: LayrzIcons.solarOutlineAltArrowLeft,
@@ -265,12 +263,10 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                         ),
                         Text(
                           t('layrz.monthPicker.year', {'year': _focusYear}),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: .bold),
                         ),
                         ThemedButton(
-                          style: ThemedButtonStyle.fab,
+                          style: .fab,
                           labelText: t('layrz.monthPicker.next'),
                           color: isDark ? Colors.white : Colors.black,
                           icon: LayrzIcons.solarOutlineAltArrowRight,
@@ -291,7 +287,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                           Color backgroundColor = isActive ? primaryColor : Theme.of(context).cardColor;
                           BoxDecoration decoration = BoxDecoration(
                             color: backgroundColor.withAlpha((255 * 0.2).toInt()),
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: .circular(5),
                           );
 
                           Color? textColor = isActive ? backgroundColor : null;
@@ -299,12 +295,12 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                           bool isDisabled = _validateIfIsDisabled(_focusYear, index);
 
                           return Padding(
-                            padding: const EdgeInsets.all(5),
+                            padding: const .all(5),
                             child: Opacity(
                               opacity: isDisabled ? 0.5 : 1,
                               child: Container(
                                 decoration: decoration,
-                                clipBehavior: Clip.antiAlias,
+                                clipBehavior: .antiAlias,
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
@@ -315,7 +311,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                                             Navigator.of(context).pop(
                                               ThemedMonth(
                                                 year: _focusYear,
-                                                month: Month.values[index],
+                                                month: .values[index],
                                               ),
                                             );
                                           },
@@ -337,7 +333,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: .spaceBetween,
                       children: [
                         ThemedButton.cancel(
                           isMobile: isMobile,
@@ -388,7 +384,7 @@ class _ThemedMonthPickerState extends State<ThemedMonthPicker> {
   }
 
   bool _validateIfIsDisabled(int year, int month) {
-    if (widget.disabledMonths.contains(ThemedMonth(year: year, month: Month.values[month]))) {
+    if (widget.disabledMonths.contains(ThemedMonth(year: year, month: .values[month]))) {
       return true;
     }
 

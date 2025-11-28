@@ -87,7 +87,7 @@ class ThemedDualListInput<T> extends StatefulWidget {
 
 class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
   bool get someHasIcon => widget.items.any((element) => element.icon != null);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   List<ThemedSelectItem<T>> available = [];
   List<ThemedSelectItem<T>> selected = [];
@@ -159,10 +159,10 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
         List<Widget> actions = [
           Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const .all(5),
             child: ThemedButton(
               color: actionButtonColor,
-              style: ThemedButtonStyle.filledFab,
+              style: .filledFab,
               icon: allToSelected,
               onTap: toggleAllToSelected,
               isDisabled: available.isEmpty,
@@ -170,10 +170,10 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const .all(5),
             child: ThemedButton(
               color: actionButtonColor,
-              style: ThemedButtonStyle.filledFab,
+              style: .filledFab,
               icon: allToAvailable,
               onTap: toggleAllToAvailable,
               isDisabled: selected.isEmpty,
@@ -183,25 +183,23 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         ];
 
         Widget availableWidget = Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const .all(10),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: .circular(10),
               color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).cardColor,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(top: 10)),
+                  padding: const EdgeInsets.symmetric(horizontal: 10).add(const .only(top: 10)),
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
                           "${widget.availableListName} (${available.length})",
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: .bold),
                         ),
                       ),
                       ThemedSearchInput(
@@ -221,7 +219,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                   child: ListView.builder(
                     itemCount: availableFiltered.length,
                     itemExtent: widget.itemExtent,
-                    padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 10)),
+                    padding: const EdgeInsets.symmetric(horizontal: 10).add(const .only(bottom: 10)),
                     itemBuilder: (context, index) {
                       final item = availableFiltered[index];
 
@@ -250,25 +248,23 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
         );
 
         Widget selectedWidget = Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const .all(10),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: .circular(10),
               color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).cardColor,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(top: 10)),
+                  padding: const EdgeInsets.symmetric(horizontal: 10).add(const .only(top: 10)),
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
                           "${widget.selectedListName} (${selected.length})",
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: .bold),
                         ),
                       ),
                       ThemedSearchInput(
@@ -288,7 +284,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                   child: ListView.builder(
                     itemCount: selectedFiltered.length,
                     itemExtent: widget.itemExtent,
-                    padding: const EdgeInsets.symmetric(horizontal: 10).add(const EdgeInsets.only(bottom: 10)),
+                    padding: const EdgeInsets.symmetric(horizontal: 10).add(const .only(bottom: 10)),
                     itemBuilder: (context, index) {
                       final item = selectedFiltered[index];
 
@@ -324,7 +320,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const .symmetric(horizontal: 10),
                           child:
                               widget.label ??
                               Text(
@@ -339,22 +335,22 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                     Expanded(child: availableWidget),
                     if (!widget.disabled) ...[
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: actions,
                       ),
                     ],
                     Expanded(child: selectedWidget),
                     ThemedFieldDisplayError(
                       errors: widget.errors,
-                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                      padding: const .only(left: 10, right: 10, bottom: 10),
                     ),
                   ],
                 )
               : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const .symmetric(horizontal: 10),
                       child:
                           widget.label ??
                           Text(
@@ -370,7 +366,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                           Expanded(child: availableWidget),
                           if (!widget.disabled) ...[
                             Column(
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: .min,
                               children: actions,
                             ),
                           ],
@@ -380,7 +376,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
                     ),
                     ThemedFieldDisplayError(
                       errors: widget.errors,
-                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                      padding: const .only(left: 10, right: 10, bottom: 10),
                     ),
                   ],
                 ),
@@ -391,7 +387,7 @@ class _ThemedDualListInputState<T> extends State<ThemedDualListInput<T>> {
 
   Widget generateItem({required ThemedSelectItem<T> item, VoidCallback? onTap}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      padding: const .symmetric(horizontal: 10, vertical: 15),
       child: InkWell(
         onTap: onTap,
         child:

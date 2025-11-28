@@ -19,7 +19,7 @@ class ThemedTooltip extends StatefulWidget {
     super.key,
     required this.child,
     required this.message,
-    this.position = ThemedTooltipPosition.bottom,
+    this.position = .bottom,
     this.color,
   });
 
@@ -42,7 +42,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
     }
   }
 
-  EdgeInsets get _defaultPadding => const EdgeInsets.all(5);
+  EdgeInsets get _defaultPadding => const .all(5);
 
   @override
   void initState() {
@@ -102,11 +102,8 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   Size _predictTextSize(String text) {
     final double maxWidth = MediaQuery.of(context).size.width * 0.8;
     TextPainter painter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: _defaultTextStyle,
-      ),
-      textDirection: TextDirection.ltr,
+      text: TextSpan(text: text, style: _defaultTextStyle),
+      textDirection: .ltr,
     )..layout(maxWidth: maxWidth);
 
     return Size(
@@ -128,7 +125,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+    if (state == .paused || state == .inactive) {
       _removeEntry(immediately: true);
     }
   }
@@ -154,7 +151,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
     }
 
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+      behavior: .opaque,
       onLongPress: () => _handleMouseEnter(),
       excludeFromSemantics: true,
       child: OverlayPortal(
@@ -175,7 +172,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
   /// [_buildEntry] builds the tooltip and adds it to the overlay.
   Widget _buildEntry(BuildContext context) {
     final RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
-    final Offset target = box.localToGlobal(Offset.zero);
+    final Offset target = box.localToGlobal(.zero);
 
     double? top;
     double? left;
@@ -192,7 +189,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
     double halfPredictedSizeHeight = size.height / 2;
 
     switch (widget.position) {
-      case ThemedTooltipPosition.top:
+      case .top:
         bottom = screenSize.height - target.dy + 10;
         double center = target.dx + (box.size.width / 2);
 
@@ -204,7 +201,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
           left = center - halfPredictedSizeWidth;
         }
         break;
-      case ThemedTooltipPosition.bottom:
+      case .bottom:
         top = target.dy + box.size.height + 10;
         double center = target.dx + (box.size.width / 2);
 
@@ -216,7 +213,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
           left = center - halfPredictedSizeWidth;
         }
         break;
-      case ThemedTooltipPosition.right:
+      case .right:
         top = target.dy + (box.size.height / 2) - halfPredictedSizeHeight;
         left = target.dx + box.size.width + 10;
 
@@ -232,7 +229,7 @@ class _ThemedTooltipState extends State<ThemedTooltip> with TickerProviderStateM
         }
 
         break;
-      case ThemedTooltipPosition.left:
+      case .left:
         top = target.dy + (box.size.height / 2) - halfPredictedSizeHeight;
         right = screenSize.width - target.dx + 10;
 

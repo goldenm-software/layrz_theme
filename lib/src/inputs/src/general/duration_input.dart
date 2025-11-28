@@ -62,7 +62,7 @@ class ThemedDurationInput extends StatefulWidget {
 }
 
 class _ThemedDurationInputState extends State<ThemedDurationInput> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
   Duration? get value => widget.value;
 
   final _controller = TextEditingController();
@@ -117,15 +117,15 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
         int minutes = value == null ? 0 : value!.inMinutes % 60;
         int seconds = value == null ? 0 : value!.inSeconds % 60;
 
-        bool isMobile = MediaQuery.of(context).size.width < kSmallGrid;
+        bool isMobile = MediaQuery.sizeOf(context).width < kSmallGrid;
 
         return StatefulBuilder(
           builder: (context, setState) {
             List<ResponsiveCol> items = [];
 
-            Sizes size = Sizes.col12;
+            Sizes size = .col12;
             if (visibleValues.length >= 2) {
-              size = Sizes.col6;
+              size = .col6;
             }
 
             for (final entry in visibleValues.asMap().entries) {
@@ -133,20 +133,20 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
               final index = entry.key;
 
               Sizes? overrideSize;
-              if (index == visibleValues.length - 1 && index % 2 == 0) overrideSize = Sizes.col12;
+              if (index == visibleValues.length - 1 && index % 2 == 0) overrideSize = .col12;
 
               items.add(
                 ResponsiveCol(
                   xs: overrideSize ?? size,
                   child: ThemedNumberInput(
-                    padding: const EdgeInsets.all(5),
+                    padding: const .all(5),
                     labelText: visibleValue.translate(i18n),
                     suffixText: visibleValue.translate(i18n),
                     value: switch (visibleValue) {
-                      ThemedUnits.day => days,
-                      ThemedUnits.hour => hours,
-                      ThemedUnits.minute => minutes,
-                      ThemedUnits.second => seconds,
+                      .day => days,
+                      .hour => hours,
+                      .minute => minutes,
+                      .second => seconds,
                       _ => 0,
                     },
                     hideDetails: true,
@@ -154,16 +154,16 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                       if (value == null) return;
                       if (value < 0) return;
                       switch (visibleValue) {
-                        case ThemedUnits.day:
+                        case .day:
                           days = value.toInt();
                           break;
-                        case ThemedUnits.hour:
+                        case .hour:
                           hours = value.toInt();
                           break;
-                        case ThemedUnits.minute:
+                        case .minute:
                           minutes = value.toInt();
                           break;
-                        case ThemedUnits.second:
+                        case .second:
                           seconds = value.toInt();
                           break;
                         default:
@@ -180,24 +180,22 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
               backgroundColor: Colors.transparent,
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(20),
+                padding: const .all(20),
                 decoration: generateContainerElevation(context: context, elevation: 3),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
                   children: [
                     widget.label ??
                         Text(
                           widget.labelText ?? '',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                         ),
                     const SizedBox(height: 10),
                     ResponsiveRow(children: items),
                     const SizedBox(height: 10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: .spaceBetween,
                       children: [
                         ThemedButton.cancel(
                           isMobile: isMobile,
@@ -205,7 +203,7 @@ class _ThemedDurationInputState extends State<ThemedDurationInput> {
                           onTap: () => Navigator.of(context).pop(),
                         ),
                         ThemedButton(
-                          style: isMobile ? ThemedButtonStyle.fab : ThemedButtonStyle.text,
+                          style: isMobile ? .fab : .text,
                           icon: LayrzIcons.solarOutlineRefreshSquare,
                           color: Colors.orange,
                           labelText: i18n?.t('actions.reset') ?? 'Reset',

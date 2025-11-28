@@ -97,24 +97,23 @@ class __ThemedSelectItemState<T> extends State<_ThemedSelectItem<T>> {
                     ? widget.onTap
                     : null
               : widget.onTap,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: .circular(5),
           child: Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const .all(5),
             child: Row(
+              spacing: 5,
               children: [
                 if (widget.showCheckbox) ...[
-                  ThemedAnimatedCheckbox(value: widget.selected),
+                  Checkbox(value: widget.selected, onChanged: null),
                 ],
                 if (widget.item.content == null) ...[
                   if (widget.item.leading != null) ...[
                     widget.item.leading!,
-                    const SizedBox(width: 5),
                   ] else if (widget.item.icon != null) ...[
                     Icon(
                       widget.item.icon,
                       size: 16,
                     ),
-                    const SizedBox(width: 5),
                   ],
                   Expanded(child: Text(widget.item.label, maxLines: 2)),
                 ] else ...[

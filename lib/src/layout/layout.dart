@@ -81,7 +81,7 @@ void overrideAppBarStyleWithColor({
   /// [color] is the color to be used in the app bar.
   required Color color,
 }) {
-  Brightness brightness = useBlack(color: color) ? Brightness.dark : Brightness.light;
+  Brightness brightness = useBlack(color: color) ? .dark : .light;
 
   SystemChrome.setSystemUIOverlayStyle(
     kDarkSystemUiOverlayStyle.copyWith(
@@ -217,8 +217,8 @@ class ThemedLayout extends StatefulWidget {
   /// [ThemedLayout] is the layout of the application. It is the parent of all
   const ThemedLayout({
     super.key,
-    this.style = ThemedLayoutStyle.mini,
-    this.mobileStyle = ThemedMobileLayoutStyle.bottomBar,
+    this.style = .mini,
+    this.mobileStyle = .bottomBar,
     required this.body,
     this.items = const [],
     this.homePath = '/home',
@@ -240,7 +240,7 @@ class ThemedLayout extends StatefulWidget {
     this.persistentItems = const [],
     this.notifications = const [],
     this.mobileBreakpoint = kMediumGrid,
-    this.padding = const EdgeInsets.all(10),
+    this.padding = const .all(10),
     this.disableSafeArea = false,
     this.onNavigatorPush,
     this.onNavigatorPop,
@@ -249,7 +249,7 @@ class ThemedLayout extends StatefulWidget {
     this.enableNotifications = true,
     this.avatarRadius = 5,
     this.enableBreadcumb = true,
-    this.breadcumbPadding = const EdgeInsets.only(left: 10, top: 10, right: 10),
+    this.breadcumbPadding = const .only(left: 10, top: 10, right: 10),
   });
 
   @override
@@ -257,23 +257,22 @@ class ThemedLayout extends StatefulWidget {
 }
 
 class _ThemedLayoutState extends State<ThemedLayout> {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
-
+  bool get isDark => Theme.of(context).brightness == .dark;
   EdgeInsetsGeometry get breadcumbPadding => widget.breadcumbPadding;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
+      builder: (context, constraints) {
         if (constraints.maxWidth <= widget.mobileBreakpoint) {
           return _buildMobileLayout(constraints: constraints);
         }
         switch (widget.style) {
-          case ThemedLayoutStyle.mini:
+          case .mini:
             return _buildMiniLayout(constraints: constraints);
-          case ThemedLayoutStyle.sidebar:
+          case .sidebar:
             return _buildSidebarLayout(constraints: constraints);
-          case ThemedLayoutStyle.dual:
+          case .dual:
             return _buildDualLayout(constraints: constraints);
         }
       },
@@ -297,7 +296,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
       );
     }
 
-    if (widget.mobileStyle == ThemedMobileLayoutStyle.appBar) {
+    if (widget.mobileStyle == .appBar) {
       return Scaffold(
         appBar: _buildAppBar(isMobile: true),
         body: child,
@@ -378,8 +377,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
     return Scaffold(
       body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: .start,
+        mainAxisAlignment: .start,
         children: [
           ThemedMiniBar(
             items: widget.items,
@@ -445,7 +444,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
             items: [
               ...widget.items,
               if (widget.persistentItems.isNotEmpty) ...[
-                ThemedNavigatorSeparator(type: ThemedSeparatorType.dots),
+                ThemedNavigatorSeparator(type: .dots),
                 ...widget.persistentItems,
               ],
             ],
@@ -507,8 +506,8 @@ class _ThemedLayoutState extends State<ThemedLayout> {
     return Scaffold(
       appBar: _buildAppBar(isMobile: false),
       body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: .start,
+        mainAxisAlignment: .start,
         children: [
           ThemedDualBar(
             onNavigatorPush: widget.onNavigatorPush,
@@ -573,7 +572,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
 
   ThemedRouteMatch? _getMatch() {
     Color color = isDark ? Colors.white : Theme.of(context).primaryColor;
-    final style = Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: color);
+    final style = Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold, color: color);
 
     List<InlineSpan> pageName = [];
     bool displayHeader = true;

@@ -3,17 +3,14 @@ part of '../../inputs.dart';
 class ThemedDynamicConfigurableDialog extends StatefulWidget {
   final List<String> choices;
 
-  const ThemedDynamicConfigurableDialog({
-    super.key,
-    required this.choices,
-  });
+  const ThemedDynamicConfigurableDialog({super.key, required this.choices});
 
   @override
   State<ThemedDynamicConfigurableDialog> createState() => _ThemedDynamicConfigurableDialogState();
 }
 
 class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigurableDialog> {
-  LayrzAppLocalizations get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations get i18n => .of(context);
   late List<String> _choices;
   late List<String> _filteredChoices;
   String _search = '';
@@ -35,22 +32,17 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        decoration: generateContainerElevation(
-          context: context,
-          elevation: 5,
-        ),
+        decoration: generateContainerElevation(context: context, elevation: 5),
         constraints: const BoxConstraints(maxWidth: 500),
-        padding: const EdgeInsets.all(10),
+        padding: const .all(10),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
+          mainAxisAlignment: .start,
           children: [
             Text(
               i18n.t('requiredFields.choices.edit'),
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
             ),
             const SizedBox(height: 10),
             ThemedTextInput(
@@ -77,7 +69,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: .circular(5),
                   onTap: () {
                     setState(() {
                       _choices.add(_search);
@@ -87,7 +79,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                     });
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const .all(10),
                     child: Row(
                       children: [
                         Icon(
@@ -115,21 +107,20 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                   itemBuilder: (context, index) {
                     final choice = _filteredChoices[index];
                     return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      margin: const .symmetric(vertical: 5),
+                      padding: const .symmetric(horizontal: 10),
                       child: Row(
+                        spacing: 10,
                         children: [
                           ThemedAvatar(
                             name: (index + 1).toString().padLeft(2, '0'),
                             size: 25,
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(choice),
-                          ),
-                          const SizedBox(width: 10),
+
+                          Expanded(child: Text(choice)),
+
                           ThemedButton(
-                            style: ThemedButtonStyle.filledTonalFab,
+                            style: .filledTonalFab,
                             icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
                             labelText: i18n.t('requiredFields.choices.remove'),
                             color: Colors.red,

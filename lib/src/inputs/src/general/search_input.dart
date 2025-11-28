@@ -34,6 +34,10 @@ class ThemedSearchInput extends StatefulWidget {
   /// [inputPadding] is the padding of the search input, only will work when [asField] is `true`.
   final EdgeInsets inputPadding;
 
+  /// [debounce] is the debounce duration of the search input.
+  /// Defaults to `Duration(milliseconds: 300)` but if is `null`, no debounce will be applied.
+  final Duration? debounce;
+
   /// [ThemedSearchInput] is a search input.
   const ThemedSearchInput({
     super.key,
@@ -43,9 +47,10 @@ class ThemedSearchInput extends StatefulWidget {
     this.labelText = 'Search',
     this.customChild,
     this.disabled = false,
-    this.position = ThemedSearchPosition.left,
+    this.position = .left,
     this.asField = false,
-    this.inputPadding = EdgeInsets.zero,
+    this.inputPadding = .zero,
+    this.debounce = const Duration(milliseconds: 300),
   });
 
   @override
@@ -53,12 +58,13 @@ class ThemedSearchInput extends StatefulWidget {
 }
 
 class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProviderStateMixin {
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   late AnimationController animation;
   OverlayEntry? overlay;
   final GlobalKey _key = GlobalKey();
   bool isHovering = false;
 
+  Timer? _debounceTimer;
   final TextEditingController _controller = TextEditingController();
 
   double get height => 40;
@@ -69,7 +75,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
     animation = AnimationController(vsync: this, duration: kHoverDuration);
 
     if (mounted) _controller.text = widget.value;
-    _controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.value.length));
+    _controller.selection = .fromPosition(TextPosition(offset: widget.value.length));
   }
 
   @override
@@ -88,13 +94,17 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         if (value.length <= previousCursorOffset) {
           previousCursorOffset = value.length;
         }
-        _controller.selection = TextSelection.fromPosition(
-          TextPosition(
-            offset: previousCursorOffset,
-          ),
-        );
+        _controller.selection = .fromPosition(TextPosition(offset: previousCursorOffset));
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    animation.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -121,7 +131,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
       width: height,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: .circular(10),
       ),
       clipBehavior: Clip.antiAlias,
       child: Material(
@@ -129,7 +139,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         child: InkWell(
           key: _key,
           onTap: _handleTap,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: .circular(10),
           child: Center(
             child: Icon(
               LayrzIcons.solarOutlineMagnifier,
@@ -145,12 +155,23 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
   Widget _buildField({required bool autofocus}) {
     return TextField(
       autofocus: autofocus,
-      onChanged: widget.onSearch,
+      onChanged: (value) {
+        if (widget.debounce == null) {
+          widget.onSearch.call(value);
+          return;
+        }
+
+        _debounceTimer?.cancel();
+        _debounceTimer = Timer(widget.debounce!, () {
+          // debugPrint("Debounced Search: $value");
+          widget.onSearch.call(value);
+        });
+      },
       controller: _controller,
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
+          borderRadius: .circular(10),
+          borderSide: .none,
         ),
         hintText: widget.labelText,
         labelStyle: Theme.of(context).textTheme.labelSmall,
@@ -159,8 +180,17 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         isDense: true,
       ),
       onSubmitted: (value) {
-        widget.onSearch.call(value);
-        _destroyOverlay();
+        if (widget.debounce != null) {
+          _debounceTimer?.cancel();
+          _debounceTimer = Timer(widget.debounce!, () {
+            // debugPrint("Debounced Search: $value");
+            widget.onSearch.call(value);
+            _destroyOverlay();
+          });
+        } else {
+          widget.onSearch.call(value);
+          _destroyOverlay();
+        }
       },
     );
   }
@@ -185,7 +215,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
     double left = 0;
     double right = 0;
 
-    if (position == ThemedSearchPosition.right) {
+    if (position == .right) {
       left = offset.dx;
       right = screenWidth - (left + maxWidth);
 
@@ -209,7 +239,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
 
   void _buildOverlay() {
     RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
-    Offset offset = box.localToGlobal(Offset.zero);
+    Offset offset = box.localToGlobal(.zero);
     double screenWidth = MediaQuery.of(context).size.width;
 
     _PredictedPosition position = _predictPosition(
@@ -239,9 +269,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                     children: [
                       ScaleTransition(
                         scale: Tween<double>(begin: 0, end: 1).animate(animation),
-                        alignment: widget.position == ThemedSearchPosition.left
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
+                        alignment: widget.position == .left ? .centerRight : .centerLeft,
                         child: Actions(
                           actions: {
                             DismissIntent: CallbackAction<DismissIntent>(
@@ -257,9 +285,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
                             child: KeyboardListener(
                               focusNode: FocusNode(),
                               onKeyEvent: (ev) {
-                                if (ev.logicalKey == LogicalKeyboardKey.escape) {
-                                  _destroyOverlay();
-                                }
+                                if (ev.logicalKey == .escape) _destroyOverlay();
                               },
                               child: _buildField(autofocus: true),
                             ),

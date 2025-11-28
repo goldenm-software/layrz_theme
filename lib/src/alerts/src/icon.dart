@@ -13,20 +13,20 @@ class ThemedAlertIcon extends StatelessWidget {
   /// [padding] is the padding around the icon inside the alert icon container.
   final EdgeInsetsGeometry padding;
 
-  /// [color] is the color of the alert icon, used only for [ThemedAlertType.custom].
+  /// [color] is the color of the alert icon, used only for [.custom].
   /// If not provided, the default color for the alert type will be used.
   final Color? color;
 
-  /// [icon] is the icon of the alert, used only for [ThemedAlertType.custom].
+  /// [icon] is the icon of the alert, used only for [.custom].
   /// If not provided, the default icon for the alert type will be used.
   final IconData? icon;
 
   const ThemedAlertIcon({
     super.key,
-    this.type = ThemedAlertType.info,
+    this.type = .info,
     this.size = 30,
     this.iconSize = 20,
-    this.padding = const EdgeInsets.all(5),
+    this.padding = const .all(5),
     this.color,
     this.icon,
   });
@@ -34,12 +34,12 @@ class ThemedAlertIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color typeColor = type.color ?? Colors.blue;
-    if (type == ThemedAlertType.custom) {
+    if (type == .custom) {
       typeColor = color ?? type.color ?? Colors.blue;
     }
 
     IconData typeIcon = type.icon ?? LayrzIcons.solarOutlineInfoSquare;
-    if (type == ThemedAlertType.custom) {
+    if (type == .custom) {
       typeIcon = icon ?? type.icon ?? LayrzIcons.solarOutlineInfoSquare;
     }
 
@@ -49,7 +49,7 @@ class ThemedAlertIcon extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: typeColor.withAlpha((255 * 0.2).toInt()),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: .circular(10),
       ),
       child: Icon(
         typeIcon,

@@ -127,7 +127,7 @@ class ThemedTextInput extends StatefulWidget {
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedTextInput({
     super.key,
-    this.keyboardType = TextInputType.text,
+    this.keyboardType = .text,
     this.labelText,
     this.label,
     this.disabled = false,
@@ -165,7 +165,7 @@ class ThemedTextInput extends StatefulWidget {
     this.maxChoicesToDisplay = 5,
     this.enableCombobox = false,
     this.emptyChoicesText = "No choices",
-    this.position = ThemedComboboxPosition.below,
+    this.position = .below,
     this.textStyle,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
@@ -177,17 +177,17 @@ class ThemedTextInput extends StatefulWidget {
 }
 
 class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderStateMixin {
-  final StreamController _streamController = StreamController<List<String>>.broadcast();
+  final StreamController _streamController = StreamController.broadcast();
   late AnimationController _animationController;
   late TextEditingController _controller;
   late String _value;
   late FocusNode _focusNode;
   OverlayEntry? _entry;
-  bool get _isEntryOnTop => widget.position == ThemedComboboxPosition.above;
+  bool get _isEntryOnTop => widget.position == .above;
 
   EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
-  Color get color => Theme.of(context).brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor;
+  Color get color => Theme.of(context).brightness == .dark ? Colors.white : Theme.of(context).primaryColor;
 
   @override
   void initState() {
@@ -201,8 +201,8 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   @override
   void dispose() {
     _entry?.remove();
-    _controller.dispose();
-    _focusNode.dispose();
+    if (widget.controller == null) _controller.dispose();
+    if (widget.focusNode == null) _focusNode.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -241,11 +241,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     previousCursorOffset = min(previousCursorOffset, _value.length);
 
     // update the cursor offset
-    _controller.selection = TextSelection.fromPosition(
-      TextPosition(
-        offset: previousCursorOffset,
-      ),
-    );
+    _controller.selection = .fromPosition(TextPosition(offset: previousCursorOffset));
   }
 
   @override
@@ -256,14 +252,12 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         widget.label ??
         Text(
           widget.labelText ?? "",
-          style: const TextStyle(
-            overflow: TextOverflow.ellipsis,
-          ),
+          style: const TextStyle(overflow: .ellipsis),
         );
 
     if (widget.isRequired) {
       label = Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           const Text("*"),
           const SizedBox(width: 4),
@@ -279,7 +273,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     if (widget.prefixWidget != null) {
       prefixes.add(
         Padding(
-          padding: const EdgeInsets.only(left: 10),
+          padding: const .only(left: 10),
           child: InkWell(
             onTap: widget.onPrefixTap,
             child: widget.prefixWidget,
@@ -290,9 +284,9 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     if (widget.prefixIcon != null) {
       prefixes.add(
         Padding(
-          padding: const EdgeInsets.only(left: 10),
+          padding: const .only(left: 10),
           child: InkWell(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: .circular(20),
             onTap: widget.onPrefixTap,
             child: Icon(widget.prefixIcon, size: 18),
           ),
@@ -303,9 +297,9 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     Widget? prefix;
     if (prefixes.isNotEmpty) {
       prefix = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: .min,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .center,
         children: prefixes,
       );
     }
@@ -315,7 +309,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     if (widget.suffixWidget != null) {
       suffixes.add(
         Padding(
-          padding: const EdgeInsets.only(right: 10),
+          padding: const .only(right: 10),
           child: InkWell(
             onTap: widget.onSuffixTap,
             child: widget.suffixWidget,
@@ -327,9 +321,9 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     if (widget.suffixIcon != null) {
       suffixes.add(
         Padding(
-          padding: const EdgeInsets.only(right: 10),
+          padding: const .only(right: 10),
           child: InkWell(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: .circular(20),
             onTap: widget.onSuffixTap,
             child: Icon(widget.suffixIcon, size: 18),
           ),
@@ -340,7 +334,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     if (widget.disabled) {
       suffixes.add(
         Padding(
-          padding: const EdgeInsets.only(right: 10),
+          padding: const .only(right: 10),
           child: Icon(LayrzIcons.solarOutlineLockKeyhole, size: 18),
         ),
       );
@@ -349,9 +343,9 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     Widget? suffix;
     if (suffixes.isNotEmpty) {
       suffix = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: .min,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .center,
         children: suffixes,
       );
     }
@@ -365,36 +359,31 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       suffixText: widget.suffixText,
       border: _entry != null
           ? UnderlineInputBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: !_isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                bottomRight: !_isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                topLeft: !_isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                topRight: !_isEntryOnTop ? const Radius.circular(10) : Radius.zero,
+              borderRadius: .only(
+                bottomLeft: !_isEntryOnTop ? .zero : const .circular(10),
+                bottomRight: !_isEntryOnTop ? .zero : const .circular(10),
+                topLeft: !_isEntryOnTop ? const .circular(10) : .zero,
+                topRight: !_isEntryOnTop ? const .circular(10) : .zero,
               ),
-              borderSide: BorderSide.none,
+              borderSide: .none,
             )
           : widget.borderRadius != null
           ? OutlineInputBorder(
               borderRadius: _entry != null
-                  ? BorderRadius.only(
-                      topLeft: Radius.circular(widget.borderRadius!),
-                      topRight: Radius.circular(widget.borderRadius!),
+                  ? .only(
+                      topLeft: .circular(widget.borderRadius!),
+                      topRight: .circular(widget.borderRadius!),
                     )
-                  : BorderRadius.circular(widget.borderRadius!),
+                  : .circular(widget.borderRadius!),
             )
           : null,
       suffixIcon: suffix,
-      contentPadding: EdgeInsets.all(10).copyWith(
-        top: 12,
-      ),
+      contentPadding: EdgeInsets.all(10).copyWith(top: 12),
     );
 
     if (isDense) {
       decoration = decoration.copyWith(
-        contentPadding: const EdgeInsets.all(10).copyWith(
-          top: 8,
-          bottom: 5,
-        ),
+        contentPadding: const EdgeInsets.all(10).copyWith(top: 8, bottom: 5),
         isDense: true,
       );
     }
@@ -403,7 +392,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       decoration = decoration.copyWith(
         errorText: errors.join(", "),
         errorStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-          overflow: TextOverflow.clip,
+          overflow: .clip,
           color: Theme.of(context).colorScheme.error,
         ),
         errorMaxLines: 3,
@@ -413,14 +402,14 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     if (widget.maxLines > 1) {
       decoration = decoration.copyWith(
         isDense: false,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
+        floatingLabelBehavior: .always,
       );
     }
 
     return Padding(
       padding: widgetPadding,
       child: TextField(
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
         controller: _controller,
@@ -470,21 +459,21 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     _entry?.remove();
 
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Offset offset = renderBox.localToGlobal(.zero);
 
     double maxHeight = 300;
     double itemExtent = 30;
     // 20 = padding - 5 = divider
     double height = min(widget.choices.length, widget.maxChoicesToDisplay) * itemExtent + 20 + 5;
 
-    Size screenSize = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery.sizeOf(context);
     double left = offset.dx + widgetPadding.left;
     double right = screenSize.width - renderBox.size.width + widgetPadding.right - offset.dx;
 
     double? top;
     double? bottom;
 
-    if (widget.position == ThemedComboboxPosition.above) {
+    if (widget.position == .above) {
       bottom = (screenSize.height - offset.dy) - widgetPadding.top;
       top = null;
     } else {
@@ -520,11 +509,11 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                         constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
                         decoration: BoxDecoration(
                           color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                            bottomRight: _isEntryOnTop ? Radius.zero : const Radius.circular(10),
-                            topLeft: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
-                            topRight: _isEntryOnTop ? const Radius.circular(10) : Radius.zero,
+                          borderRadius: .only(
+                            bottomLeft: _isEntryOnTop ? .zero : const .circular(10),
+                            bottomRight: _isEntryOnTop ? .zero : const .circular(10),
+                            topLeft: _isEntryOnTop ? const .circular(10) : .zero,
+                            topRight: _isEntryOnTop ? const .circular(10) : .zero,
                           ),
                         ),
                         child: Column(
@@ -539,7 +528,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                                       ),
                                     )
                                   : ListView.builder(
-                                      padding: const EdgeInsets.all(10),
+                                      padding: const .all(10),
                                       itemCount: choices.length,
                                       itemExtent: itemExtent,
                                       shrinkWrap: true,
@@ -549,14 +538,14 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                                           child: Material(
                                             color: Colors.transparent,
                                             child: InkWell(
-                                              borderRadius: BorderRadius.circular(5),
+                                              borderRadius: .circular(5),
                                               onTap: () async {
                                                 await _destroyEntry();
                                                 _controller.text = itm;
                                                 widget.onChanged?.call(itm);
                                               },
                                               child: Padding(
-                                                padding: const EdgeInsets.all(5),
+                                                padding: const .all(5),
                                                 child: Text(
                                                   itm,
                                                   style: Theme.of(context).textTheme.bodyMedium,

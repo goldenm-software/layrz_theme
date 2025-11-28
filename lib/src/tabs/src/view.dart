@@ -30,6 +30,18 @@ class ThemedTabView extends StatefulWidget {
   /// If the previous position is not available, it will default to the first tab.
   final bool persistTabPosition;
 
+  /// [initialPosition] is the initial position of the tab bar view
+  final int initialPosition;
+
+  /// [onTabIndex] is the callback when the tab index changes
+  final Function(int tabIndex)? onTabIndex;
+
+  /// [additionalWidgets] are additional widgets to display in the tab bar view
+  final List<Widget> additionalWidgets;
+
+  /// [style] is the style of the tab view
+  final ThemedTabStyle style;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -37,14 +49,18 @@ class ThemedTabView extends StatefulWidget {
   const ThemedTabView({
     super.key,
     required this.tabs,
-    this.padding = const EdgeInsets.all(10),
-    this.crossAxisAlignment = CrossAxisAlignment.start,
-    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.padding = const .all(10),
+    this.crossAxisAlignment = .start,
+    this.mainAxisAlignment = .start,
     this.animationDuration = const Duration(milliseconds: 250),
     this.physics,
-    this.separatorPadding = const EdgeInsets.only(top: 10),
+    this.separatorPadding = const .only(top: 10),
     this.showArrows = false,
     this.persistTabPosition = true,
+    this.initialPosition = 0,
+    this.onTabIndex,
+    this.additionalWidgets = const [],
+    this.style = .filledTonal,
   });
 
   @override
@@ -61,10 +77,19 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
     super.initState();
 
     _tabController = TabController(
+      initialIndex: widget.initialPosition,
       length: widget.tabs.length,
       vsync: this,
       animationDuration: widget.animationDuration,
     );
+    if (widget.onTabIndex != null) {
+      _tabController.addListener(() {
+        if (_tabController.indexIsChanging) {
+          widget.onTabIndex!(_tabController.index);
+          debugPrint("tab change: ${_tabController.index}");
+        }
+      });
+    }
   }
 
   @override
@@ -101,13 +126,16 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
         children: [
           Theme(
             data: Theme.of(context).copyWith(
-              tabBarTheme: Theme.of(context).tabBarTheme.copyWith(tabAlignment: TabAlignment.start),
+              tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
+                tabAlignment: .start,
+                indicatorColor: widget.style == .filledTonal ? Colors.transparent : null,
+              ),
             ),
             child: Row(
               children: [
                 if (widget.showArrows) ...[
                   ThemedButton(
-                    style: ThemedButtonStyle.filledTonalFab,
+                    style: .filledTonalFab,
                     labelText: '',
                     tooltipEnabled: false,
                     height: 40,
@@ -125,13 +153,21 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                 Expanded(
                   child: TabBar(
                     isScrollable: true,
-                    tabs: widget.tabs,
+                    tabs: widget.tabs.map((e) => e.overrideStyle(widget.style)).toList(),
+                    labelPadding: .zero,
+                    splashBorderRadius: widget.style == .filledTonal ? BorderRadius.circular(8) : null,
                     controller: _tabController,
                   ),
                 ),
+                if (widget.additionalWidgets.isNotEmpty) ...[
+                  Row(
+                    spacing: 10,
+                    children: widget.additionalWidgets,
+                  ),
+                ],
                 if (widget.showArrows) ...[
                   ThemedButton(
-                    style: ThemedButtonStyle.filledTonalFab,
+                    style: .filledTonalFab,
                     labelText: '',
                     tooltipEnabled: false,
                     height: 40,

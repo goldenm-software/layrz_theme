@@ -1,5 +1,69 @@
 # Changelog
 
+## 7.5.0
+
+- Updated constraint of Dart SDK to `>=3.10.0 <4.0.0`
+- Updated constraint of Flutter SDK to `>=3.38.0`
+- Dot shorthands everywhere!
+- Added `ThemedTable2Controller` to handle programmatically sorting, filtering and refreshing the table data.
+- Added `debounce` property to `ThemedSearchInput` to handle debounced search inputs.
+- Improvements over `ThemedImage` base64 caching to prevent memory leaks.
+- Updated `ThemedChip` to support more styles and configurations.
+- New `ThemedChipStyle` enum to define the style of the `ThemedChip`.
+- New `ThemedChipGroup` widget to handle groups of chips with selection support.
+- Optimizations on `ThemedTable2` to improve performance when handling large datasets.
+- Bypassed limitations of `Isolate` on `ThemedTable2` when using complex objects as items, the workaround is to use the `isolateSafety` property on `ThemedColumn2` to define a function that returns a primitive type from the item to be used on sorting and filtering instead of the full object.
+
+## 7.4.12
+
+- Changed `ThemedButton` loading and disabled behavior to use the original coloring of the button style instead of from context.
+
+## 7.4.11
+
+- Added `padding` prop to `ThemedDateTimePicker` to handle the padding of the input field.
+
+## 7.4.10
+
+- New `ThemedTabStyle` enum to define the style of the `ThemedTabView` tabs.
+
+## 7.4.9
+
+- Add `additionalWidgets` in `ThemedTabView`.
+
+## 7.4.8
+
+- Updated design of `ThemedButton` to support new styling when loading or in cooldown.
+- Added factory on `ThemedButton.legacyLoading` to support the previous loading design.
+
+## 7.4.7
+
+- Added `customConfirm` and `customDismiss` parameters to the `deleteConfirmationDialog` utility.
+
+## 7.4.6+1
+
+- Fix on filtering items on `ThemedTable2` when it's empty.
+
+## 7.4.6
+
+- Fixed an issue with the `ThemedTable2` where the filtering was not working correctly after the last changes.
+- Changed behavior on `dispose()` on `ThemedTextInput` to only dispose the internal controller and focus node when they are not provided externally.
+
+## 7.4.5
+
+- Added `initialPosition` and `onTabIndex` in `ThemedTabView`
+
+## 7.4.4
+
+- Solved extremely weird bug using the `ThemedTable2`, now creates a copy of the items list to prevent issues when filtering and sorting the data. (Discovered by @ManuelRomeroA)
+
+## 7.4.3
+
+- Added `ThemedTable2OnTapBehavior` enum to define the default behavior of onTap events on table cells.
+
+## 7.4.2
+
+- Added `notifier` and other props on `ThemedActionButton` to support dynamic coloring, labeling and iconing of the button based on the notifier.
+
 ## 7.4.1
 
 - Fix visual issues on `ThemedCalendar` when you select a date outside of the current month

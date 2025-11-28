@@ -119,7 +119,7 @@ class ThemedDynamicConfigurableBlock extends StatefulWidget {
 class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurableBlock>
     with SingleTickerProviderStateMixin {
   late CredentialFieldInput object;
-  LayrzAppLocalizations get i18n => LayrzAppLocalizations.of(context);
+  LayrzAppLocalizations get i18n => .of(context);
   late AnimationController _controller;
 
   bool _isExpanded = false;
@@ -166,26 +166,26 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
   @override
   Widget build(BuildContext context) {
     return ResponsiveCol(
-      xs: Sizes.col12,
+      xs: .col12,
       child: Container(
-        margin: const EdgeInsets.all(10),
+        margin: const .all(10),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: .circular(10),
           color: Theme.of(context).scaffoldBackgroundColor,
-          border: Border.all(color: Theme.of(context).dividerColor),
+          border: .all(color: Theme.of(context).dividerColor),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: .start,
+          mainAxisAlignment: .start,
           children: [
             Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(10),
-                  topRight: const Radius.circular(10),
-                  bottomLeft: _isExpanded ? Radius.zero : const Radius.circular(10),
-                  bottomRight: _isExpanded ? Radius.zero : const Radius.circular(10),
+                borderRadius: .only(
+                  topLeft: const .circular(10),
+                  topRight: const .circular(10),
+                  bottomLeft: _isExpanded ? .zero : const .circular(10),
+                  bottomRight: _isExpanded ? .zero : const .circular(10),
                 ),
                 onTap: () {
                   setState(() {
@@ -199,7 +199,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                   });
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const .all(10),
                   child: Row(
                     children: [
                       RotationTransition(
@@ -220,18 +220,15 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                       Expanded(
                         child: Text(
                           object.field.isEmpty ? 'N/A' : object.field,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold, fontSize: 20),
                         ),
                       ),
                       const SizedBox(width: 5),
                       ThemedButton(
+                        style: .filledTonalFab,
                         labelText: i18n.t('requiredFields.remove'),
                         color: Colors.red,
                         icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
-                        style: ThemedButtonStyle.filledTonalFab,
                         onTap: () => widget.onRemove.call(),
                       ),
                     ],
@@ -242,24 +239,23 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
             SizeTransition(
               sizeFactor: CurveTween(curve: Curves.easeInOut).animate(_controller),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: .start,
+                mainAxisAlignment: .start,
                 children: [
                   const SizedBox(height: 10),
                   ResponsiveRow(
                     children: [
                       ResponsiveCol(
-                        xs: Sizes.col12,
-                        sm: Sizes.col6,
-                        md: Sizes.col4,
+                        xs: .col12,
+                        sm: .col6,
+                        md: .col4,
                         child: ThemedTextInput(
                           labelText: i18n.t('requiredFields.field'),
                           value: object.field,
-                          inputFormatters:
-                              widget.inputFormatters ??
-                              [
-                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_.]')),
-                              ],
+                          inputFormatters: [
+                            ...?widget.inputFormatters,
+                            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_.]')),
+                          ],
                           suffixIcon: LayrzIcons.solarOutlineCopy,
                           onSuffixTap: () {
                             Clipboard.setData(
@@ -283,9 +279,9 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                         ),
                       ),
                       ResponsiveCol(
-                        xs: Sizes.col12,
-                        sm: Sizes.col6,
-                        md: widget.enabledActions.isNotEmpty ? Sizes.col4 : Sizes.col8,
+                        xs: .col12,
+                        sm: .col6,
+                        md: widget.enabledActions.isNotEmpty ? .col4 : .col8,
                         child: ThemedSelectInput<CredentialFieldType>(
                           items: widget.enabledTypes
                               .map(
@@ -300,35 +296,39 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                           errors: context.getErrors(key: '${widget.errorsKey}.${widget.index}.type'),
                           onChanged: (value) {
                             setState(() {
-                              object.type = value?.value ?? CredentialFieldType.string;
+                              object.type = value?.value ?? .string;
 
-                              if (value?.value == CredentialFieldType.string) {
-                                object.maxLength = 255;
-                                object.minLength = 1;
-                                object.maxValue = null;
-                                object.minValue = null;
-                                object.choices = [];
-                                object.onlyChoices = [];
-                                object.onlyField = null;
-                              } else if ([
-                                CredentialFieldType.integer,
-                                CredentialFieldType.float,
-                              ].contains(value?.value)) {
-                                object.maxLength = null;
-                                object.minLength = null;
-                                object.maxValue = 1;
-                                object.minValue = 0;
-                                object.choices = [];
-                                object.onlyChoices = [];
-                                object.onlyField = null;
-                              } else if (value?.value == CredentialFieldType.choices) {
-                                object.maxLength = null;
-                                object.minLength = null;
-                                object.maxValue = null;
-                                object.minValue = null;
-                                object.choices = [];
-                                object.onlyChoices = [];
-                                object.onlyField = '';
+                              switch (value?.value) {
+                                case .string:
+                                  object.maxLength = 255;
+                                  object.minLength = 1;
+                                  object.maxValue = null;
+                                  object.minValue = null;
+                                  object.choices = [];
+                                  object.onlyChoices = [];
+                                  object.onlyField = null;
+                                  break;
+                                case .integer:
+                                case .float:
+                                  object.maxLength = null;
+                                  object.minLength = null;
+                                  object.maxValue = 1;
+                                  object.minValue = 0;
+                                  object.choices = [];
+                                  object.onlyChoices = [];
+                                  object.onlyField = null;
+                                  break;
+                                case .choices:
+                                  object.maxLength = null;
+                                  object.minLength = null;
+                                  object.maxValue = null;
+                                  object.minValue = null;
+                                  object.choices = [];
+                                  object.onlyChoices = [];
+                                  object.onlyField = '';
+                                  break;
+                                default:
+                                  break;
                               }
                             });
                             widget.onChanged.call(object);
@@ -337,8 +337,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                       ),
                       if (widget.enabledActions.isNotEmpty) ...[
                         ResponsiveCol(
-                          xs: Sizes.col12,
-                          md: Sizes.col4,
+                          xs: .col12,
+                          md: .col4,
                           child: ThemedSelectInput<CredentialFieldAction>(
                             items: widget.enabledActions
                                 .map(
@@ -353,7 +353,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                             errors: context.getErrors(key: '${widget.errorsKey}.${widget.index}.action'),
                             onChanged: (value) {
                               setState(() {
-                                object.action = value?.value ?? CredentialFieldAction.none;
+                                object.action = value?.value ?? .none;
                               });
                               widget.onChanged.call(object);
                             },
@@ -371,7 +371,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                   ].contains(object.type)) ...[
                     const SizedBox(height: 10),
                     Padding(
-                      padding: const EdgeInsets.only(left: 15),
+                      padding: const .only(left: 15),
                       child: Text(
                         i18n.t('requiredFields.sections.validators'),
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -381,10 +381,10 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                     ),
                     ResponsiveRow(
                       children: [
-                        if (object.type == CredentialFieldType.string) ...[
+                        if (object.type == .string) ...[
                           ResponsiveCol(
-                            xs: Sizes.col12,
-                            sm: Sizes.col6,
+                            xs: .col12,
+                            sm: .col6,
                             child: ThemedNumberInput(
                               labelText: i18n.t('requiredFields.minLength'),
                               value: object.minLength,
@@ -396,8 +396,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                             ),
                           ),
                           ResponsiveCol(
-                            xs: Sizes.col12,
-                            sm: Sizes.col6,
+                            xs: .col12,
+                            sm: .col6,
                             child: ThemedNumberInput(
                               labelText: i18n.t('requiredFields.maxLength'),
                               value: object.maxLength,
@@ -408,10 +408,10 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                               },
                             ),
                           ),
-                        ] else if (object.type == CredentialFieldType.choices) ...[
+                        ] else if (object.type == .choices) ...[
                           if (widget.otherFields.isNotEmpty) ...[
                             ResponsiveCol(
-                              xs: Sizes.col12,
+                              xs: .col12,
                               child: ThemedSelectInput(
                                 items: widget.otherFields
                                     .map(
@@ -432,8 +432,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                             ),
                           ],
                           ResponsiveCol(
-                            xs: Sizes.col12,
-                            sm: Sizes.col6,
+                            xs: .col12,
+                            sm: .col6,
                             child: ThemedMultiSelectInput<String>(
                               items: object.choices
                                   .map(
@@ -454,8 +454,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                             ),
                           ),
                           ResponsiveCol(
-                            xs: Sizes.col12,
-                            sm: Sizes.col6,
+                            xs: .col12,
+                            sm: .col6,
                             child: ThemedTextInput(
                               labelText: i18n.t('requiredFields.choices'),
                               readonly: true,
@@ -479,8 +479,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                           ),
                         ] else if ([CredentialFieldType.integer, CredentialFieldType.float].contains(object.type)) ...[
                           ResponsiveCol(
-                            xs: Sizes.col12,
-                            sm: Sizes.col6,
+                            xs: .col12,
+                            sm: .col6,
                             child: ThemedNumberInput(
                               labelText: i18n.t('requiredFields.minValue'),
                               value: object.minValue,
@@ -492,8 +492,8 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                             ),
                           ),
                           ResponsiveCol(
-                            xs: Sizes.col12,
-                            sm: Sizes.col6,
+                            xs: .col12,
+                            sm: .col6,
                             child: ThemedNumberInput(
                               labelText: i18n.t('requiredFields.maxValue'),
                               value: object.maxValue,
@@ -504,13 +504,13 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                               },
                             ),
                           ),
-                        ] else if (object.type == CredentialFieldType.nestedField) ...[
+                        ] else if (object.type == .nestedField) ...[
                           ResponsiveCol(
-                            xs: Sizes.col12,
+                            xs: .col12,
                             child: Column(
                               children: [
                                 SizedBox(
-                                  width: double.infinity,
+                                  width: .infinity,
                                   child: ThemedButton(
                                     labelText: i18n.t('requiredFields.add'),
                                     color: Colors.green,

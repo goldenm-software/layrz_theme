@@ -232,7 +232,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
   }
 
   void _timerStatusListener(AnimationStatus status) async {
-    if (status == AnimationStatus.completed) {
+    if (status == .completed) {
       await _fadeController.reverse();
       await Future.delayed(const Duration(milliseconds: 100));
       // Remove the snackbar from the list and rebuild the widget
@@ -245,7 +245,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
   }
 
   void _fadeStatusListener(AnimationStatus status) {
-    if (status == AnimationStatus.completed) {
+    if (status == .completed) {
       _timerController.forward(from: 0.0);
     }
   }
@@ -271,8 +271,8 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
     _fadeController.dispose();
     snackbars.clear();
     _ready = false;
-    _screenSize = Size.zero;
-    _viewPadding = EdgeInsets.zero;
+    _screenSize = .zero;
+    _viewPadding = .zero;
 
     super.dispose();
   }
@@ -309,7 +309,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                       child: Container(
                         decoration: BoxDecoration(
                           color: _backgroundColor,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: .circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withAlpha((255 * 0.1).toInt()),
@@ -319,7 +319,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                             ),
                           ],
                         ),
-                        clipBehavior: Clip.antiAlias,
+                        clipBehavior: .antiAlias,
                         child: Stack(
                           children: [
                             Positioned(
@@ -348,9 +348,9 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: _backgroundColor,
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: .circular(14),
                                 ),
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                padding: const .symmetric(horizontal: 10, vertical: 5),
                                 child: Row(
                                   spacing: 10,
                                   children: [
@@ -361,8 +361,8 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                     ),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: .start,
+                                        mainAxisAlignment: .center,
                                         children: [
                                           if (_currentSnackbar!.title != null) ...[
                                             Text(
@@ -370,9 +370,8 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                               style: _titleStyle?.copyWith(
                                                 color: validateColor(color: _backgroundColor),
                                               ),
-                                              textAlign: TextAlign.justify,
-
-                                              overflow: TextOverflow.visible,
+                                              textAlign: .justify,
+                                              overflow: .visible,
                                             ),
                                           ],
                                           Text(
@@ -382,8 +381,8 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                                 alpha: _currentSnackbar!.title == null ? 1 : 0.8,
                                               ),
                                             ),
-                                            textAlign: TextAlign.justify,
-                                            overflow: TextOverflow.visible,
+                                            textAlign: .justify,
+                                            overflow: .visible,
                                           ),
                                         ],
                                       ),
@@ -391,7 +390,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                     Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: .circular(20),
                                         onTap: () {
                                           snackbars.removeAt(0);
                                           setState(() {});
@@ -433,16 +432,16 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                       height: 35,
                       decoration: BoxDecoration(
                         color: Colors.red,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      clipBehavior: Clip.antiAlias,
+                      clipBehavior: .antiAlias,
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
                           onHover: (value) => setState(() => _hoveringClose = value),
                           onTap: () => _resetControllers(clearAll: true),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            padding: const .symmetric(vertical: 5, horizontal: 10),
                             child: Center(
                               child: _hoveringClose
                                   ? Icon(
@@ -452,7 +451,11 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                     )
                                   : Text(
                                       _totalSnackbars > 9 ? '+9' : _totalSnackbars.toString(),
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white),
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
                                     ),
                             ),
                           ),

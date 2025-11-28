@@ -9,19 +9,23 @@ class ResponsiveRow extends StatelessWidget {
     required ResponsiveCol Function(int) itemBuilder,
 
     /// [mainAxisAlignment] The alignment of the children.
-    WrapAlignment mainAxisAlignment = WrapAlignment.start,
+    WrapAlignment mainAxisAlignment = .start,
 
     /// [crossAxisAlignment] The alignment of the children.
-    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
+    WrapCrossAlignment crossAxisAlignment = .start,
+
+    /// [spacing] The spacing between the children.
+    double spacing = 0,
   }) {
-    List<ResponsiveCol> childs = [];
+    List<ResponsiveCol> children = [];
     for (int i = 0; i < itemCount; i++) {
-      childs.add(itemBuilder(i));
+      children.add(itemBuilder(i));
     }
     return ResponsiveRow(
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
-      children: childs,
+      spacing: spacing,
+      children: children,
     );
   }
 
@@ -43,13 +47,17 @@ class ResponsiveRow extends StatelessWidget {
   /// [crossAxisAlignment] The alignment of the children in the cross axis.
   final WrapCrossAlignment crossAxisAlignment;
 
+  /// [spacing] The spacing between the children. By default is 0.
+  final double spacing;
+
   /// [ResponsiveRow] is a component to generate a grid system using 12 columns (as standard),
   /// uses the following constants as breakpoints:
   const ResponsiveRow({
     super.key,
     required this.children,
-    this.mainAxisAlignment = WrapAlignment.start,
-    this.crossAxisAlignment = WrapCrossAlignment.start,
+    this.mainAxisAlignment = .start,
+    this.crossAxisAlignment = .start,
+    this.spacing = 0,
   });
 
   @override
@@ -57,6 +65,7 @@ class ResponsiveRow extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Wrap(
+        spacing: spacing,
         direction: Axis.horizontal,
         alignment: mainAxisAlignment,
         crossAxisAlignment: crossAxisAlignment,

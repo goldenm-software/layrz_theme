@@ -61,7 +61,7 @@ class ThemedCheckboxInput extends StatefulWidget {
     this.hideDetails = false,
     this.padding = const EdgeInsets.all(10),
     this.dense = false,
-    this.style = ThemedCheckboxInputStyle.asFlutterCheckbox,
+    this.style = .asFlutterCheckbox,
   }) : assert(label == null || labelText == null);
 
   @override
@@ -93,11 +93,11 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
   @override
   Widget build(BuildContext context) {
     switch (style) {
-      case ThemedCheckboxInputStyle.asField:
+      case .asField:
         return _buildAsField();
-      case ThemedCheckboxInputStyle.asSwitch:
+      case .asSwitch:
         return _buildAsSwitch();
-      case ThemedCheckboxInputStyle.asFlutterCheckbox:
+      case .asFlutterCheckbox:
         return _buildAsCheckbox();
       default:
         return _buildAsCheckbox(asNewDesign: true);
@@ -105,7 +105,7 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
   }
 
   Widget _buildAsField() {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
+    LayrzAppLocalizations? i18n = .maybeOf(context);
 
     return ThemedSelectInput<bool>(
       labelText: widget.labelText,
@@ -141,8 +141,8 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
     return Padding(
       padding: widgetPadding,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: .min,
+        crossAxisAlignment: .center,
         children: [
           Row(
             children: [
@@ -176,8 +176,8 @@ class _ThemedCheckboxInputState extends State<ThemedCheckboxInput> {
     return Padding(
       padding: widgetPadding,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: .min,
+        crossAxisAlignment: .center,
         children: [
           Row(
             children: [

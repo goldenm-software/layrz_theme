@@ -34,7 +34,7 @@ class _ThemedAnimatedCheckboxState extends State<ThemedAnimatedCheckbox> with Ti
   late AnimationController _selectedController;
   late bool value;
 
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
   Color get activeColor => widget.activeColor ?? (isDark ? Colors.white : Theme.of(context).primaryColor);
   Widget get _unselectedIcon => Icon(LayrzIcons.mdiCheckboxBlankCircleOutline, color: Colors.grey, size: 20);
   Widget get _selectedIcon => Icon(LayrzIcons.mdiCheckboxMarkedCircleOutline, color: activeColor, size: 20);
@@ -76,7 +76,7 @@ class _ThemedAnimatedCheckboxState extends State<ThemedAnimatedCheckbox> with Ti
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.onChanged == null ? null : _handleTap,
-      borderRadius: BorderRadius.circular(100),
+      borderRadius: .circular(100),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Stack(

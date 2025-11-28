@@ -32,7 +32,7 @@ class ThemedInputLikeContainer extends StatelessWidget {
     this.label,
     this.suffixIcon,
     this.prefixIcon,
-    this.padding = const EdgeInsets.all(10.0),
+    this.padding = const .all(10.0),
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -41,9 +41,7 @@ class ThemedInputLikeContainer extends StatelessWidget {
         label ??
         Text(
           labelText ?? "",
-          style: const TextStyle(
-            overflow: TextOverflow.ellipsis,
-          ),
+          style: const TextStyle(overflow: .ellipsis),
         );
     InputDecoration decoration = InputDecoration(
       label: inputLabel,

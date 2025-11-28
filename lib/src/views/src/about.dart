@@ -9,11 +9,7 @@ void showThemedAboutDialog({
   showDialog(
     context: context,
     builder: (context) {
-      return ThemedAboutDialog(
-        companyName: companyName,
-        version: version,
-        logo: logo,
-      );
+      return ThemedAboutDialog(companyName: companyName, version: version, logo: logo);
     },
   );
 }
@@ -41,8 +37,8 @@ class ThemedAboutDialog extends StatefulWidget {
 }
 
 class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
-  LayrzAppLocalizations? get i18n => LayrzAppLocalizations.maybeOf(context);
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  LayrzAppLocalizations? get i18n => .maybeOf(context);
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   Color get _spinnerColor => isDark ? Colors.white : Theme.of(context).primaryColor;
 
@@ -153,14 +149,14 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        margin: const EdgeInsets.all(20),
+        margin: const .all(20),
         decoration: generateContainerElevation(context: context, elevation: 3),
-        padding: const EdgeInsets.all(20),
+        padding: const .all(20),
         constraints: const BoxConstraints(maxWidth: 500),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .center,
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
           children: [
             ThemedImage(
               path: _logoUri,
@@ -173,9 +169,7 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                 children: [
                   TextSpan(
                     text: "© ${DateTime.now().year} ${widget.companyName}",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
                   ),
                   const WidgetSpan(
                     child: SizedBox(width: 5),
@@ -192,9 +186,7 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                 children: [
                   TextSpan(
                     text: "${i18n?.t('copyright.platform.os') ?? "Platform"}: ",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: .bold),
                   ),
                   TextSpan(
                     text: kThemedPlatform.toString(),
@@ -212,7 +204,7 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
             const SizedBox(height: 10),
             if (_isLoading) ...[
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const .all(20),
                 child: Center(
                   child: CircularProgressIndicator(
                     color: _spinnerColor,
@@ -223,17 +215,13 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
               ThemedTextInput(
                 labelText: i18n?.t('about.search') ?? 'Search package',
                 dense: true,
-                padding: EdgeInsets.zero,
+                padding: .zero,
                 prefixIcon: LayrzIcons.solarOutlineMagnifier,
                 onChanged: (value) => setState(() => _searchText = value),
               ),
               const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
-                  // gridDelegate: ThemedGridDelegateWithFixedHeight(
-                  //   crossAxisCount: _axisCount,
-                  //   height: 40,
-                  // ),
                   itemCount: _filteredLicenses.length,
                   itemBuilder: (context, index) {
                     final package = _filteredLicenses[index];
@@ -252,27 +240,25 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                                 builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                                   if (snapshot.hasData) {
                                     return Container(
-                                      padding: const EdgeInsets.all(20),
+                                      padding: const .all(20),
                                       decoration: generateContainerElevation(context: context, elevation: 3),
                                       constraints: const BoxConstraints(maxWidth: 600),
                                       child: SingleChildScrollView(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment: .start,
+                                          mainAxisAlignment: .start,
+                                          mainAxisSize: .min,
                                           children: [
                                             Text(
                                               package.package,
-                                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: .bold),
                                             ),
                                             const SizedBox(height: 10),
                                             Text(
                                               snapshot.data ?? 'N/A',
                                               style: Theme.of(context).textTheme.bodyMedium,
                                               maxLines: 100,
-                                              textAlign: TextAlign.justify,
+                                              textAlign: .justify,
                                             ),
                                           ],
                                         ),

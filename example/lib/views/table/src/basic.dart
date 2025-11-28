@@ -129,20 +129,6 @@ class _BasicTableViewState extends State<BasicTableView> {
             labelText: 'Kind',
             valueBuilder: (_, item) => item.kind?.name ?? 'N/A',
           ),
-          ThemedColumn(
-            labelText: 'Active Time',
-            valueBuilder: (_, item) => item.activeTime != null ? item.activeTime.toString() : 'N/A',
-
-            widgetBuilder: (_, item) => Row(
-              spacing: 8,
-              children: [
-                Icon(
-                  LayrzIcons.mdiClock,
-                ),
-                Text(item.activeTime.toString()),
-              ],
-            ),
-          ),
         ],
       ),
     );

@@ -38,6 +38,9 @@ class ThemedTab extends StatelessWidget {
   /// This information is only used when the tab is a child of a [ThemedTabView]
   final Widget child;
 
+  /// [style] is the style of the tab
+  final ThemedTabStyle style;
+
   /// [ThemedTab] is a tab for the [TabBar] widget
   const ThemedTab({
     super.key,
@@ -51,34 +54,75 @@ class ThemedTab extends StatelessWidget {
     this.padding = const EdgeInsets.all(10),
     this.color,
     this.child = const SizedBox(),
+    this.style = .filledTonal,
   }) : assert(labelText != null || label != null);
+
+  ThemedTab overrideStyle(ThemedTabStyle newStyle) {
+    return ThemedTab(
+      key: key,
+      labelText: labelText,
+      label: label,
+      iconSize: iconSize,
+      leading: leading,
+      leadingIcon: leadingIcon,
+      trailing: trailing,
+      trailingIcon: trailingIcon,
+      padding: padding,
+      color: color,
+      style: newStyle,
+      child: child,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final primary = Theme.of(context).colorScheme.primary;
+    Color backgroundColor = color ?? DefaultTextStyle.of(context).style.color ?? primary;
+    final bool redMatch = primary.r == backgroundColor.r;
+    final bool greenMatch = primary.g == backgroundColor.g;
+    final bool blueMatch = primary.b == backgroundColor.b;
+
+    final isActive = redMatch && greenMatch && blueMatch;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
       padding: padding,
-      child: Row(
-        children: [
-          if (leading != null || leadingIcon != null) ...[
-            leading ??
-                Icon(
-                  leadingIcon!,
-                  size: iconSize,
-                  color: color,
+      decoration: style == .filledTonal
+          ? BoxDecoration(
+              color: isActive ? backgroundColor.withAlpha((255 * 0.2).toInt()) : Colors.transparent,
+              borderRadius: .circular(8),
+            )
+          : null,
+      child: Padding(
+        padding: const .symmetric(horizontal: 10),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              if (leading != null || leadingIcon != null) ...[
+                WidgetSpan(
+                  alignment: .middle,
+                  child: leading ?? Icon(leadingIcon!, size: iconSize, color: backgroundColor),
                 ),
-            const SizedBox(width: 10),
-          ],
-          label ?? Text(labelText ?? '', style: TextStyle(color: color)),
-          if (trailing != null || trailingIcon != null) ...[
-            const SizedBox(width: 10),
-            trailing ??
-                Icon(
-                  trailingIcon!,
-                  size: iconSize,
-                  color: color,
+                const WidgetSpan(child: SizedBox(width: 10)),
+              ],
+              if (label != null) ...[
+                WidgetSpan(child: label!),
+              ] else ...[
+                TextSpan(
+                  text: labelText,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: backgroundColor),
                 ),
-          ],
-        ],
+              ],
+              if (trailing != null || trailingIcon != null) ...[
+                const WidgetSpan(child: SizedBox(width: 10)),
+                WidgetSpan(
+                  alignment: .middle,
+                  child: trailing ?? Icon(trailingIcon!, size: iconSize, color: backgroundColor),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }

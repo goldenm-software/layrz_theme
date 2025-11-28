@@ -40,7 +40,7 @@ Future<List<ThemedFile>?> pickFile({
       dialogTitle: dialogTitle,
       allowMultiple: allowMultiple,
       type: type,
-      allowedExtensions: type == FileType.custom ? allowedExtensions : [],
+      allowedExtensions: type == .custom ? allowedExtensions : [],
     );
 
     if (result != null) {
@@ -75,7 +75,7 @@ Future<List<ThemedFile>?> pickFile({
       dialogTitle: dialogTitle,
       allowMultiple: allowMultiple,
       type: type,
-      allowedExtensions: type == FileType.custom ? allowedExtensions : [],
+      allowedExtensions: type == .custom ? allowedExtensions : [],
     );
 
     if (result != null) {
@@ -112,7 +112,7 @@ Future<List<ThemedFile>?> pickFile({
         dialogTitle: dialogTitle,
         allowMultiple: allowMultiple,
         type: type,
-        allowedExtensions: type == FileType.custom ? allowedExtensions : [],
+        allowedExtensions: type == .custom ? allowedExtensions : [],
       );
     } catch (e) {
       debugPrint("[layrz_theme] Error while picking file: $e");
@@ -144,7 +144,7 @@ Future<List<ThemedFile>?> pickFile({
         dialogTitle: dialogTitle,
         allowMultiple: allowMultiple,
         type: type,
-        allowedExtensions: type == FileType.custom ? allowedExtensions : [],
+        allowedExtensions: type == .custom ? allowedExtensions : [],
       );
     } catch (e) {
       debugPrint("[layrz_theme] Error while picking file: $e");
@@ -176,7 +176,7 @@ Future<List<ThemedFile>?> pickFile({
         dialogTitle: dialogTitle,
         allowMultiple: allowMultiple,
         type: type,
-        allowedExtensions: type == FileType.custom ? allowedExtensions : [],
+        allowedExtensions: type == .custom ? allowedExtensions : [],
       );
     } catch (e) {
       debugPrint("[layrz_theme] Error while picking file: $e");

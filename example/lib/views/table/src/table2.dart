@@ -85,6 +85,16 @@ class _InfinityTableViewState extends State<InfinityTableView> {
 
         columns: [
           ThemedColumn2(
+            headerText: 'Plate',
+            valueBuilder: (item) => item.plate ?? 'N/A',
+            customSort: (a, b) {
+              return (a.plate ?? '').compareTo(b.plate ?? '');
+            },
+            onTap: (item) async {
+              debugPrint('Tapped on ${item.name}');
+            },
+          ),
+          ThemedColumn2(
             headerText: 'ID',
             width: 80,
             valueBuilder: (item) => item.id,

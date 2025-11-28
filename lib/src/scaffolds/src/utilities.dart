@@ -17,8 +17,10 @@ Future<bool> deleteConfirmationDialog({
   VoidCallback? onCooldown,
   String? customTitle,
   String? customContent,
+  String? customConfirm,
+  String? customDismiss,
 }) async {
-  LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
+  LayrzAppLocalizations? i18n = .maybeOf(context);
 
   String title = '';
   String content = '';
@@ -31,11 +33,21 @@ Future<bool> deleteConfirmationDialog({
     content = i18n?.t('actions.confirmation.content') ?? 'Once deleted, you will not be able to recover it.';
   }
 
+  String dismissLabel = i18n?.t('actions.confirmation.dismiss') ?? 'Nevermind';
+
+  String confirmLabel = i18n?.t('actions.confirmation.confirm') ?? 'Do it!';
+
   if (customTitle != null) {
     title = customTitle;
   }
   if (customContent != null) {
     content = customContent;
+  }
+  if (customConfirm != null) {
+    confirmLabel = customConfirm;
+  }
+  if (customDismiss != null) {
+    dismissLabel = customDismiss;
   }
 
   bool? result = await showDialog(
@@ -49,35 +61,35 @@ Future<bool> deleteConfirmationDialog({
           decoration: generateContainerElevation(context: context, elevation: 5),
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: .start,
+            mainAxisAlignment: .start,
+            mainAxisSize: .min,
             children: [
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
                 maxLines: 10,
-                textAlign: TextAlign.justify,
+                textAlign: .justify,
               ),
               Text(
                 content,
-                textAlign: TextAlign.justify,
+                textAlign: .justify,
                 maxLines: 10,
               ),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
                   ThemedButton.cancel(
-                    labelText: i18n?.t('actions.confirmation.dismiss') ?? 'Nevermind',
+                    labelText: dismissLabel,
                     onTap: () => Navigator.of(context).pop(false),
                     isCooldown: isCooldown,
                     isLoading: isLoading,
                   ),
                   ThemedButton.save(
-                    labelText: i18n?.t('actions.confirmation.confirm') ?? 'Do it!',
+                    labelText: confirmLabel,
                     onTap: () => Navigator.of(context).pop(true),
                     isCooldown: isCooldown,
                     isLoading: isLoading,

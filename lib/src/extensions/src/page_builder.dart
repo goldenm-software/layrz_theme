@@ -10,14 +10,9 @@ class ThemedPageTransition extends PageRouteBuilder {
     required this.page,
     super.settings,
   }) : super(
-         pageBuilder:
-             (
-               BuildContext context,
-               Animation<double> animation,
-               Animation<double> secondaryAnimation,
-             ) {
-               return page;
-             },
+         pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+           return page;
+         },
          transitionsBuilder:
              (
                BuildContext context,

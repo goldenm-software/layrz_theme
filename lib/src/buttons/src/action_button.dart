@@ -41,7 +41,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
   OverlayEntry? _overlayEntry;
   late AnimationController _animationController;
   final GlobalKey _key = GlobalKey();
-  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+  bool get isDark => Theme.of(context).brightness == .dark;
 
   double get width => MediaQuery.sizeOf(context).width;
   bool get isMobile => width <= widget.mobileBreakpoint;
@@ -75,21 +75,46 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
         key: _key,
         icon: LayrzIcons.solarOutlineMenuDots,
         labelText: widget.actionsLabel,
-        style: ThemedButtonStyle.fab,
+        style: .fab,
         color: Colors.grey.shade500,
         onTap: _handleTap,
       );
     }
 
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: .horizontal,
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: widget.actions.map<Widget>((ThemedActionButton action) {
+          if (action.notifier != null) {
+            return ValueListenableBuilder(
+              valueListenable: action.notifier!,
+              builder: (context, value, child) {
+                return Padding(
+                  padding: widget.actionPadding,
+                  child: ThemedButton(
+                    style: action.onlyIcon ? .filledTonalFab : .filledTonal,
+                    icon: action.iconBuilder?.call(value) ?? action.icon,
+                    label: action.label,
+                    labelText: action.labelTextBuilder?.call(value) ?? action.labelText,
+                    color: action.colorBuilder?.call(value) ?? action.color,
+                    onTap: action.onTap,
+                    tooltipPosition: action.tooltipPosition,
+                    isLoading: action.isLoading,
+                    cooldownDuration: action.cooldown ?? const Duration(seconds: 5),
+                    isCooldown: action.isCooldown,
+                    onCooldownFinish: action.onCooldownFinish,
+                    isDisabled: action.isDisabled,
+                  ),
+                );
+              },
+            );
+          }
+
           return Padding(
             padding: widget.actionPadding,
             child: ThemedButton(
-              style: action.onlyIcon ? ThemedButtonStyle.filledTonalFab : ThemedButtonStyle.filledTonal,
+              style: action.onlyIcon ? .filledTonalFab : .filledTonal,
               icon: action.icon,
               label: action.label,
               labelText: action.labelText,
@@ -118,9 +143,9 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
 
   void _buildOverlay() {
     RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
-    Offset offset = box.localToGlobal(Offset.zero);
+    Offset offset = box.localToGlobal(.zero);
     Size boxSize = box.size;
-    Size screenSize = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery.sizeOf(context);
 
     double width = this.width * 0.5;
     if (width > 400) width = 400;
@@ -136,13 +161,13 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
           text: action.labelText ?? "",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
         ),
-        textDirection: TextDirection.ltr,
+        textDirection: .ltr,
       )..layout(maxWidth: width);
       predictedWidths.add(textPainter.size.width + 60); // 60 for icon and padding
     }
     double maxWidth = predictedWidths.reduce((a, b) => a > b ? a : b);
     double overlayWidth = min(maxWidth, width);
-    debugPrint("Overlay width: $overlayWidth - Screen width: $width - Max width: $maxWidth");
+    // debugPrint("Overlay width: $overlayWidth - Screen width: $width - Max width: $maxWidth");
 
     double? right = screenSize.width - offset.dx - boxSize.width + actionsOffset.dx;
     double? left;
@@ -178,13 +203,13 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                   width: overlayWidth,
                   height: _overlayHeight,
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       FadeTransition(
                         opacity: Tween<double>(begin: 0, end: 1).animate(_animationController),
                         child: Container(
                           decoration: generateContainerElevation(context: context, elevation: 2),
-                          clipBehavior: Clip.antiAlias,
+                          clipBehavior: .antiAlias,
                           child: ListView.builder(
                             shrinkWrap: true,
                             padding: kListViewPadding,
@@ -194,7 +219,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                               ThemedActionButton action = widget.actions[index];
                               Color color = action.color ?? (isDark ? Colors.white : Colors.black);
                               if (action.isDisabled) {
-                                color = ThemedButton.getDisabledColor(isDark, ThemedButtonStyle.filledTonal);
+                                color = Theme.of(context).inputDecorationTheme.fillColor ?? Colors.grey;
                               }
 
                               return Material(
@@ -202,10 +227,10 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                                 child: InkWell(
                                   onTap: action.isDisabled ? null : () => _removeOverlay(callback: action.onTap),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(10),
+                                    padding: const .all(10),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: .end,
+                                      crossAxisAlignment: .center,
                                       children: [
                                         if (left != null) ...[
                                           Icon(
@@ -220,9 +245,9 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
                                             action.labelText ?? "",
                                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                               color: color,
-                                              overflow: TextOverflow.ellipsis,
+                                              overflow: .ellipsis,
                                             ),
-                                            textAlign: TextAlign.end,
+                                            textAlign: .end,
                                           ),
                                         ),
                                         if (left == null) ...[
@@ -301,6 +326,18 @@ class ThemedActionButton {
   /// [isDisabled] forces the button to be displayed as disabled.
   final bool isDisabled;
 
+  /// [notifier] is the ValueNotifier to be used to update the button.
+  final ValueNotifier<dynamic>? notifier;
+
+  /// [iconBuilder] is the function to be used to build the icon based on the notifier value.
+  final IconData Function(dynamic value)? iconBuilder;
+
+  /// [labelTextBuilder] is the function to be used to build the label text based on the notifier value.
+  final String Function(dynamic value)? labelTextBuilder;
+
+  /// [colorBuilder] is the function to be used to build the color based on the notifier value.
+  final Color Function(dynamic value)? colorBuilder;
+
   const ThemedActionButton({
     this.label,
     this.labelText,
@@ -312,9 +349,17 @@ class ThemedActionButton {
     this.cooldown,
     this.isCooldown = false,
     this.onCooldownFinish,
-    this.tooltipPosition = ThemedTooltipPosition.bottom,
+    this.tooltipPosition = .bottom,
     this.isDisabled = false,
-  }) : assert(label != null || labelText != null);
+    this.notifier,
+    this.iconBuilder,
+    this.labelTextBuilder,
+    this.colorBuilder,
+  }) : assert(label != null || labelText != null),
+       assert(
+         notifier == null || (iconBuilder != null || labelTextBuilder != null || colorBuilder != null),
+         "If notifier is provided, at least one of iconBuilder, labelTextBuilder or colorBuilder must be provided.",
+       );
 
   factory ThemedActionButton.save({
     bool isMobile = false,
@@ -324,7 +369,7 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
-    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
+    ThemedTooltipPosition tooltipPosition = .bottom,
   }) {
     return ThemedActionButton(
       tooltipPosition: tooltipPosition,
@@ -348,7 +393,7 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
-    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
+    ThemedTooltipPosition tooltipPosition = .bottom,
   }) {
     return ThemedActionButton(
       tooltipPosition: tooltipPosition,
@@ -372,7 +417,7 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
-    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
+    ThemedTooltipPosition tooltipPosition = .bottom,
   }) {
     return ThemedActionButton(
       tooltipPosition: tooltipPosition,
@@ -396,7 +441,7 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
-    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
+    ThemedTooltipPosition tooltipPosition = .bottom,
   }) {
     return ThemedActionButton(
       tooltipPosition: tooltipPosition,
@@ -420,7 +465,7 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
-    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
+    ThemedTooltipPosition tooltipPosition = .bottom,
   }) {
     return ThemedActionButton(
       tooltipPosition: tooltipPosition,
@@ -444,7 +489,7 @@ class ThemedActionButton {
     bool isDisabled = false,
     bool isCooldown = false,
     VoidCallback? onCooldownFinish,
-    ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.bottom,
+    ThemedTooltipPosition tooltipPosition = .bottom,
   }) {
     return ThemedActionButton(
       tooltipPosition: tooltipPosition,
@@ -474,6 +519,10 @@ class ThemedActionButton {
     VoidCallback? onCooldownFinish,
     ThemedTooltipPosition? tooltipPosition,
     bool? isDisabled,
+    ValueNotifier<dynamic>? notifier,
+    IconData Function(dynamic value)? iconBuilder,
+    String Function(dynamic value)? labelTextBuilder,
+    Color Function(dynamic value)? colorBuilder,
   }) {
     return ThemedActionButton(
       label: label ?? this.label,
@@ -488,6 +537,10 @@ class ThemedActionButton {
       onCooldownFinish: onCooldownFinish ?? this.onCooldownFinish,
       tooltipPosition: tooltipPosition ?? this.tooltipPosition,
       isDisabled: isDisabled ?? this.isDisabled,
+      notifier: notifier ?? this.notifier,
+      iconBuilder: iconBuilder ?? this.iconBuilder,
+      labelTextBuilder: labelTextBuilder ?? this.labelTextBuilder,
+      colorBuilder: colorBuilder ?? this.colorBuilder,
     );
   }
 }

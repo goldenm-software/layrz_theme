@@ -169,39 +169,39 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
 
   String get _title {
     switch (mode) {
-      case ThemedCalendarMode.year:
+      case .year:
         return _dayGenerator.format(pattern: widget.yearFormat, i18n: i18n);
-      case ThemedCalendarMode.month:
+      case .month:
         return _dayGenerator.format(pattern: widget.monthFormat, i18n: i18n);
-      case ThemedCalendarMode.week:
+      case .week:
         return _dayGenerator.format(pattern: widget.weekFormat, i18n: i18n);
-      case ThemedCalendarMode.day:
+      case .day:
         return _dayGenerator.format(pattern: widget.dayFormat, i18n: i18n);
     }
   }
 
   String get _backLabel {
     switch (mode) {
-      case ThemedCalendarMode.year:
+      case .year:
         return t('layrz.calendar.year.back');
-      case ThemedCalendarMode.month:
+      case .month:
         return t('layrz.calendar.month.back');
-      case ThemedCalendarMode.week:
+      case .week:
         return t('layrz.calendar.week.back');
-      case ThemedCalendarMode.day:
+      case .day:
         return t('layrz.calendar.day.back');
     }
   }
 
   String get _forwardLabel {
     switch (mode) {
-      case ThemedCalendarMode.year:
+      case .year:
         return t('layrz.calendar.year.next');
-      case ThemedCalendarMode.month:
+      case .month:
         return t('layrz.calendar.month.next');
-      case ThemedCalendarMode.week:
+      case .week:
         return t('layrz.calendar.week.next');
-      case ThemedCalendarMode.day:
+      case .day:
         return t('layrz.calendar.day.next');
     }
   }
@@ -235,7 +235,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
       // Get a middle day between the highlighted days
       List<DateTime> sortedHighlightedDays = widget.highlightedDays..sort((a, b) => a.compareTo(b));
       if (sortedHighlightedDays.isEmpty) {
-        _focusDay = widget.focusDay ?? DateTime.now();
+        _focusDay = widget.focusDay ?? .now();
         _dayGenerator = _focusDay.copyWith(day: 1);
       } else {
         DateTime middle = sortedHighlightedDays.first.add(
@@ -245,7 +245,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
         _dayGenerator = middle.copyWith(day: 1);
       }
     } else {
-      _focusDay = widget.focusDay ?? DateTime.now();
+      _focusDay = widget.focusDay ?? .now();
       _dayGenerator = _focusDay.subtract(Duration(days: _focusDay.day - 1));
     }
   }
@@ -253,9 +253,9 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const .all(10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: [
@@ -263,7 +263,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                 labelText: t('layrz.calendar.pickMonth'),
                 value: ThemedMonth(
                   year: _dayGenerator.year,
-                  month: Month.values[_dayGenerator.month - 1],
+                  month: .values[_dayGenerator.month - 1],
                 ),
                 onChanged: (newMonth) {
                   _dayGenerator = DateTime(
@@ -288,9 +288,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
               Expanded(
                 child: Text(
                   _title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: .bold),
                 ),
               ),
               // if (widget.onModeChanged != null) ...[
@@ -313,37 +311,37 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
               // ],
               ThemedButton(
                 labelText: _backLabel,
-                style: ThemedButtonStyle.fab,
+                style: .fab,
                 icon: LayrzIcons.solarOutlineAltArrowLeft,
                 onTap: _back,
               ),
               if (widget.todayButton) ...[
                 ThemedButton(
                   labelText: t('layrz.calendar.today'),
-                  style: ThemedButtonStyle.fab,
+                  style: .fab,
                   icon: LayrzIcons.solarOutlineCalendar,
                   onTap: () {
-                    setState(() => _focusDay = DateTime.now());
-                    widget.onDayTap?.call(DateTime.now());
+                    setState(() => _focusDay = .now());
+                    widget.onDayTap?.call(.now());
                   },
                 ),
               ],
               ThemedButton(
                 labelText: _forwardLabel,
-                style: ThemedButtonStyle.fab,
+                style: .fab,
                 icon: LayrzIcons.solarOutlineAltArrowRight,
                 onTap: _forward,
               ),
               ...widget.aditionalButtons.map((button) => button),
             ],
           ),
-          if (mode == ThemedCalendarMode.year) ...[
+          if (mode == .year) ...[
             // TO DO - Yearly calendar
-          ] else if (mode == ThemedCalendarMode.month) ...[
+          ] else if (mode == .month) ...[
             _buildMonthCalendar(),
-          ] else if (mode == ThemedCalendarMode.week) ...[
+          ] else if (mode == .week) ...[
             // TO DO - Weekly calendar
-          ] else if (mode == ThemedCalendarMode.day) ...[
+          ] else if (mode == .day) ...[
             // TO DO - Daily calendar
           ],
         ],
@@ -355,7 +353,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   void _forward() {
     late DateTime next;
     switch (mode) {
-      case ThemedCalendarMode.year:
+      case .year:
         next = DateTime(
           _dayGenerator.year + 1,
           _dayGenerator.month,
@@ -365,7 +363,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
           _dayGenerator.second,
         );
         break;
-      case ThemedCalendarMode.month:
+      case .month:
         if (_dayGenerator.month == 12) {
           next = DateTime(
             _dayGenerator.year + 1,
@@ -386,11 +384,11 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
           );
         }
         break;
-      case ThemedCalendarMode.week:
+      case .week:
         final thisWeek = _dayGenerator.thisWeek;
         next = thisWeek.last.add(const Duration(days: 1));
         break;
-      case ThemedCalendarMode.day:
+      case .day:
         int lastDay = 31;
         if (_dayGenerator.month == DateTime.february) {
           if (_dayGenerator.month % 4 == 0) {
@@ -449,7 +447,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   void _back() {
     late DateTime next;
     switch (mode) {
-      case ThemedCalendarMode.year:
+      case .year:
         next = DateTime(
           _dayGenerator.year - 1,
           _dayGenerator.month,
@@ -459,7 +457,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
           _dayGenerator.second,
         );
         break;
-      case ThemedCalendarMode.month:
+      case .month:
         if (_dayGenerator.month == 1) {
           next = DateTime(
             _dayGenerator.year - 1,
@@ -480,11 +478,11 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
           );
         }
         break;
-      case ThemedCalendarMode.week:
+      case .week:
         final thisWeek = _dayGenerator.thisWeek;
         next = thisWeek.first.subtract(const Duration(days: 1));
         break;
-      case ThemedCalendarMode.day:
+      case .day:
         if (_dayGenerator.day == 1) {
           if (_dayGenerator.month == 1) {
             next = DateTime(
@@ -548,14 +546,14 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
           double width = (constraints.maxWidth - 20) / 7;
 
           return Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const .all(10),
             child: Column(
               children: [
                 Container(
                   height: 30,
                   color: Theme.of(context).scaffoldBackgroundColor,
                   child: Row(
-                    children: List.generate(7, (i) {
+                    children: .generate(7, (i) {
                       String weekdayString = "";
                       switch (i + 1) {
                         case DateTime.monday:
@@ -584,12 +582,10 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                       return Container(
                         width: width,
                         height: 30,
-                        alignment: Alignment.center,
+                        alignment: .center,
                         child: Text(
                           widget.smallWeekdays ? weekdayString.substring(0, 3) : weekdayString,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
                         ),
                       );
                     }),
@@ -621,7 +617,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                         ...dayEntries,
                       ];
 
-                      DateTime now = DateTime(day.year, day.month, day.day);
+                      DateTime now = .new(day.year, day.month, day.day);
                       bool isFocusDay =
                           day.year == _focusDay.year && day.month == _focusDay.month && day.day == _focusDay.day;
                       bool isDisabled = widget.disabledDays
@@ -653,20 +649,20 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                             : 0.5,
                         child: Container(
                           color: Theme.of(context).scaffoldBackgroundColor,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const .symmetric(vertical: 10),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: .start,
+                            crossAxisAlignment: .center,
                             children: [
                               if (!widget.showEntries) const Spacer(),
                               Container(
                                 width: widget.showEntries ? 30 : height * 0.5,
                                 height: widget.showEntries ? 30 : height * 0.5,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(height / 6),
+                                  borderRadius: .circular(height / 6),
                                   color: containerColor?.withValues(alpha: 0.3),
                                 ),
-                                clipBehavior: Clip.antiAlias,
+                                clipBehavior: .antiAlias,
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
@@ -682,7 +678,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                       child: Text(
                                         day.day.toString(),
                                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: .bold,
                                           fontSize: widget.showEntries ? null : height * 0.2,
                                           color: containerColor,
                                         ),
@@ -715,10 +711,10 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                         ThemedCalendarEntry item = joinedEntries[index];
                                         Color cardColor = item.color ?? primaryColor;
 
-                                        BorderRadius borderRadius = BorderRadius.circular(5);
+                                        BorderRadius borderRadius = .circular(5);
 
                                         return Padding(
-                                          padding: const EdgeInsets.all(2),
+                                          padding: const .all(2),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: cardColor,
@@ -733,8 +729,8 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                                 mouseCursor: item.onTap == null ? SystemMouseCursors.basic : null,
                                                 hoverColor: item.onTap == null ? Colors.transparent : null,
                                                 child: Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: .center,
+                                                  mainAxisAlignment: .center,
                                                   children: [
                                                     if (item.icon != null) ...[
                                                       const SizedBox(width: 5),
@@ -786,7 +782,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   List<ThemedCalendarEntry> _getEntriesOfDay(DateTime day) {
     List<ThemedCalendarEntry> entries = widget.entries.where((entry) {
       switch (mode) {
-        case ThemedCalendarMode.month:
+        case .month:
           return entry.at.year == day.year && entry.at.month == day.month && entry.at.day == day.day;
         default:
           return false;
@@ -800,7 +796,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   List<ThemedCalendarRangeEntry> _getRangeEntriesOfDay(DateTime day) {
     List<ThemedCalendarRangeEntry> entries = widget.rangeEntries.where((entry) {
       switch (mode) {
-        case ThemedCalendarMode.month:
+        case .month:
           return day.isAfter(entry.startAt) && day.isBefore(entry.endAt);
         default:
           return false;
@@ -869,7 +865,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
   /// You can replace variables in the translation using the following format: `{variableName}`
   /// The variables changes depending of the implementation in this component.
   String t(String key, [Map<String, dynamic> args = const {}]) {
-    LayrzAppLocalizations? i18n = LayrzAppLocalizations.maybeOf(context);
+    LayrzAppLocalizations? i18n = .maybeOf(context);
 
     if (i18n != null) {
       return i18n.t(key, args);
@@ -899,17 +895,18 @@ enum ThemedCalendarMode {
   month,
 
   /// [ThemedCalendarMode.year] displays a single year of months.
-  year;
+  year
+  ;
 
   String get translation {
     switch (this) {
-      case ThemedCalendarMode.year:
+      case .year:
         return 'layrz.calendar.year';
-      case ThemedCalendarMode.month:
+      case .month:
         return 'layrz.calendar.month';
-      case ThemedCalendarMode.week:
+      case .week:
         return 'layrz.calendar.week';
-      case ThemedCalendarMode.day:
+      case .day:
         return 'layrz.calendar.day';
     }
   }
@@ -1006,6 +1003,6 @@ class ThemedCalendarRangeEntry {
     required this.title,
     this.caption,
     this.onTap,
-    this.textAlign = TextAlign.justify,
+    this.textAlign = .justify,
   });
 }
