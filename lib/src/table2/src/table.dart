@@ -276,10 +276,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source, removing debouncer...");
       _debounce?.cancel();
       _debounce = null;
+      _isLoading.value = false;
       if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
     }
-    if (!mounted) return;
-    _isLoading.value = false;
   }
 
   @override

@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.0+1
+
+- Hotfix regarding of a bug on `ThemedTable2` where the loading indicator was not being removed after filtering and sorting when the items list is empty.
+
 ## 7.5.0
 
 - Updated constraint of Dart SDK to `>=3.10.0 <4.0.0`
