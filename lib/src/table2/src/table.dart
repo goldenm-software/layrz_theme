@@ -267,7 +267,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         _sort,
         _SortParams<T>(
           items: items,
-          column: _colSelected,
+          column: _colSelected.isolateSafety,
           isReversed: _isReversed,
           itemsStrings: _itemsStrings,
         ),
@@ -887,10 +887,11 @@ int _defaultSort<T>(
 
   Duration? parseDuration(String s) {
     final parts = s.split(':');
-    if (parts.length == 3) {
+    if (parts.length > 2) {
       final h = int.tryParse(parts[0]) ?? 0;
       final m = int.tryParse(parts[1]) ?? 0;
-      final sec = int.tryParse(parts[2]) ?? 0;
+      int sec = 0;
+      if (parts.length == 3) sec = int.tryParse(parts[2]) ?? 0;
       return Duration(hours: h, minutes: m, seconds: sec);
     }
     return null;

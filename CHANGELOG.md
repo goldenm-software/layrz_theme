@@ -12,6 +12,7 @@
 - New `ThemedChipStyle` enum to define the style of the `ThemedChip`.
 - New `ThemedChipGroup` widget to handle groups of chips with selection support.
 - Optimizations on `ThemedTable2` to improve performance when handling large datasets.
+- Bypassed limitations of `Isolate` on `ThemedTable2` when using complex objects as items, the workaround is to use the `isolateSafety` property on `ThemedColumn2` to define a function that returns a primitive type from the item to be used on sorting and filtering instead of the full object.
 
 ## 7.4.12
 
