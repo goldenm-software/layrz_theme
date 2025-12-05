@@ -814,7 +814,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _debounce = Timer(const Duration(milliseconds: 600), () {
       _filterAndSort('SEARCH');
     });
-    if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
   }
 }
 
