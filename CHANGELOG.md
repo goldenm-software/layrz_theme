@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.1+1
+- Minor state validation on `ThemedTable2` setState call on search.
+
 ## 7.5.1
 - Fixed `ThemedTable2` search debounce not working as expected.
 
