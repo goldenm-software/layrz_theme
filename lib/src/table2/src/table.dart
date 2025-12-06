@@ -273,13 +273,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         ),
       );
     } finally {
-      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source, removing debouncer...");
-      _debounce?.cancel();
-      _debounce = null;
+      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source.");
+      _isLoading.value = false;
       if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
     }
-    if (!mounted) return;
-    _isLoading.value = false;
   }
 
   @override
@@ -813,7 +810,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   void _onSearchChanged(String value) {
-    _debounce = Timer(const Duration(milliseconds: 300), () {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 600), () {
       _filterAndSort('SEARCH');
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
