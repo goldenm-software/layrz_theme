@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.2
+- Fixed `ThemedMapToolbar` zoom in and zoom out buttons doing the opposite action.
+
 ## 7.5.1+1
 - Minor state validation on `ThemedTable2` setState call on search.
 
