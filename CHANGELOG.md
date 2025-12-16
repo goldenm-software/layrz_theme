@@ -1,5 +1,22 @@
 # Changelog
 
+## 7.5.3
+
+- Changed `customSort` signature on `ThemedColumn2` to include the `ascending` parameter to allow more complex sorting algorithms.
+
+## 7.5.2
+- Fixed `ThemedMapToolbar` zoom in and zoom out buttons doing the opposite action.
+
+## 7.5.1+1
+- Minor state validation on `ThemedTable2` setState call on search.
+
+## 7.5.1
+- Fixed `ThemedTable2` search debounce not working as expected.
+
+## 7.5.0+1
+
+- Hotfix regarding of a bug on `ThemedTable2` where the loading indicator was not being removed after filtering and sorting when the items list is empty.
+
 ## 7.5.0
 
 - Updated constraint of Dart SDK to `>=3.10.0 <4.0.0`

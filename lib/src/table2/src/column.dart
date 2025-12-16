@@ -24,7 +24,7 @@ class ThemedColumn2<T> {
   final CellTap<T>? onTap;
 
   /// [customSort] is a function that takes two items and returns an integer for custom sorting
-  int Function(T a, T b)? customSort;
+  int Function(T a, T b, bool ascending)? customSort;
 
   /// [ThemedColumn2] is the new implementation of ThemedColumn with enhanced features
   ///

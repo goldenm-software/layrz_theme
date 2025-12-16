@@ -273,13 +273,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         ),
       );
     } finally {
-      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source, removing debouncer...");
-      _debounce?.cancel();
-      _debounce = null;
+      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source.");
+      _isLoading.value = false;
       if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
     }
-    if (!mounted) return;
-    _isLoading.value = false;
   }
 
   @override
@@ -813,7 +810,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   void _onSearchChanged(String value) {
-    _debounce = Timer(const Duration(milliseconds: 300), () {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 600), () {
       _filterAndSort('SEARCH');
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -847,16 +845,19 @@ class _SortParams<T> {
 /// This function runs on an Isolated thread to ensure non-blocking UI performance, the only issue with this
 /// is, you cannot use complexes objects or functions that are not sendable between isolates.
 List<T> _sort<T>(_SortParams<T> params) {
-  params.items.sort(
-    params.column.customSort ??
-        (a, b) => _defaultSort(
-          a,
-          b,
-          colSelected: params.column,
-          isReversed: params.isReversed,
-          itemsStrings: params.itemsStrings,
-        ),
-  );
+  if (params.column.customSort != null) {
+    params.items.sort((a, b) => params.column.customSort!.call(a, b, !params.isReversed));
+  } else {
+    params.items.sort(
+      (a, b) => _defaultSort(
+        a,
+        b,
+        colSelected: params.column,
+        isReversed: params.isReversed,
+        itemsStrings: params.itemsStrings,
+      ),
+    );
+  }
   return params.items;
 }
 
