@@ -88,7 +88,7 @@ class _InfinityTableViewState extends State<InfinityTableView> {
           ThemedColumn2(
             headerText: 'Plate',
             valueBuilder: (item) => item.plate ?? 'N/A',
-            customSort: (a, b) {
+            customSort: (a, b, ascending) {
               return (a.plate ?? '').compareTo(b.plate ?? '');
             },
             onTap: (item) async {

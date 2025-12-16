@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.3
+
+- Changed `customSort` signature on `ThemedColumn2` to include the `ascending` parameter to allow more complex sorting algorithms.
+
 ## 7.5.2
 - Fixed `ThemedMapToolbar` zoom in and zoom out buttons doing the opposite action.
 

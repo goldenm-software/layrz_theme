@@ -845,16 +845,19 @@ class _SortParams<T> {
 /// This function runs on an Isolated thread to ensure non-blocking UI performance, the only issue with this
 /// is, you cannot use complexes objects or functions that are not sendable between isolates.
 List<T> _sort<T>(_SortParams<T> params) {
-  params.items.sort(
-    params.column.customSort ??
-        (a, b) => _defaultSort(
-          a,
-          b,
-          colSelected: params.column,
-          isReversed: params.isReversed,
-          itemsStrings: params.itemsStrings,
-        ),
-  );
+  if (params.column.customSort != null) {
+    params.items.sort((a, b) => params.column.customSort!.call(a, b, !params.isReversed));
+  } else {
+    params.items.sort(
+      (a, b) => _defaultSort(
+        a,
+        b,
+        colSelected: params.column,
+        isReversed: params.isReversed,
+        itemsStrings: params.itemsStrings,
+      ),
+    );
+  }
   return params.items;
 }
 
