@@ -19,11 +19,23 @@ Future<bool> deleteConfirmationDialog({
   String? customContent,
   String? customConfirm,
   String? customDismiss,
+  int? itemsLength,
 }) async {
   LayrzAppLocalizations? i18n = .maybeOf(context);
 
   String title = '';
   String content = '';
+  String? countInfo;
+
+  if (itemsLength != null) {
+    countInfo =
+        i18n?.tc(
+          'actions.confirmation.countInfo',
+          itemsLength,
+          {'count': itemsLength},
+        ) ??
+        ((itemsLength > 1) ? 'Deleting $itemsLength items.' : 'Deleting $itemsLength item.');
+  }
 
   if (isMultiple) {
     title = i18n?.t('actions.confirmationMultiple.title') ?? 'Are you sure that you want to delete these items?';
@@ -78,6 +90,15 @@ Future<bool> deleteConfirmationDialog({
                 textAlign: .justify,
                 maxLines: 10,
               ),
+              if (countInfo != null) ...[
+                const SizedBox(height: 5),
+
+                Text(
+                  countInfo,
+                  textAlign: .justify,
+                  maxLines: 10,
+                ),
+              ],
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: .spaceBetween,
