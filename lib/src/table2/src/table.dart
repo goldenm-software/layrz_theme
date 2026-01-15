@@ -431,14 +431,22 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                             child: ValueListenableBuilder(
                               valueListenable: _selectedItems,
                               builder: (context, value, child) {
+                                /// Select all checkbox
+                                /// selectAll
                                 return Checkbox(
-                                  value: value.length == widget.items.length && widget.items.isNotEmpty,
+                                  value: value.length == _filteredData.value.length && _filteredData.value.isNotEmpty,
                                   onChanged: (val) {
+                                    // print('BEFORE');
+                                    // print('Selected data: ${_selectedItems.value.length}');
+                                    // print(' Filtered data: ${_filteredData.value.length}');
                                     if (val == true) {
-                                      _selectedItems.value = .from(widget.items);
+                                      _selectedItems.value = .from(_filteredData.value);
                                     } else {
                                       _selectedItems.value = [];
                                     }
+                                    // debugPrint('AFTER');
+                                    // debugPrint('Selected data: ${_selectedItems.value.length}');
+                                    // debugPrint(' Filtered data: ${_filteredData.value.length}');
                                   },
                                 );
                               },

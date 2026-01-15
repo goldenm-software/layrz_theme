@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.4
+- Critical fix on `ThemedTable2` Select All checkbox, fixed an issue where selecting all items selected everything avaiable even when filtering with the search bar.
+
 ## 7.5.3
 
 - Changed `customSort` signature on `ThemedColumn2` to include the `ascending` parameter to allow more complex sorting algorithms.
