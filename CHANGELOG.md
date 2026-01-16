@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.6
+- Add `onLongPress` with `customLongPressDuration` in `ThemedButton`
+
 ## 7.5.5
 - Added `itemsLength` parameter to `deleteConfirmationDialog` utility to show the number of items being deleted in the confirmation dialog.
 
