@@ -81,6 +81,9 @@ class ThemedNumberInput extends StatefulWidget {
   /// [hidePrefixSuffixActions] is the state of the input to hide the prefix and suffix actions. on the input
   final bool hidePrefixSuffixActions;
 
+  /// [focusNode] is the focus node of the input.
+  final FocusNode? focusNode;
+
   /// [ThemedNumberInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedNumberInput({
@@ -110,6 +113,7 @@ class ThemedNumberInput extends StatefulWidget {
     this.suffixText,
     this.prefixText,
     this.hidePrefixSuffixActions = false,
+    this.focusNode,
   }) : assert(
          (label == null && labelText != null) || (label != null && labelText == null),
          'You must provide either a labelText or a label, but not both.',
@@ -250,6 +254,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
         widget.onChanged?.call(castedValue);
       },
       onSubmitted: widget.onSubmitted,
+      focusNode: widget.focusNode,
     );
   }
 }
