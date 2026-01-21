@@ -39,7 +39,7 @@ class _InfinityTableViewState extends State<InfinityTableView> {
   Asset _generateAsset(int index) {
     return Asset(
       id: (index + 1).toString(),
-      name: (index == 2) ? "Asset asdasfasfasf ${index + 1}" : "Other Asset ${index + 1}",
+      name: (index == 2) ? "Asset LOREM ${index + 1}" : "Other Asset ${index + 1}",
       plate: 'PLATE${index + 1} testestes',
       vin: 'VIN${index + 1}',
       mode: AssetMode.single,
@@ -54,6 +54,7 @@ class _InfinityTableViewState extends State<InfinityTableView> {
       body: ThemedTable2<Asset>(
         items: _items,
         actionsCount: 3,
+        canSearch: true,
         multiselectActions: [
           ThemedActionButton(
             icon: LayrzIcons.faSolidLayerGroup,
@@ -87,7 +88,7 @@ class _InfinityTableViewState extends State<InfinityTableView> {
           ThemedColumn2(
             headerText: 'Plate',
             valueBuilder: (item) => item.plate ?? 'N/A',
-            customSort: (a, b) {
+            customSort: (a, b, ascending) {
               return (a.plate ?? '').compareTo(b.plate ?? '');
             },
             onTap: (item) async {

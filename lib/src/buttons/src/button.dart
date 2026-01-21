@@ -111,6 +111,13 @@ class ThemedButton extends StatefulWidget {
   /// By default uses the `Theme.of(context).inputDecorationTheme.fillColor`
   final Color? loadingForegroundColor;
 
+  /// [onLongPressDuration] is used to set the duration to trigger a long press.
+  final Duration customLongPressDuration;
+
+  /// [onLongPress] is called when the button is long pressed.
+  /// This callback is only available when the button is not disabled.
+  final VoidCallback? onLongPress;
+
   /// [ThemedButton] is a widget that displays a button with a custom label.
   const ThemedButton({
     super.key,
@@ -136,12 +143,15 @@ class ThemedButton extends StatefulWidget {
     this.iconSeparatorSize = 8,
     this.loadingBackgroundColor,
     this.loadingForegroundColor,
+    this.customLongPressDuration = const Duration(milliseconds: 500),
+    this.onLongPress,
   }) : assert(label != null || labelText != null, "You must provide a label or labelText, not both or none."),
        assert(height >= 30, "Height must be greater than 30u"),
        assert(iconSize >= 0, "Icon size must be greater than 0"),
        assert(iconSize <= height, "Icon size must be less than or equal to height"),
        assert(fontSize >= 0, "Font size must be greater than 0"),
-       assert(fontSize <= height, "Font size must be less than or equal to height");
+       assert(fontSize <= height, "Font size must be less than or equal to height"),
+       assert(!(onTap != null && onLongPress != null), "You must provide either onTap or onLongPress, not both.");
 
   factory ThemedButton.save({
     bool isMobile = false,
@@ -463,6 +473,15 @@ class _ThemedButtonState extends State<ThemedButton> {
   /// [iconSeparatorSize] is used to know the size of the icon separator.
   double get iconSeparatorSize => widget.iconSeparatorSize;
 
+  /// [_longPressTimer] is used to handle the long press event.
+  Timer? _longPressTimer;
+
+  /// [longPressTriggered] is used to know if the long press event was triggered.
+  bool longPressTriggered = false;
+
+  /// [customLongPressDuration] is used to set the duration to trigger a long press.
+  Duration get customLongPressDuration => widget.customLongPressDuration;
+
   WidgetSpan get iconSeparator => WidgetSpan(
     alignment: .middle,
     child: SizedBox(width: iconSeparatorSize),
@@ -601,6 +620,37 @@ class _ThemedButtonState extends State<ThemedButton> {
     );
   }
 
+  /// [_handleTapDown] is used to handle the tap down event.
+  /// This method starts the long press timer.
+  void _handleTapDown(TapDownDetails details) {
+    if (isDisabled || widget.onLongPress == null) return;
+    longPressTriggered = false;
+    _longPressTimer = Timer(customLongPressDuration, () {
+      longPressTriggered = true;
+      widget.onLongPress?.call();
+    });
+  }
+
+  /// [_handleTapUp] is used to handle the tap up event.
+  /// This method cancels the long press timer.
+  void _handleTapUp(TapUpDetails details) {
+    _longPressTimer?.cancel();
+    _longPressTimer = null;
+  }
+
+  /// [_handleTapCancel] is used to handle the tap cancel event.
+  /// This method cancels the long press timer.
+  void _handleTapCancel() {
+    _longPressTimer?.cancel();
+    _longPressTimer = null;
+  }
+
+  @override
+  void dispose() {
+    _longPressTimer?.cancel();
+    super.dispose();
+  }
+
   /// [_buildFilledTonal] is used to build a filled tonal button.
   /// This button is used when the [style] is [.filledTonal].
   Widget _buildFilledTonal() {
@@ -617,6 +667,9 @@ class _ThemedButtonState extends State<ThemedButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onTap,
+          onTapDown: widget.onLongPress != null ? _handleTapDown : null,
+          onTapUp: widget.onLongPress != null ? _handleTapUp : null,
+          onTapCancel: widget.onLongPress != null ? _handleTapCancel : null,
           child: Padding(
             padding: padding,
             child: _buildLoadingOrChild(

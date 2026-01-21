@@ -237,7 +237,8 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
             icon: LayrzIcons.solarBoldAddSquare,
             isDisabled: value >= widget.maxZoom,
             onTap: () async {
-              double newZoom = (value - 1).clamp(widget.minZoom, widget.maxZoom);
+              // Increase zoom by 1
+              double newZoom = (value + 1).clamp(widget.minZoom, widget.maxZoom);
               debugPrint('layrz_theme/ThemedMapToolbar/ZoomOut: Zoom to $newZoom');
               await widget.animatedMapController.animatedZoomTo(newZoom);
               _zoomListenable.value = newZoom;
@@ -283,7 +284,8 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
             icon: LayrzIcons.solarBoldMinusSquare,
             isDisabled: value <= widget.minZoom,
             onTap: () async {
-              double newZoom = (value + 1).clamp(widget.minZoom, widget.maxZoom);
+              // reduce zoom by 1
+              double newZoom = (value - 1).clamp(widget.minZoom, widget.maxZoom);
               debugPrint('layrz_theme/ThemedMapToolbar/ZoomOut: Zoom to $newZoom');
               await widget.animatedMapController.animatedZoomTo(newZoom);
               _zoomListenable.value = newZoom;
