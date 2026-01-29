@@ -1,5 +1,3 @@
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:layrz_models/layrz_models.dart';
@@ -9,22 +7,12 @@ import 'package:layrz_theme_example/store/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:layrz_state/layrz_state.dart';
 
-const font = AppFont(source: FontSource.google, name: 'Ubuntu');
+const font = AppFont(source: .google, name: 'Ubuntu Mono');
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await ThemedFontHandler.preloadFont(font);
-
-  String? mapboxToken;
-  String? googleToken;
-  String? hereToken;
-
-  // if (kDebugMode) {
-  //   await dotenv.load(fileName: ".env");
-  //   mapboxToken = dotenv.env['MAPBOX_TOKEN'];
-  //   googleToken = dotenv.env['GOOGLE_TOKEN'];
-  //   hereToken = dotenv.env['HERE_TOKEN'];
-  // }
 
   final prefs = await SharedPreferences.getInstance();
   final rawThemeMode = prefs.getString('layrz.theme.mode');
@@ -44,9 +32,6 @@ Future<void> main() async {
     LayrzState(
       store: AppStore(
         themeMode: themeMode ?? ThemeMode.system,
-        mapboxToken: mapboxToken,
-        googleToken: googleToken,
-        hereToken: hereToken,
         colorblindMode: colorblindMode ?? ColorblindMode.normal,
         colorblindStrength: colorblindStrength,
       ),

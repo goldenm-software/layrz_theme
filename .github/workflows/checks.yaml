@@ -1,0 +1,20 @@
+name: "Deploy package"
+
+on:
+  pull_request:
+    branches: [ main, next, development ]
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  lint-dart:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run checks
+        run: flutter analyze
