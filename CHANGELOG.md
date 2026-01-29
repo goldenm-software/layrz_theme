@@ -1,9 +1,15 @@
 # Changelog
 
+## 7.5.8
+
+- Upgraded `google_fonts` dependency to `^8.0.0` to support latest font features and improvements.
+
 ## 7.5.7
+
 - Added `focusNode` prop to `ThemedNumberInput` to allow external focus node management.
 
 ## 7.5.6
+
 - Add `onLongPress` with `customLongPressDuration` in `ThemedButton`
 
 ## 7.5.5
