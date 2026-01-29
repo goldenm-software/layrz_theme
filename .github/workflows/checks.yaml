@@ -18,8 +18,9 @@ jobs:
         with:
           channel: stable
           version: 3.38.8
-          cache-sdk: true
           cache: true
+          cache-sdk: true
+          cache-key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
 
       - name: Install dependencies
         run: flutter pub get
