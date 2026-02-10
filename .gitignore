@@ -48,3 +48,5 @@ credentials.json
 .fvm/
 
 .vscode/settings.json
+
+ignoreme.dart
