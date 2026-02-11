@@ -45,12 +45,16 @@ jobs:
         run: |
           if [ -f test-results.json ]; then
             # Count total tests and failures from the JSON output
-            TOTAL=$(grep -c '"type":"testStart"' test-results.json || echo "0")
-            FAILED=$(grep -c '"result":"error"' test-results.json || echo "0")
+            TOTAL=$(grep -c '"type":"testStart"' test-results.json 2>/dev/null || echo 0)
+            FAILED=$(grep -c '"result":"error"' test-results.json 2>/dev/null || echo 0)
+
+            # Ensure variables are numeric (strip whitespace and default to 0)
+            TOTAL=${TOTAL:-0}
+            FAILED=${FAILED:-0}
             PASSED=$((TOTAL - FAILED))
 
             # Calculate percentage
-            if [ $TOTAL -gt 0 ]; then
+            if [ "$TOTAL" -gt 0 ] 2>/dev/null; then
               PASS_RATE=$(awk "BEGIN {printf \"%.1f\", ($PASSED/$TOTAL)*100}")
             else
               PASS_RATE="0.0"
