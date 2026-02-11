@@ -50,3 +50,6 @@ credentials.json
 .vscode/settings.json
 
 ignoreme.dart
+
+# Claude Code
+.claude/settings.local.json
