@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.9
+
+- Added `ThemedPasswordInput` widget with built-in password visibility toggle, strength level indicator, and requirement validation (lowercase, uppercase, digit, special character). Supports `LayrzAppLocalizations` for i18n.
+
 ## 7.5.8
 
 - Upgraded `google_fonts` dependency to `^8.0.0` to support latest font features and improvements.
