@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.11
+
+- Improved `ThemedPasswordInput` requirements validation logic to use `.entries` for cleaner iteration and better performance.
+
 ## 7.5.10
 
 - Renamed `tools/` to `tool/` as suggestion of the Dart team to follow the standard convention for Dart CLI tools.
