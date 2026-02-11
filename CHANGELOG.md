@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.10
+
+- Renamed `tools/` to `tool/` as suggestion of the Dart team to follow the standard convention for Dart CLI tools.
+
 ## 7.5.9
 
 - Added `ThemedPasswordInput` widget with built-in password visibility toggle, strength level indicator, and requirement validation (lowercase, uppercase, digit, special character). Supports `LayrzAppLocalizations` for i18n.

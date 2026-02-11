@@ -374,7 +374,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.5.9"
+    version: "7.5.10"
   leak_tracker:
     dependency: transitive
     description:
