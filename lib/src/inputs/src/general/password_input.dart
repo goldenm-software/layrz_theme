@@ -102,8 +102,8 @@ class _ThemedPasswordInputState extends State<ThemedPasswordInput> {
   /// [_matches] is the list of regular expressions that match the requirements met by the current password value.
   Map<String, bool> get _matches {
     final matches = <String, bool>{};
-    for (final requirement in requirements.keys) {
-      matches[requirements[requirement]!] = requirement.hasMatch(widget.value ?? '');
+    for (final entry in requirements.entries) {
+      matches[entry.value] = entry.key.hasMatch(widget.value ?? '');
     }
     return matches;
   }
@@ -187,7 +187,7 @@ class _ThemedPasswordInputState extends State<ThemedPasswordInput> {
               ),
               richMessage: TextSpan(
                 children: [
-                  for (final requirement in requirements.keys) ...[
+                  for (final entry in requirements.entries) ...[
                     WidgetSpan(
                       child: Padding(
                         padding: const EdgeInsets.all(5),
@@ -195,15 +195,15 @@ class _ThemedPasswordInputState extends State<ThemedPasswordInput> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              _matches[requirements[requirement]!]!
+                              _matches[entry.value]!
                                   ? LayrzIcons.solarOutlineCheckCircle
                                   : LayrzIcons.solarOutlineCloseCircle,
                               size: 16,
-                              color: _matches[requirements[requirement]!]! ? Colors.green : Colors.red,
+                              color: _matches[entry.value]! ? Colors.green : Colors.red,
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              _translate(requirements[requirement]!),
+                              _translate(entry.value),
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: validateColor(color: Theme.of(context).scaffoldBackgroundColor),
                               ),
