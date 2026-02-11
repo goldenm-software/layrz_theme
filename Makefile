@@ -9,9 +9,9 @@ test:
 .PHONY: coverage
 coverage:
 	flutter test --coverage
-	@dart run tools/coverage_report.dart
+	@dart run tool/coverage_report.dart
 
 .PHONY: coverage-summary
 coverage-summary:
 	flutter test --coverage
-	@dart run tools/coverage_report.dart --summary
+	@dart run tool/coverage_report.dart --summary
