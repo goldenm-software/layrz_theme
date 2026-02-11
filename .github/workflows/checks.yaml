@@ -25,5 +25,16 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run checks
+      - name: Run analyze
         run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --machine > test-results.json
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Unit Tests
+          path: test-results.json
+          reporter: flutter-json
