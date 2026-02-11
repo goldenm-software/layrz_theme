@@ -54,6 +54,7 @@ part 'src/general/radio_input.dart';
 part 'src/general/search_input.dart';
 part 'src/general/select_input.dart';
 part 'src/general/multiselect_input.dart';
+part 'src/general/password_input.dart';
 
 // Not-reviewed inputs (Basically not documented and/or upgraded to new format)
 part 'src/code_editor.dart';

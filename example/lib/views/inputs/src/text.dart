@@ -10,6 +10,7 @@ class TextInputView extends StatefulWidget {
 class _TextInputViewState extends State<TextInputView> {
   num? _value;
   String? _text;
+  String _password = "Abc123!@#";
   Duration? _dur = const Duration();
   @override
   Widget build(BuildContext context) {
@@ -186,6 +187,22 @@ class _TextInputViewState extends State<TextInputView> {
               labelText: "Example label",
               value: _dur,
               onChanged: (value) => setState(() => _dur = value),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "Finally, you can also use ThemedPasswordInput to handle passwords easly, like the following example:",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            ThemedPasswordInput(
+              labelText: "Password field",
+              value: _password,
+              onChanged: (value) {
+                debugPrint("Value: $value");
+                setState(() => _password = value);
+              },
             ),
           ],
         ),
