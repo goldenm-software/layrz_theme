@@ -58,5 +58,39 @@ The library is organized as a set of sub-libraries under `lib/src/`. Each module
 
 ## CI
 
-- PRs to `main`, `next`, `development` run `flutter analyze` (Flutter 3.38.8 stable)
+- PRs to `main`, `next`, `development` run `flutter analyze` and `flutter test` (Flutter 3.38.8 stable)
+- Test results published as check run + PR comment with summary
 - Version tags (`v*.*.*`) trigger publish to pub.dev and deploy example to GitHub Pages
+
+## Git Workflow
+
+### Automatic Commits
+
+When the user says any of these phrases, automatically commit and push changes:
+- "wrap it up"
+- "commit and push"
+- "summarize and commit"
+- "done, commit"
+
+**Auto-commit process:**
+1. Run `git status` to check for changes
+2. Stage relevant files (avoid using `git add -A`, prefer specific files)
+3. Create a descriptive commit message that:
+   - Summarizes what was changed/added
+   - Uses bullet points for multiple changes
+   - Ends with: `Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>`
+4. Push to the current branch (usually `development`)
+5. Provide a summary of what was committed
+
+**Example:**
+```bash
+git add file1.dart file2.dart
+git commit -m "Add new feature X
+
+- Implemented Y functionality
+- Added tests for Z
+- Updated documentation
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+git push origin development
+```
