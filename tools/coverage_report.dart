@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 void main(List<String> args) {
@@ -69,10 +71,14 @@ void main(List<String> args) {
     final display = name.length > 58 ? '...${name.substring(name.length - 55)}' : name;
     final pct = entry.value.total > 0 ? (entry.value.hit / entry.value.total * 100) : 0.0;
 
-    print('${display.padRight(60)} ${entry.value.total.toString().padLeft(7)} ${entry.value.hit.toString().padLeft(9)} ${pct.toStringAsFixed(1).padLeft(6)}%');
+    print(
+      '${display.padRight(60)} ${entry.value.total.toString().padLeft(7)} ${entry.value.hit.toString().padLeft(9)} ${pct.toStringAsFixed(1).padLeft(6)}%',
+    );
   }
 
   print('${'─' * 60} ${'─' * 7} ${'─' * 9} ${'─' * 7}');
-  print('${'TOTAL'.padRight(60)} ${totalLines.toString().padLeft(7)} ${totalHit.toString().padLeft(9)} ${totalPct.toStringAsFixed(1).padLeft(6)}%');
+  print(
+    '${'TOTAL'.padRight(60)} ${totalLines.toString().padLeft(7)} ${totalHit.toString().padLeft(9)} ${totalPct.toStringAsFixed(1).padLeft(6)}%',
+  );
   print('');
 }
