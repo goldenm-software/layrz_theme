@@ -49,6 +49,14 @@ class ThemedPasswordInput extends StatefulWidget {
   /// The progress indicator will fill up to 25% for each requirement met and for each level reached.
   final bool showLevels;
 
+  /// [autofillHints] is the list of autofill hints for the input.
+  ///
+  /// By default uses [AutofillHints.newPassword] and [AutofillHints.password] to allow the browser
+  /// to suggest strong passwords and to recognize the field as a password input
+  /// for autofill purposes. However, ideally you should use [AutofillHints.newPassword] for password
+  /// creation fields and [AutofillHints.password] for password update fields
+  final List<String> autofillHints;
+
   /// [ThemedPasswordInput] is the constructor of the input.
   /// Simplifies (I hope so) the creation of an input using the standard format of Layrz.
   const ThemedPasswordInput({
@@ -68,6 +76,7 @@ class ThemedPasswordInput extends StatefulWidget {
     this.focusNode,
     this.controller,
     this.showLevels = true,
+    this.autofillHints = const [AutofillHints.newPassword, AutofillHints.password],
   }) : assert(
          (label == null && labelText != null) || (label != null && labelText == null),
          'You must provide either a labelText or a label, but not both.',
@@ -167,6 +176,7 @@ class _ThemedPasswordInputState extends State<ThemedPasswordInput> {
       padding: widget.padding,
       isRequired: widget.isRequired,
       obscureText: !_showPassword,
+      autofillHints: widget.autofillHints,
       suffixWidget: Row(
         mainAxisAlignment: .center,
         crossAxisAlignment: .center,
