@@ -1,0 +1,26 @@
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+      - duplicate
+    authors:
+      - dependabot
+  categories:
+    - title: 🚀 New Features
+      labels:
+        - feat
+        - enh
+    - title: 🐛 Bug Fixes
+      labels:
+        - bug
+        - fix
+    - title: 📖 Documentation
+      labels:
+        - docs
+    - title: 🧹 Maintenance
+      labels:
+        - perf
+        - deps
+    - title: Other Changes
+      labels:
+        - "*"

@@ -111,6 +111,7 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
                     layer: selectedLayer,
                     controller: _controller,
                   ),
+
                   // MarkerLayer(
                   //   markers: [
                   //     Marker(
