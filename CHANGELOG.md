@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.5.13
+
+- Added `autofillHints` parameter to `ThemedPasswordInput` to improve browser password manager integration with default values for new and existing password fields.
+- Improved CI/CD pipeline with automated GitHub release changelog generation using conventional commits.
+
 ## 7.5.12
 
 - Updated `url_launcher_android` dependency to `^6.3.28` to support latest Android features and improvements.
