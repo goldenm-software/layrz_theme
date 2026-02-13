@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.12
+
+- Updated `url_launcher_android` dependency to `^6.3.28` to support latest Android features and improvements.
+
 ## 7.5.11
 
 - Improved `ThemedPasswordInput` requirements validation logic to use `.entries` for cleaner iteration and better performance.
