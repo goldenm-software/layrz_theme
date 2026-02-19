@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.14
+- Created `ThemedDateTimeSteppedPicker` widget for a stepped date and time picking experience, allowing users to select date first and then time
+
 ## 7.5.13
 
 - Added `autofillHints` parameter to `ThemedPasswordInput` to improve browser password manager integration with default values for new and existing password fields.

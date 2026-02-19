@@ -99,6 +99,12 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
               value: _selectedDateTimeRange,
               onChanged: (val) => setState(() => _selectedDateTimeRange = val),
             ),
+            const Text("Stepped variant, after selecting the date, you will select the time"),
+            ThemedDateTimeSteppedPicker(
+              labelText: "Example label",
+              value: _selectedDateTime,
+              onChanged: (val) => setState(() => _selectedDateTime = val),
+            ),
             Text(
               "Similar to the ThemedTimePicker and ThemedTimeRangePicker, using the property use24HourFormat "
               "you can use the 24 hour format",
