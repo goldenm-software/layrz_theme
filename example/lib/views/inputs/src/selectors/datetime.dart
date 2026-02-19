@@ -66,7 +66,18 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             ThemedTimePicker(
               labelText: "Example label",
               value: _selectedTime,
-              onChanged: (val) => setState(() => _selectedTime = val),
+              onChanged: (val) {
+                setState(() {
+                  _selectedTime = val;
+                  _selectedDateTime = DateTime(
+                    _selectedDateTime?.year ?? DateTime.now().year,
+                    _selectedDateTime?.month ?? DateTime.now().month,
+                    _selectedDateTime?.day ?? DateTime.now().day,
+                    val.hour,
+                    val.minute,
+                  );
+                });
+              },
               disableBlink: true,
             ),
             const Text("And the range variant"),
@@ -103,7 +114,10 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             ThemedDateTimeSteppedPicker(
               labelText: "Example label",
               value: _selectedDateTime,
-              onChanged: (val) => setState(() => _selectedDateTime = val),
+              onChanged: (val) {
+                _selectedTime = TimeOfDay(hour: val.hour, minute: val.minute);
+                setState(() => _selectedDateTime = val);
+              },
             ),
             Text(
               "Similar to the ThemedTimePicker and ThemedTimeRangePicker, using the property use24HourFormat "
