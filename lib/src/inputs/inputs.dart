@@ -88,6 +88,8 @@ part 'src/pickers/time/utility.dart';
 // Date Time Pickers
 part 'src/pickers/datetime/single.dart';
 part 'src/pickers/datetime/range.dart';
+part 'src/pickers/datetime/single_stepped.dart';
+
 
 // Blocks
 part 'src/dynamic_configurable/block.dart';
