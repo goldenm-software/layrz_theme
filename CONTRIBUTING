@@ -1,0 +1,56 @@
+# Conventional Commits
+
+All commit messages MUST follow the Conventional Commits specification:
+
+**Format:**
+
+```
+<type>: <description>
+
+[optional body]
+[extra <type>: <description>]
+
+[BREAKING CHANGE: <description>]
+
+[optional co-authors(s) (Can be human or AIs)]
+```
+
+**Required Types:**
+
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `perf`: Performance improvement
+- `refactor`: Code refactoring (no functional changes)
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks (excluded from changelog)
+- `style`: Code style changes (excluded from changelog)
+
+**Rules:**
+
+- Type MUST be lowercase
+- Colon and space MUST follow the type
+- Description MUST be present, concise, and imperative mood
+- Description MUST NOT end with a period
+- Optional scope can be added: `feat(auth): Add OAuth2 support`
+- Breaking changes: Add `BREAKING CHANGE:` in footer
+
+**Examples:**
+
+```
+feat: Add passkey authentication support
+fix: Resolve MFA validation timing issue
+docs: Update web platform setup instructions
+perf: Optimize GraphQL query caching
+```
+
+**Complex example:**
+```feat: Added new things!
+
+Enhancements on something
+
+fix: Fixed some bugs
+
+Co-authored-by: Kenny Mochizuki <PHKenny@users.noreply.github.com>
+Co-authored-by: AI Assistant <no-reply@ai.com>
+```
