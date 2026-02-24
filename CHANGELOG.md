@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.15
+- Adjusted `ThemedDateTimeSteppedPicker` to call the onChanged method only once after the time is selected.
+
 ## 7.5.14
 - Created `ThemedDateTimeSteppedPicker` widget for a stepped date and time picking experience, allowing users to select date first and then time
 

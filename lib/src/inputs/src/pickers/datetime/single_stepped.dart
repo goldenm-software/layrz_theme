@@ -251,20 +251,11 @@ class _ThemedDateTimeSteppedPickerState extends State<ThemedDateTimeSteppedPicke
     );
 
     if (selected != null) {
-      widget.onChanged?.call(
-        DateTime(
-          selected.year,
-          selected.month,
-          selected.day,
-          widget.value?.hour ?? 0,
-          widget.value?.minute ?? 0,
-        ),
-      );
-      _showTimePicker();
+      _showTimePicker(selected);
     }
   }
 
-  void _showTimePicker() async {
+  void _showTimePicker(DateTime dateTime) async {
     TimeOfDay? result = await showDialog(
       context: context,
       builder: (context) => _ThemedTimeUtility(
@@ -283,9 +274,9 @@ class _ThemedDateTimeSteppedPickerState extends State<ThemedDateTimeSteppedPicke
     if (result != null) {
       widget.onChanged?.call(
         DateTime(
-          widget.value?.year ?? 0,
-          widget.value?.month ?? 0,
-          widget.value?.day ?? 0,
+          dateTime.year,
+          dateTime.month,
+          dateTime.day,
           result.hour,
           result.minute,
         ),
