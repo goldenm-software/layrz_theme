@@ -1,0 +1,158 @@
+name: 'Coverage Report Comment'
+description: 'Parse coverage files and post unified coverage report comment to PR'
+author: 'Layrz'
+
+inputs:
+  enable-python:
+    description: 'Enable Python coverage reporting'
+    required: false
+    default: 'false'
+  enable-go:
+    description: 'Enable Go coverage reporting'
+    required: false
+    default: 'false'
+  enable-dart:
+    description: 'Enable Dart/Flutter coverage reporting'
+    required: false
+    default: 'false'
+  python-coverage-path:
+    description: 'Path to Python coverage.json file (must be downloaded first)'
+    required: false
+    default: 'python-coverage/coverage.json'
+  go-coverage-path:
+    description: 'Path to Go coverage-summary.txt file (must be downloaded first)'
+    required: false
+    default: 'go-coverage/coverage-summary.txt'
+  dart-coverage-path:
+    description: 'Path to Dart lcov.info file (must be downloaded first)'
+    required: false
+    default: 'flutter-coverage/lcov.info'
+  github-token:
+    description: 'GitHub token for posting comments'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install lcov (for Dart)
+      if: ${{ inputs.enable-dart == 'true' }}
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y lcov
+
+    - name: Parse Dart coverage
+      if: ${{ inputs.enable-dart == 'true' }}
+      id: dart-coverage
+      shell: bash
+      run: |
+        if [ -f "${{ inputs.dart-coverage-path }}" ]; then
+          COVERAGE_SUMMARY=$(lcov --summary "${{ inputs.dart-coverage-path }}" 2>&1)
+          COVERAGE_PCT=$(echo "$COVERAGE_SUMMARY" | grep -oP 'lines\.*: \K[\d.]+(?=%)')
+          COVERAGE_PCT=${COVERAGE_PCT:-0.0}
+          LINES_HIT=$(grep -o 'DA:' "${{ inputs.dart-coverage-path }}" | wc -l)
+          LINES_TOTAL=$(grep -o 'LF:' "${{ inputs.dart-coverage-path }}" | wc -l)
+          echo "coverage_pct=$COVERAGE_PCT" >> $GITHUB_OUTPUT
+          echo "lines_hit=$LINES_HIT" >> $GITHUB_OUTPUT
+          echo "lines_total=$LINES_TOTAL" >> $GITHUB_OUTPUT
+          echo "available=true" >> $GITHUB_OUTPUT
+        else
+          echo "available=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Post coverage comment
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const fs = require('fs');
+          const sections = [];
+
+          // Python coverage
+          if (${{ inputs.enable-python }}) {
+            try {
+              const raw = fs.readFileSync('${{ inputs.python-coverage-path }}', 'utf8');
+              const data = JSON.parse(raw);
+              const totals = data.totals;
+              const pct = totals.percent_covered.toFixed(1);
+              const covered = totals.covered_lines;
+              const missing = totals.missing_lines;
+              const total = covered + missing;
+
+              sections.push(`### 🐍 Python\n\n| Metric | Value |\n|--------|-------|\n| **Coverage** | **${pct}%** |\n| Lines covered | ${covered} / ${total} |\n| Lines missing | ${missing} |`);
+            } catch (e) {
+              sections.push(`### 🐍 Python\n\n> No coverage data available.`);
+              core.warning(`Failed to parse Python coverage: ${e.message}`);
+            }
+          }
+
+          // Go coverage
+          if (${{ inputs.enable-go }}) {
+            try {
+              const raw = fs.readFileSync('${{ inputs.go-coverage-path }}', 'utf8');
+              const lines = raw.trim().split('\n');
+              const totalLine = lines[lines.length - 1];
+              const match = totalLine.match(/([\d.]+)%/);
+              const goPct = match ? match[1] : 'N/A';
+
+              sections.push(`### 🔷 Go\n\n| Metric | Value |\n|--------|-------|\n| **Coverage** | **${goPct}%** |\n| Functions measured | ${lines.length - 1} |`);
+            } catch (e) {
+              sections.push(`### 🔷 Go\n\n> No coverage data available.`);
+              core.warning(`Failed to parse Go coverage: ${e.message}`);
+            }
+          }
+
+          // Dart coverage
+          if (${{ inputs.enable-dart }}) {
+            const available = '${{ steps.dart-coverage.outputs.available }}' === 'true';
+            if (available) {
+              const coveragePct = '${{ steps.dart-coverage.outputs.coverage_pct }}';
+              const linesHit = '${{ steps.dart-coverage.outputs.lines_hit }}';
+              const linesTotal = '${{ steps.dart-coverage.outputs.lines_total }}';
+              const linesMissing = parseInt(linesTotal) - parseInt(linesHit);
+
+              sections.push(`### 🎯 Dart/Flutter\n\n| Metric | Value |\n|--------|-------|\n| **Coverage** | **${coveragePct}%** |\n| Lines covered | ${linesHit} / ${linesTotal} |\n| Lines missing | ${linesMissing} |`);
+            } else {
+              sections.push(`### 🎯 Dart/Flutter\n\n> No coverage data available.`);
+            }
+          }
+
+          // Build final comment
+          const body = [
+            '## 📊 Test Coverage Report',
+            '',
+            ...sections,
+            '',
+            '---',
+            `<sub>🤖 Generated by coverage workflow</sub>`,
+          ].join('\n');
+
+          // Find and update existing comment
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+
+          const marker = '## 📊 Test Coverage Report';
+          const existing = comments.find(c =>
+            c.user.type === 'Bot' && c.body.includes(marker)
+          );
+
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existing.id,
+              body,
+            });
+            core.info(`Updated existing coverage comment #${existing.id}`);
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+            core.info('Created new coverage comment');
+          }

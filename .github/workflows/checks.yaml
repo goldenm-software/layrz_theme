@@ -2,22 +2,20 @@ name: "Checks"
 
 on:
   pull_request:
-    branches: [ main, next, development ]
+    branches: [ main ]
     types: [ opened, synchronize, reopened ]
 
 jobs:
   lint-dart:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
         with:
           channel: stable
-          version: 3.38.8
+          version: '3.38.8'
           cache: true
           cache-sdk: true
           cache-key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
@@ -25,110 +23,64 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run analyze
+      - name: Run checks
+        shell: bash
         run: flutter analyze
 
       - name: Run tests
+        shell: bash
         run: flutter test --machine --coverage > test-results.json
 
       - name: Publish test results
         uses: dorny/test-reporter@v1
-        if: always()
         with:
           name: Unit Tests
           path: test-results.json
           reporter: flutter-json
 
-      - name: Upload coverage
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          COVERAGE_PATH="lcov.info"
+          TEST_RESULTS_PATH="test-results.json"
+          echo "coverage-path=$COVERAGE_PATH" >> $GITHUB_OUTPUT
+          echo "test-results-path=$TEST_RESULTS_PATH" >> $GITHUB_OUTPUT
+
+      - name: Upload coverage artifact
+        id: upload-coverage
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: flutter-coverage
+          name: dart-coverage-${{ github.run_id }}
           path: coverage/lcov.info
           retention-days: 1
-
+  
   coverage-comment:
-    runs-on: ubuntu-latest
     needs: lint-dart
     if: always() && github.event_name == 'pull_request'
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Download coverage
+      - uses: actions/checkout@v6
+
+      - name: Download coverage artifacts
         uses: actions/download-artifact@v4
         with:
-          name: flutter-coverage
-          path: coverage
-        continue-on-error: true
+          name: dart-coverage-${{ github.run_id }}
+          path: dart-coverage
 
-      - name: Install lcov
-        run: sudo apt-get update && sudo apt-get install -y lcov
-
-      - name: Parse coverage
-        id: coverage
-        run: |
-          if [ -f coverage/lcov.info ]; then
-            # Use lcov to get summary (more reliable than grep)
-            COVERAGE_SUMMARY=$(lcov --summary coverage/lcov.info 2>&1)
-
-            # Extract line coverage percentage
-            COVERAGE_PCT=$(echo "$COVERAGE_SUMMARY" | grep -oP 'lines\.*: \K[\d.]+(?=%)')
-            COVERAGE_PCT=${COVERAGE_PCT:-0.0}
-
-            # Extract hit/total counts
-            LINES_HIT=$(grep -o 'DA:' coverage/lcov.info | wc -l)
-            LINES_TOTAL=$(grep -o 'LF:' coverage/lcov.info | wc -l)
-
-            echo "coverage_pct=$COVERAGE_PCT" >> $GITHUB_OUTPUT
-            echo "lines_hit=$LINES_HIT" >> $GITHUB_OUTPUT
-            echo "lines_total=$LINES_TOTAL" >> $GITHUB_OUTPUT
-          else
-            echo "coverage_pct=0.0" >> $GITHUB_OUTPUT
-            echo "lines_hit=0" >> $GITHUB_OUTPUT
-            echo "lines_total=0" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Post coverage comment
-        uses: actions/github-script@v7
+      - uses: ./.github/actions/coverage-comment
         with:
-          script: |
-            const coveragePct = '${{ steps.coverage.outputs.coverage_pct }}';
-            const linesHit = '${{ steps.coverage.outputs.lines_hit }}';
-            const linesTotal = '${{ steps.coverage.outputs.lines_total }}';
-            const linesMissing = parseInt(linesTotal) - parseInt(linesHit);
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          enable-dart: true
+          dart-coverage-path: dart-coverage/lcov.info
 
-            const body = `## 📊 Coverage Report
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-            | Metric | Value |
-            |--------|-------|
-            | **Coverage** | **${coveragePct}%** |
-            | Lines covered | ${linesHit} / ${linesTotal} |
-            | Lines missing | ${linesMissing} |
-
-            <sub>🤖 Coverage report from [checks workflow](${context.payload.repository.html_url}/actions/runs/${context.runId})</sub>`;
-
-            // Find existing comment
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const existing = comments.find(c =>
-              c.user.type === 'Bot' && c.body.includes('## 📊 Coverage Report')
-            );
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body,
-              });
-            }
+      - uses: ./.github/actions/changelog
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          post-comment: true
