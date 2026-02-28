@@ -20,6 +20,14 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
   ThemedMonth? _selectedMonth;
   List<ThemedMonth> _selectedMonthRange = [];
 
+  late Location tz;
+  @override
+  void initState() {
+    super.initState();
+    tz = getLocation('Asia/Tokyo');
+    setTimezone(tz);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Layout(
@@ -43,10 +51,20 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             ),
             const SizedBox(height: 10),
             const Text("Classic picker"),
+
             ThemedDatePicker(
               labelText: "Example label",
               value: _selectedDate,
-              onChanged: (val) => setState(() => _selectedDate = val),
+              onChanged: (val) {
+                setState(() => _selectedDate = val);
+                if (val is TZDateTime) {
+                  debugPrint('Selected date: $val (TZDateTime) in timezone ${tz.name}');
+                  _selectedDate = val;
+                } else {
+                  _selectedDate = TZDateTime.from(val, tz);
+                  debugPrint('Selected date: $_selectedDate (converted to TZDateTime) in timezone ${tz.name}');
+                }
+              },
             ),
             const Text("And the range variant"),
             ThemedDateRangePicker(
@@ -99,16 +117,54 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             ),
             const SizedBox(height: 10),
             const Text("Classic picker"),
+            if (kDebugMode) ...[
+              if (_selectedDateTime is TZDateTime)
+                Text('Selected date and time: $_selectedDateTime (TZDateTime) in timezone ${tz.name}')
+              else if (_selectedDateTime != null)
+                Text('Selected date and time: $_selectedDateTime (DateTime, not converted to TZDateTime)'),
+            ],
             ThemedDateTimePicker(
               labelText: "Example label",
               value: _selectedDateTime,
-              onChanged: (val) => setState(() => _selectedDateTime = val),
+              onChanged: (val) {
+                debugPrint("Raw selected date and time: $val (${val.runtimeType})");
+                if (val is TZDateTime) {
+                  debugPrint('Selected date and time: $val (TZDateTime) in timezone ${tz.name}');
+                  setState(() => _selectedDateTime = val);
+                } else {
+                  final converted = TZDateTime.from(val, tz);
+                  debugPrint('Selected date and time: $converted (converted to TZDateTime) in timezone ${tz.name}');
+                  setState(() => _selectedDateTime = converted);
+                }
+              },
             ),
             const Text("And the range variant"),
+            if (kDebugMode) ...[
+              for (final entry in _selectedDateTimeRange.asMap().entries) ...[
+                if (entry.value is TZDateTime) ...[
+                  Text('[${entry.key}] Selected date and time: ${entry.value} (TZDateTime) in timezone ${tz.name}'),
+                ] else ...[
+                  Text('[${entry.key}] Selected date and time: ${entry.value} (DateTime, not converted to TZDateTime)'),
+                ],
+              ],
+            ],
             ThemedDateTimeRangePicker(
               labelText: "Example label",
               value: _selectedDateTimeRange,
-              onChanged: (val) => setState(() => _selectedDateTimeRange = val),
+              onChanged: (val) {
+                debugPrint("Raw selected date and time range: $val");
+                final convertedRange = val.map((dateTime) {
+                  if (dateTime is TZDateTime) {
+                    debugPrint('Selected date and time: $dateTime (TZDateTime) in timezone ${tz.name}');
+                    return dateTime;
+                  } else {
+                    final converted = TZDateTime.from(dateTime, tz);
+                    debugPrint('Selected date and time: $converted (converted to TZDateTime) in timezone ${tz.name}');
+                    return converted;
+                  }
+                }).toList();
+                setState(() => _selectedDateTimeRange = convertedRange);
+              },
             ),
             const Text("Stepped variant, after selecting the date, you will select the time"),
             ThemedDateTimeSteppedPicker(

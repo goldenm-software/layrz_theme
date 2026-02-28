@@ -241,6 +241,12 @@ class _ThemedDateRangePickerState extends State<ThemedDateRangePicker> {
     );
 
     if (selected != null) {
+      if (widget.value.isNotEmpty) {
+        if (widget.value.first is TZDateTime) {
+          final tz = (widget.value.first as TZDateTime).location;
+          selected = selected.map((e) => TZDateTime(tz, e.year, e.month, e.day)).toList();
+        }
+      }
       widget.onChanged?.call(selected);
     }
   }

@@ -466,7 +466,7 @@ class _ButtonsViewState extends State<ButtonsView> {
   }
 
   Widget _factorButton({
-    required style,
+    required ThemedButtonStyle style,
     ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.right,
   }) {
     return ThemedButton(

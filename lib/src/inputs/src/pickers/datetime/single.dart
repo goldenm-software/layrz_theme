@@ -339,6 +339,24 @@ class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with Single
                           onTap: () {
                             if (date != null && time != null) {
                               _tabController.animateTo(0);
+                              if (widget.value != null) {
+                                final value = widget.value;
+                                if (value is TZDateTime) {
+                                  Navigator.of(context).pop(
+                                    TZDateTime(
+                                      value.location,
+                                      date!.year,
+                                      date!.month,
+                                      date!.day,
+                                      time!.hour,
+                                      time!.minute,
+                                      0,
+                                    ),
+                                  );
+                                  return;
+                                }
+                              }
+
                               Navigator.of(context).pop(
                                 DateTime(
                                   date!.year,
