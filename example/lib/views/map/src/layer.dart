@@ -35,7 +35,7 @@ class _MapLayerViewState extends State<MapLayerView> with TickerProviderStateMix
     super.dispose();
   }
 
-  void _listener(event) {
+  void _listener(ThemedMapEvent event) {
     debugPrint('layrz_theme_example/ThemedMapController() event: $event');
   }
 
