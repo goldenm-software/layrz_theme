@@ -145,7 +145,7 @@ final goRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: kDebugMode ? '/map/layer' : '/',
+  initialLocation: kDebugMode ? '/inputs/selectors/datetime' : '/',
   errorPageBuilder: (context, state) => customTransitionBuilder(context, state, const NotFoundView()),
   routes: goRoutes,
 );

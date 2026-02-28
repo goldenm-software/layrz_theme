@@ -6,13 +6,15 @@ import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:layrz_state/layrz_state.dart';
+import 'package:layrz_theme_example/timezone/native.dart'
+    if (dart.library.js_interop) 'package:layrz_theme_example/timezone/web.dart';
 
 const font = AppFont(source: .google, name: 'Ubuntu Mono');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await ThemedFontHandler.preloadFont(font);
+  await initializeTimeZone();
 
   final prefs = await SharedPreferences.getInstance();
   final rawThemeMode = prefs.getString('layrz.theme.mode');

@@ -209,6 +209,10 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
     );
 
     if (selected != null) {
+      if (widget.value is TZDateTime) {
+        final tz = (widget.value as TZDateTime).location;
+        selected = TZDateTime(tz, selected.year, selected.month, selected.day);
+      }
       widget.onChanged?.call(selected);
     }
   }

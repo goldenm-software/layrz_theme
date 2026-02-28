@@ -186,6 +186,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
   }
 
   void _handleUpdate({bool force = false, List<T> previousValues = const [], List<T> newValues = const []}) {
+    debugPrint("_handleUpdate: ${previousValues.length} vs ${newValues.length}");
     if (newValues.isEmpty && force) {
       if (widget.autoselectFirst && widget.items.isNotEmpty) {
         selected = [widget.items.first];

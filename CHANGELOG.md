@@ -1,9 +1,15 @@
 # Changelog
 
+## 7.5.16
+
+- Native support for `TZDateTime` on Date and DateTime pickers.
+
 ## 7.5.15
+
 - Adjusted `ThemedDateTimeSteppedPicker` to call the onChanged method only once after the time is selected.
 
 ## 7.5.14
+
 - Created `ThemedDateTimeSteppedPicker` widget for a stepped date and time picking experience, allowing users to select date first and then time
 
 ## 7.5.13

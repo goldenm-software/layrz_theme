@@ -455,20 +455,48 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
                     ThemedButton.save(
                       labelText: t('actions.save'),
                       onTap: () {
-                        DateTime start = DateTime(
-                          startDate.year,
-                          startDate.month,
-                          startDate.day,
-                          startTime.hour,
-                          startTime.minute,
-                        );
-                        DateTime end = DateTime(
-                          endDate.year,
-                          endDate.month,
-                          endDate.day,
-                          endTime.hour,
-                          endTime.minute,
-                        );
+                        Location? tz;
+                        if (widget.value.isNotEmpty && widget.value.first is TZDateTime) {
+                          final value = widget.value.first;
+                          if (value is TZDateTime) tz = value.location;
+                        }
+
+                        DateTime start;
+                        DateTime end;
+
+                        if (tz != null) {
+                          start = TZDateTime(
+                            tz,
+                            startDate.year,
+                            startDate.month,
+                            startDate.day,
+                            startTime.hour,
+                            startTime.minute,
+                          );
+                          end = TZDateTime(
+                            tz,
+                            endDate.year,
+                            endDate.month,
+                            endDate.day,
+                            endTime.hour,
+                            endTime.minute,
+                          );
+                        } else {
+                          start = DateTime(
+                            startDate.year,
+                            startDate.month,
+                            startDate.day,
+                            startTime.hour,
+                            startTime.minute,
+                          );
+                          end = DateTime(
+                            endDate.year,
+                            endDate.month,
+                            endDate.day,
+                            endTime.hour,
+                            endTime.minute,
+                          );
+                        }
 
                         _tabController.animateTo(0);
 
