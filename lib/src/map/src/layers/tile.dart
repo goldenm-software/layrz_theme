@@ -79,7 +79,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   bool get isDark => Theme.of(context).brightness == .dark;
 
   String get _osmUrl => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-  // String get _osmUrl => 'http://127.0.0.1:5000/{z}/{x}/{y}.png';
 
   String get _mapboxUrl {
     if (layer.source != .mapbox) return _osmUrl;
@@ -225,7 +224,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
   }
 
   String get _layrzAttributionLight => 'https://cdn.layrz.com/resources/layrz/logo/normal.png';
-  // String get _layrzAttributionDark => 'https://cdn.layrz.com/resources/layrz/logo/white.png';
 
   String get _mapboxAttributionLight => 'https://cdn.layrz.com/resources/map_attributions/mapbox_maps/normal.png';
   String get _mapboxAttributionDark => 'https://cdn.layrz.com/resources/map_attributions/mapbox_maps/white.png';
@@ -266,46 +264,90 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
         }
       : {};
 
-  TileLayer _buildTile({required String urlTemplate}) {
-    return TileLayer(
-      urlTemplate: urlTemplate,
-      minZoom: widget.minZoom,
-      maxZoom: widget.maxZoom,
-      minNativeZoom: widget.minZoom.toInt(),
-      maxNativeZoom: widget.maxZoom.toInt(),
-      tileProvider: NetworkTileProvider(
-        headers: headers,
+  String _googleUrl = '';
+  String get _urlTemplate {
+    switch (layer.source) {
+      case .osm:
+        return _osmUrl;
+      case .mapbox:
+        return _mapboxUrl;
+      case .here:
+        return _hereUrl;
+      case .google:
+        return _googleUrl;
+      case .custom:
+        return _customUrl;
+    }
+  }
 
-        /// Setting for the previous CancellableNetworkTileProvider
-        abortObsoleteRequests: widget.isCancellable,
-      ),
+  @override
+  void initState() {
+    super.initState();
+    if (layer.source == MapSource.google) _initializeGoogleMaps();
+  }
 
-      keepBuffer: buffer,
-      panBuffer: buffer,
-    );
+  @override
+  void didUpdateWidget(covariant ThemedTileLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.layer?.id != widget.layer?.id && layer.source == MapSource.google) {
+      _initializeGoogleMaps();
+    }
+  }
+
+  Future<void> _initializeGoogleMaps() async {
+    setState(() => _googleUrl = '');
+    String? url = await _fetchGoogleAuth(layer: layer);
+    if (url != null) setState(() => _googleUrl = url);
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        if (_urlTemplate.isNotEmpty) ...[
+          TileLayer(
+            urlTemplate: _urlTemplate,
+            minZoom: widget.minZoom,
+            maxZoom: widget.maxZoom,
+            minNativeZoom: widget.minZoom.toInt(),
+            maxNativeZoom: widget.maxZoom.toInt(),
+            tileProvider: NetworkTileProvider(
+              headers: headers,
+
+              /// Setting for the previous CancellableNetworkTileProvider
+              abortObsoleteRequests: widget.isCancellable,
+            ),
+
+            keepBuffer: buffer,
+            panBuffer: buffer,
+          ),
+        ],
         if (layer.source == .osm) ...[
-          _buildTile(urlTemplate: _osmUrl),
           Align(
             alignment: .bottomLeft,
             child: Padding(
               padding: const .all(10),
-              child: Image.network(
-                _layrzAttributionLight,
-                width: 80,
-                height: 20,
-                filterQuality: .medium,
-                alignment: .centerLeft,
+              child: Container(
+                decoration: generateContainerElevation(context: context, elevation: 0),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
+                child: RichText(
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.bodySmall,
+                    children: [
+                      TextSpan(text: "Map data from"),
+                      TextSpan(
+                        text: " OpenStreetMap ",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: .bold),
+                      ),
+                      TextSpan(text: "and their contributors"),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ] else if (layer.source == .mapbox) ...[
-          _buildTile(urlTemplate: _mapboxUrl),
           Align(
             alignment: .bottomLeft,
             child: Padding(
@@ -320,7 +362,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             ),
           ),
         ] else if (layer.source == MapSource.here) ...[
-          _buildTile(urlTemplate: _hereUrl),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -335,18 +376,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             ),
           ),
         ] else if (layer.source == .google) ...[
-          FutureBuilder<String?>(
-            future: _fetchGoogleAuth(layer: layer),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data != null) {
-                  return _buildTile(urlTemplate: snapshot.data!);
-                }
-              }
-
-              return const SizedBox.expand();
-            },
-          ),
           Align(
             alignment: .bottomLeft,
             child: Padding(
@@ -361,7 +390,6 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             ),
           ),
         ] else ...[
-          _buildTile(urlTemplate: _customUrl),
           Align(
             alignment: .bottomLeft,
             child: Padding(

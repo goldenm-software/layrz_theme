@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.17
+
+- Updated attributions on `ThemedTileLayer` for OpenStreetMaps.
+
 ## 7.5.16
 
 - Native support for `TZDateTime` on Date and DateTime pickers.
