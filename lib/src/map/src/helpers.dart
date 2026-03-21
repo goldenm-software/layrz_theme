@@ -50,6 +50,8 @@ List<MapLayer> subdivideLayersPerSource({required List<MapLayer> rawLayers}) {
             source: layer.source,
             mapboxToken: layer.mapboxToken,
             mapboxLayers: [mapboxLayer],
+            mapboxCustomStyleId: layer.mapboxCustomStyleId,
+            mapboxCustomUsername: layer.mapboxCustomUsername,
           ),
         );
       }
