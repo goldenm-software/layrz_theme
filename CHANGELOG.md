@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.18
+
+- Added `mapboxCustomStyleId` and `mapboxCustomUsername` to `ThemedTileLayer` to support custom Mapbox styles.
+
 ## 7.5.17
 
 - Updated attributions on `ThemedTileLayer` for OpenStreetMaps.
