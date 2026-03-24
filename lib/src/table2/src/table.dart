@@ -436,17 +436,11 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                 return Checkbox(
                                   value: value.length == _filteredData.value.length && _filteredData.value.isNotEmpty,
                                   onChanged: (val) {
-                                    // print('BEFORE');
-                                    // print('Selected data: ${_selectedItems.value.length}');
-                                    // print(' Filtered data: ${_filteredData.value.length}');
                                     if (val == true) {
                                       _selectedItems.value = .from(_filteredData.value);
                                     } else {
                                       _selectedItems.value = [];
                                     }
-                                    // debugPrint('AFTER');
-                                    // debugPrint('Selected data: ${_selectedItems.value.length}');
-                                    // debugPrint(' Filtered data: ${_filteredData.value.length}');
                                   },
                                 );
                               },
@@ -467,6 +461,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                               itemBuilder: (context, index) {
                                 final ThemedColumn2<T> entry = widget.columns[index];
                                 final bool isSelected = entry == _colSelected;
+                                double cellWidth = sizes[index]! - (index < widget.columns.length - 1 ? 1 : 0);
 
                                 return Row(
                                   children: [
@@ -480,38 +475,62 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                             _colSelected = entry;
                                             _isReversed = false;
                                           }
-
                                           _filterAndSort('SORT');
                                         },
                                         child: Container(
-                                          width: sizes[index]! - (index < widget.columns.length - 1 ? 1 : 0),
+                                          width: cellWidth,
                                           padding: _padding,
                                           alignment: entry.alignment,
-                                          child: RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                if (isSelected) ...[
-                                                  WidgetSpan(
-                                                    alignment: .middle,
-                                                    child: Icon(
-                                                      _isReversed
-                                                          ? LayrzIcons.solarBoldSortFromBottomToTop
-                                                          : LayrzIcons.solarBoldSortFromTopToBottom,
-                                                      size: _sortIconSize,
-                                                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                                                    ),
-                                                  ),
-                                                  const WidgetSpan(child: SizedBox(width: 5)),
-                                                ],
+                                          child: Builder(
+                                            builder: (context) {
+                                              final double textWidth = cellWidth - (_padding.left + _padding.right);
 
-                                                TextSpan(
-                                                  text: entry.headerText,
-                                                  style: Theme.of(
-                                                    context,
-                                                  ).textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+                                              // Fetch inline spans if richTextBuilder is provided, otherwise, use the header text
+                                              final textOnlySpan = TextSpan(
+                                                text: entry.headerText,
+                                                style: Theme.of(
+                                                  context,
+                                                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                              );
+                                              // Calculate if the text overflows the available width
+                                              final textPainter = TextPainter(
+                                                text: textOnlySpan,
+                                                maxLines: 1,
+                                                textDirection: Directionality.of(context),
+                                              )..layout(maxWidth: textWidth);
+
+                                              final bool isOverflowing = textPainter.didExceedMaxLines;
+                                              // Widget to display the header text
+                                              final richText = RichText(
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  children: [
+                                                    if (isSelected)
+                                                      WidgetSpan(
+                                                        alignment: PlaceholderAlignment.middle,
+                                                        child: Icon(
+                                                          _isReversed
+                                                              ? LayrzIcons.solarBoldSortFromBottomToTop
+                                                              : LayrzIcons.solarBoldSortFromTopToBottom,
+                                                          size: _sortIconSize,
+                                                          color: Theme.of(context).textTheme.bodyMedium?.color,
+                                                        ),
+                                                      ),
+                                                    if (isSelected) const WidgetSpan(child: SizedBox(width: 5)),
+                                                    textOnlySpan,
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
+                                              );
+                                              // If richTextBuilder is provided, use it to build the header content, otherwise, use the header text
+                                              return isOverflowing
+                                                  ? ThemedTooltip(
+                                                      position: .top,
+                                                      message: entry.headerText,
+                                                      child: richText,
+                                                    )
+                                                  : richText;
+                                            },
                                           ),
                                         ),
                                       ),
@@ -815,6 +834,25 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         );
       },
     );
+  }
+
+  Widget buildHeaderCell(String text, TextStyle style, double maxWidth) {
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: maxWidth);
+
+    final isOverflowing = textPainter.didExceedMaxLines;
+
+    final child = Text(
+      text,
+      style: style,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+
+    return isOverflowing ? ThemedTooltip(position: ThemedTooltipPosition.top, message: text, child: child) : child;
   }
 
   void _onSearchChanged(String value) {
