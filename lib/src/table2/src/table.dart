@@ -483,7 +483,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                           alignment: entry.alignment,
                                           child: Builder(
                                             builder: (context) {
-                                              final double textWidth = cellWidth - (_padding.left + _padding.right);
+                                              final double textWidth =
+                                                  cellWidth -
+                                                  (_padding.left + _padding.right) -
+                                                  (isSelected ? _sortIconSize : 0);
 
                                               // Fetch inline spans if richTextBuilder is provided, otherwise, use the header text
                                               final textOnlySpan = TextSpan(
