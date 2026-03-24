@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.19
+- Add `ThemedTooltip` to headers of `ThemedTable2` for better overflow handling
+
 ## 7.5.18
 
 - Added `mapboxCustomStyleId` and `mapboxCustomUsername` to `ThemedTileLayer` to support custom Mapbox styles.

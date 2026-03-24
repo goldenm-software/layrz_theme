@@ -117,7 +117,7 @@ class _InfinityTableViewState extends State<InfinityTableView> {
           //   );
           // }),
           ThemedColumn2(
-            headerText: 'VIN',
+            headerText: 'Lore 123456 Lore large lore lore lore lore lore lore lore  ',
             valueBuilder: (item) => '${item.vin}',
             width: 250,
             richTextBuilder: (item) => [
