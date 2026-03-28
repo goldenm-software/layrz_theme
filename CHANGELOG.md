@@ -7,6 +7,8 @@
 - Fixed `ThemedTable2` unsendable closure crash: sort keys are now precomputed on the main thread before `compute()`, ensuring `valueBuilder` closures that capture `BuildContext` or `i18n` objects never cross the isolate boundary.
 - Improved `ThemedTable2` multiselect performance: introduced an internal `Set<T>` mirroring `_selectedItems` for O(1) `contains()` lookups instead of O(n) on the backing `List<T>`.
 - Improved `ThemedTable2` `didUpdateWidget` performance: replaced `DeepCollectionEquality` (O(n)) with a fast O(1) heuristic using `identical` + length check.
+- Removed all `debugPrint` statements from `ThemedTable2._filterAndSort` (startup, precompute, sort, finish, queue logs).
+- Added widget tests for `ThemedTable2` covering: renders item values after compute completes, shows loading indicator while computing, renders without errors on empty dataset, column key collision regression (two columns with identical `headerText` show distinct data), search filters by matching query, search matches values from all columns, search restores all items when cleared, `controller.sort` ascending (A→Z), `controller.sort` descending (Z→A), numeric sort as numbers not strings, `controller.refresh` preserves sort order, `didUpdateWidget` reflects new items on rebuild, `didUpdateWidget` handles growing list without losing existing rows.
 - Add `ThemedTable2` skill.
 
 ## 7.5.21

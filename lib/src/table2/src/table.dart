@@ -236,12 +236,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   Future<void> _filterAndSort(String source) async {
-    debugPrint("layrz_theme/ThemedTable2: Starting _filterAndSortAsync from $source...");
     if (_isLoading.value) {
       // Queue the update instead of silently dropping it.
       // _filterAndSort will re-run once the current operation finishes.
       _pendingUpdate = true;
-      debugPrint('layrz_theme/ThemedTable2: Queuing _filterAndSortAsync from $source (already loading)');
       return;
     }
 
@@ -250,12 +248,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     try {
       List<T> items = .from(widget.items, growable: true);
       if (items.isEmpty) {
-        debugPrint("layrz_theme/ThemedTable2: No items to filter and sort from $source.");
         _filteredData.value = items;
         return;
       }
 
-      debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
       // Key: item.hashCode (stable for value-based domain objects, consistent across isolate boundaries).
       // Value: List<String> indexed by column position — avoids col.hashCode collisions
       //        (e.g. two columns with the same headerText).
@@ -267,7 +263,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       }
 
       if (_searchController.text.isNotEmpty) {
-        debugPrint("layrz_theme/ThemedTable2: Filtering data from $source...");
         final searchLower = _searchController.text.toLowerCase();
         items = items.where((row) {
           final cols = _itemsStrings[row.hashCode];
@@ -279,13 +274,11 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         }).toList();
       }
 
-      debugPrint("layrz_theme/ThemedTable2: Sorting data...");
       // Precompute sort keys on the main thread so that valueBuilder closures
       // (which may capture BuildContext or i18n objects) never cross the isolate boundary.
       final columnIndex = widget.columns.indexOf(_colSelected);
       final sortKeys = [
-        for (final item in items)
-          _itemsStrings[item.hashCode]?[columnIndex] ?? _colSelected.valueBuilder(item),
+        for (final item in items) _itemsStrings[item.hashCode]?[columnIndex] ?? _colSelected.valueBuilder(item),
       ];
       _filteredData.value = await compute(
         _sort,
@@ -297,7 +290,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         ),
       );
     } finally {
-      debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source.");
       _isLoading.value = false;
       if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
       // Process a queued update that arrived while we were loading.
@@ -342,7 +334,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       final ascending = event.ascending;
 
       if (columnIndex < 0 || columnIndex >= widget.columns.length) {
-        debugPrint('layrz_theme/ThemedTable2: Invalid column index $columnIndex for sorting');
         return;
       }
 
@@ -357,8 +348,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       _filterAndSort('CONTROLLER_REFRESH');
       return;
     }
-
-    debugPrint('layrz_theme/ThemedTable2: Unknown controller event type: ${event.runtimeType}');
   }
 
   @override
@@ -650,8 +639,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                                   }
                                                 } else {
                                                   if (_selectedSet.contains(item)) {
-                                                    _selectedItems.value =
-                                                        selectedList.where((i) => i != item).toList();
+                                                    _selectedItems.value = selectedList
+                                                        .where((i) => i != item)
+                                                        .toList();
                                                   }
                                                 }
                                               },
@@ -701,8 +691,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                               // Use column index as key (avoids col.hashCode collisions
                                               // when two columns share the same headerText).
                                               String text =
-                                                  _itemsStrings[data.hashCode]?[colIndex] ??
-                                                  header.valueBuilder(data);
+                                                  _itemsStrings[data.hashCode]?[colIndex] ?? header.valueBuilder(data);
 
                                               Widget child;
                                               if (header.richTextBuilder != null) {
