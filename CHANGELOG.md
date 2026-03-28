@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.5.22
+
+- Fixed `ThemedTable2` column key collision in `_itemsStrings`: inner key now uses column index instead of `col.hashCode`, preventing silent data corruption when two columns share the same `headerText`.
+- Fixed `ThemedTable2` silent update loss: updates arriving while loading are now queued via `_pendingUpdate` flag and processed once the current operation completes.
+- Fixed `ThemedTable2` unsendable closure crash: sort keys are now precomputed on the main thread before `compute()`, ensuring `valueBuilder` closures that capture `BuildContext` or `i18n` objects never cross the isolate boundary.
+- Improved `ThemedTable2` multiselect performance: introduced an internal `Set<T>` mirroring `_selectedItems` for O(1) `contains()` lookups instead of O(n) on the backing `List<T>`.
+- Improved `ThemedTable2` `didUpdateWidget` performance: replaced `DeepCollectionEquality` (O(n)) with a fast O(1) heuristic using `identical` + length check.
+
 ## 7.5.21
 - Add claudio `Skills`
 

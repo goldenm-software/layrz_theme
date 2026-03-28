@@ -164,7 +164,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   final ValueNotifier<List<T>> _filteredData = ValueNotifier([]);
 
   /// [_itemsStrings] holds a precomputed list of string representations of the items for efficient searching.
-  Map<int, Map<int, String>> _itemsStrings = {};
+  ///
+  /// Key: item.hashCode — assumes items have a stable, value-based hashCode (typical for domain objects).
+  /// Value: `List<String>` indexed by column position — avoids column hashCode collisions.
+  Map<int, List<String>> _itemsStrings = {};
 
   /// [_colSelected] is the currently selected column used for sorting.
   late ThemedColumn2<T> _colSelected;
@@ -178,8 +181,15 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   /// [_isLoading] indicates whether the table is currently loading or computing data.
   final ValueNotifier<bool> _isLoading = .new(false);
 
+  /// [_pendingUpdate] tracks whether a _filterAndSort call arrived while loading was in progress.
+  /// If true, _filterAndSort will re-run once the current operation finishes.
+  bool _pendingUpdate = false;
+
   /// [_selectedItems] holds the list of currently selected items in multi-select mode.
   late ValueNotifier<List<T>> _selectedItems;
+
+  /// [_selectedSet] mirrors [_selectedItems] as a Set for O(1) contains() lookups.
+  final Set<T> _selectedSet = {};
 
   @override
   void initState() {
@@ -196,6 +206,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _actionsController = _verticalScrollControllerGroup.addAndGet();
 
     _selectedItems = widget.multiselectValue ?? .new([]);
+    _selectedItems.addListener(_syncSelectedSet);
 
     widget.controller?.addListener(_onControllerEvent);
 
@@ -206,9 +217,15 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   @override
   void didUpdateWidget(covariant ThemedTable2<T> oldWidget) {
-    final eq = const DeepCollectionEquality().equals;
-    final bool c1 = !eq(oldWidget.items, widget.items);
-    final bool c2 = !eq(oldWidget.columns, widget.columns);
+    // Use a fast heuristic instead of O(n) DeepCollectionEquality for large lists.
+    // Checks referential identity first, then length, then the first element.
+    final bool c1 =
+        !identical(oldWidget.items, widget.items) &&
+        (oldWidget.items.length != widget.items.length ||
+            (widget.items.isNotEmpty && !identical(oldWidget.items.first, widget.items.first)));
+    final bool c2 =
+        oldWidget.columns.length != widget.columns.length ||
+        (widget.columns.isNotEmpty && oldWidget.columns.first != widget.columns.first);
     final bool c3 = oldWidget.actionsCount != widget.actionsCount;
     final bool c4 = oldWidget.canSearch != widget.canSearch;
     bool c5 = false;
@@ -221,7 +238,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   Future<void> _filterAndSort(String source) async {
     debugPrint("layrz_theme/ThemedTable2: Starting _filterAndSortAsync from $source...");
     if (_isLoading.value) {
-      debugPrint('layrz_theme/ThemedTable2: Skipping _filterAndSortAsync from $source because is already loading');
+      // Queue the update instead of silently dropping it.
+      // _filterAndSort will re-run once the current operation finishes.
+      _pendingUpdate = true;
+      debugPrint('layrz_theme/ThemedTable2: Queuing _filterAndSortAsync from $source (already loading)');
       return;
     }
 
@@ -236,46 +256,55 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       }
 
       debugPrint("layrz_theme/ThemedTable2: Precomputing data from $source...");
+      // Key: item.hashCode (stable for value-based domain objects, consistent across isolate boundaries).
+      // Value: List<String> indexed by column position — avoids col.hashCode collisions
+      //        (e.g. two columns with the same headerText).
       _itemsStrings = {};
       for (final item in widget.items) {
-        int rowHashCode = item.hashCode;
-        _itemsStrings[rowHashCode] = {};
-
-        for (final col in widget.columns) {
-          final colHashCode = col.hashCode;
-          _itemsStrings[rowHashCode]![colHashCode] = col.valueBuilder(item);
-        }
+        _itemsStrings[item.hashCode] = [
+          for (final col in widget.columns) col.valueBuilder(item),
+        ];
       }
 
       if (_searchController.text.isNotEmpty) {
         debugPrint("layrz_theme/ThemedTable2: Filtering data from $source...");
         final searchLower = _searchController.text.toLowerCase();
         items = items.where((row) {
-          final rowHashCode = row.hashCode;
-          final cols = _itemsStrings[rowHashCode];
+          final cols = _itemsStrings[row.hashCode];
           if (cols == null) return false;
-          for (final entry in cols.entries) {
-            if (entry.value.toLowerCase().contains(searchLower)) return true;
+          for (final value in cols) {
+            if (value.toLowerCase().contains(searchLower)) return true;
           }
           return false;
         }).toList();
       }
 
       debugPrint("layrz_theme/ThemedTable2: Sorting data...");
-
+      // Precompute sort keys on the main thread so that valueBuilder closures
+      // (which may capture BuildContext or i18n objects) never cross the isolate boundary.
+      final columnIndex = widget.columns.indexOf(_colSelected);
+      final sortKeys = [
+        for (final item in items)
+          _itemsStrings[item.hashCode]?[columnIndex] ?? _colSelected.valueBuilder(item),
+      ];
       _filteredData.value = await compute(
         _sort,
         _SortParams<T>(
           items: items,
-          column: _colSelected.isolateSafety,
+          sortKeys: sortKeys,
           isReversed: _isReversed,
-          itemsStrings: _itemsStrings,
+          customSort: _colSelected.customSort,
         ),
       );
     } finally {
       debugPrint("layrz_theme/ThemedTable2: Finished filtering and sorting from $source.");
       _isLoading.value = false;
       if (mounted) WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+      // Process a queued update that arrived while we were loading.
+      if (_pendingUpdate && mounted) {
+        _pendingUpdate = false;
+        _filterAndSort('PENDING_UPDATE');
+      }
     }
   }
 
@@ -294,9 +323,17 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _horizontalHeaderController.dispose();
     _horizontalContentController.dispose();
 
+    _selectedItems.removeListener(_syncSelectedSet);
     widget.controller?.removeListener(_onControllerEvent);
 
     super.dispose();
+  }
+
+  /// Keeps [_selectedSet] in sync with [_selectedItems] for O(1) contains() lookups.
+  void _syncSelectedSet() {
+    _selectedSet
+      ..clear()
+      ..addAll(_selectedItems.value);
   }
 
   void _onControllerEvent(ThemedTable2Event event) {
@@ -602,15 +639,19 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                         color: index % 2 == 0 ? null : _stripColor,
                                         child: ValueListenableBuilder(
                                           valueListenable: _selectedItems,
-                                          builder: (context, value, child) {
+                                          builder: (context, selectedList, child) {
+                                            // O(1) lookup via the mirrored Set instead of O(n) List.contains()
                                             return Checkbox(
-                                              value: value.contains(item),
+                                              value: _selectedSet.contains(item),
                                               onChanged: (val) {
                                                 if (val == true) {
-                                                  if (!value.contains(item)) _selectedItems.value = [...value, item];
+                                                  if (!_selectedSet.contains(item)) {
+                                                    _selectedItems.value = [...selectedList, item];
+                                                  }
                                                 } else {
-                                                  if (value.contains(item)) {
-                                                    _selectedItems.value = value.where((i) => i != item).toList();
+                                                  if (_selectedSet.contains(item)) {
+                                                    _selectedItems.value =
+                                                        selectedList.where((i) => i != item).toList();
                                                   }
                                                 }
                                               },
@@ -657,8 +698,10 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                               final header = entry.value;
                                               final colIndex = entry.key;
 
+                                              // Use column index as key (avoids col.hashCode collisions
+                                              // when two columns share the same headerText).
                                               String text =
-                                                  _itemsStrings[data.hashCode]?[header.hashCode] ??
+                                                  _itemsStrings[data.hashCode]?[colIndex] ??
                                                   header.valueBuilder(data);
 
                                               Widget child;
@@ -871,15 +914,23 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
 class _SortParams<T> {
   final List<T> items;
-  final ThemedColumn2<T> column;
+
+  /// [sortKeys] are the precomputed string values for the sort column, computed on the
+  /// main thread. This ensures that [valueBuilder] closures (which may capture [BuildContext]
+  /// or localization objects) never cross the isolate boundary.
+  final List<String> sortKeys;
+
   final bool isReversed;
-  final Map<int, Map<int, String>> itemsStrings;
+
+  /// [customSort] is an optional custom comparator. If provided, it must not capture
+  /// any non-sendable objects (e.g. BuildContext, i18n, streams).
+  final int Function(T a, T b, bool ascending)? customSort;
 
   _SortParams({
     required this.items,
-    required this.column,
+    required this.sortKeys,
     required this.isReversed,
-    this.itemsStrings = const {},
+    this.customSort,
   });
 }
 
@@ -887,44 +938,29 @@ class _SortParams<T> {
 ///
 /// Requires the [_SortParams] containing:
 /// - [items]: The list of items to sort.
-/// - [column]: The column to sort by.
+/// - [sortKeys]: Precomputed sort key strings (one per item), built on the main thread.
 /// - [isReversed]: Whether to sort in descending order.
-/// - [itemsStrings]: A precomputed map of string representations of items for efficient sorting.
+/// - [customSort]: Optional custom comparator (must not capture non-sendable objects).
 ///
-/// This function runs on an Isolated thread to ensure non-blocking UI performance, the only issue with this
-/// is, you cannot use complexes objects or functions that are not sendable between isolates.
+/// Sort keys are precomputed on the main thread before entering the isolate, so that
+/// valueBuilder closures (which may capture BuildContext, i18n, etc.) never cross
+/// the isolate boundary.
 List<T> _sort<T>(_SortParams<T> params) {
-  if (params.column.customSort != null) {
-    params.items.sort((a, b) => params.column.customSort!.call(a, b, !params.isReversed));
-  } else {
-    params.items.sort(
-      (a, b) => _defaultSort(
-        a,
-        b,
-        colSelected: params.column,
-        isReversed: params.isReversed,
-        itemsStrings: params.itemsStrings,
-      ),
-    );
+  if (params.customSort != null) {
+    params.items.sort((a, b) => params.customSort!.call(a, b, !params.isReversed));
+    return params.items;
   }
-  return params.items;
+
+  // Sort a parallel index array using the precomputed keys, then reorder items.
+  final indices = List<int>.generate(params.items.length, (i) => i);
+  indices.sort((a, b) => _defaultSort(params.sortKeys[a], params.sortKeys[b], isReversed: params.isReversed));
+
+  return [for (final i in indices) params.items[i]];
 }
 
-/// [_defaultSort] is the default sorting function used when no custom sort is provided.
-int _defaultSort<T>(
-  T a,
-  T b, {
-  required ThemedColumn2<T> colSelected,
-  required bool isReversed,
-  required Map<int, Map<int, String>> itemsStrings,
-}) {
-  final colHashCode = colSelected.hashCode;
-  final rowAHashCode = a.hashCode;
-  final rowBHashCode = b.hashCode;
-
-  final valueA = itemsStrings[rowAHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(a);
-  final valueB = itemsStrings[rowBHashCode]?[colHashCode] ?? colSelected.valueBuilder.call(b);
-
+/// [_defaultSort] compares two precomputed string values, attempting numeric, duration,
+/// datetime, and finally lexicographic comparison in that order.
+int _defaultSort(String valueA, String valueB, {required bool isReversed}) {
   final numA = num.tryParse(valueA);
   final numB = num.tryParse(valueB);
   if (numA != null && numB != null) {
