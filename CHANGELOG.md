@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.5.21
+- Add claudio `Skills`
+
 ## 7.5.20
 - Fixed `ThemedTable2` header overflow detection by including the sort icon width in the available text width, ensuring tooltips appear correctly.
 

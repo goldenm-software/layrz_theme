@@ -1,0 +1,16 @@
+{
+  "name": "layrz-theme",
+  "owner": {
+    "name": "goldenm-software"
+  },
+  "metadata": {
+    "description": "Claude Code skills for layrz_theme Flutter widget library"
+  },
+  "plugins": [
+    {
+      "name": "layrz_theme",
+      "source": "./",
+      "description": "Skills for using layrz_theme components in Flutter projects"
+    }
+  ]
+}
