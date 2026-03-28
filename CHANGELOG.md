@@ -7,6 +7,7 @@
 - Fixed `ThemedTable2` unsendable closure crash: sort keys are now precomputed on the main thread before `compute()`, ensuring `valueBuilder` closures that capture `BuildContext` or `i18n` objects never cross the isolate boundary.
 - Improved `ThemedTable2` multiselect performance: introduced an internal `Set<T>` mirroring `_selectedItems` for O(1) `contains()` lookups instead of O(n) on the backing `List<T>`.
 - Improved `ThemedTable2` `didUpdateWidget` performance: replaced `DeepCollectionEquality` (O(n)) with a fast O(1) heuristic using `identical` + length check.
+- Add `ThemedTable2` skill.
 
 ## 7.5.21
 - Add claudio `Skills`
