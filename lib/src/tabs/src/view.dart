@@ -1,5 +1,11 @@
 part of '../tabs.dart';
 
+// Constants for ThemedTabView styling and behavior
+const double _kTabBorderRadius = 8.0;
+const double _kArrowButtonHeight = 40.0;
+const double _kArrowButtonFontSize = 30.0;
+const double _kAdditionalWidgetsSpacing = 10.0;
+
 class ThemedTabView extends StatefulWidget {
   /// [tabs] is the list of tabs to display
   final List<ThemedTab> tabs;
@@ -42,6 +48,11 @@ class ThemedTabView extends StatefulWidget {
   /// [style] is the style of the tab view
   final ThemedTabStyle style;
 
+  /// [wrapArrowNavigation] is whether to wrap navigation when using arrows
+  /// When true: left arrow from first tab goes to last, right arrow from last tab goes to first
+  /// When false: arrows are disabled at boundaries
+  final bool wrapArrowNavigation;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -61,6 +72,7 @@ class ThemedTabView extends StatefulWidget {
     this.onTabIndex,
     this.additionalWidgets = const [],
     this.style = .filledTonal,
+    this.wrapArrowNavigation = false,
   });
 
   @override
@@ -76,20 +88,21 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
   void initState() {
     super.initState();
 
+    final validInitialPosition = widget.initialPosition.clamp(0, widget.tabs.length - 1);
     _tabController = TabController(
-      initialIndex: widget.initialPosition,
+      initialIndex: validInitialPosition,
       length: widget.tabs.length,
       vsync: this,
       animationDuration: widget.animationDuration,
     );
-    if (widget.onTabIndex != null) {
-      _tabController.addListener(() {
-        if (_tabController.indexIsChanging) {
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {});
+        if (widget.onTabIndex != null) {
           widget.onTabIndex!(_tabController.index);
-          debugPrint("tab change: ${_tabController.index}");
         }
-      });
-    }
+      }
+    });
   }
 
   @override
@@ -101,11 +114,12 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
       if (!widget.persistTabPosition) lastIndex = 0;
       _tabController.dispose();
 
+      final validIndex = lastIndex.clamp(0, (widget.tabs.length - 1).clamp(0, double.infinity).toInt());
       _tabController = TabController(
         length: widget.tabs.length,
         vsync: this,
         animationDuration: widget.animationDuration,
-        initialIndex: lastIndex < widget.tabs.length ? lastIndex : 0,
+        initialIndex: validIndex,
       );
     }
   }
@@ -138,15 +152,19 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                     style: .filledTonalFab,
                     labelText: '',
                     tooltipEnabled: false,
-                    height: 40,
-                    fontSize: 30,
+                    height: _kArrowButtonHeight,
+                    fontSize: _kArrowButtonFontSize,
                     color: color,
                     icon: LayrzIcons.solarOutlineAltArrowLeft,
-                    isDisabled: _tabController.index == 0,
+                    isDisabled: !widget.wrapArrowNavigation && _tabController.index == 0,
                     onTap: () {
-                      if (_tabController.index == 0) return;
-                      _tabController.animateTo(_tabController.index - 1);
-                      setState(() {});
+                      if (widget.wrapArrowNavigation) {
+                        final nextIndex = _tabController.index == 0 ? widget.tabs.length - 1 : _tabController.index - 1;
+                        _tabController.animateTo(nextIndex);
+                      } else {
+                        if (_tabController.index == 0) return;
+                        _tabController.animateTo(_tabController.index - 1);
+                      }
                     },
                   ),
                 ],
@@ -155,13 +173,13 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                     isScrollable: true,
                     tabs: widget.tabs.map((e) => e.overrideStyle(widget.style)).toList(),
                     labelPadding: .zero,
-                    splashBorderRadius: widget.style == .filledTonal ? BorderRadius.circular(8) : null,
+                    splashBorderRadius: widget.style == .filledTonal ? BorderRadius.circular(_kTabBorderRadius) : null,
                     controller: _tabController,
                   ),
                 ),
                 if (widget.additionalWidgets.isNotEmpty) ...[
                   Row(
-                    spacing: 10,
+                    spacing: _kAdditionalWidgetsSpacing,
                     children: widget.additionalWidgets,
                   ),
                 ],
@@ -170,15 +188,19 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                     style: .filledTonalFab,
                     labelText: '',
                     tooltipEnabled: false,
-                    height: 40,
-                    fontSize: 30,
+                    height: _kArrowButtonHeight,
+                    fontSize: _kArrowButtonFontSize,
                     color: color,
                     icon: LayrzIcons.solarOutlineAltArrowRight,
-                    isDisabled: _tabController.index == widget.tabs.length - 1,
+                    isDisabled: !widget.wrapArrowNavigation && _tabController.index == widget.tabs.length - 1,
                     onTap: () {
-                      if (_tabController.index == widget.tabs.length - 1) return;
-                      _tabController.animateTo(_tabController.index + 1);
-                      setState(() {});
+                      if (widget.wrapArrowNavigation) {
+                        final nextIndex = _tabController.index == widget.tabs.length - 1 ? 0 : _tabController.index + 1;
+                        _tabController.animateTo(nextIndex);
+                      } else {
+                        if (_tabController.index == widget.tabs.length - 1) return;
+                        _tabController.animateTo(_tabController.index + 1);
+                      }
                     },
                   ),
                 ],

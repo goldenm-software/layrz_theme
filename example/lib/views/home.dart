@@ -87,7 +87,7 @@ class _HomeViewState extends State<HomeView> {
                   const Divider(),
                   ListTile(
                     leading: ThemedAvatar(
-                      icon: LayrzIcons.mdiTable,
+                      icon: LayrzIcons.solarOutlineAlbum,
                       color: color,
                       size: iconSize,
                     ),
@@ -131,6 +131,30 @@ class _HomeViewState extends State<HomeView> {
                       icon: LayrzIcons.mdiRocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/utilities/widgets'),
+                    ),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: ThemedAvatar(
+                      icon: LayrzIcons.solarOutlineAlbum,
+                      color: color,
+                      size: iconSize,
+                    ),
+                    title: Text(
+                      "Tabs",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      "ThemedTabView provides a customizable tab widget with multiple styles, navigation arrows, "
+                      "and support for icons and additional widgets. Perfect for organizing content into tabs.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      maxLines: 5,
+                    ),
+                    trailing: ThemedButton(
+                      labelText: "Go!",
+                      icon: LayrzIcons.mdiRocketLaunch,
+                      color: Colors.green,
+                      onTap: () => context.go('/tabs'),
                     ),
                   ),
                   const Divider(),

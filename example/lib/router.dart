@@ -14,6 +14,7 @@ import 'package:layrz_theme_example/views/not_found.dart';
 import 'package:layrz_theme_example/views/table/table.dart';
 import 'package:layrz_theme_example/views/theme_generation.dart';
 import 'package:layrz_theme_example/views/snackbars/snackbars.dart';
+import 'package:layrz_theme_example/views/tabs/tabs.dart';
 
 Page<void> customTransitionBuilder(BuildContext context, GoRouterState state, Widget child) {
   return CustomTransitionPage(
@@ -125,6 +126,20 @@ final goRoutes = [
   GoRoute(
     path: '/snackbar/basic',
     pageBuilder: (context, state) => customTransitionBuilder(context, state, const BasicSnackbarView()),
+  ),
+
+  // Tabs
+  GoRoute(
+    path: '/tabs',
+    redirect: (context, state) => '/tabs/basic',
+  ),
+  GoRoute(
+    path: '/tabs/basic',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const BasicTabsView()),
+  ),
+  GoRoute(
+    path: '/tabs/advanced',
+    pageBuilder: (context, state) => customTransitionBuilder(context, state, const AdvancedTabsView()),
   ),
 
   // Map

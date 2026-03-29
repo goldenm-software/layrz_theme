@@ -82,14 +82,14 @@ class _LayoViewState extends State<LayoView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonalFab,
                         tooltipPosition: ThemedTooltipPosition.left,
-                        icon: LayrzIcons.mdiContentCopy,
+                        icon: LayrzIcons.solarOutlineCopy,
                         labelText: "Copy this emotion as example",
                         onTap: () {
                           Clipboard.setData(ClipboardData(text: "Layo(size: 30, emotion: ${emotion.toString()})"));
                           ThemedSnackbarMessenger.of(context).showSnackbar(
                             ThemedSnackbar(
                               message: "Copied to clipboard",
-                              icon: LayrzIcons.mdiClipboardCheckOutline,
+                              icon: LayrzIcons.solarOutlineClipboardCheck,
                               color: Colors.green,
                             ),
                           );

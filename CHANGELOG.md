@@ -1,5 +1,21 @@
 # Changelog
 
+## 7.5.23
+
+- Fixed `ThemedTabView` debugPrint statement left in production code.
+- Fixed `ThemedTabView` initialPosition validation: out-of-bounds indices are now clamped to valid range instead of potentially crashing `TabController`.
+- Fixed `ThemedTabView` unnecessary `setState()` calls in arrow button handlers: `TabController.animateTo()` already notifies listeners.
+- Fixed `ThemedTabView` arrow button disabling state not updating during navigation: `setState()` now called unconditionally when tab index changes, ensuring arrow disabled state reflects current position even without `onTabIndex` callback.
+- Improved `ThemedTabView` tab active-state detection: color comparison now includes alpha channel for more accurate active state handling.
+- Improved `ThemedTabView` code quality: extracted magic numbers to named constants (`_kTabBorderRadius`, `_kArrowButtonHeight`, `_kAdditionalWidgetsSpacing`, `_kTabAnimationDuration`).
+- Added `wrapArrowNavigation` parameter to `ThemedTabView` for circular tab navigation: when `true`, left arrow from first tab goes to last tab and right arrow from last tab goes to first tab; when `false` (default), arrows are disabled at boundaries.
+- Added comprehensive widget tests for `ThemedTabView` covering: rendering, tab switching via tap, `onTabIndex` callback firing, arrow button navigation, `initialPosition` clamping, `persistTabPosition` behavior, additional widgets, different tab styles, leading/trailing icons, custom padding and alignment, arrow button state reactivity during navigation (regression test), and `wrapArrowNavigation` behavior (wrap first→last, wrap last→first, arrows always enabled at boundaries).
+- Added `ThemedTabView` skill documentation with parameter reference, usage examples, gotchas, best practices, and testing patterns.
+- Added comprehensive widget tests for `ResponsiveRow` covering: basic rendering, empty children, single child, spacing parameter (0 and custom values), main/cross axis alignment, full-width enforcement, `ResponsiveRow.builder` with various item counts, and integration tests with `ResponsiveCol`.
+- Added comprehensive widget tests for `ResponsiveCol` covering: child rendering, breakpoint fallback logic (xs default, sm/md/lg/xl optional), LayoutBuilder usage, and child widget preservation.
+- Added widget tests for `Sizes` enum covering: gridSize calculations for all column variants, boxWidth calculations at various container widths, and validation of size constraints.
+- Added `ResponsiveRow` and `ResponsiveCol` skill documentation with parameter reference, breakpoint logic, responsive behavior examples, gotchas (fallback chain, LayoutBuilder dynamics, width calculations), best practices, and common layout patterns (sidebar + content, card grid, responsive forms).
+
 ## 7.5.22
 
 - Fixed `ThemedTable2` column key collision in `_itemsStrings`: inner key now uses column index instead of `col.hashCode`, preventing silent data corruption when two columns share the same `headerText`.
