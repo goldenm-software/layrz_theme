@@ -1,161 +1,138 @@
-# ResponsiveRow & ResponsiveCol Skill
+---
+name: responsive-row
+description: ResponsiveRow and ResponsiveCol — Material 3 responsive grid layouts with breakpoint-based column sizing
+---
 
 ## Overview
 
-ResponsiveRow and ResponsiveCol form a 12-column responsive grid system for Flutter. ResponsiveRow wraps ResponsiveCol children and uses Dart's `Wrap` widget for layout. ResponsiveCol applies responsive sizing based on breakpoints (xs, sm, md, lg, xl).
+`ResponsiveRow` and `ResponsiveCol` provide a responsive 12-column grid system for layrz_theme. ResponsiveRow acts as a flex container using Wrap layout, while ResponsiveCol defines column width at different breakpoints (xs, sm, md, lg, xl). Together they create layouts that adapt to screen size without manual media queries.
 
-**File locations:**
-- `lib/src/grid/src/row.dart` — ResponsiveRow
-- `lib/src/grid/src/col.dart` — ResponsiveCol
-- `lib/src/grid/src/sizes.dart` — Sizes enum and extensions
+| Feature | Details |
+|---|---|
+| Responsive Breakpoints | xs (0-600), sm (600-960), md (960-1264), lg (1264-1904), xl (1904+) |
+| 12-Column Grid | Sizes enum with col1-col12 for flexible width specification |
+| Wrap Layout | ResponsiveRow uses Wrap for automatic line breaking when space insufficient |
+| Builder Pattern | ResponsiveRow.builder for dynamic child generation |
+| Spacing Control | Configurable gap between columns |
+| Alignment Options | Main axis and cross axis alignment control |
+| Full-Width Enforcement | ResponsiveRow always spans full parent width |
+| Fallback Chain | Missing breakpoints cascade to larger breakpoints automatically |
 
-## Components
+**When to use:** Responsive dashboards, card grids, sidebar + content layouts, responsive forms. Prefer when you need width-based column sizing without MediaQuery or custom LayoutDelegate.
 
-### ResponsiveRow
+## ResponsiveRow
 
-Horizontal flex container that arranges ResponsiveCol children using a Wrap widget. All children are arranged horizontally with configurable spacing and alignment.
+Horizontal container that arranges ResponsiveCol children using a Wrap widget. All children are laid out horizontally with configurable spacing and alignment. Wraps to next line when space is insufficient.
 
-**Parameters:**
-- `children: List<ResponsiveCol>` — **Required.** Must be ResponsiveCol widgets only. Type-safe at compile time.
-- `spacing: double` — Space between children (default: 0)
-- `mainAxisAlignment: WrapAlignment` — Horizontal alignment (default: .start)
-- `crossAxisAlignment: WrapCrossAlignment` — Vertical alignment (default: .start)
-- `key: Key?` — Optional widget key
+### Key Parameters
 
-**Constructor:**
+| Parameter | Type | Default | Notes |
+|---|---|---|---|
+| `children` | `List<Widget>` | required (OR `builder`) | List of ResponsiveCol widgets. Type-safe at compile time |
+| `builder` | `IndexedWidgetBuilder?` | required (OR `children`) | Build function for dynamic children. Use with `itemCount` |
+| `itemCount` | `int?` | `null` | Number of items to build when using `builder` |
+| `spacing` | `double` | `0` | Horizontal gap between columns (in pixels) |
+| `mainAxisAlignment` | `WrapAlignment` | `.start` | Horizontal alignment of columns |
+| `crossAxisAlignment` | `WrapCrossAlignment` | `.start` | Vertical alignment of columns |
+
+### Minimal responsive row
+
 ```dart
-const ResponsiveRow({
-  required this.children,
-  this.mainAxisAlignment = .start,
-  this.crossAxisAlignment = .start,
-  this.spacing = 0,
-})
+ResponsiveRow(
+  children: [
+    ResponsiveCol(xs: Sizes.col12, sm: Sizes.col6, md: Sizes.col4, child: CardWidget()),
+    ResponsiveCol(xs: Sizes.col12, sm: Sizes.col6, md: Sizes.col4, child: CardWidget()),
+    ResponsiveCol(xs: Sizes.col12, sm: Sizes.col6, md: Sizes.col4, child: CardWidget()),
+  ],
+)
 ```
 
-**Factory Constructor (builder):**
+### Row with spacing and alignment
+
 ```dart
-static ResponsiveRow builder({
-  required int itemCount,
-  required ResponsiveCol Function(int) itemBuilder,
-  WrapAlignment mainAxisAlignment = .start,
-  WrapCrossAlignment crossAxisAlignment = .start,
-  double spacing = 0,
-})
-```
-
-Generates ResponsiveRow with `itemCount` children by calling `itemBuilder` for each index.
-
-**Gotchas:**
-1. **itemCount must be >= 0** — builder will iterate 0 times if itemCount is 0 (valid, renders empty Wrap)
-2. **Type safety** — Dart prevents non-ResponsiveCol widgets at compile time. No runtime validation needed.
-3. **Wrap behavior** — Children wrap to next line when they exceed container width
-4. **Full width enforced** — ResponsiveRow always has `width: double.infinity`
-
-**Example:**
-```dart
-// Manual children
 ResponsiveRow(
   spacing: 16,
   mainAxisAlignment: WrapAlignment.spaceEvenly,
+  crossAxisAlignment: WrapCrossAlignment.center,
   children: [
-    ResponsiveCol(xs: .col6, md: .col4, child: Container()),
-    ResponsiveCol(xs: .col6, md: .col4, child: Container()),
-    ResponsiveCol(xs: .col12, md: .col4, child: Container()),
+    ResponsiveCol(xs: Sizes.col12, md: Sizes.col6, child: SidebarWidget()),
+    ResponsiveCol(xs: Sizes.col12, md: Sizes.col6, child: ContentWidget()),
   ],
 )
+```
 
-// Using builder
+### Row with builder for dynamic children
+
+```dart
 ResponsiveRow.builder(
+  spacing: 12,
   itemCount: 12,
-  spacing: 8,
-  itemBuilder: (index) => ResponsiveCol(
-    xs: .col12,
-    md: .col6,
-    lg: .col4,
-    child: Card(child: Text('Item $index')),
-  ),
+  itemBuilder: (context, index) {
+    return ResponsiveCol(
+      xs: Sizes.col12,
+      sm: Sizes.col6,
+      md: Sizes.col4,
+      lg: Sizes.col3,
+      child: ProductCard(product: products[index]),
+    );
+  },
 )
 ```
 
-### ResponsiveCol
+## ResponsiveCol
 
-Responsive column wrapper that applies a width based on current screen size and breakpoint configuration.
+Defines a column's width at different breakpoints. Must be a child of ResponsiveRow. Uses LayoutBuilder internally to detect current breakpoint and apply responsive sizing.
 
-**Parameters:**
-- `child: Widget` — **Required.** Widget to wrap (can be any widget type)
-- `xs: Sizes` — Extra small (< 600px), **Required** (default: .col12)
-- `sm: Sizes?` — Small (≥ 600px, < 960px), fallback to xs if null
-- `md: Sizes?` — Medium (≥ 960px, < 1264px), fallback chain: md → sm → xs
-- `lg: Sizes?` — Large (≥ 1264px, < 1904px), fallback chain: lg → md → sm → xs
-- `xl: Sizes?` — Extra large (≥ 1904px), fallback chain: xl → lg → md → sm → xs
-- `key: Key?` — Optional widget key
+### Key Parameters
 
-**Constructor:**
+| Parameter | Type | Default | Notes |
+|---|---|---|---|
+| `child` | `Widget` | required | Content widget displayed in this column |
+| `xs` | `Sizes` | `col12` | Width at extra small breakpoint (0-600px) |
+| `sm` | `Sizes?` | `null` | Width at small breakpoint (600-960px). Falls back to xs if null |
+| `md` | `Sizes?` | `null` | Width at medium breakpoint (960-1264px). Falls back to sm→xs if null |
+| `lg` | `Sizes?` | `null` | Width at large breakpoint (1264-1904px). Falls back to md→sm→xs if null |
+| `xl` | `Sizes?` | `null` | Width at extra large breakpoint (1904px+). Falls back to lg→md→sm→xs if null |
+
+### Sizes Enum
+
+Column widths specified using Sizes enum with 12-column system:
+- `Sizes.col1` through `Sizes.col12` — represents 1 to 12 columns
+- Width = `(containerWidth / 12) * columnCount`
+
+### Minimal column
+
 ```dart
-const ResponsiveCol({
-  this.xs = .col12,
-  this.sm,
-  this.md,
-  this.lg,
-  this.xl,
-  required this.child,
-})
-```
-
-**Breakpoint Values (constants):**
-```dart
-const double kExtraSmallGrid = 600;    // xs
-const double kSmallGrid = 960;         // sm
-const double kMediumGrid = 1264;       // md
-const double kLargeGrid = 1904;        // lg
-// xl is anything >= kLargeGrid
-```
-
-**Sizes Enum:**
-- `col1` through `col12` — grid columns (1/12 to 12/12 of available width)
-- Each size calculates: `width = (containerWidth / 12) * gridSize`
-
-**Gotchas:**
-1. **Fallback chain is critical** — If md is null, ResponsiveCol will use sm or xs. This allows "lazy" specification:
-   ```dart
-   ResponsiveCol(
-     xs: .col12,     // mobile: full width
-     lg: .col6,      // desktop: half width
-     // sm and md inherit: sm→xs (col12), md→xs (col12)
-   )
-   ```
-
-2. **LayoutBuilder is used internally** — Breakpoints are re-evaluated when constraints change (window resize, parent reflow)
-
-3. **Width calculation is proportional** — All widths are based on 12-column system:
-   - col6 at 1200px = 600px
-   - col3 at 600px = 150px
-   - col1 at 1200px = 100px
-
-4. **Width never exceeds container** — ResponsiveCol fits within parent constraints
-
-5. **All nullable sizes default to xs if specified** — You don't need to specify all breakpoints
-
-**Example:**
-```dart
-// Responsive across all breakpoints
 ResponsiveCol(
-  xs: .col12,     // Mobile: full width
-  sm: .col6,      // Tablet portrait: 50%
-  md: .col4,      // Tablet landscape: 33%
-  lg: .col3,      // Desktop: 25%
-  xl: .col2,      // Ultra-wide: 16%
-  child: Card(child: Text('Responsive!')),
+  xs: Sizes.col12,
+  md: Sizes.col6,
+  child: CardWidget(),
 )
+```
 
-// Lazy specification (some breakpoints inherit)
+### Column with all breakpoints
+
+```dart
 ResponsiveCol(
-  xs: .col12,
-  lg: .col6,
-  child: Button(onPressed: () {}),
+  xs: Sizes.col12,  // Mobile: full width
+  sm: Sizes.col6,   // Tablet: half width
+  md: Sizes.col4,   // Desktop: one-third
+  lg: Sizes.col3,   // Large: one-quarter
+  xl: Sizes.col2,   // Extra large: one-sixth
+  child: ProductCard(),
 )
-// At sm/md: uses xs (.col12)
-// At lg/xl: uses lg (.col6)
+```
+
+### Column with fallback chain (lazy specification)
+
+```dart
+ResponsiveCol(
+  xs: Sizes.col12,     // Mobile: full width (explicit)
+  md: Sizes.col8,      // Desktop: two-thirds (sm and lg fall back to this)
+  // sm → falls back to md (col8)
+  // lg → falls back to xl (col12) → defaults to col12
+  child: ArticleView(),
+)
 ```
 
 ## Sizes Enum & Extension
