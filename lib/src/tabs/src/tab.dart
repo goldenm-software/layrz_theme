@@ -1,5 +1,11 @@
 part of '../tabs.dart';
 
+// Constants for ThemedTab styling
+const double _kTabContainerBorderRadius = 8.0;
+const double _kTabActiveAlpha = 0.2;
+const double _kTabInternalPadding = 10.0;
+const Duration _kTabAnimationDuration = Duration(milliseconds: 200);
+
 class ThemedTab extends StatelessWidget {
   /// [labelText] is the label text of the input.
   /// Avoid submit [label] and [labelText] at the same time.
@@ -74,27 +80,32 @@ class ThemedTab extends StatelessWidget {
     );
   }
 
+  /// Compares two colors for equality (RGB + Alpha)
+  static bool _colorsAreEqual(Color a, Color b) {
+    return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+  }
+
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
-    Color backgroundColor = color ?? DefaultTextStyle.of(context).style.color ?? primary;
-    final bool redMatch = primary.r == backgroundColor.r;
-    final bool greenMatch = primary.g == backgroundColor.g;
-    final bool blueMatch = primary.b == backgroundColor.b;
+    final fallbackColor = DefaultTextStyle.of(context).style.color ?? primary;
+    final backgroundColor = color ?? fallbackColor;
 
-    final isActive = redMatch && greenMatch && blueMatch;
+    // Determine if active by comparing colors
+    // Note: This is a heuristic since the tab doesn't have direct access to TabController.index
+    final isActive = _colorsAreEqual(backgroundColor, primary);
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: _kTabAnimationDuration,
       padding: padding,
       decoration: style == .filledTonal
           ? BoxDecoration(
-              color: isActive ? backgroundColor.withAlpha((255 * 0.2).toInt()) : Colors.transparent,
-              borderRadius: .circular(8),
+              color: isActive ? backgroundColor.withAlpha((255 * _kTabActiveAlpha).toInt()) : Colors.transparent,
+              borderRadius: BorderRadius.circular(_kTabContainerBorderRadius),
             )
           : null,
       child: Padding(
-        padding: const .symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: _kTabInternalPadding),
         child: RichText(
           text: TextSpan(
             children: [
@@ -103,7 +114,7 @@ class ThemedTab extends StatelessWidget {
                   alignment: .middle,
                   child: leading ?? Icon(leadingIcon!, size: iconSize, color: backgroundColor),
                 ),
-                const WidgetSpan(child: SizedBox(width: 10)),
+                WidgetSpan(child: SizedBox(width: _kTabInternalPadding)),
               ],
               if (label != null) ...[
                 WidgetSpan(child: label!),
@@ -114,7 +125,7 @@ class ThemedTab extends StatelessWidget {
                 ),
               ],
               if (trailing != null || trailingIcon != null) ...[
-                const WidgetSpan(child: SizedBox(width: 10)),
+                WidgetSpan(child: SizedBox(width: _kTabInternalPadding)),
                 WidgetSpan(
                   alignment: .middle,
                   child: trailing ?? Icon(trailingIcon!, size: iconSize, color: backgroundColor),

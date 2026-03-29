@@ -186,6 +186,24 @@ class _LayoutState extends State<Layout> {
           ],
         ),
         ThemedNavigatorPage(
+          labelText: 'Tabs',
+          path: '/tabs',
+          useDefaultRedirect: false,
+          icon: LayrzIcons.solarOutlineAlbum,
+          children: [
+            ThemedNavigatorPage(
+              labelText: 'Basic tabs',
+              path: '/tabs/basic',
+              icon: LayrzIcons.solarOutlineAlbum,
+            ),
+            ThemedNavigatorPage(
+              labelText: 'Advanced tabs',
+              path: '/tabs/advanced',
+              icon: LayrzIcons.solarOutlineAlbum,
+            ),
+          ],
+        ),
+        ThemedNavigatorPage(
           labelText: 'Snackbars',
           path: '/snackbar/basic',
           icon: LayrzIcons.solarOutlineTagHorizontal,

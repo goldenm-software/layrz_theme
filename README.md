@@ -49,3 +49,15 @@ This project is maintained by [Golden M](https://goldenm.com) with authorization
 ## Who are you? / Want to work with us?
 
 **Golden M** is a software and hardware development company what is working on a new, innovative and disruptive technologies. For more information, contact us at [sales@goldenm.com](mailto:sales@goldenm.com) or via WhatsApp at [+(507)-6979-3073](https://wa.me/50769793073?text="From%20layrz_theme%20flutter%20library.%20Hello").
+
+
+
+test:
+ - Add widget tests for ResponsiveRow and ResponsiveCol    
+ - Add comprehensive tests covering rendering, spacing, alignment, builder functionality, and integration between ResponsiveRow and ResponsiveCol.                                                           
+                                                                                                                                   
+docs: 
+ - Add ResponsiveRow and ResponsiveCol skill documentation
+ - Document parameter reference, breakpoint logic, responsive behavior examples, gotchas, best practices, and common layout patterns.                                        
+                                                                                                                                    
+  Co-authored-by: Claude AI
