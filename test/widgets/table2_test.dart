@@ -19,6 +19,24 @@ class _Item {
   int get hashCode => id.hashCode;
 }
 
+// Full value-equality item — simulates Freezed objects (all fields compared).
+// Used in the DeepCollectionEquality regression test.
+class _ItemFull {
+  final String id;
+  final String name;
+  final String secondary;
+
+  const _ItemFull({required this.id, required this.name, required this.secondary});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _ItemFull && id == other.id && name == other.name && secondary == other.secondary;
+
+  @override
+  int get hashCode => Object.hash(id, name, secondary);
+}
+
 // Waits for a _filterAndSort cycle to complete.
 //
 // compute() spawns a REAL isolate even in widget tests. pumpAndSettle() cannot
@@ -463,6 +481,72 @@ void main() {
         expect(find.text('First'), findsOneWidget);
         expect(find.text('Second'), findsOneWidget);
       });
+
+      testWidgets(
+        'detects edit in middle of same-length list (DeepCollectionEquality regression)',
+        (tester) async {
+          // BUG DE PRODUCCIÓN: con la heurística O(1) anterior, si la lista tenía
+          // el mismo largo y el mismo primer elemento pero un elemento del medio
+          // cambiaba, c1=false y la tabla NUNCA se actualizaba.
+          // _ItemFull tiene igualdad por valor completa (simula Freezed).
+          // DeepCollectionEquality detecta el cambio de 'name' aunque el 'id' sea igual.
+          List<_ItemFull> items = [
+            const _ItemFull(id: '1', name: 'First', secondary: ''),
+            const _ItemFull(id: '2', name: 'OriginalMiddle', secondary: ''),
+            const _ItemFull(id: '3', name: 'Last', secondary: ''),
+          ];
+          late StateSetter rebuildState;
+
+          await tester.pumpWidget(
+            StatefulBuilder(
+              builder: (context, setState) {
+                rebuildState = setState;
+                return MaterialApp(
+                  home: Scaffold(
+                    body: SizedBox(
+                      height: 600,
+                      width: 800,
+                      child: ThemedTable2<_ItemFull>(
+                        items: items,
+                        actionsCount: 0,
+                        hasMultiselect: false,
+                        canSearch: false,
+                        populateDelay: Duration.zero,
+                        columns: [
+                          ThemedColumn2<_ItemFull>(
+                            headerText: 'Name',
+                            valueBuilder: (item) => item.name,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+          await tester.pump();
+          await _waitForCompute(tester);
+
+          expect(find.text('OriginalMiddle'), findsOneWidget);
+
+          // Mismo largo (3), mismo primer elemento ('First'), pero el del medio cambió.
+          rebuildState(() {
+            items = [
+              const _ItemFull(id: '1', name: 'First', secondary: ''),
+              const _ItemFull(id: '2', name: 'EditedMiddle', secondary: ''),
+              const _ItemFull(id: '3', name: 'Last', secondary: ''),
+            ];
+          });
+          await tester.pump();
+          await _waitForCompute(tester);
+
+          // Con la heurística rota: OriginalMiddle seguía visible (bug).
+          // Con DeepCollectionEquality: EditedMiddle debe aparecer.
+          expect(find.text('OriginalMiddle'), findsNothing);
+          expect(find.text('EditedMiddle'), findsOneWidget);
+        },
+      );
     });
   });
 }
