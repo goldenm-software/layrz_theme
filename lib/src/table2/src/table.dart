@@ -217,15 +217,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   @override
   void didUpdateWidget(covariant ThemedTable2<T> oldWidget) {
-    // Use a fast heuristic instead of O(n) DeepCollectionEquality for large lists.
-    // Checks referential identity first, then length, then the first element.
-    final bool c1 =
-        !identical(oldWidget.items, widget.items) &&
-        (oldWidget.items.length != widget.items.length ||
-            (widget.items.isNotEmpty && !identical(oldWidget.items.first, widget.items.first)));
-    final bool c2 =
-        oldWidget.columns.length != widget.columns.length ||
-        (widget.columns.isNotEmpty && oldWidget.columns.first != widget.columns.first);
+    final eq = const DeepCollectionEquality().equals;
+    final bool c1 = !eq(oldWidget.items, widget.items);
+    final bool c2 = !eq(oldWidget.columns, widget.columns);
     final bool c3 = oldWidget.actionsCount != widget.actionsCount;
     final bool c4 = oldWidget.canSearch != widget.canSearch;
     bool c5 = false;
@@ -237,8 +231,6 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
 
   Future<void> _filterAndSort(String source) async {
     if (_isLoading.value) {
-      // Queue the update instead of silently dropping it.
-      // _filterAndSort will re-run once the current operation finishes.
       _pendingUpdate = true;
       return;
     }

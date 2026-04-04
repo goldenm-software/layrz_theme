@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.5.24
+
+- Fixed `ThemedTable2` silent update loss for mid-list edits: reverted `didUpdateWidget` heuristic back to `DeepCollectionEquality` — the heuristic (identical + length + first element) missed edits to non-first elements in same-length lists; with Freezed value-equality objects the O(n) cost is negligible in practice (~4 of 170 telemetry updates actually triggered a reload in production profiling).
+- Removed `ThemedTable2` update throttle: the throttle introduced in 7.5.22 blocked CRUD operations for up to 30 seconds at trailing-edge; the root performance problem (constant reloads) was already solved by the `DeepCollectionEquality` equality check, making the throttle unnecessary complexity.
+- Added `ThemedTable2` regression test: `didUpdateWidget` now verifies that editing a middle element of a same-length list (same length, same first element) correctly triggers a table reload.
+
 ## 7.5.23
 
 - Fixed `ThemedTabView` debugPrint statement left in production code.
