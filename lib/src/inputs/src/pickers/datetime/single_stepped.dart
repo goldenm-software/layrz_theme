@@ -105,6 +105,12 @@ class ThemedDateTimeSteppedPicker extends StatefulWidget {
 
   final bool disableTimePickerBlink;
 
+  /// [lastDay] any datetime after this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? lastDay;
+
+  /// [firstDay] any datetime before this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? firstDay;
+
   /// [ThemedDateTimeSteppedPicker] is a date time stepped picker input. It is a wrapper of [ThemedTextInput] with a date time stepped picker.
   const ThemedDateTimeSteppedPicker({
     super.key,
@@ -150,6 +156,8 @@ class ThemedDateTimeSteppedPicker extends StatefulWidget {
     this.hideDetails = false,
     this.padding,
     this.disableTimePickerBlink = false,
+    this.firstDay,
+    this.lastDay,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -241,6 +249,8 @@ class _ThemedDateTimeSteppedPickerState extends State<ThemedDateTimeSteppedPicke
               showEntries: false,
               smallWeekdays: true,
               disabledDays: widget.disabledDays,
+              lastDay: widget.lastDay,
+              firstDay: widget.firstDay,
               onDayTap: (day) {
                 Navigator.of(context).pop(day);
               },
