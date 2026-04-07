@@ -64,14 +64,14 @@ Widget _buildReactive({
   int maximumDecimalDigits = 4,
   bool hidePrefixSuffixActions = false,
 }) {
-  num? _value = getValue();
+  num? value = getValue();
   return MaterialApp(
     home: Scaffold(
       body: StatefulBuilder(
         builder: (context, setState) {
           return ThemedNumberInput(
             labelText: 'Number',
-            value: _value,
+            value: value,
             minimum: minimum,
             maximum: maximum,
             step: step,
@@ -80,7 +80,7 @@ Widget _buildReactive({
             hidePrefixSuffixActions: hidePrefixSuffixActions,
             onChanged: (v) {
               setState(() {
-                _value = v;
+                value = v;
                 setValue(v);
               });
             },
@@ -383,7 +383,11 @@ void main() {
         final textLength = tf.controller!.text.length;
 
         // Cursor MUST be at the end — not stuck at old position 1
-        expect(cursorOffset, equals(textLength), reason: 'Cursor should be at end after step, got $cursorOffset on "${tf.controller!.text}"');
+        expect(
+          cursorOffset,
+          equals(textLength),
+          reason: 'Cursor should be at end after step, got $cursorOffset on "${tf.controller!.text}"',
+        );
       });
 
       testWidgets('cursor is at end after incrementing from 99 to 100', (tester) async {
