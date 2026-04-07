@@ -113,6 +113,12 @@ class ThemedCalendar extends StatefulWidget {
   /// [focusOnHighlightedDays] allows to focus the calendar in a day between the highlighted days.
   final bool focusOnHighlightedDays;
 
+  /// [lastDay] any datetime after this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? lastDay;
+
+  /// [firstDay] any datetime before this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? firstDay;
+
   const ThemedCalendar({
     super.key,
     this.focusDay,
@@ -152,6 +158,8 @@ class ThemedCalendar extends StatefulWidget {
     this.todayButton = true,
     this.aditionalButtons = const [],
     this.focusOnHighlightedDays = false,
+    this.lastDay,
+    this.firstDay,
   });
 
   @override
@@ -626,10 +634,33 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                           })
                           .contains(now);
 
-                      if (widget.isHighlightDaysAsRange) {
-                        isFocusDay = false;
-                        isDisabled = false;
+                      if (widget.firstDay != null) {
+                        isDisabled =
+                            isDisabled ||
+                            now.isBefore(
+                              DateTime(
+                                widget.firstDay!.year,
+                                widget.firstDay!.month,
+                                widget.firstDay!.day,
+                              ),
+                            );
                       }
+                      if (widget.lastDay != null) {
+                        isDisabled =
+                            isDisabled ||
+                            now.isAfter(
+                              DateTime(
+                                widget.lastDay!.year,
+                                widget.lastDay!.month,
+                                widget.lastDay!.day,
+                              ),
+                            );
+                      }
+
+                      // if (widget.isHighlightDaysAsRange) {
+                      //   isFocusDay = false;
+                      //   isDisabled = false;
+                      // }
 
                       bool isCurrentMonth = day.month == _dayGenerator.month;
 

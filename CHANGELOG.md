@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.25
+- Added the `firstDay` and `lastDay` parameters to `ThemedCalendar` to allow setting a date range for the picker, preventing selection of dates outside the specified range.
+- The `firstDay` and `lastDay` parameters are now supported in `ThemedDateRangePicker`, `ThemedDatePicker`, `ThemedDateTimeRangePicker`, `ThemedDateTimeSteppedPicker` and `ThemedDateTimePicker`.
+
 ## 7.5.24
 
 - Fixed `ThemedTable2` silent update loss for mid-list edits: reverted `didUpdateWidget` heuristic back to `DeepCollectionEquality` — the heuristic (identical + length + first element) missed edits to non-first elements in same-length lists; with Freezed value-equality objects the O(n) cost is negligible in practice (~4 of 170 telemetry updates actually triggered a reload in production profiling).

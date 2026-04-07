@@ -170,6 +170,8 @@ class _DateTimePickersViewState extends State<DateTimePickersView> {
             ThemedDateTimeSteppedPicker(
               labelText: "Example label",
               value: _selectedDateTime,
+              firstDay: DateTime.now().subtract(const Duration(days: 10)),
+              lastDay: DateTime.now(),
               onChanged: (val) {
                 _selectedTime = TimeOfDay(hour: val.hour, minute: val.minute);
                 setState(() => _selectedDateTime = val);

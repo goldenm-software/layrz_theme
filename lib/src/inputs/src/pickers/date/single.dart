@@ -84,6 +84,12 @@ class ThemedDatePicker extends StatefulWidget {
   /// [emptyListText] is the text to be displayed when the list is empty.
   final EdgeInsets? padding;
 
+  /// [lastDay] any datetime after this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? lastDay;
+
+  /// [firstDay] any datetime before this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? firstDay;
+
   /// [ThemedDatePicker] is a date picker input. It is a wrapper of [ThemedTextInput] with a date picker.
   const ThemedDatePicker({
     super.key,
@@ -116,6 +122,8 @@ class ThemedDatePicker extends StatefulWidget {
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
+    this.firstDay,
+    this.lastDay,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -199,6 +207,8 @@ class _ThemedDatePickerState extends State<ThemedDatePicker> {
               showEntries: false,
               smallWeekdays: true,
               disabledDays: widget.disabledDays,
+              firstDay: widget.firstDay,
+              lastDay: widget.lastDay,
               onDayTap: (day) {
                 Navigator.of(context).pop(day);
               },
