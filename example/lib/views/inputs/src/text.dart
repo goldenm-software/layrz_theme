@@ -9,6 +9,11 @@ class TextInputView extends StatefulWidget {
 
 class _TextInputViewState extends State<TextInputView> {
   num? _value;
+  num? _temperature;
+  num? _price;
+  num? _rating;
+  num? _clamped;
+  num? _stepped;
   String? _text;
   String _password = "Abc123!@#";
   Duration? _dur = const Duration();
@@ -147,33 +152,189 @@ class _TextInputViewState extends State<TextInputView> {
             ),
             const SizedBox(height: 10),
             Text(
-              "But, you can also use ThemedNumberInput to handle numbers easly, like the following example:",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              "ThemedNumberInput",
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "A number input with built-in formatting, step controls, and min/max constraints.",
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 10),
+            const Divider(),
+
+            // Basic usage
+            Text("Basic usage", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(
+              "Current value: ${_value ?? 'null'}",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             ThemedNumberInput(
-              labelText: "Example label",
+              labelText: "A simple number",
               value: _value,
-              suffixText: '\$',
+              onChanged: (value) => setState(() => _value = value),
+            ),
+            const SizedBox(height: 10),
+
+            // Prefix / suffix text
+            Text(
+              "With prefix and suffix text",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Use prefixText and suffixText to add units or currency symbols.",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            ThemedNumberInput(
+              labelText: "Price (USD)",
+              value: _price,
+              prefixText: '\$',
+              maximumDecimalDigits: 2,
+              onChanged: (value) => setState(() => _price = value),
+            ),
+            ThemedNumberInput(
+              labelText: "Temperature",
+              value: _temperature,
+              suffixText: '°C',
+              maximumDecimalDigits: 1,
+              onChanged: (value) => setState(() => _temperature = value),
+            ),
+            const SizedBox(height: 10),
+
+            // Decimal separators
+            Text(
+              "Decimal separators",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Use ThemedDecimalSeparator.dot (default) or .comma for European-style formatting.",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            ThemedNumberInput(
+              labelText: "Dot separator  (1,234.56)",
+              value: _value,
               decimalSeparator: ThemedDecimalSeparator.dot,
-              onChanged: (value) {
-                debugPrint("Value: $value");
-                setState(() => _value = value);
-              },
+              maximumDecimalDigits: 4,
+              onChanged: (value) => setState(() => _value = value),
             ),
             ThemedNumberInput(
-              decimalSeparator: ThemedDecimalSeparator.comma,
-              dense: true,
+              labelText: "Comma separator  (1.234,56)",
               value: _value,
-              labelText: 'Number input with comma as decimal separator',
-              maximumDecimalDigits: 8,
-              onChanged: (value) {
-                debugPrint("Value: $value");
-                setState(() => _value = value);
-              },
+              decimalSeparator: ThemedDecimalSeparator.comma,
+              maximumDecimalDigits: 4,
+              onChanged: (value) => setState(() => _value = value),
             ),
+            const SizedBox(height: 10),
+
+            // Step controls with min/max
+            Text(
+              "Step controls + min/max constraints",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "The − and + buttons respect minimum and maximum. Notice how they disable at the boundaries.",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            ThemedNumberInput(
+              labelText: "Rating (0–10, step 1)",
+              value: _rating,
+              minimum: 0,
+              maximum: 10,
+              step: 1,
+              onChanged: (value) => setState(() => _rating = value),
+            ),
+            ThemedNumberInput(
+              labelText: "Clamped (−50 to 50, step 5)",
+              value: _clamped,
+              minimum: -50,
+              maximum: 50,
+              step: 5,
+              onChanged: (value) => setState(() => _clamped = value),
+            ),
+            ThemedNumberInput(
+              labelText: "Fine step (step 0.1)",
+              value: _stepped,
+              minimum: 0,
+              maximum: 1,
+              step: 0.1,
+              maximumDecimalDigits: 1,
+              onChanged: (value) => setState(() => _stepped = value),
+            ),
+            const SizedBox(height: 10),
+
+            // Dense + disabled + errors
+            Text(
+              "Dense, disabled & validation errors",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            ThemedNumberInput(
+              labelText: "Dense mode",
+              value: _value,
+              dense: true,
+              onChanged: (value) => setState(() => _value = value),
+            ),
+            ThemedNumberInput(
+              labelText: "Disabled",
+              value: 42,
+              disabled: true,
+              onChanged: null,
+            ),
+            ThemedNumberInput(
+              labelText: "With validation error",
+              value: _value,
+              errors: const ["Value must be positive"],
+              onChanged: (value) => setState(() => _value = value),
+            ),
+            ThemedNumberInput(
+              labelText: "hideDetails: true (no error space)",
+              value: _value,
+              hideDetails: true,
+              errors: const ["Hidden error"],
+              onChanged: (value) => setState(() => _value = value),
+            ),
+            const SizedBox(height: 10),
+
+            // isRequired
+            Text(
+              "Required field",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Use isRequired: true to show the * indicator.",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            ThemedNumberInput(
+              labelText: "Quantity",
+              value: _value,
+              isRequired: true,
+              onChanged: (value) => setState(() => _value = value),
+            ),
+            const SizedBox(height: 10),
+
+            // hidePrefixSuffixActions
+            Text(
+              "Hide step actions",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "hidePrefixSuffixActions removes the − / + buttons entirely. Useful when you only want free-form input.",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            ThemedNumberInput(
+              labelText: "No step buttons",
+              value: _value,
+              hidePrefixSuffixActions: true,
+              onChanged: (value) => setState(() => _value = value),
+            ),
+            const SizedBox(height: 10),
+            const Divider(),
             const SizedBox(height: 10),
             Text(
               "Or handle durations, to do that, you can use ThemedDurationInput to handle easly, "
