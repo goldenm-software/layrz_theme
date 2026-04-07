@@ -7,16 +7,16 @@ class ThemedNumberInput extends StatefulWidget {
   /// [label] is the widget of the label of the input.
   final Widget? label;
 
-  /// [disabled] is the state of the input being disabled.
+  /// [placeholder] is the placeholder of the input.
   final String? placeholder;
 
-  /// [placeholder] is the placeholder of the input.
+  /// [onChanged] is the callback function when the input is changed.
   final void Function(num?)? onChanged;
 
-  /// [onChanged] is the callback function when the input is changed.
+  /// [value] is the value of the input.
   final num? value;
 
-  /// [value] is the value of the input.
+  /// [disabled] is the state of the input being disabled.
   final bool disabled;
 
   /// [errors] is the list of errors of the input.
@@ -130,7 +130,8 @@ class ThemedNumberInput extends StatefulWidget {
 class _ThemedNumberInputState extends State<ThemedNumberInput> {
   bool get _hideActionButtons => widget.hidePrefixSuffixActions || widget.disabled;
 
-  RegExp get _regex => RegExp(r'[-0-9\,.]');
+  static final RegExp _regex = RegExp(r'[-0-9\,.]');
+  bool _stepTriggered = false;
   final _controller = TextEditingController();
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == .dark ? Colors.white : Theme.of(context).primaryColor;
@@ -156,6 +157,12 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(ThemedNumberInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateCursorOffset(oldWidget);
@@ -167,11 +174,19 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       return;
     }
     if (oldWidget.value != widget.value) {
+      final String newValue = format.format(widget.value);
+
+      if (_stepTriggered) {
+        _stepTriggered = false;
+        _controller.text = newValue;
+        _controller.selection = TextSelection.fromPosition(TextPosition(offset: newValue.length));
+        return;
+      }
+
       // save the current cursor offset
       int previousCursorOffset = _controller.selection.extentOffset;
 
       String oldValue = oldWidget.value != null ? format.format(oldWidget.value) : '';
-      String newValue = format.format(widget.value);
 
       String thousandSeparator = widget.decimalSeparator == .comma ? '.' : ',';
 
@@ -208,6 +223,13 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
 
   @override
   Widget build(BuildContext context) {
+    final bool canDecrement =
+        !_hideActionButtons &&
+        ((widget.value ?? 0) - (widget.step ?? 1)) >= (widget.minimum ?? double.negativeInfinity);
+    final bool canIncrement =
+        !_hideActionButtons &&
+        ((widget.value ?? 0) + (widget.step ?? 1)) <= (widget.maximum ?? double.infinity);
+
     return ThemedTextInput(
       controller: _controller,
       value: widget.value == null ? null : format.format(widget.value),
@@ -218,21 +240,19 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       prefixText: widget.prefixText,
       suffixText: widget.suffixText,
       prefixIcon: _hideActionButtons ? null : LayrzIcons.solarOutlineMinusSquare,
+      prefixIconDisabled: !canDecrement,
       onPrefixTap: () {
-        if (_hideActionButtons) return;
+        if (!canDecrement) return;
+        _stepTriggered = true;
         num newValue = (widget.value ?? 0) - (widget.step ?? 1);
-        if (newValue < (widget.minimum ?? double.negativeInfinity)) {
-          return;
-        }
         widget.onChanged?.call(newValue);
       },
       suffixIcon: _hideActionButtons ? null : LayrzIcons.solarOutlineAddSquare,
+      suffixIconDisabled: !canIncrement,
       onSuffixTap: () {
-        if (_hideActionButtons) return;
+        if (!canIncrement) return;
+        _stepTriggered = true;
         num newValue = (widget.value ?? 0) + (widget.step ?? 1);
-        if (newValue > (widget.maximum ?? double.infinity)) {
-          return;
-        }
         widget.onChanged?.call(newValue);
       },
       hideDetails: widget.hideDetails,
@@ -242,16 +262,20 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       isRequired: widget.isRequired,
       keyboardType: widget.keyboardType,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(_regex),
+        FilteringTextInputFormatter.allow(widget.inputRegExp ?? _regex),
         ...widget.inputFormatters,
       ],
       onChanged: (value) {
-        if (value.isEmpty) return widget.onChanged?.call(null);
+        if (value.isEmpty) {
+          widget.onChanged?.call(null);
+          return;
+        }
         if (value == '-') return;
 
         final castedValue = format.tryParse(value);
-
-        widget.onChanged?.call(castedValue);
+        if (castedValue != null) {
+          widget.onChanged?.call(castedValue);
+        }
       },
       onSubmitted: widget.onSubmitted,
       focusNode: widget.focusNode,

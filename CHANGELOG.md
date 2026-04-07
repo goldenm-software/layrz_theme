@@ -1,5 +1,18 @@
 # Changelog
 
+## 7.5.25
+
+- Fixed `ThemedNumberInput` memory leak: `TextEditingController` is now properly disposed in `dispose()`.
+- Fixed `ThemedNumberInput` `inputRegExp` parameter being silently ignored: the custom regex is now applied to the `FilteringTextInputFormatter` when provided, honoring the existing assertion that requires it when `format` is set.
+- Fixed `ThemedNumberInput` unsafe `onChanged` call when `format.tryParse()` returns `null`: unparseable input is now silently ignored and the last valid value is preserved, preventing `null` from being emitted for intermediate typed states.
+- Fixed `ThemedNumberInput` cursor position after step button tap: cursor now moves to the end of the formatted number after increment/decrement, instead of staying at the previous offset (which caused cursor to land mid-number when digit count changed, e.g. 9→10, 99→100, 999→1,000).
+- Fixed `ThemedNumberInput` doc comments misalignment: `placeholder`, `onChanged`, `value`, and `disabled` fields had their comments shifted by one field due to a copy-paste error.
+- Improved `ThemedNumberInput` `_regex` allocation: moved from a getter (new `RegExp` instance per access) to a `static final` field.
+- Improved `ThemedNumberInput` step button UX: buttons now show 0.4 opacity and ignore taps when the next step would exceed `minimum` or `maximum`, providing clear visual feedback at boundaries.
+- Added `prefixIconDisabled` and `suffixIconDisabled` parameters to `ThemedTextInput`: when `true`, the respective icon renders at 0.4 opacity and its `InkWell` tap is suppressed, enabling disabled visual states for icon buttons without hiding them.
+- Added comprehensive widget tests for `ThemedNumberInput` covering: rendering (label, initial value, null value, suffixText, prefixText, isRequired, errors, hideDetails), `onChanged` via keyboard (parsed value, clear→null, lone minus sign, unparseable input, negative numbers), step buttons (increment, decrement, default step, null value start, boundary enforcement at min/max, hidden when `hidePrefixSuffixActions` or `disabled`), cursor position after step (9→10, 99→100, 10→9, 999→1,000 regressions), decimal separators (dot and comma locale formatting), and lifecycle (mount/unmount without errors, repeated cycles, controller text clears on null value).
+- Updated `ThemedNumberInput` example showcase with sections covering: basic usage, prefix/suffix text, decimal separators side-by-side, step controls with min/max boundary feedback, dense/disabled/error/hideDetails states, isRequired indicator, and hidePrefixSuffixActions mode.
+
 ## 7.5.24
 
 - Fixed `ThemedTable2` silent update loss for mid-list edits: reverted `didUpdateWidget` heuristic back to `DeepCollectionEquality` — the heuristic (identical + length + first element) missed edits to non-first elements in same-length lists; with Freezed value-equality objects the O(n) cost is negligible in practice (~4 of 170 telemetry updates actually triggered a reload in production profiling).

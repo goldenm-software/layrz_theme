@@ -26,6 +26,12 @@ class ThemedTextInput extends StatefulWidget {
   /// [onPrefixTap] is the callback function when the prefix is tapped.
   final VoidCallback? onPrefixTap;
 
+  /// [prefixIconDisabled] disables the prefix icon visually (0.4 opacity) and ignores taps.
+  final bool prefixIconDisabled;
+
+  /// [suffixIconDisabled] disables the suffix icon visually (0.4 opacity) and ignores taps.
+  final bool suffixIconDisabled;
+
   /// [suffixIcon] is the suffix icon of the input.
   final IconData? suffixIcon;
 
@@ -136,6 +142,8 @@ class ThemedTextInput extends StatefulWidget {
     this.prefixIcon,
     this.prefixWidget,
     this.onPrefixTap,
+    this.prefixIconDisabled = false,
+    this.suffixIconDisabled = false,
     this.suffixIcon,
     this.suffixText,
     this.onSuffixTap,
@@ -285,10 +293,13 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       prefixes.add(
         Padding(
           padding: const .only(left: 10),
-          child: InkWell(
-            borderRadius: .circular(20),
-            onTap: widget.onPrefixTap,
-            child: Icon(widget.prefixIcon, size: 18),
+          child: Opacity(
+            opacity: widget.prefixIconDisabled ? 0.4 : 1.0,
+            child: InkWell(
+              borderRadius: .circular(20),
+              onTap: widget.prefixIconDisabled ? null : widget.onPrefixTap,
+              child: Icon(widget.prefixIcon, size: 18),
+            ),
           ),
         ),
       );
@@ -322,10 +333,13 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       suffixes.add(
         Padding(
           padding: const .only(right: 10),
-          child: InkWell(
-            borderRadius: .circular(20),
-            onTap: widget.onSuffixTap,
-            child: Icon(widget.suffixIcon, size: 18),
+          child: Opacity(
+            opacity: widget.suffixIconDisabled ? 0.4 : 1.0,
+            child: InkWell(
+              borderRadius: .circular(20),
+              onTap: widget.suffixIconDisabled ? null : widget.onSuffixTap,
+              child: Icon(widget.suffixIcon, size: 18),
+            ),
           ),
         ),
       );
