@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.5.25
+## 7.5.26
 
 - Fixed `ThemedNumberInput` memory leak: `TextEditingController` is now properly disposed in `dispose()`.
 - Fixed `ThemedNumberInput` `inputRegExp` parameter being silently ignored: the custom regex is now applied to the `FilteringTextInputFormatter` when provided, honoring the existing assertion that requires it when `format` is set.
@@ -12,6 +12,10 @@
 - Added `prefixIconDisabled` and `suffixIconDisabled` parameters to `ThemedTextInput`: when `true`, the respective icon renders at 0.4 opacity and its `InkWell` tap is suppressed, enabling disabled visual states for icon buttons without hiding them.
 - Added comprehensive widget tests for `ThemedNumberInput` covering: rendering (label, initial value, null value, suffixText, prefixText, isRequired, errors, hideDetails), `onChanged` via keyboard (parsed value, clear→null, lone minus sign, unparseable input, negative numbers), step buttons (increment, decrement, default step, null value start, boundary enforcement at min/max, hidden when `hidePrefixSuffixActions` or `disabled`), cursor position after step (9→10, 99→100, 10→9, 999→1,000 regressions), decimal separators (dot and comma locale formatting), and lifecycle (mount/unmount without errors, repeated cycles, controller text clears on null value).
 - Updated `ThemedNumberInput` example showcase with sections covering: basic usage, prefix/suffix text, decimal separators side-by-side, step controls with min/max boundary feedback, dense/disabled/error/hideDetails states, isRequired indicator, and hidePrefixSuffixActions mode.
+
+## 7.5.25
+- Added the `firstDay` and `lastDay` parameters to `ThemedCalendar` to allow setting a date range for the picker, preventing selection of dates outside the specified range.
+- The `firstDay` and `lastDay` parameters are now supported in `ThemedDateRangePicker`, `ThemedDatePicker`, `ThemedDateTimeRangePicker`, `ThemedDateTimeSteppedPicker` and `ThemedDateTimePicker`.
 
 ## 7.5.24
 

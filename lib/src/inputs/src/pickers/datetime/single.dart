@@ -103,6 +103,12 @@ class ThemedDateTimePicker extends StatefulWidget {
   /// [emptyListText] is the text to be displayed when the list is empty.
   final EdgeInsets? padding;
 
+  /// [lastDay] any datetime after this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? lastDay;
+
+  /// [firstDay] any datetime before this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? firstDay;
+
   /// [ThemedDateTimePicker] is a date time picker input. It is a wrapper of [ThemedTextInput] with a date time picker.
   const ThemedDateTimePicker({
     super.key,
@@ -147,6 +153,8 @@ class ThemedDateTimePicker extends StatefulWidget {
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
+    this.firstDay,
+    this.lastDay,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null));
 
   @override
@@ -304,6 +312,8 @@ class _ThemedDateTimePickerState extends State<ThemedDateTimePicker> with Single
                             disabledDays: widget.disabledDays,
                             translations: widget.translations,
                             overridesLayrzTranslations: widget.overridesLayrzTranslations,
+                            firstDay: widget.firstDay,
+                            lastDay: widget.lastDay,
                             onDayTap: (newDate) => setState(() => date = newDate),
                           ),
                           Column(

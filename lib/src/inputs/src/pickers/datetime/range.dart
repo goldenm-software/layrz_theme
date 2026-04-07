@@ -103,6 +103,12 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
   /// [emptyListText] is the text to be displayed when the list is empty.
   final EdgeInsets? padding;
 
+  /// [lastDay] any datetime after this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? lastDay;
+
+  /// [firstDay] any datetime before this day will be disabled. If null, the calendar will not have a limit.
+  final DateTime? firstDay;
+
   /// [ThemedDateTimeRangePicker] is a date time picker input. It is a wrapper of [ThemedTextInput]
   /// with a date time picker.
   const ThemedDateTimeRangePicker({
@@ -148,6 +154,8 @@ class ThemedDateTimeRangePicker extends StatefulWidget {
     this.errors = const [],
     this.hideDetails = false,
     this.padding,
+    this.firstDay,
+    this.lastDay,
   }) : assert((label == null && labelText != null) || (label != null && labelText == null)),
        assert(value.length == 0 || value.length == 2);
 
@@ -245,6 +253,8 @@ class _ThemedDateTimeRangePickerState extends State<ThemedDateTimeRangePicker> w
         translations: widget.translations,
         overridesLayrzTranslations: widget.overridesLayrzTranslations,
         use24HourFormat: widget.use24HourFormat,
+        firstDay: widget.firstDay,
+        lastDay: widget.lastDay,
       ),
     );
 
@@ -276,6 +286,8 @@ class ThemedDateTimeRangeDialog extends StatefulWidget {
   final List<DateTime> disabledDays;
   final Map<String, String> translations;
   final bool overridesLayrzTranslations;
+  final DateTime? firstDay;
+  final DateTime? lastDay;
   final bool use24HourFormat;
 
   const ThemedDateTimeRangeDialog({
@@ -286,6 +298,8 @@ class ThemedDateTimeRangeDialog extends StatefulWidget {
     this.translations = const {},
     this.overridesLayrzTranslations = false,
     this.use24HourFormat = false,
+    this.firstDay,
+    this.lastDay,
   });
 
   @override
@@ -383,6 +397,8 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
                     controller: _tabController,
                     children: [
                       ThemedCalendar(
+                        firstDay: widget.firstDay,
+                        lastDay: widget.lastDay,
                         focusDay: tempDate,
                         focusOnHighlightedDays: tempDate == null,
                         showEntries: false,
