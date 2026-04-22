@@ -15,7 +15,7 @@ This repository includes a *Claude Code plugin* as part of our initiative to pro
 Add this repository as a Claude Code plugin marketplace, then install the plugin:
 
 ```bash
-/plugin marketplace add goldenm-software/layrz-theme
+/plugin marketplace add goldenm-software/layrz_theme
 ```
 
 Once the marketplace is added, install the plugin from the **Discover** tab in `/plugin`, or run:
