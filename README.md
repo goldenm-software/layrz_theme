@@ -6,6 +6,30 @@
 
 It's a set of tools, widgets and generators to help you to create an application easily, fast and with a good quality using the Layrz design standard. Works in the platforms that Flutter supports, also mostly of `layrz_theme` works in Embedded devices using [Flutter eLinux](https://github.com/sony/flutter-elinux) (Disclaimer, not fully tested).
 
+## Claude Code skill
+
+This repository includes a *Claude Code plugin* as part of our initiative to provide AI-assisted development tools for Flutter. The plugin contains a collection of skills that guide developers on how to use the various components of the `layrz_theme` library effectively in their Flutter projects. Each skill includes detailed descriptions, usage examples, and best practices for implementing specific widgets or features from the `layrz_theme` package. By leveraging these skills, developers can quickly integrate `layrz_theme` into their applications and adhere to the Layrz design standard with ease.
+
+### Installation
+
+Add this repository as a Claude Code plugin marketplace, then install the plugin:
+
+```bash
+/plugin marketplace add goldenm-software/layrz-theme
+```
+
+Once the marketplace is added, install the plugin from the **Discover** tab in `/plugin`, or run:
+
+```bash
+/plugin install layrz-theme@goldenm-software-layrz-theme
+```
+
+Then reload your plugins:
+
+```bash
+/reload-plugins
+```
+
 ## Live demo
 
 You can see a live demo on [https://theme.layrz.com](https://theme.layrz.com) (Disclaimer, not all of the components of Layrz Theme are available in the demo)
@@ -15,10 +39,6 @@ You can see a live demo on [https://theme.layrz.com](https://theme.layrz.com) (D
 ### Why is this package called `layrz_theme`?
 
 All packages developed by [Layrz](https://layrz.com) are prefixed with `layrz_`, check out our other packages on [pub.dev](https://pub.dev/publishers/goldenm.com/packages).
-
-### This library is a framework?
-
-Technically, no because Flutter is the Framework, but `layrz_theme` is framework-like library, with a set of tools, widgets and generators.
 
 ### Why this library exists?
 
@@ -44,20 +64,6 @@ If you need more assistance, you open an issue on the [Repository](https://githu
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This project is maintained by [Golden M](https://goldenm.com) with authorization of [Layrz LTD](https://layrz.com).
-
 ## Who are you? / Want to work with us?
 
 **Golden M** is a software and hardware development company what is working on a new, innovative and disruptive technologies. For more information, contact us at [sales@goldenm.com](mailto:sales@goldenm.com) or via WhatsApp at [+(507)-6979-3073](https://wa.me/50769793073?text="From%20layrz_theme%20flutter%20library.%20Hello").
-
-
-
-test:
- - Add widget tests for ResponsiveRow and ResponsiveCol    
- - Add comprehensive tests covering rendering, spacing, alignment, builder functionality, and integration between ResponsiveRow and ResponsiveCol.                                                           
-                                                                                                                                   
-docs: 
- - Add ResponsiveRow and ResponsiveCol skill documentation
- - Document parameter reference, breakpoint logic, responsive behavior examples, gotchas, best practices, and common layout patterns.                                        
-                                                                                                                                    
-  Co-authored-by: Claude AI
