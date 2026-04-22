@@ -1,5 +1,20 @@
 # Changelog
 
+## 7.5.27
+
+- Fixed `ThemedColorPicker` double `#` prefix bug: `.hex` extension already includes `#`, so the controller text was displaying `##RRGGBB` instead of `#RRGGBB`.
+- Fixed `ThemedColorPicker` memory leak: `TextEditingController` is now properly disposed in `dispose()`.
+- Fixed `ThemedColorPicker` external value not reflected: added `didUpdateWidget` to sync `_value` and controller text when the parent passes a new `value` prop.
+- Fixed `ThemedColorPicker` duplicate dialog buttons: `ColorPickerActionButtons` had `dialogActionButtons: true` while a manual `Row` with `ThemedButton.cancel`/`ThemedButton.save` was also rendered below; set `dialogActionButtons: false` to use only the Layrz-themed buttons.
+- Fixed `ThemedColorPicker` assertion: replaced `(label == null && labelText != null) || (label != null && labelText == null)` with XOR logic `(label == null) != (labelText == null)` and added a descriptive error message.
+- Fixed `ThemedColorPicker` doc comments misalignment: `onChanged`, `value`, and `disabled` fields had their comments shifted by two fields.
+- Removed `ThemedColorPicker` unused `prefixIcon` parameter: the prefix is always a color swatch and cannot be replaced with an icon.
+- Improved `ThemedColorPicker` `placeholder` forwarding: the parameter was declared but never passed to `ThemedTextInput`.
+- Improved `ThemedColorPicker` `dense` and `padding` forwarding: `ThemedTextInput` now receives values through the `isDense` and `widgetPadding` getters.
+- Improved `ThemedColorPicker` method signature: `_showPicker` is now `Future<void>` instead of `void async`.
+- Added comprehensive widget tests for `ThemedColorPicker` covering: rendering (label, hex display, kPrimaryColor fallback, color swatch), disabled state (dialog does not open), and lifecycle (dispose without leak, repeated mount/unmount, `didUpdateWidget` updates field on external value change, resets to `kPrimaryColor` on null, handles same-value rebuild without crash).
+- Added `ThemedColorPicker` skill documentation with parameter reference, `ColorPickerType` values, usage examples, form integration patterns, and Color extension helpers.
+
 ## 7.5.26
 
 - Fixed `ThemedNumberInput` memory leak: `TextEditingController` is now properly disposed in `dispose()`.

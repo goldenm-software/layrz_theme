@@ -9,13 +9,13 @@ class ThemedColorPicker extends StatefulWidget {
   /// Avoid submit [label] and [labelText] at the same time. We priorize [label] over [labelText].
   final Widget? label;
 
-  /// [disabled] is the state of the input being disabled.
+  /// [onChanged] is the callback function when the input is changed.
   final void Function(Color)? onChanged;
 
-  /// [onChanged] is the callback function when the input is changed.
+  /// [value] is the value of the input.
   final Color? value;
 
-  /// [value] is the value of the input.
+  /// [disabled] is the state of the input being disabled.
   final bool disabled;
 
   /// [errors] is the list of errors of the input.
@@ -29,9 +29,6 @@ class ThemedColorPicker extends StatefulWidget {
 
   /// [dense] is the state of the input being dense.
   final bool dense;
-
-  /// [prefixIcon] is the prefix icon of the input.
-  final IconData? prefixIcon;
 
   /// [onPrefixTap] is the callback function when the prefix is tapped.
   final VoidCallback? onPrefixTap;
@@ -87,7 +84,6 @@ class ThemedColorPicker extends StatefulWidget {
     this.hideDetails = false,
     this.padding,
     this.dense = false,
-    this.prefixIcon,
     this.onPrefixTap,
     this.placeholder,
     this.saveText = "OK",
@@ -100,7 +96,7 @@ class ThemedColorPicker extends StatefulWidget {
     this.highlightColor = Colors.transparent,
     this.borderRadius = const .all(.circular(10)),
     this.maxWidth = 400,
-  }) : assert((label == null && labelText != null) || (label != null && labelText == null));
+  }) : assert((label == null) != (labelText == null), 'Provide exactly one of label or labelText');
 
   @override
   State<ThemedColorPicker> createState() => _ThemedColorPickerState();
@@ -115,7 +111,22 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
     super.initState();
     _value = widget.value ?? kPrimaryColor;
 
-    _controller.text = "#${_value.hex}";
+    _controller.text = _value.hex;
+  }
+
+  @override
+  void didUpdateWidget(ThemedColorPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _value = widget.value ?? kPrimaryColor;
+      _controller.text = _value.hex;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
@@ -138,6 +149,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
     return ThemedTextInput(
       label: widget.label,
       labelText: widget.labelText,
+      placeholder: widget.placeholder,
       prefixWidget: Padding(
         padding: const .symmetric(vertical: 10, horizontal: 15),
         child: SizedBox(
@@ -156,16 +168,16 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
       suffixIcon: LayrzIcons.solarOutlinePalette2,
       disabled: widget.disabled,
       onTap: widget.disabled ? null : _showPicker,
-      dense: widget.dense,
+      dense: isDense,
       errors: widget.errors,
       hideDetails: widget.hideDetails,
       controller: _controller,
       readonly: true,
-      padding: widget.padding,
+      padding: widgetPadding,
     );
   }
 
-  void _showPicker() async {
+  Future<void> _showPicker() async {
     Color? value = await showDialog<Color>(
       context: context,
       builder: (context) {
@@ -188,7 +200,7 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
                         pasteButton: true,
                       ),
                       actionButtons: ColorPickerActionButtons(
-                        dialogActionButtons: true,
+                        dialogActionButtons: false,
                         dialogActionIcons: false,
                         dialogOkButtonType: .outlined,
                         dialogCancelButtonType: .text,
@@ -241,6 +253,6 @@ class _ThemedColorPickerState extends State<ThemedColorPicker> {
     if (value == null) return;
     setState(() => _value = value);
     widget.onChanged?.call(value);
-    _controller.text = "#${_value.hex}";
+    _controller.text = _value.hex;
   }
 }

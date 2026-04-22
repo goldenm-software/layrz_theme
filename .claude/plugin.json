@@ -1,0 +1,12 @@
+{
+  "name": "layrz-theme",
+  "description": "Claude Code skills for layrz-theme Flutter widget library",
+  "version": "7.5.27",
+  "author": {
+    "name": "Golden M, Inc.",
+    "url": "https://github.com/goldenm-software"
+  },
+  "repository": "https://github.com/goldenm-software/layrz_theme",
+  "license": "MIT",
+  "skills": "./.claude/skills/"
+}
