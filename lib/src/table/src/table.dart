@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 part of '../table.dart';
 
 @Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
