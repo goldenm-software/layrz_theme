@@ -1,20 +1,26 @@
 part of '../table.dart';
 
 /// [ValueBuilder<T>] defines the value to display in a column.
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 typedef ValueBuilder<T> = String Function(BuildContext context, T item);
 
 /// [WidgetBuilder<T>] defines the widget to display in a column.
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 typedef WidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
 /// [CellTap<T>] defines the action when the cell is tapped.
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 typedef CellTap<T> = void Function(T item);
 
 /// [CellColor<T>] defines the color of the cell.
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 typedef CellColor<T> = Color? Function(T item);
 
 /// [ValueBuilder2<T>] defines the value to display in a column.
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 typedef ValueBuilder2<T> = String Function(T item);
 
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 class ThemedColumn<T> {
   /// The label of the column.
   final Widget? label;

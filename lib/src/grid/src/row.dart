@@ -66,6 +66,7 @@ class ResponsiveRow extends StatelessWidget {
       width: double.infinity,
       child: Wrap(
         spacing: spacing,
+        runSpacing: spacing,
         direction: Axis.horizontal,
         alignment: mainAxisAlignment,
         crossAxisAlignment: crossAxisAlignment,
