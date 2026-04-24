@@ -35,7 +35,7 @@ ResponsiveRow.builder({
 | `children` | `List<ResponsiveCol>` | required | Only `ResponsiveCol`. For dividers: `ResponsiveCol(child: Divider())` |
 | `mainAxisAlignment` | `WrapAlignment` | `.start` | Horizontal alignment of columns |
 | `crossAxisAlignment` | `WrapCrossAlignment` | `.start` | Vertical alignment of columns |
-| `spacing` | `double` | `0` | Horizontal gap between columns in pixels |
+| `spacing` | `double` | `0` | Gap between columns (horizontal) and between wrapped rows (vertical) in pixels |
 
 Renders as `SizedBox(width: double.infinity, child: Wrap(...))` — always full parent width.
 

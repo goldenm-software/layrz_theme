@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.5.28
+
+- Deprecated `ThemedTable`, `ThemedColumn`, `ThemedTableAction`, `ThemedTableAvatar`, and related typedefs (`ValueBuilder`, `WidgetBuilder`, `CellTap`, `CellColor`, `ValueBuilder2`, `kThemedTableCanTrue`). Use `ThemedTable2` instead. All symbols will be removed in version 8.0.0.
+- Fixed `ResponsiveRow` spacing on vertical layouts: `spacing` now applies to both horizontal gaps between columns and vertical gaps between wrapped rows (`Wrap.runSpacing`). Previously, `spacing` had no effect when columns stacked vertically on mobile (xs: .col12).
+
 ## 7.5.27
 
 - Fixed `ThemedColorPicker` double `#` prefix bug: `.hex` extension already includes `#`, so the controller text was displaying `##RRGGBB` instead of `#RRGGBB`.

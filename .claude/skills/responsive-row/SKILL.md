@@ -37,7 +37,7 @@ ResponsiveRow(
 - Renders as `SizedBox(width: double.infinity, child: Wrap(...))` — always full parent width.
 - `children` only accepts `List<ResponsiveCol>` — use `ResponsiveCol(child: Divider())` for dividers.
 - `builder` takes `ResponsiveCol Function(int)` — not `Widget Function(BuildContext, int)`.
-- `spacing` is horizontal gap between columns in pixels (default `0`).
+- `spacing` applies to **both axes**: horizontal gap between columns in the same row, and vertical gap between rows when columns wrap (default `0`).
 
 ---
 

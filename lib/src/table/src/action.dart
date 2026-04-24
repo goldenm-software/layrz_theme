@@ -1,5 +1,6 @@
 part of '../table.dart';
 
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 class ThemedTableAction<T> {
   /// The label of the action.
   final Widget? label;

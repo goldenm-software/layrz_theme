@@ -112,6 +112,43 @@ void main() {
       expect(wrap.spacing, 0); // Default spacing should be 0
     });
 
+    testWidgets('ResponsiveRow spacing applies to Wrap.runSpacing', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              spacing: 20,
+              children: [
+                ResponsiveCol(xs: .col6, child: Container(height: 100)),
+                ResponsiveCol(xs: .col6, child: Container(height: 100)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
+      expect(wrap.runSpacing, 20);
+    });
+
+    testWidgets('ResponsiveRow default spacing gives runSpacing of 0', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              children: [
+                ResponsiveCol(xs: .col6, child: Container(height: 100)),
+                ResponsiveCol(xs: .col6, child: Container(height: 100)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
+      expect(wrap.runSpacing, 0);
+    });
+
     testWidgets('ResponsiveRow respects mainAxisAlignment', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(

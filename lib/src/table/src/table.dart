@@ -1,7 +1,9 @@
 part of '../table.dart';
 
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 bool kThemedTableCanTrue(BuildContext context, item) => true;
 
+@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 class ThemedTable<T> extends StatefulWidget {
   /// Represents the columns or headers of the table. This columns only will be displayed in desktop size.
   ///
