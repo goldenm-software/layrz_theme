@@ -3,6 +3,7 @@
 ## 7.5.29
 
 - Added `onFilteredCountChanged: void Function(int count)?` to `ThemedTable2<T>`. The callback fires after every filter-and-sort cycle (initial load, search, sort, `items` update) with the count of currently visible rows. Optional and `null` by default — fully backward-compatible.
+- Restored `prefixIcon` parameter in `ThemedColorPicker` as `@Deprecated`. The parameter was removed in 7.5.27 but is still referenced in downstream packages. It is now accepted (and ignored) to restore build compatibility while consumers migrate.
 
 ## 7.5.28
 
