@@ -49,6 +49,7 @@ Always wrap in `Expanded` or give a fixed height — `ThemedTable2` requires bou
 - `actionsCount` must equal the number of buttons `actionsBuilder` actually returns — assert enforced.
 - `hasMultiselect: true` requires at least one entry in `multiselectActions` — assert enforced.
 - `onTapDefaultBehavior` defaults to `.copyToClipboard`; set to `.none` to disable.
+- `onFilteredCountChanged` fires after every `_filterAndSort` cycle (initial load, search, sort, `items` update) with the visible row count. Fires with `0` for an empty dataset. Optional — `null` by default, no overhead when omitted.
 
 ---
 
@@ -127,6 +128,18 @@ ThemedTable2<Asset>(
       onTap: () => _onDeleteSelected(_selected.value),
     ),
   ],
+  columns: [ /* ... */ ],
+)
+
+// With filtered count callback
+ThemedTable2<Asset>(
+  items: _items,
+  canSearch: true,
+  actionsCount: 0,
+  hasMultiselect: false,
+  onFilteredCountChanged: (count) {
+    setState(() => _visibleCount = count);
+  },
   columns: [ /* ... */ ],
 )
 

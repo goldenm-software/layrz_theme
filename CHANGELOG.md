@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.29
+
+- Added `onFilteredCountChanged: void Function(int count)?` to `ThemedTable2<T>`. The callback fires after every filter-and-sort cycle (initial load, search, sort, `items` update) with the count of currently visible rows. Optional and `null` by default — fully backward-compatible.
+
 ## 7.5.28
 
 - Deprecated `ThemedTable`, `ThemedColumn`, `ThemedTableAction`, `ThemedTableAvatar`, and related typedefs (`ValueBuilder`, `WidgetBuilder`, `CellTap`, `CellColor`, `ValueBuilder2`, `kThemedTableCanTrue`). Use `ThemedTable2` instead. All symbols will be removed in version 8.0.0.

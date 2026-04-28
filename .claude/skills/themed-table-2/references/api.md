@@ -96,6 +96,7 @@ const ThemedTable2({
   this.onTapDefaultBehavior = .copyToClipboard,
   this.copyToClipboardText,
   this.controller,
+  this.onFilteredCountChanged,
 })
 // Asserts:
 // - columns.length > 0
@@ -121,6 +122,7 @@ const ThemedTable2({
 | `canSearch` | `bool` | `true` | Shows search input above the table |
 | `onTapDefaultBehavior` | `ThemedTable2OnTapBehavior` | `.copyToClipboard` | Cell tap behavior when no `onTap` on column |
 | `controller` | `ThemedTable2Controller<T>?` | `null` | Programmatic sort/refresh |
+| `onFilteredCountChanged` | `void Function(int count)?` | `null` | Called after each filter+sort cycle with the visible row count |
 | `populateDelay` | `Duration` | `150ms` | Delay before rendering data |
 | `minColumnWidth` | `double` | `250` | Minimum width for flex columns |
 | `headerHeight` | `double` | `40` | Header row height |
