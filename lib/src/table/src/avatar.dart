@@ -1,6 +1,5 @@
 part of '../table.dart';
 
-@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 class ThemedTableAvatar {
   /// Represents the name, label or identifier of the avatar.
   final String? label;

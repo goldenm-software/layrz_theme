@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.5.30
+
+- Fixed incorrect deprecation of `ThemedTableAvatar`: the class is used by `ThemedScaffoldView.avatarBuilder` in the scaffolds module and is not exclusive to `ThemedTable`. Consumers using `ThemedScaffoldView` were receiving a false `deprecated_member_use` warning.
+- Fixed incorrect deprecation of `CellTap<T>`: the typedef is used by `ThemedColumn2.onTap` in `ThemedTable2` and must remain public and non-deprecated while `ThemedTable2` depends on it.
+
 ## 7.5.29
 
 - Added `onFilteredCountChanged: void Function(int count)?` to `ThemedTable2<T>`. The callback fires after every filter-and-sort cycle (initial load, search, sort, `items` update) with the count of currently visible rows. Optional and `null` by default — fully backward-compatible.
