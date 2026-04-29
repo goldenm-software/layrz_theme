@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 part of '../scaffolds.dart';
 
 class ThemedScaffoldView<T> extends StatefulWidget {

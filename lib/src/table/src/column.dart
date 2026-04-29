@@ -9,7 +9,6 @@ typedef ValueBuilder<T> = String Function(BuildContext context, T item);
 typedef WidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
 /// [CellTap<T>] defines the action when the cell is tapped.
-@Deprecated('Use ThemedTable2 instead. ThemedTable will be removed in version 8.0.0.')
 typedef CellTap<T> = void Function(T item);
 
 /// [CellColor<T>] defines the color of the cell.
