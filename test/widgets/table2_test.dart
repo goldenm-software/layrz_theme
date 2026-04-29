@@ -71,6 +71,7 @@ Widget _buildTable(
   List<ThemedColumn2<_Item>>? columns,
   bool canSearch = false,
   ThemedTable2Controller<_Item>? controller,
+  void Function(int count)? onFilteredCountChanged,
 }) {
   return MaterialApp(
     home: Scaffold(
@@ -84,6 +85,7 @@ Widget _buildTable(
           canSearch: canSearch,
           populateDelay: Duration.zero,
           controller: controller,
+          onFilteredCountChanged: onFilteredCountChanged,
           columns: columns ??
               [
                 ThemedColumn2<_Item>(
@@ -547,6 +549,158 @@ void main() {
           expect(find.text('EditedMiddle'), findsOneWidget);
         },
       );
+    });
+
+    // ─────────────────────────────────────────────
+    // onFilteredCountChanged
+    // ─────────────────────────────────────────────
+    group('onFilteredCountChanged', () {
+      testWidgets('fires with full count on initial load', (tester) async {
+        final counts = <int>[];
+        final items = [
+          const _Item(id: '1', name: 'Alpha', secondary: ''),
+          const _Item(id: '2', name: 'Beta', secondary: ''),
+          const _Item(id: '3', name: 'Gamma', secondary: ''),
+        ];
+
+        await tester.pumpWidget(_buildTable(items, onFilteredCountChanged: counts.add));
+        await tester.pump();
+        await _waitForCompute(tester);
+
+        expect(counts.last, equals(3));
+      });
+
+      testWidgets('null callback does not throw', (tester) async {
+        final items = [const _Item(id: '1', name: 'Alpha', secondary: '')];
+
+        await tester.pumpWidget(_buildTable(items));
+        await tester.pump();
+        await _waitForCompute(tester);
+
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('fires with 0 on empty items list', (tester) async {
+        final counts = <int>[];
+
+        await tester.pumpWidget(_buildTable([], onFilteredCountChanged: counts.add));
+        await tester.pump();
+        await _waitForCompute(tester);
+
+        expect(counts.last, equals(0));
+      });
+
+      testWidgets('fires filtered count after search narrows results', (tester) async {
+        final counts = <int>[];
+        final items = [
+          const _Item(id: '1', name: 'Apple', secondary: ''),
+          const _Item(id: '2', name: 'Banana', secondary: ''),
+          const _Item(id: '3', name: 'Apricot', secondary: ''),
+        ];
+
+        await tester.pumpWidget(
+          _buildTable(items, canSearch: true, onFilteredCountChanged: counts.add),
+        );
+        await tester.pump();
+        await _waitForCompute(tester);
+        expect(counts.last, equals(3));
+
+        // 'Ap' matches Apple and Apricot (both start with 'Ap'), but not Banana.
+        await tester.enterText(find.byType(TextField), 'Ap');
+        await tester.pump(const Duration(milliseconds: 700));
+        await _waitForCompute(tester);
+
+        expect(counts.last, equals(2));
+      });
+
+      testWidgets('fires updated count when items list grows via didUpdateWidget', (tester) async {
+        final counts = <int>[];
+        List<_Item> items = [const _Item(id: '1', name: 'First', secondary: '')];
+        late StateSetter rebuildState;
+
+        await tester.pumpWidget(
+          StatefulBuilder(
+            builder: (context, setState) {
+              rebuildState = setState;
+              return MaterialApp(
+                home: Scaffold(
+                  body: SizedBox(
+                    height: 600,
+                    width: 800,
+                    child: ThemedTable2<_Item>(
+                      items: items,
+                      actionsCount: 0,
+                      hasMultiselect: false,
+                      canSearch: false,
+                      populateDelay: Duration.zero,
+                      onFilteredCountChanged: counts.add,
+                      columns: [
+                        ThemedColumn2<_Item>(
+                          headerText: 'Name',
+                          valueBuilder: (item) => item.name,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+        await tester.pump();
+        await _waitForCompute(tester);
+        expect(counts.last, equals(1));
+
+        rebuildState(() {
+          items = [
+            const _Item(id: '1', name: 'First', secondary: ''),
+            const _Item(id: '2', name: 'Second', secondary: ''),
+          ];
+        });
+        await tester.pump();
+        await _waitForCompute(tester);
+
+        expect(counts.last, equals(2));
+      });
+
+      testWidgets('fires with same count after controller.sort', (tester) async {
+        final counts = <int>[];
+        final controller = ThemedTable2Controller<_Item>();
+        addTearDown(controller.dispose);
+
+        final items = [
+          const _Item(id: '1', name: 'Zebra', secondary: ''),
+          const _Item(id: '2', name: 'Apple', secondary: ''),
+        ];
+
+        await tester.pumpWidget(
+          _buildTable(items, controller: controller, onFilteredCountChanged: counts.add),
+        );
+        await tester.pump();
+        await _waitForCompute(tester);
+        final countAfterInit = counts.last;
+
+        controller.sort(columnIndex: 0, ascending: true);
+        await _waitForCompute(tester);
+
+        expect(counts.last, equals(countAfterInit));
+        expect(counts.last, equals(2));
+      });
+
+      testWidgets('does not fire after widget is disposed', (tester) async {
+        final counts = <int>[];
+        final items = [const _Item(id: '1', name: 'Alpha', secondary: '')];
+
+        await tester.pumpWidget(_buildTable(items, onFilteredCountChanged: counts.add));
+        await tester.pump();
+        await _waitForCompute(tester);
+        final countAfterMount = counts.length;
+
+        await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
+        await tester.pump();
+
+        expect(counts.length, equals(countAfterMount));
+      });
     });
   });
 }

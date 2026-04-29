@@ -30,6 +30,10 @@ class ThemedColorPicker extends StatefulWidget {
   /// [dense] is the state of the input being dense.
   final bool dense;
 
+  /// [prefixIcon] is the prefix icon of the input.
+  @Deprecated('prefixIcon is no longer used in ThemedColorPicker')
+  final IconData? prefixIcon;
+
   /// [onPrefixTap] is the callback function when the prefix is tapped.
   final VoidCallback? onPrefixTap;
 
@@ -84,6 +88,8 @@ class ThemedColorPicker extends StatefulWidget {
     this.hideDetails = false,
     this.padding,
     this.dense = false,
+    // ignore: deprecated_member_use_from_same_package
+    this.prefixIcon,
     this.onPrefixTap,
     this.placeholder,
     this.saveText = "OK",

@@ -79,6 +79,11 @@ class ThemedTable2<T> extends StatefulWidget {
   /// [controller] is an optional controller to programmatically control the table.
   final ThemedTable2Controller<T>? controller;
 
+  /// [onFilteredCountChanged] is called whenever the number of rows currently
+  /// displayed in the table changes (after filtering and sorting completes).
+  /// The integer argument is the new filtered row count.
+  final void Function(int count)? onFilteredCountChanged;
+
   const ThemedTable2({
     required this.items,
     required this.columns,
@@ -102,6 +107,7 @@ class ThemedTable2<T> extends StatefulWidget {
     this.onTapDefaultBehavior = .copyToClipboard,
     this.copyToClipboardText,
     this.controller,
+    this.onFilteredCountChanged,
   }) : assert(columns.length > 0, 'Columns cant be empty'),
        assert(actionsCount >= 0, 'Actions count cant be negative'),
        assert(minColumnWidth > 0, 'Min column width must be greater than 0'),
@@ -209,6 +215,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _selectedItems.addListener(_syncSelectedSet);
 
     widget.controller?.addListener(_onControllerEvent);
+    _filteredData.addListener(_onFilteredDataChanged);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _filterAndSort('INIT_STATE');
@@ -295,6 +302,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   @override
   void dispose() {
     _isLoading.dispose();
+    _filteredData.removeListener(_onFilteredDataChanged);
     _filteredData.dispose();
     _searchController.dispose();
 
@@ -318,6 +326,11 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
     _selectedSet
       ..clear()
       ..addAll(_selectedItems.value);
+  }
+
+  /// Called when [_filteredData] changes; forwards the new count to [widget.onFilteredCountChanged].
+  void _onFilteredDataChanged() {
+    widget.onFilteredCountChanged?.call(_filteredData.value.length);
   }
 
   void _onControllerEvent(ThemedTable2Event event) {
