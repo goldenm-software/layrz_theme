@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.31
+
+- Fixed `ThemedDateTimeRangePicker` swapped times when the date range was picked in reverse order: selecting the later date first and the earlier date second caused the times entered in the Time tab to be glued to the wrong endpoint, because `startDate`/`endDate` were left in selection order while only the final save sorted the resulting `DateTime`s. The dialog now sorts `startDate`/`endDate` the moment the second tap closes the range, so the Time tab always shows "Start" for the earlier day and "End" for the later one and the returned `[start, end]` list keeps each time aligned with its intended date.
+
 ## 7.5.30
 
 - Fixed incorrect deprecation of `ThemedTableAvatar`: the class is used by `ThemedScaffoldView.avatarBuilder` in the scaffolds module and is not exclusive to `ThemedTable`. Consumers using `ThemedScaffoldView` were receiving a false `deprecated_member_use` warning.
