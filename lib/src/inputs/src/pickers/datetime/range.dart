@@ -420,11 +420,12 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
 
                           endDate = newDate;
                           tempDate = null;
-                          filledDates = _fillDates(
-                            [startDate, endDate]..sort((a, b) {
-                              return a.compareTo(b);
-                            }),
-                          );
+                          if (endDate.isBefore(startDate)) {
+                            final swap = startDate;
+                            startDate = endDate;
+                            endDate = swap;
+                          }
+                          filledDates = _fillDates([startDate, endDate]);
                           setState(() {});
                         },
                       ),
