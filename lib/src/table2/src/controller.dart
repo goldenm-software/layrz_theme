@@ -28,6 +28,27 @@ class ThemedTable2Controller<T> {
     }
   }
 
+  void onSort({
+    int columnIndex = 0,
+    bool ascending = true,
+  }) {
+    for (var listener in _listeners) {
+      listener(ThemedTable2OnSortEvent<T>(columnIndex: columnIndex, ascending: ascending));
+    }
+  }
+
+  void search(String search) {
+    for (var listener in _listeners) {
+      listener(ThemedTable2SearchEvent<T>(search: search));
+    }
+  }
+
+  void onSearch(String search) {
+    for (var listener in _listeners) {
+      listener(ThemedTable2OnSearchEvent<T>(search: search));
+    }
+  }
+
   void refresh() {
     for (var listener in _listeners) {
       listener(ThemedTable2RefreshEvent());
