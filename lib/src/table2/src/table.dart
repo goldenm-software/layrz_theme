@@ -261,6 +261,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
         ];
       }
 
+      widget.controller?.onSearch(_searchController.text);
       if (_searchController.text.isNotEmpty) {
         final searchLower = _searchController.text.toLowerCase();
         items = items.where((row) {
@@ -279,6 +280,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       final sortKeys = [
         for (final item in items) _itemsStrings[item.hashCode]?[columnIndex] ?? _colSelected.valueBuilder(item),
       ];
+      widget.controller?.onSort(columnIndex: columnIndex, ascending: !_isReversed);
       _filteredData.value = await compute(
         _sort,
         _SortParams<T>(
@@ -334,6 +336,9 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
   }
 
   void _onControllerEvent(ThemedTable2Event event) {
+    /// Handle sort events from the controller:
+
+    /// Sort events are handled by updating the selected column and sort order, then re-filtering and sorting the data.
     if (event is ThemedTable2SortEvent<T>) {
       final columnIndex = event.columnIndex;
       final ascending = event.ascending;
@@ -349,8 +354,16 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
       return;
     }
 
+    /// Refresh events are handled by re-filtering and sorting the data.
     if (event is ThemedTable2RefreshEvent<T>) {
       _filterAndSort('CONTROLLER_REFRESH');
+      return;
+    }
+
+    /// Search events are handled by updating the search controller text, which triggers the search listener and re-filters the data.
+    if (event is ThemedTable2SearchEvent<T>) {
+      _searchController.text = event.search;
+      _filterAndSort('CONTROLLER_SEARCH');
       return;
     }
   }
