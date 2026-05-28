@@ -5,6 +5,9 @@ import 'package:layrz_theme/layrz_theme.dart';
 void main() {
   group('ResponsiveRow', () {
     testWidgets('Renders basic ResponsiveRow with children', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 600));
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -18,12 +21,12 @@ void main() {
         ),
       );
 
-      expect(find.byType(Wrap), findsOneWidget);
+      expect(find.byType(LayoutBuilder), findsWidgets);
       expect(find.byType(ResponsiveCol), findsNWidgets(2));
       expect(find.byType(Container), findsNWidgets(2));
     });
 
-    testWidgets('ResponsiveRow with empty children renders empty Wrap', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow with empty children renders no Row widget', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -34,9 +37,8 @@ void main() {
         ),
       );
 
-      final wrap = find.byType(Wrap);
-      expect(wrap, findsOneWidget);
       expect(find.byType(ResponsiveCol), findsNothing);
+      expect(find.byType(Row), findsNothing);
     });
 
     testWidgets('ResponsiveRow with single child', (WidgetTester tester) async {
@@ -56,100 +58,127 @@ void main() {
       expect(find.byType(Container), findsOneWidget);
     });
 
-    testWidgets('ResponsiveRow respects spacing parameter', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow respects spacing parameter (geometric)', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: ResponsiveRow(
               spacing: 16,
               children: [
-                ResponsiveCol(xs: .col6, child: Container(color: Colors.red, height: 100)),
-                ResponsiveCol(xs: .col6, child: Container(color: Colors.blue, height: 100)),
+                ResponsiveCol(xs: .col6, child: Container(color: Colors.red, height: 100, key: const Key('a'))),
+                ResponsiveCol(xs: .col6, child: Container(color: Colors.blue, height: 100, key: const Key('b'))),
               ],
             ),
           ),
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.spacing, 16);
+      final aRight = tester.getTopRight(find.byKey(const Key('a')));
+      final bLeft = tester.getTopLeft(find.byKey(const Key('b')));
+      // Gap between right edge of 'a' and left edge of 'b' should equal spacing (16)
+      expect(bLeft.dx - aRight.dx, closeTo(16, 1));
     });
 
-    testWidgets('ResponsiveRow respects spacing = 0', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow respects spacing = 0 (geometric)', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: ResponsiveRow(
               spacing: 0,
               children: [
-                ResponsiveCol(xs: .col6, child: Container(color: Colors.red, height: 100)),
-                ResponsiveCol(xs: .col6, child: Container(color: Colors.blue, height: 100)),
+                ResponsiveCol(xs: .col6, child: Container(color: Colors.red, height: 100, key: const Key('a'))),
+                ResponsiveCol(xs: .col6, child: Container(color: Colors.blue, height: 100, key: const Key('b'))),
               ],
             ),
           ),
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.spacing, 0);
+      final aRight = tester.getTopRight(find.byKey(const Key('a')));
+      final bLeft = tester.getTopLeft(find.byKey(const Key('b')));
+      // With spacing=0 children are adjacent
+      expect(bLeft.dx - aRight.dx, closeTo(0, 1));
     });
 
-    testWidgets('ResponsiveRow default spacing is 0', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow default spacing is 0 (geometric)', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: ResponsiveRow(
               children: [
-                ResponsiveCol(xs: .col6, child: Container(height: 100)),
-                ResponsiveCol(xs: .col6, child: Container(height: 100)),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('a'))),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('b'))),
               ],
             ),
           ),
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.spacing, 0); // Default spacing should be 0
+      final aRight = tester.getTopRight(find.byKey(const Key('a')));
+      final bLeft = tester.getTopLeft(find.byKey(const Key('b')));
+      expect(bLeft.dx - aRight.dx, closeTo(0, 1));
     });
 
-    testWidgets('ResponsiveRow spacing applies to Wrap.runSpacing', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow spacing applies as vertical gap between wrapped rows', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: ResponsiveRow(
               spacing: 20,
               children: [
-                ResponsiveCol(xs: .col6, child: Container(height: 100)),
-                ResponsiveCol(xs: .col6, child: Container(height: 100)),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('a'))),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('b'))),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('c'))),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('d'))),
               ],
             ),
           ),
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.runSpacing, 20);
+      final aBottom = tester.getBottomLeft(find.byKey(const Key('a')));
+      final cTop = tester.getTopLeft(find.byKey(const Key('c')));
+      // Vertical gap between row 1 bottom and row 2 top should equal spacing
+      expect(cTop.dy - aBottom.dy, closeTo(20, 1));
     });
 
-    testWidgets('ResponsiveRow default spacing gives runSpacing of 0', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow default spacing gives no vertical gap between rows', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: ResponsiveRow(
               children: [
-                ResponsiveCol(xs: .col6, child: Container(height: 100)),
-                ResponsiveCol(xs: .col6, child: Container(height: 100)),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('a'))),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('b'))),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('c'))),
+                ResponsiveCol(xs: .col6, child: Container(height: 100, key: const Key('d'))),
               ],
             ),
           ),
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.runSpacing, 0);
+      final aBottom = tester.getBottomLeft(find.byKey(const Key('a')));
+      final cTop = tester.getTopLeft(find.byKey(const Key('c')));
+      expect(cTop.dy - aBottom.dy, closeTo(0, 1));
     });
 
-    testWidgets('ResponsiveRow respects mainAxisAlignment', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow respects mainAxisAlignment (inner Row)', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -163,11 +192,11 @@ void main() {
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.alignment, WrapAlignment.center);
+      final row = tester.widget<Row>(find.byType(Row).first);
+      expect(row.mainAxisAlignment, MainAxisAlignment.center);
     });
 
-    testWidgets('ResponsiveRow respects crossAxisAlignment', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow respects crossAxisAlignment (inner Row)', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -181,8 +210,8 @@ void main() {
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.crossAxisAlignment, WrapCrossAlignment.center);
+      final row = tester.widget<Row>(find.byType(Row).first);
+      expect(row.crossAxisAlignment, CrossAxisAlignment.center);
     });
 
     testWidgets('ResponsiveRow has full width (width: double.infinity)', (WidgetTester tester) async {
@@ -242,7 +271,7 @@ void main() {
       expect(find.byType(ResponsiveCol), findsNothing);
     });
 
-    testWidgets('ResponsiveRow.builder respects mainAxisAlignment', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow.builder respects mainAxisAlignment (inner Row)', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -255,28 +284,35 @@ void main() {
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.alignment, WrapAlignment.spaceEvenly);
+      final row = tester.widget<Row>(find.byType(Row).first);
+      expect(row.mainAxisAlignment, MainAxisAlignment.spaceEvenly);
     });
 
-    testWidgets('ResponsiveRow.builder respects spacing', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow.builder respects spacing (geometric)', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: ResponsiveRow.builder(
-              itemCount: 3,
+              itemCount: 2,
               spacing: 20,
-              itemBuilder: (index) => ResponsiveCol(xs: .col4, child: Container()),
+              itemBuilder: (index) => ResponsiveCol(
+                xs: .col4,
+                child: Container(key: Key('item-$index'), height: 50),
+              ),
             ),
           ),
         ),
       );
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.spacing, 20);
+      final aRight = tester.getTopRight(find.byKey(const Key('item-0')));
+      final bLeft = tester.getTopLeft(find.byKey(const Key('item-1')));
+      expect(bLeft.dx - aRight.dx, closeTo(20, 1));
     });
 
-    testWidgets('ResponsiveRow uses Wrap as layout widget', (WidgetTester tester) async {
+    testWidgets('ResponsiveRow uses LayoutBuilder + Column as layout widgets', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -290,7 +326,9 @@ void main() {
         ),
       );
 
-      expect(find.byType(Wrap), findsOneWidget);
+      expect(find.byType(LayoutBuilder), findsOneWidget);
+      expect(find.byType(Column), findsWidgets);
+      expect(find.byType(Wrap), findsNothing);
     });
 
     testWidgets('ResponsiveRow.builder with large itemCount', (WidgetTester tester) async {
@@ -378,18 +416,25 @@ void main() {
       expect(find.byKey(const Key('test')), findsOneWidget);
     });
 
-    testWidgets('ResponsiveCol uses LayoutBuilder for responsive sizing', (WidgetTester tester) async {
+    testWidgets('ResponsiveCol is a transparent pass-through (no own LayoutBuilder)', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ResponsiveCol(
-              xs: .col12,
-              child: Container(color: Colors.red, height: 100),
+            body: ResponsiveRow(
+              children: [
+                ResponsiveCol(
+                  xs: .col12,
+                  child: Container(color: Colors.red, height: 100, key: const Key('pass-through')),
+                ),
+              ],
             ),
           ),
         ),
       );
 
+      // Child is discoverable
+      expect(find.byKey(const Key('pass-through')), findsOneWidget);
+      // Only the ResponsiveRow creates exactly one LayoutBuilder, not per-col
       expect(find.byType(LayoutBuilder), findsOneWidget);
     });
 
@@ -521,8 +566,7 @@ void main() {
       expect(find.byType(ResponsiveCol), findsNWidgets(12));
     });
 
-    testWidgets('ResponsiveRow.builder with all parameters',
-        (WidgetTester tester) async {
+    testWidgets('ResponsiveRow.builder with all parameters', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -543,14 +587,12 @@ void main() {
 
       expect(find.byType(ResponsiveCol), findsNWidgets(4));
 
-      final wrap = find.byType(Wrap).evaluate().first.widget as Wrap;
-      expect(wrap.spacing, 10);
-      expect(wrap.alignment, WrapAlignment.spaceEvenly);
-      expect(wrap.crossAxisAlignment, WrapCrossAlignment.center);
+      final row = tester.widget<Row>(find.byType(Row).first);
+      expect(row.mainAxisAlignment, MainAxisAlignment.spaceEvenly);
+      expect(row.crossAxisAlignment, CrossAxisAlignment.center);
     });
 
-    testWidgets('ResponsiveCol with ResponsiveRow preserves layout structure',
-        (WidgetTester tester) async {
+    testWidgets('ResponsiveCol with ResponsiveRow preserves layout structure', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -571,7 +613,203 @@ void main() {
       );
 
       expect(find.byKey(const Key('responsive-item')), findsOneWidget);
-      expect(find.byType(Wrap), findsOneWidget);
+      expect(find.byType(LayoutBuilder), findsOneWidget);
+    });
+  });
+
+  // New TDD tests — written RED before implementation (FR-001, FR-002, FR-003, FR-008)
+  group('ResponsiveRow horizontal layout', () {
+    testWidgets('two col6 with spacing=12 at md (W=1000) stay on one row', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              spacing: 12,
+              children: [
+                ResponsiveCol(md: .col6, child: Container(key: const Key('a'), height: 50)),
+                ResponsiveCol(md: .col6, child: Container(key: const Key('b'), height: 50)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final aRect = tester.getRect(find.byKey(const Key('a')));
+      final bRect = tester.getRect(find.byKey(const Key('b')));
+
+      // Both children on the same vertical row
+      expect(aRect.top, closeTo(bRect.top, 1));
+
+      // available = 1000 - 12*(2-1) = 988; each = 988 * 6 / 12 = 494
+      expect(aRect.width, closeTo(494, 1));
+      expect(bRect.width, closeTo(494, 1));
+
+      // Second child starts after first + spacing
+      expect(bRect.left, closeTo(aRect.right + 12, 1));
+    });
+
+    testWidgets('three col4 with spacing=12 at md (W=1000) stay on one row', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              spacing: 12,
+              children: [
+                ResponsiveCol(md: .col4, child: Container(key: const Key('a'), height: 50)),
+                ResponsiveCol(md: .col4, child: Container(key: const Key('b'), height: 50)),
+                ResponsiveCol(md: .col4, child: Container(key: const Key('c'), height: 50)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final aRect = tester.getRect(find.byKey(const Key('a')));
+      final bRect = tester.getRect(find.byKey(const Key('b')));
+      final cRect = tester.getRect(find.byKey(const Key('c')));
+
+      // All three on the same row
+      expect(aRect.top, closeTo(bRect.top, 1));
+      expect(aRect.top, closeTo(cRect.top, 1));
+
+      // available = 1000 - 12*(3-1) = 976; each = 976 * 4 / 12 ≈ 325.33
+      expect(aRect.width, closeTo(325.33, 1));
+      expect(bRect.width, closeTo(325.33, 1));
+      expect(cRect.width, closeTo(325.33, 1));
+    });
+
+    testWidgets('mixed [col6, col6, col4, col4, col4] groups into two rows', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              spacing: 12,
+              children: [
+                ResponsiveCol(md: .col6, child: Container(key: const Key('a'), height: 50)),
+                ResponsiveCol(md: .col6, child: Container(key: const Key('b'), height: 50)),
+                ResponsiveCol(md: .col4, child: Container(key: const Key('c'), height: 50)),
+                ResponsiveCol(md: .col4, child: Container(key: const Key('d'), height: 50)),
+                ResponsiveCol(md: .col4, child: Container(key: const Key('e'), height: 50)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final aRect = tester.getRect(find.byKey(const Key('a')));
+      final bRect = tester.getRect(find.byKey(const Key('b')));
+      final cRect = tester.getRect(find.byKey(const Key('c')));
+      final dRect = tester.getRect(find.byKey(const Key('d')));
+      final eRect = tester.getRect(find.byKey(const Key('e')));
+
+      // Row 1: a and b share same top
+      expect(aRect.top, closeTo(bRect.top, 1));
+
+      // Row 2: c, d, e share same top (which is greater than row 1 top)
+      expect(cRect.top, closeTo(dRect.top, 1));
+      expect(cRect.top, closeTo(eRect.top, 1));
+      expect(cRect.top, greaterThan(aRect.bottom));
+
+      // Vertical gap between row 1 bottom and row 2 top equals spacing (12)
+      expect(cRect.top - aRect.bottom, closeTo(12, 1));
+    });
+
+    testWidgets('spacing=0 produces width = W * g / 12', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              spacing: 0,
+              children: [
+                ResponsiveCol(md: .col6, child: Container(key: const Key('a'), height: 50)),
+                ResponsiveCol(md: .col6, child: Container(key: const Key('b'), height: 50)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final aRect = tester.getRect(find.byKey(const Key('a')));
+      final bRect = tester.getRect(find.byKey(const Key('b')));
+
+      // available = 1000 - 0 = 1000; each = 1000 * 6 / 12 = 500
+      expect(aRect.width, closeTo(500, 1));
+      expect(bRect.width, closeTo(500, 1));
+      // Children are adjacent
+      expect(bRect.left, closeTo(aRect.right, 1));
+    });
+
+    testWidgets('breakpoint transition from xs to md regroups children', (WidgetTester tester) async {
+      // At xs (W < 600): col6 xs default → gridSize 12, so two rows of 1
+      await tester.binding.setSurfaceSize(const Size(500, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              spacing: 0,
+              children: [
+                ResponsiveCol(md: .col6, child: Container(key: const Key('a'), height: 50)),
+                ResponsiveCol(md: .col6, child: Container(key: const Key('b'), height: 50)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final aRectXs = tester.getRect(find.byKey(const Key('a')));
+      final bRectXs = tester.getRect(find.byKey(const Key('b')));
+      // At xs both cols fill full width → different rows (different top values)
+      expect(bRectXs.top, greaterThan(aRectXs.top));
+
+      // Now transition to md (W=1000)
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      await tester.pump();
+
+      final aRectMd = tester.getRect(find.byKey(const Key('a')));
+      final bRectMd = tester.getRect(find.byKey(const Key('b')));
+      // At md both cols are col6 → same row
+      expect(aRectMd.top, closeTo(bRectMd.top, 1));
+    });
+
+    testWidgets('vertical gap between row groups equals spacing', (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 800));
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ResponsiveRow(
+              spacing: 16,
+              children: [
+                ResponsiveCol(md: .col6, child: Container(key: const Key('a'), height: 50)),
+                ResponsiveCol(md: .col6, child: Container(key: const Key('b'), height: 50)),
+                ResponsiveCol(md: .col6, child: Container(key: const Key('c'), height: 50)),
+                ResponsiveCol(md: .col6, child: Container(key: const Key('d'), height: 50)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final aRect = tester.getRect(find.byKey(const Key('a')));
+      final cRect = tester.getRect(find.byKey(const Key('c')));
+
+      // Row 1: a, b at top; Row 2: c, d below with gap=16
+      expect(cRect.top - aRect.bottom, closeTo(16, 1));
     });
   });
 }

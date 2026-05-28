@@ -64,14 +64,89 @@ class ResponsiveRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
-        direction: Axis.horizontal,
-        alignment: mainAxisAlignment,
-        crossAxisAlignment: crossAxisAlignment,
-        children: children,
+      child: LayoutBuilder(
+        builder: (context, constraints) => _renderRows(constraints.maxWidth),
       ),
     );
   }
+
+  /// Orchestrates row rendering. Returns a shrink widget for empty children,
+  /// otherwise a [Column] of [Row]s interleaved with vertical gap [SizedBox]es.
+  Widget _renderRows(double totalWidth) {
+    if (children.isEmpty) return const SizedBox.shrink();
+
+    final groups = _groupIntoRows(children, totalWidth);
+    final widgets = <Widget>[];
+
+    for (var i = 0; i < groups.length; i++) {
+      if (i > 0) widgets.add(SizedBox(height: spacing));
+      widgets.add(_buildRow(groups[i], totalWidth));
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: widgets,
+    );
+  }
+
+  /// Groups [cols] into logical rows where each row's sum of gridSizes is ≤ 12.
+  /// A new row starts whenever adding the next child would push the sum above 12.
+  List<List<ResponsiveCol>> _groupIntoRows(List<ResponsiveCol> cols, double totalWidth) {
+    final rows = <List<ResponsiveCol>>[];
+    var current = <ResponsiveCol>[];
+    var sum = 0;
+
+    for (final col in cols) {
+      final g = col.gridSizeAt(totalWidth);
+      if (sum + g > 12 && current.isNotEmpty) {
+        rows.add(current);
+        current = [];
+        sum = 0;
+      }
+      current.add(col);
+      sum += g;
+    }
+
+    if (current.isNotEmpty) rows.add(current);
+    return rows;
+  }
+
+  /// Builds a single [Row] for a group of [ResponsiveCol] children.
+  /// Each child is wrapped in a [SizedBox] sized by the per-row math:
+  /// `available = totalWidth - spacing * (n - 1)`, `childWidth = available * gridSize / 12`.
+  Widget _buildRow(List<ResponsiveCol> rowCols, double totalWidth) {
+    final n = rowCols.length;
+    final available = totalWidth - spacing * (n - 1);
+    final rowChildren = <Widget>[];
+
+    for (var i = 0; i < n; i++) {
+      if (i > 0) rowChildren.add(SizedBox(width: spacing));
+      final g = rowCols[i].gridSizeAt(totalWidth);
+      rowChildren.add(SizedBox(width: available * g / 12, child: rowCols[i]));
+    }
+
+    return Row(
+      mainAxisAlignment: _mapMain(mainAxisAlignment),
+      crossAxisAlignment: _mapCross(crossAxisAlignment),
+      children: rowChildren,
+    );
+  }
+
+  /// Maps [WrapAlignment] to [MainAxisAlignment] exhaustively.
+  MainAxisAlignment _mapMain(WrapAlignment a) => switch (a) {
+        WrapAlignment.start => MainAxisAlignment.start,
+        WrapAlignment.end => MainAxisAlignment.end,
+        WrapAlignment.center => MainAxisAlignment.center,
+        WrapAlignment.spaceBetween => MainAxisAlignment.spaceBetween,
+        WrapAlignment.spaceAround => MainAxisAlignment.spaceAround,
+        WrapAlignment.spaceEvenly => MainAxisAlignment.spaceEvenly,
+      };
+
+  /// Maps [WrapCrossAlignment] to [CrossAxisAlignment] exhaustively.
+  CrossAxisAlignment _mapCross(WrapCrossAlignment a) => switch (a) {
+        WrapCrossAlignment.start => CrossAxisAlignment.start,
+        WrapCrossAlignment.center => CrossAxisAlignment.center,
+        WrapCrossAlignment.end => CrossAxisAlignment.end,
+      };
 }

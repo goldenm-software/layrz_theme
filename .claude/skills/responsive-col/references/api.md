@@ -54,8 +54,26 @@ const ResponsiveCol({
 | `xl` | `Sizes?` | `null` | ≥ 1904 px. Falls back to `lg → md → sm → xs` |
 | `child` | `Widget` | required | |
 
-Rendered via `LayoutBuilder` — breakpoint is evaluated against the col's own constraint width.  
-Width formula: `(containerWidth / 12) * gridSize`
+Rendered as a pass-through — `build` returns `child` directly (no inner `LayoutBuilder`, no `SizedBox`). The breakpoint is evaluated by the parent `ResponsiveRow` against the row's full width via the package-internal `gridSizeAt(double rowWidth)` accessor. The col's final width is computed by `ResponsiveRow` and applied via an outer `SizedBox` wrapping the col.
+
+Width formula (computed in `ResponsiveRow`, post-v7.5.33):
+
+```
+availableWidth = rowWidth − spacing × (n − 1)
+childWidth     = (availableWidth / 12) × gridSize
+```
+
+where `n` is the number of cols in the same row (cols are grouped so the sum of their `gridSize` ≤ 12 per row).
+
+---
+
+## Package-internal API
+
+```dart
+int gridSizeAt(double rowWidth)
+```
+
+Returns the `gridSize` (1–12) that this col resolves to at the given row width, applying the breakpoint fallback chain (`xl ?? lg ?? md ?? sm ?? xs`). Called by `ResponsiveRow` during layout — not intended for direct use, but visible because the col is not in a private library.
 
 ---
 

@@ -180,6 +180,30 @@ class _HomeViewState extends State<HomeView> {
                       onTap: () => context.go('/layo'),
                     ),
                   ),
+                  const Divider(),
+                  ListTile(
+                    leading: ThemedAvatar(
+                      icon: LayrzIcons.mdiGrid,
+                      color: color,
+                      size: iconSize,
+                    ),
+                    title: Text(
+                      "Responsive Grid",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      "A 12-column responsive grid built on ResponsiveRow and ResponsiveCol. "
+                      "Eight live cases prove the v7.5.33 true-gap spacing fix and breakpoint reflow behavior.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      maxLines: 5,
+                    ),
+                    trailing: ThemedButton(
+                      labelText: "Go!",
+                      icon: LayrzIcons.mdiRocketLaunch,
+                      color: Colors.green,
+                      onTap: () => context.go('/grid/responsive-row'),
+                    ),
+                  ),
                 ],
               ),
             ),

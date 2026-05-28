@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.5.33
+
+- fix: preserve horizontal layout in `ResponsiveRow` when `spacing > 0` and child gridSizes sum to 12 (e.g., two `col6`, three `col4`). Render path now uses a single `LayoutBuilder` with explicit per-row sizing; public API unchanged.
+- behavior note: when `spacing > 0`, each child's pixel width is now computed as `(totalWidth - spacing * (n - 1)) / 12 * gridSize` (where `n` is the number of children in that row). Previously each child computed its width as `totalWidth / 12 * gridSize` ignoring spacing, which caused the wrap bug. Consumers with golden tests or pixel-perfect layouts that use `spacing > 0` may see small width differences (e.g. 500px → 494px for a `col6` with `spacing: 12` and two children). Layouts with `spacing: 0` are pixel-identical to previous versions.
+- internal: `ResponsiveCol.build` now returns `child` directly (no inner `LayoutBuilder`); breakpoint resolution is delegated to the parent `ResponsiveRow` via the new package-internal accessor `ResponsiveCol.gridSizeAt(double rowWidth)`. `ResponsiveCol` was always documented as a child of `ResponsiveRow`; standalone usage was never supported.
+- example: added a dedicated `ResponsiveRowShowcaseView` at `/grid/responsive-row` with 8 interactive cases (basic two-column, three-column with tunable spacing via `ThemedNumberInput`, mixed grids, full responsive reflow, vertical gap, builder, form layout, and `crossAxisAlignment` toggle). Accessible from the sidebar and the home view.
+- skills: updated `responsive-row` and `responsive-col` skills with the post-7.5.33 render path, the per-row width formula, the row-grouping algorithm, and the new `gridSizeAt` accessor.
+
 ## 7.5.32
 
 - Added `onSort`, `onSearch` and `search` to `ThemedTable2Controller` to allow programmatic control of sorting and searching, and to expose the current search query.
