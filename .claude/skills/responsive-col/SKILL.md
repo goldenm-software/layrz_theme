@@ -34,8 +34,8 @@ ResponsiveCol(
 
 - `xs` defaults to `.col12` but should always be set explicitly — it's the fallback for all other breakpoints.
 - Fallback chain: `xl ?? lg ?? md ?? sm ?? xs` — only set breakpoints that differ.
-- Uses `LayoutBuilder` internally — breakpoint is evaluated against the col's own available width, not the screen width.
-- Width formula: `(containerWidth / 12) * gridSize`.
+- Does NOT use `LayoutBuilder` internally — `build` returns `child` directly (pass-through). The breakpoint is evaluated by the parent `ResponsiveRow` via `gridSizeAt(rowWidth)`, using the row's full width (not the col's own constraint).
+- Width is assigned by the parent `ResponsiveRow` as `SizedBox(width: available * gridSize / 12)` where `available = totalWidth - spacing * (n - 1)`. The col widget itself is unaware of its width.
 
 ---
 

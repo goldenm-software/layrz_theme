@@ -37,7 +37,32 @@ ResponsiveRow.builder({
 | `crossAxisAlignment` | `WrapCrossAlignment` | `.start` | Vertical alignment of columns |
 | `spacing` | `double` | `0` | Gap between columns (horizontal) and between wrapped rows (vertical) in pixels |
 
-Renders as `SizedBox(width: double.infinity, child: Wrap(...))` — always full parent width.
+Renders as `SizedBox(width: double.infinity, child: LayoutBuilder(...))`. Internally produces a Column of Rows; spacing creates true pixel gaps. See the Algorithm section below for details.
+
+---
+
+## Algorithm (post-v7.5.33)
+
+`ResponsiveRow` replaces the old `Wrap`-based layout with a deterministic two-pass algorithm:
+
+**Step 1 — Row grouping**
+Children are walked in order. Each child's `gridSizeAt(totalWidth)` is accumulated. When adding the next child would make the running sum exceed 12, a new row begins. This guarantees predictable row breaks (e.g. col6+col6 fills one row; adding a col4 starts a second row).
+
+**Step 2 — Width calculation**
+For a row containing *n* children:
+```
+available = totalWidth - spacing * (n - 1)
+childWidth = available * gridSize / 12
+```
+Each child is wrapped in `SizedBox(width: childWidth)`. Horizontal `SizedBox(width: spacing)` widgets are interleaved between siblings.
+
+**Step 3 — Vertical gap**
+`SizedBox(height: spacing)` is inserted between consecutive rows.
+
+**Step 4 — Alignment mapping**
+`mainAxisAlignment` (`WrapAlignment`) maps to `MainAxisAlignment`; `crossAxisAlignment` (`WrapCrossAlignment`) maps to `CrossAxisAlignment` — the property names are kept for backwards compatibility.
+
+**`gridSizeAt(double rowWidth)`** is a package-internal method on `ResponsiveCol`, called by `ResponsiveRow._groupIntoRows` and `ResponsiveRow._buildRow`. It returns the active grid column count (1–12) for the given parent row width. It is not part of the public widget API and should not be called by application code.
 
 ---
 

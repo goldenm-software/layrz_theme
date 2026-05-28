@@ -213,6 +213,11 @@ class _LayoutState extends State<Layout> {
           path: '/alerts',
           icon: LayrzIcons.solarOutlineDanger,
         ),
+        ThemedNavigatorPage(
+          labelText: 'Responsive Row & Col',
+          path: '/grid/responsive-row',
+          icon: LayrzIcons.solarOutlineWidget2,
+        ),
       ],
       persistentItems: [
         ThemedNavigatorAction(

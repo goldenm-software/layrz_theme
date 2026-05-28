@@ -34,16 +34,11 @@ class ResponsiveCol extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-          width: _currentSize(width: constraints.maxWidth).boxWidth(constraints.maxWidth),
-          child: child,
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => child;
+
+  /// Returns the grid column count (1..12) for this column at the given parent row width.
+  /// Used by [ResponsiveRow] to compute per-child pixel widths.
+  int gridSizeAt(double rowWidth) => _currentSize(width: rowWidth).gridSize;
 
   Sizes _currentSize({required double width}) {
     if (width < kExtraSmallGrid) {

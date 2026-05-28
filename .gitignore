@@ -53,5 +53,6 @@ ignoreme.dart
 
 # Claude Code
 .claude/settings.local.json
+.atl/
 
 coverage/
