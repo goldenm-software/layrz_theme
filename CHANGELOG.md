@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.34
+
+- Fixed use of `flutter_map` `TileLayer` in `ThemedTileLayer` to use `userAgentPackageName` of browser as default to allow use of Open Street Map on mobile apps.
+
 ## 7.5.33
 
 - fix: preserve horizontal layout in `ResponsiveRow` when `spacing > 0` and child gridSizes sum to 12 (e.g., two `col6`, three `col4`). Render path now uses a single `LayoutBuilder` with explicit per-row sizing; public API unchanged.

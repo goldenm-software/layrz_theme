@@ -312,6 +312,8 @@ class _ThemedTileLayerState extends State<ThemedTileLayer> {
             maxZoom: widget.maxZoom,
             minNativeZoom: widget.minZoom.toInt(),
             maxNativeZoom: widget.maxZoom.toInt(),
+            userAgentPackageName:
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
             tileProvider: NetworkTileProvider(
               headers: headers,
 
