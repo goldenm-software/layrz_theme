@@ -56,7 +56,7 @@ class _AlertsViewState extends State<AlertsView> {
                       size: 40,
                       iconSize: 30,
                       color: Colors.purple,
-                      icon: LayrzIcons.solarOutlinePlain3,
+                      icon: LayrzIcons.solarOutlinePlainN3,
                     ),
                     const SizedBox(width: 10),
                     for (final style in ThemedAlertStyle.values) ...[
@@ -69,7 +69,7 @@ class _AlertsViewState extends State<AlertsView> {
                             title: "${alertType.name} - ${style.name}",
                             description: "This is a ${alertType.name} alert with the style ${style.name}.",
                             color: Colors.purple,
-                            icon: LayrzIcons.solarOutlinePlain3,
+                            icon: LayrzIcons.solarOutlinePlainN3,
                           ),
                         ),
                       ),

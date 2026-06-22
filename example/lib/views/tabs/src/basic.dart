@@ -244,13 +244,13 @@ class _BasicTabsViewState extends State<BasicTabsView> {
                           tabs: [
                             ThemedTab(
                               labelText: 'Dashboard',
-                              leadingIcon: LayrzIcons.solarOutlineHome,
+                              leadingIcon: LayrzIcons.solarOutlineHomeN2,
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      LayrzIcons.solarOutlineHome,
+                                      LayrzIcons.solarOutlineHomeN2,
                                       size: 64,
                                       color: Theme.of(context).colorScheme.primary,
                                     ),
