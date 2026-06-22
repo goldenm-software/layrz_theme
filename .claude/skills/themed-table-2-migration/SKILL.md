@@ -130,7 +130,7 @@ multiselectValue: _selectedItems,
 multiselectActions: [
   ThemedActionButton(
     color: Colors.red,
-    icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+    icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
     labelText: i18n.t('helpers.multipleSelection.actions.delete'),
     isLoading: _isLoading,
     onTap: () async {

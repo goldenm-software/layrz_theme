@@ -67,7 +67,7 @@ ThemedButton(
 // Long-press (mutually exclusive with onTap)
 ThemedButton(
   labelText: 'Delete',
-  icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+  icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
   color: Colors.red,
   onLongPress: () => confirmDelete(),
 )
@@ -202,7 +202,7 @@ factory ThemedButton.<name>({
 | `.info` | `solarOutlineInfoSquare` | `Colors.blue` | `.filledTonal` | `.filledTonalFab` |
 | `.show` | `solarOutlineEyeScan` | `Colors.blue` | `.filledTonal` | `.filledTonalFab` |
 | `.edit` | `solarOutlinePenNewSquare` | `Colors.orange` | `.filledTonal` | `.filledTonalFab` |
-| `.delete` | `solarOutlineTrashBinMinimalistic2` | `Colors.red` | `.filledTonal` | `.filledTonalFab` |
+| `.delete` | `solarOutlineTrashBinMinimalisticN2` | `Colors.red` | `.filledTonal` | `.filledTonalFab` |
 
 > **Deprecated:** `ThemedButton.legacyLoading(...)` — do not use; prefer the primary constructor.
 
