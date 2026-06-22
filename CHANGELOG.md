@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.6.0
+
+- Bumped `layrz_icons` to `^1.1.0`, which renames several Solar icon constants, and updated all internal usages to match (e.g. `solarOutlineMagnifier` → `solarOutlineMagnifer`, `solarOutlineTrashBinMinimalistic2` → `solarOutlineTrashBinMinimalisticN2`, `solarOutlinePalette2` → `solarOutlinePalette`). Consumers passing the renamed constants directly will need to update their references.
+- Raised minimum SDK constraints to Dart `>=3.12.0` and Flutter `>=3.44.0`.
+
 ## 7.5.34
 
 - Fixed use of `flutter_map` `TileLayer` in `ThemedTileLayer` to use `userAgentPackageName` of browser as default to allow use of Open Street Map on mobile apps.

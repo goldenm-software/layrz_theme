@@ -428,7 +428,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                     width: .infinity,
                     child: ThemedTextInput(
                       labelText: LayrzAppLocalizations.maybeOf(context)?.t('actions.search') ?? 'Search...',
-                      prefixIcon: LayrzIcons.solarOutlineMagnifier,
+                      prefixIcon: LayrzIcons.solarOutlineMagnifer,
                       padding: .zero,
                       controller: _searchController,
                       onChanged: _onSearchChanged,
@@ -603,7 +603,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                   WidgetSpan(
                                     alignment: .middle,
                                     child: Icon(
-                                      LayrzIcons.solarOutlineTuningSquare2,
+                                      LayrzIcons.solarOutlineTuningSquareN2,
                                       size: _sortIconSize,
                                       color: Theme.of(context).textTheme.bodyMedium?.color,
                                     ),

@@ -216,7 +216,7 @@ class _LayoutState extends State<Layout> {
         ThemedNavigatorPage(
           labelText: 'Responsive Row & Col',
           path: '/grid/responsive-row',
-          icon: LayrzIcons.solarOutlineWidget2,
+          icon: LayrzIcons.solarOutlineWidgetN2,
         ),
       ],
       persistentItems: [

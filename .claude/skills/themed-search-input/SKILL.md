@@ -96,7 +96,7 @@ ThemedSearchInput(
   labelText: context.i18n.t('general.search'),
   customChild: ThemedButton(
     label: context.i18n.t('general.search'),
-    icon: LayrzIcons.solarOutlineMagnifier,
+    icon: LayrzIcons.solarOutlineMagnifer,
     style: ThemedButtonStyle.outlined,
     onTap: () {},
   ),

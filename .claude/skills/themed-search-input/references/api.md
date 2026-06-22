@@ -58,7 +58,7 @@ ThemedSearchInput(
   labelText: 'Search',
   customChild: ThemedButton(
     label: 'Search',
-    icon: LayrzIcons.solarOutlineMagnifier,
+    icon: LayrzIcons.solarOutlineMagnifer,
     style: ThemedButtonStyle.outlined,
     onTap: () {},
   ),

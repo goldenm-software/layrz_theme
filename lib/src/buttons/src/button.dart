@@ -279,7 +279,7 @@ class ThemedButton extends StatefulWidget {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+      icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
       style: isMobile ? .filledTonalFab : .filledTonal,
       color: Colors.red,
     );

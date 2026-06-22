@@ -428,7 +428,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                         ),
                         ThemedTab(
                           labelText: 'Search',
-                          leadingIcon: LayrzIcons.solarOutlineMagnifier,
+                          leadingIcon: LayrzIcons.solarOutlineMagnifer,
                           child: Center(
                             child: Text(
                               'Search Tab',

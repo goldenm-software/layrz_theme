@@ -228,7 +228,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                         style: .filledTonalFab,
                         labelText: i18n.t('requiredFields.remove'),
                         color: Colors.red,
-                        icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+                        icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
                         onTap: () => widget.onRemove.call(),
                       ),
                     ],

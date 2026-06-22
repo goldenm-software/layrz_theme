@@ -879,7 +879,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                           ThemedButton(
                                             style: .outlinedTonal,
                                             color: Colors.red,
-                                            icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+                                            icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
                                             labelText: t('helpers.multipleSelection.actions.delete'),
                                             isLoading: widget.isLoading,
                                             isCooldown: widget.isCooldown,
@@ -1159,7 +1159,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                     ),
                                     alignment: .centerRight,
                                     padding: ThemedColumn.padding,
-                                    child: Icon(LayrzIcons.solarOutlineTuning4, size: 20),
+                                    child: Icon(LayrzIcons.solarOutlineTuningN4, size: 20),
                                   ),
                                   Expanded(
                                     child: ListView.builder(

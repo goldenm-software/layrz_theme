@@ -246,7 +246,7 @@ class _ThemedScaffoldViewState<T> extends State<ThemedScaffoldView<T>> {
                                   Row(
                                     children: [
                                       if (isSelected) ...[
-                                        Icon(LayrzIcons.solarOutlineStart1, size: 14, color: Colors.grey),
+                                        Icon(LayrzIcons.solarOutlineStarInLike, size: 14, color: Colors.grey),
                                         const SizedBox(width: 5),
                                       ] else if (prefixIcon != null) ...[
                                         Icon(

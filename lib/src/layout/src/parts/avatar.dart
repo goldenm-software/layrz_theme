@@ -157,7 +157,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       if (widget.onSettingsTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.settings') ?? 'Settings',
-          icon: LayrzIcons.solarOutlineTuning4,
+          icon: LayrzIcons.solarOutlineTuningN4,
           onTap: widget.onSettingsTap!,
         ),
       if (widget.onProfileTap != null)
@@ -169,7 +169,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       if (widget.onLogoutTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.signOut') ?? 'Logout',
-          icon: LayrzIcons.solarOutlineLogout2,
+          icon: LayrzIcons.solarOutlineLogoutN2,
           onTap: widget.onLogoutTap!,
         ),
     ];

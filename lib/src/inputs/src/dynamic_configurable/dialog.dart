@@ -62,7 +62,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
                 setState(() {});
               },
               dense: true,
-              prefixIcon: LayrzIcons.solarOutlineMagnifier,
+              prefixIcon: LayrzIcons.solarOutlineMagnifer,
             ),
             if (_shouldAdd) ...[
               const SizedBox(height: 10),
@@ -121,7 +121,7 @@ class _ThemedDynamicConfigurableDialogState extends State<ThemedDynamicConfigura
 
                           ThemedButton(
                             style: .filledTonalFab,
-                            icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+                            icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
                             labelText: i18n.t('requiredFields.choices.remove'),
                             color: Colors.red,
                             onTap: () {
