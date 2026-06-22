@@ -2,8 +2,8 @@ name: "Checks"
 
 on:
   pull_request:
-    branches: [ main ]
-    types: [ opened, synchronize, reopened ]
+    branches: [main]
+    types: [opened, synchronize, reopened]
 
 jobs:
   lint-dart:
@@ -11,49 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup Flutter
-        uses: flutter-actions/setup-flutter@v4
+      - uses: goldenm-software/layrz-actions/.github/actions/check-dart@v1
         with:
-          channel: stable
-          version: '3.38.8'
-          cache: true
-          cache-sdk: true
-          cache-key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
+          flutter-version: "3.44.2"
+          run-tests: true
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run checks
-        shell: bash
-        run: flutter analyze
-
-      - name: Run tests
-        shell: bash
-        run: flutter test --machine --coverage > test-results.json
-
-      - name: Publish test results
-        uses: dorny/test-reporter@v1
-        with:
-          name: Unit Tests
-          path: test-results.json
-          reporter: flutter-json
-
-      - name: Set outputs
-        id: set-outputs
-        run: |
-          COVERAGE_PATH="lcov.info"
-          TEST_RESULTS_PATH="test-results.json"
-          echo "coverage-path=$COVERAGE_PATH" >> $GITHUB_OUTPUT
-          echo "test-results-path=$TEST_RESULTS_PATH" >> $GITHUB_OUTPUT
-
-      - name: Upload coverage artifact
-        id: upload-coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: dart-coverage-${{ github.run_id }}
-          path: coverage/lcov.info
-          retention-days: 1
-  
   coverage-comment:
     needs: lint-dart
     if: always() && github.event_name == 'pull_request'
@@ -62,12 +24,12 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Download coverage artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dart-coverage-${{ github.run_id }}
           path: dart-coverage
 
-      - uses: ./.github/actions/coverage-comment
+      - uses: goldenm-software/layrz-actions/.github/actions/coverage-comment@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           enable-dart: true
@@ -80,7 +42,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: ./.github/actions/changelog
+      - uses: goldenm-software/layrz-actions/.github/actions/changelog@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           post-comment: true
