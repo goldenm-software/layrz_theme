@@ -347,7 +347,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
           labelText: i18n?.t('helpers.search') ?? 'Search an icon',
           value: search,
           onChanged: (value) => setState(() => search = value),
-          prefixIcon: LayrzIcons.solarOutlineMagnifier,
+          prefixIcon: LayrzIcons.solarOutlineMagnifer,
         ),
         if (mounted)
           Expanded(

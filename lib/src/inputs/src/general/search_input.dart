@@ -142,7 +142,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
           borderRadius: .circular(10),
           child: Center(
             child: Icon(
-              LayrzIcons.solarOutlineMagnifier,
+              LayrzIcons.solarOutlineMagnifer,
               size: 15,
               color: isDark ? Colors.grey.shade300 : Colors.grey.shade500,
             ),
@@ -175,7 +175,7 @@ class _ThemedSearchInputState extends State<ThemedSearchInput> with TickerProvid
         ),
         hintText: widget.labelText,
         labelStyle: Theme.of(context).textTheme.labelSmall,
-        prefixIcon: Icon(LayrzIcons.solarOutlineMagnifier),
+        prefixIcon: Icon(LayrzIcons.solarOutlineMagnifer),
         filled: true,
         isDense: true,
       ),

@@ -299,7 +299,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                         padding: .zero,
                                         labelText: t('layrz.select.search'),
                                         onChanged: (value) => setState(() => searchText = value),
-                                        prefixIcon: LayrzIcons.solarOutlineMagnifier,
+                                        prefixIcon: LayrzIcons.solarOutlineMagnifer,
                                         suffixIcon: searchText.isNotEmpty ? LayrzIcons.solarOutlineCloseSquare : null,
                                         onSuffixTap: searchText.isNotEmpty
                                             ? () => setState(() => searchText = "")

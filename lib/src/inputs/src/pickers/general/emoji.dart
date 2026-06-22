@@ -229,7 +229,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
                     ThemedTextInput(
                       labelText: t('helpers.search'),
                       value: search,
-                      prefixIcon: LayrzIcons.solarOutlineMagnifier,
+                      prefixIcon: LayrzIcons.solarOutlineMagnifer,
                       dense: true,
                       onChanged: (value) {
                         setState(() => search = value);

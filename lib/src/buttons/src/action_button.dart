@@ -499,7 +499,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlineTrashBinMinimalistic2,
+      icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
       onlyIcon: isMobile,
       color: Colors.red,
     );
