@@ -12,7 +12,7 @@
       "cwd": "example",
       "request": "launch",
       "type": "dart",
-      "flutterMode":  "profile",
+      "flutterMode": "profile",
       "args": [
         "--profile",
         "--purge-persistent-cache"
