@@ -27,6 +27,13 @@ dependencies:
   layrz_theme:
     path: ../
 
+# layrz_models pulls in layrz_logging, which itself depends on the published layrz_theme. That
+# leaves this app asking for layrz_theme from two sources at once — path here, hosted through
+# logging — which version solving cannot reconcile. Force the local copy for everyone so the
+# example always exercises the sources next to it.
+dependency_overrides:
+  layrz_theme:
+    path: ../
 
 dev_dependencies:
   flutter_test:
