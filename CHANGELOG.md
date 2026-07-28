@@ -3,6 +3,7 @@
 ## 7.7.0
 
 - Added `textInputAction` to `ThemedTextInput`, passed through to the underlying `TextField`. It lets a form declare the keyboard's action key, e.g. `TextInputAction.next` so the key advances to the next field instead of showing the platform default.
+- Update `layrz_model`
 
 ## 7.6.0
 

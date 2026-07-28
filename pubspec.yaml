@@ -35,7 +35,7 @@ dependencies:
   latlong2: ^0.9.1
   shared_preferences: ^2.5.3
   dio: ^5.8.0
-  layrz_models: ^3.4.3
+  layrz_models: ^3.18.2
   pointer_interceptor: ^0.10.1+2
   two_dimensional_scrollables: ^0.3.4
   sync_scroll_controller: ^1.0.1
