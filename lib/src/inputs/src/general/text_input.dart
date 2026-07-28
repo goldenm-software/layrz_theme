@@ -83,6 +83,10 @@ class ThemedTextInput extends StatefulWidget {
   /// [onSubmitted] is the callback function when the input is submitted.
   final VoidCallback? onSubmitted;
 
+  /// [textInputAction] is the action button of the keyboard, e.g. [TextInputAction.next]
+  /// to display a "next" key instead of the platform default.
+  final TextInputAction? textInputAction;
+
   /// [readonly] is the state of the input being readonly.
   final bool readonly;
 
@@ -160,6 +164,7 @@ class ThemedTextInput extends StatefulWidget {
     this.focusNode,
     this.validator,
     this.onSubmitted,
+    this.textInputAction,
     this.readonly = false,
     this.inputFormatters = const [],
     this.autofillHints = const [],
@@ -431,6 +436,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
         enabled: !widget.disabled,
         decoration: decoration,
         focusNode: _focusNode,
+        textInputAction: widget.textInputAction,
         inputFormatters: widget.inputFormatters,
         maxLines: widget.maxLines,
         autocorrect: widget.autocorrect,
