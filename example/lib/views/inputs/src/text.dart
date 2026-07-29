@@ -85,18 +85,6 @@ class _TextInputViewState extends State<TextInputView> {
                       labelText: "Example label",
                       placeholder: "Example placeholder",
                       textStyle: TextStyle(color: Colors.purple),
-                      inputFormatters: [
-                        TextInputFormatter.withFunction((oldValue, newValue) {
-                          final regex = RegExp(r'^\d+\,?\d*$');
-                          if (newValue.text.isEmpty) {
-                            return newValue;
-                          }
-                          if (regex.hasMatch(newValue.text)) {
-                            return newValue;
-                          }
-                          return oldValue;
-                        }),
-                      ],
                     ),
                     Text(r"With a Regex formater ^\d+\,?\d*$"),
                     ThemedTextInput(

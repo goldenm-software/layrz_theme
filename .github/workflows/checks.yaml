@@ -14,6 +14,7 @@ jobs:
       - uses: goldenm-software/layrz-actions/.github/actions/check-dart@v1
         with:
           flutter-version: "3.44.2"
+          artifact-name: dart-coverage-${{ github.run_id }}
           run-tests: true
 
   coverage-comment:

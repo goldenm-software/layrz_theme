@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.7.0
+
+- Added `textInputAction` to `ThemedTextInput`, passed through to the underlying `TextField`. It lets a form declare the keyboard's action key, e.g. `TextInputAction.next` so the key advances to the next field instead of showing the platform default.
+- Update `layrz_model`
+
 ## 7.6.0
 
 - Bumped `layrz_icons` to `^1.1.0`, which renames several Solar icon constants, and updated all internal usages to match (e.g. `solarOutlineMagnifier` → `solarOutlineMagnifer`, `solarOutlineTrashBinMinimalistic2` → `solarOutlineTrashBinMinimalisticN2`, `solarOutlinePalette2` → `solarOutlinePalette`). Consumers passing the renamed constants directly will need to update their references.
