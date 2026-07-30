@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.8.0
+
+- Added `isScrollable` and `tabAlignment` to `ThemedTabView`. `isScrollable` defaults to `true`, which keeps the previous behaviour: every tab takes only the width of its own content and the bar scrolls when the tabs do not fit. Passing `isScrollable: false` makes the tabs share the available width evenly, filling the space left by `additionalWidgets` and the arrow buttons. `tabAlignment` is `null` by default and resolves to `TabAlignment.start` when scrollable and `TabAlignment.fill` when not; set it explicitly only when the value matches `isScrollable`, since Flutter accepts `.start`/`.startOffset` only on a scrollable bar and `.fill`/`.center` only on a non-scrollable one. Both values were previously hardcoded, so there was no way to make the tabs span the full width.
+- Fixed the active tab background not covering the whole tab cell when `isScrollable: false`. The decorated container sized itself to the label while the ink splash always covers the cell the `TabBar` assigned, so the splash painted a visibly larger area than the highlight. `ThemedTab` now takes an `expand` flag — set by `ThemedTabView` through `overrideStyle`, and only when the bar is not scrollable — that stretches the container to fill its cell and centers the label. Scrollable bars are unaffected: they lay tabs out with unbounded width, where expanding would throw `BoxConstraints forces an infinite width`.
+- `ThemedTab.overrideStyle` gained an optional `expand` parameter. The method is used internally by `ThemedTabView`; existing calls keep working unchanged.
+
 ## 7.7.0
 
 - Added `textInputAction` to `ThemedTextInput`, passed through to the underlying `TextField`. It lets a form declare the keyboard's action key, e.g. `TextInputAction.next` so the key advances to the next field instead of showing the platform default.

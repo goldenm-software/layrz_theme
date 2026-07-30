@@ -80,6 +80,8 @@ const ThemedTabView({
   this.additionalWidgets = const [],
   this.style = .filledTonal,
   this.wrapArrowNavigation = false,
+  this.isScrollable = true,
+  this.tabAlignment,
 })
 ```
 
@@ -103,6 +105,8 @@ const ThemedTabView({
 | `crossAxisAlignment` | `CrossAxisAlignment` | `.start` | Vertical alignment of content column |
 | `mainAxisAlignment` | `MainAxisAlignment` | `.start` | Horizontal alignment of content (rarely used) |
 | `physics` | `ScrollPhysics?` | `null` | Scroll physics for `TabBarView` |
+| `isScrollable` | `bool` | `true` | `false` makes tabs share the available width evenly |
+| `tabAlignment` | `TabAlignment?` | `null` | Derived from `isScrollable` when null: `.start` if scrollable, `.fill` if not |
 
 ---
 
@@ -142,6 +146,7 @@ const ThemedTab({
 | `padding` | `EdgeInsets` | `all(10)` | Padding around the tab label area |
 | `color` | `Color?` | `null` | Override tab color (used for active state detection) |
 | `style` | `ThemedTabStyle` | `.filledTonal` | Overridden by parent `ThemedTabView.style` |
+| `expand` | `bool` | `false` | Fills the cell assigned by the `TabBar`. Set by `ThemedTabView` — do not pass manually |
 
 ---
 
@@ -163,7 +168,9 @@ enum ThemedTabStyle {
 
 ## Behavior notes
 
-- Tab bar is always scrollable (`TabBar(isScrollable: true)`).
+- Tab bar is scrollable by default (`isScrollable: true`); pass `isScrollable: false` to make the tabs share the full width.
+- With `isScrollable: false` the active background stretches to the whole cell so it matches the ink splash bounds. Never force `expand` on a scrollable bar — unbounded width throws `BoxConstraints forces an infinite width`.
+- Long labels shrink instead of scrolling when `isScrollable: false`, so it suits a small fixed set of tabs.
 - `onTabIndex` fires only when the user changes the tab (`indexIsChanging` guard) — not on initial mount.
 - `persistTabPosition` only resets to 0 when `tabs.length` changes. Same-length rebuilds always preserve index.
 - `initialPosition` out of range is clamped — no exception thrown.

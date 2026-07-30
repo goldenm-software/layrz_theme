@@ -53,6 +53,23 @@ class ThemedTabView extends StatefulWidget {
   /// When false: arrows are disabled at boundaries
   final bool wrapArrowNavigation;
 
+  /// [isScrollable] is whether the tab bar scrolls horizontally.
+  ///
+  /// When `true` (default) each tab only takes the width of its own content, and the bar scrolls
+  /// when the tabs do not fit. When `false` the tabs share the available width evenly, filling the
+  /// space left by [additionalWidgets] and the arrow buttons.
+  ///
+  /// Keep in mind that `false` makes long labels shrink instead of scroll, so it fits a small,
+  /// fixed set of tabs.
+  final bool isScrollable;
+
+  /// [tabAlignment] is how the tabs are distributed inside the tab bar.
+  ///
+  /// Defaults to `TabAlignment.start` when [isScrollable] is `true` and `TabAlignment.fill` when it
+  /// is `false`. Flutter only accepts `.start`/`.startOffset` on a scrollable bar and
+  /// `.fill`/`.center` on a non-scrollable one, so an explicit value must match [isScrollable].
+  final TabAlignment? tabAlignment;
+
   /// [ThemedTabView] is a tab for the [TabBar] widget
   ///
   /// Be careful!
@@ -73,6 +90,8 @@ class ThemedTabView extends StatefulWidget {
     this.additionalWidgets = const [],
     this.style = .filledTonal,
     this.wrapArrowNavigation = false,
+    this.isScrollable = true,
+    this.tabAlignment,
   });
 
   @override
@@ -141,7 +160,7 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
           Theme(
             data: Theme.of(context).copyWith(
               tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
-                tabAlignment: .start,
+                tabAlignment: widget.tabAlignment ?? (widget.isScrollable ? .start : .fill),
                 indicatorColor: widget.style == .filledTonal ? Colors.transparent : null,
               ),
             ),
@@ -170,8 +189,10 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                 ],
                 Expanded(
                   child: TabBar(
-                    isScrollable: true,
-                    tabs: widget.tabs.map((e) => e.overrideStyle(widget.style)).toList(),
+                    isScrollable: widget.isScrollable,
+                    tabs: widget.tabs
+                        .map((e) => e.overrideStyle(widget.style, expand: !widget.isScrollable))
+                        .toList(),
                     labelPadding: .zero,
                     splashBorderRadius: widget.style == .filledTonal ? BorderRadius.circular(_kTabBorderRadius) : null,
                     controller: _tabController,
