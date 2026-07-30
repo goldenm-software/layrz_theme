@@ -40,7 +40,7 @@ ThemedTabView(
 
 ## Key behaviors
 
-- Tab bar is always scrollable (`TabBar(isScrollable: true)`).
+- Tab bar is scrollable by default; `isScrollable: false` makes the tabs share the full available width (and the active background then fills the whole tab cell).
 - Two styles: `.filledTonal` (default, filled background on active) and `.underline` (bottom border on active).
 - `initialPosition` is clamped to valid range — out-of-range values don't crash.
 - `onTabIndex` fires only when the user **changes** the tab, not on initial mount.
@@ -106,5 +106,14 @@ ThemedTabView(
 ThemedTabView(
   persistTabPosition: false,
   tabs: categories.map((c) => ThemedTab(labelText: c.name, child: CategoryView(c))).toList(),
+)
+
+// Tabs spanning the full width instead of hugging their labels
+ThemedTabView(
+  isScrollable: false,
+  tabs: [
+    ThemedTab(labelText: 'Summary', child: SummaryView()),
+    ThemedTab(labelText: 'Detail', child: DetailView()),
+  ],
 )
 ```

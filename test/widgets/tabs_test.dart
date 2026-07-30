@@ -880,5 +880,181 @@ void main() {
       expect(leftButton.isDisabled, isFalse);
       expect(rightButton.isDisabled, isFalse);
     });
+
+    testWidgets('isScrollable false makes tabs share the available width', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 600,
+              height: 400,
+              child: ThemedTabView(
+                isScrollable: false,
+                padding: EdgeInsets.zero,
+                tabs: [
+                  ThemedTab(labelText: 'A', child: const Text('Content A')),
+                  ThemedTab(labelText: 'B', child: const Text('Content B')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final tabBar = tester.widget<TabBar>(find.byType(TabBar));
+      expect(tabBar.isScrollable, isFalse);
+
+      // Both tabs must end up the same width, and each must be wider than its bare label.
+      final containers = find.descendant(
+        of: find.byType(TabBar),
+        matching: find.byType(AnimatedContainer),
+      );
+      final firstWidth = tester.getSize(containers.at(0)).width;
+      final secondWidth = tester.getSize(containers.at(1)).width;
+      expect(firstWidth, equals(secondWidth));
+      expect(firstWidth, greaterThan(100));
+    });
+
+    testWidgets('isScrollable false leaves room for additionalWidgets', (tester) async {
+      const double barWidth = 600;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: barWidth,
+              height: 400,
+              child: ThemedTabView(
+                isScrollable: false,
+                padding: EdgeInsets.zero,
+                additionalWidgets: const [SizedBox(width: 120, height: 40)],
+                tabs: [
+                  ThemedTab(labelText: 'A', child: const Text('Content A')),
+                  ThemedTab(labelText: 'B', child: const Text('Content B')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The extra widget keeps its intrinsic size; only the TabBar gives up space.
+      expect(tester.getSize(find.byType(TabBar)).width, lessThanOrEqualTo(barWidth - 120));
+
+      final containers = find.descendant(
+        of: find.byType(TabBar),
+        matching: find.byType(AnimatedContainer),
+      );
+      final firstWidth = tester.getSize(containers.at(0)).width;
+      final secondWidth = tester.getSize(containers.at(1)).width;
+
+      // Tabs still split evenly, now over the reduced width.
+      expect(firstWidth, equals(secondWidth));
+      expect(firstWidth + secondWidth, lessThanOrEqualTo(barWidth - 120));
+    });
+
+    testWidgets('isScrollable false expands the tab background to the full cell', (tester) async {
+      // Regression: the active background used to shrink to the label while the ink splash covered
+      // the whole cell, so the highlight looked smaller than the splash.
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 600,
+              height: 400,
+              child: ThemedTabView(
+                isScrollable: false,
+                padding: EdgeInsets.zero,
+                tabs: [
+                  ThemedTab(labelText: 'Summary', child: const Text('Content A')),
+                  ThemedTab(labelText: 'B', child: const Text('Content B')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final containers = find.descendant(
+        of: find.byType(TabBar),
+        matching: find.byType(AnimatedContainer),
+      );
+      final longLabelWidth = tester.getSize(containers.at(0)).width;
+      final shortLabelWidth = tester.getSize(containers.at(1)).width;
+
+      // Both containers fill their own cell, so 'Summary' and 'B' end up identical despite very
+      // different label lengths. Before the fix each shrank to its label and the splash — which
+      // always covers the full cell — painted a visibly larger area than the background.
+      expect(longLabelWidth, equals(shortLabelWidth));
+
+      // And together they span the whole bar, leaving no unpainted gap for the splash to reveal.
+      final barWidth = tester.getSize(find.byType(TabBar)).width;
+      expect(longLabelWidth + shortLabelWidth, moreOrLessEquals(barWidth, epsilon: 1));
+    });
+
+    testWidgets('isScrollable true keeps tabs at their intrinsic width', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 600,
+              height: 400,
+              child: ThemedTabView(
+                padding: EdgeInsets.zero,
+                tabs: [
+                  ThemedTab(labelText: 'A', child: const Text('Content A')),
+                  ThemedTab(labelText: 'a much longer tab label', child: const Text('Content B')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final tabBar = tester.widget<TabBar>(find.byType(TabBar));
+      expect(tabBar.isScrollable, isTrue);
+
+      // Intrinsic sizing: the long label must be wider than the short one.
+      final containers = find.descendant(
+        of: find.byType(TabBar),
+        matching: find.byType(AnimatedContainer),
+      );
+      final shortWidth = tester.getSize(containers.at(0)).width;
+      final longWidth = tester.getSize(containers.at(1)).width;
+      expect(longWidth, greaterThan(shortWidth));
+
+      // A scrollable TabBar lays tabs out unbounded, so expanding here would assert with
+      // `BoxConstraints forces an infinite width`. Reaching this point proves it does not expand.
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('isScrollable true with additionalWidgets does not overflow', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 600,
+              height: 400,
+              child: ThemedTabView(
+                padding: EdgeInsets.zero,
+                additionalWidgets: const [SizedBox(width: 120, height: 40)],
+                tabs: [
+                  ThemedTab(labelText: 'A', child: const Text('Content A')),
+                  ThemedTab(labelText: 'a much longer tab label', child: const Text('Content B')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(tester.widget<TabBar>(find.byType(TabBar)).isScrollable, isTrue);
+    });
   });
 }

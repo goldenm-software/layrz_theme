@@ -47,6 +47,13 @@ class ThemedTab extends StatelessWidget {
   /// [style] is the style of the tab
   final ThemedTabStyle style;
 
+  /// [expand] makes the tab fill the width of the cell assigned by the [TabBar].
+  ///
+  /// Set by [ThemedTabView] through [overrideStyle]: it is `true` only when the bar is not
+  /// scrollable. A scrollable [TabBar] lays its tabs out with unbounded width, so expanding there
+  /// would assert with `BoxConstraints forces an infinite width`.
+  final bool expand;
+
   /// [ThemedTab] is a tab for the [TabBar] widget
   const ThemedTab({
     super.key,
@@ -61,9 +68,10 @@ class ThemedTab extends StatelessWidget {
     this.color,
     this.child = const SizedBox(),
     this.style = .filledTonal,
+    this.expand = false,
   }) : assert(labelText != null || label != null);
 
-  ThemedTab overrideStyle(ThemedTabStyle newStyle) {
+  ThemedTab overrideStyle(ThemedTabStyle newStyle, {bool? expand}) {
     return ThemedTab(
       key: key,
       labelText: labelText,
@@ -76,6 +84,7 @@ class ThemedTab extends StatelessWidget {
       padding: padding,
       color: color,
       style: newStyle,
+      expand: expand ?? this.expand,
       child: child,
     );
   }
@@ -98,6 +107,11 @@ class ThemedTab extends StatelessWidget {
     return AnimatedContainer(
       duration: _kTabAnimationDuration,
       padding: padding,
+      // When expanded, fill the cell the TabBar assigned to this tab so the active background
+      // matches the ink splash bounds. Otherwise the container shrinks to the label and the splash
+      // paints a visibly larger area than the highlight.
+      width: expand ? double.infinity : null,
+      alignment: expand ? Alignment.center : null,
       decoration: style == .filledTonal
           ? BoxDecoration(
               color: isActive ? backgroundColor.withAlpha((255 * _kTabActiveAlpha).toInt()) : Colors.transparent,
@@ -107,6 +121,7 @@ class ThemedTab extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: _kTabInternalPadding),
         child: RichText(
+          textAlign: expand ? TextAlign.center : TextAlign.start,
           text: TextSpan(
             children: [
               if (leading != null || leadingIcon != null) ...[
