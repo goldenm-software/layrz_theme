@@ -9,7 +9,7 @@ import 'package:layrz_state/layrz_state.dart';
 import 'package:layrz_theme_example/timezone/native.dart'
     if (dart.library.js_interop) 'package:layrz_theme_example/timezone/web.dart';
 
-const font = AppFont(source: .google, name: 'Ubuntu Mono');
+const font = AppFont(source: .google, name: 'Open Sans');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
