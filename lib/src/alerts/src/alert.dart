@@ -48,9 +48,9 @@ class ThemedAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color typeColor = type.color ?? Colors.blue;
+    Color typeColor = type.color(context) ?? Colors.blue;
     if (type == .custom) {
-      typeColor = color ?? type.color ?? Colors.blue;
+      typeColor = color ?? type.color(context) ?? Colors.blue;
     }
 
     IconData typeIcon = type.icon ?? LayrzIcons.solarOutlineInfoSquare;
@@ -66,13 +66,13 @@ class ThemedAlert extends StatelessWidget {
             color: typeColor,
             width: 2,
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: LayrzTokenizer.of(context).borderRadius,
         ),
         clipBehavior: .antiAlias,
         child: Row(
           children: [
             Container(
-              padding: const .all(10),
+              padding: LayrzTokenizer.of(context).padding,
               child: Center(
                 child: Icon(
                   typeIcon,
@@ -85,9 +85,12 @@ class ThemedAlert extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: .only(topRight: .circular(8), bottomRight: .circular(8)),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(LayrzTokenizer.of(context).radius),
+                    bottomRight: Radius.circular(LayrzTokenizer.of(context).radius),
+                  ),
                 ),
-                padding: const .all(10),
+                padding: LayrzTokenizer.of(context).padding,
                 child: Column(
                   mainAxisAlignment: .center,
                   crossAxisAlignment: .start,
@@ -116,7 +119,7 @@ class ThemedAlert extends StatelessWidget {
     Color? textColor;
 
     if (style == .filledTonal) {
-      backgroundColor = typeColor.withAlpha((255 * 0.2).toInt());
+      backgroundColor = typeColor.withValues(alpha: LayrzTokenizer.of(context).tonalOpacity);
       borderColor = Colors.transparent;
       textColor = typeColor;
     } else if (style == .filled) {
@@ -132,11 +135,11 @@ class ThemedAlert extends StatelessWidget {
     bool isLayrzStyle = style == .layrz;
 
     return Container(
-      padding: const .all(10),
+      padding: LayrzTokenizer.of(context).padding,
       decoration: BoxDecoration(
         color: backgroundColor,
-        border: .all(color: borderColor ?? Colors.transparent, width: 1),
-        borderRadius: .circular(10),
+        border: .all(color: borderColor ?? Colors.transparent, width: LayrzTokenizer.of(context).borderWidth),
+        borderRadius: LayrzTokenizer.of(context).borderRadius,
       ),
       child: Column(
         mainAxisAlignment: .start,

@@ -13,6 +13,9 @@ class ThemedSnackbar {
   /// [color] helps to build the background color of the snackbar
   final Color? color;
 
+  /// [type] helps to build the type of the snackbar.
+  final ThemedSnackbarType type;
+
   /// [duration] helps to build the duration of the snackbar
   final Duration duration;
 
@@ -33,7 +36,7 @@ class ThemedSnackbar {
     required this.message,
     this.icon,
     this.color,
-    this.duration = const Duration(seconds: 5),
+    this.duration = const Duration(seconds: 10),
     @Deprecated(
       'This property will be removed in favor of the messenger maxWidth property, '
       'and it will be removed on version 8.0.0',
@@ -41,6 +44,7 @@ class ThemedSnackbar {
     this.width,
     @Deprecated('This property will not be used anymore, and it will be removed on version 8.0.0') this.maxLines = 2,
     this.isDismissible = true,
+    this.type = .custom,
   }) : assert(message.isNotEmpty, 'Message must not be empty'),
        assert(duration.inSeconds > 0, 'Duration must be greater than 0 seconds');
 

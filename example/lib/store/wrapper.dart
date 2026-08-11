@@ -40,8 +40,8 @@ class _LayoutState extends State<Layout> {
     }
 
     return ThemedLayout(
-      style: ThemedLayoutStyle.mini,
-      mobileStyle: ThemedMobileLayoutStyle.bottomBar,
+      style: .sidebar,
+      mobileStyle: .bottomBar,
       isBackEnabled: false,
       // style: layoutStyle,
       logo: logo,

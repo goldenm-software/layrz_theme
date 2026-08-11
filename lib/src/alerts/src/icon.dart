@@ -33,9 +33,9 @@ class ThemedAlertIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color typeColor = type.color ?? Colors.blue;
+    Color typeColor = type.color(context) ?? Colors.blue;
     if (type == .custom) {
-      typeColor = color ?? type.color ?? Colors.blue;
+      typeColor = color ?? type.color(context) ?? Colors.blue;
     }
 
     IconData typeIcon = type.icon ?? LayrzIcons.solarOutlineInfoSquare;

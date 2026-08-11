@@ -36,6 +36,10 @@ You can see a live demo on [https://theme.layrz.com](https://theme.layrz.com) (D
 
 ## FAQ
 
+### `layrz_ui` is the same as `layrz_theme`?
+
+Not quite, `layrz_ui` is the next evolution of `layrz_theme`, and we're excited about it! The Flutter team is leading the charge on decoupling Material and Cupertino from the core framework, and that vision inspired us to go all in: `layrz_ui` is a 100% design-system-agnostic library, built to give you total creative freedom.
+
 ### Why is this package called `layrz_theme`?
 
 All packages developed by [Layrz](https://layrz.com) are prefixed with `layrz_`, check out our other packages on [pub.dev](https://pub.dev/publishers/goldenm.com/packages).

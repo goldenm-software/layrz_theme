@@ -22,8 +22,7 @@ enum ThemedAlertType {
   context,
 
   /// [custom] is the type of alert that allows for custom icons and colors.
-  custom
-  ;
+  custom;
 
   IconData? get icon {
     switch (this) {
@@ -42,18 +41,19 @@ enum ThemedAlertType {
     }
   }
 
-  Color? get color {
+  Color? color(BuildContext context) {
+    final t = LayrzTokenizer.of(context);
     switch (this) {
       case .info:
-        return Colors.blue;
+        return t.info;
       case .success:
-        return Colors.green;
+        return t.success;
       case .warning:
-        return Colors.orange;
+        return t.warning;
       case .danger:
-        return Colors.red;
+        return t.danger;
       case .context:
-        return Colors.grey;
+        return t.context;
       default:
         return null; // For custom type, no default color is provided
     }

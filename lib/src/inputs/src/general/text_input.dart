@@ -168,7 +168,7 @@ class ThemedTextInput extends StatefulWidget {
     this.readonly = false,
     this.inputFormatters = const [],
     this.autofillHints = const [],
-    this.borderRadius,
+    @Deprecated('This property will be removed in favor of the `LayrzTokenizer`.') this.borderRadius,
     this.maxLines = 1,
     this.autocorrect = true,
     this.enableSuggestions = true,
@@ -186,6 +186,7 @@ class ThemedTextInput extends StatefulWidget {
   State<ThemedTextInput> createState() => _ThemedTextInputState();
 
   /// [padding] is the padding of the input.
+  @Deprecated('This property will be removed in favor of the `LayrzTokenizer`.')
   static EdgeInsets get outerPadding => const EdgeInsets.all(10);
 }
 
@@ -196,11 +197,11 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
   late String _value;
   late FocusNode _focusNode;
   OverlayEntry? _entry;
-  bool get _isEntryOnTop => widget.position == .above;
+  bool get isDark => Theme.brightnessOf(context) == .dark;
 
-  EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
+  EdgeInsets get widgetPadding => widget.padding ?? LayrzTokenizer.of(context).padding;
   bool get isDense => widget.dense;
-  Color get color => Theme.of(context).brightness == .dark ? Colors.white : Theme.of(context).primaryColor;
+  Color get color => isDark ? Colors.white : Theme.of(context).primaryColor;
 
   @override
   void initState() {
@@ -372,48 +373,27 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
     InputDecoration decoration = InputDecoration(
       label: label,
       hintText: widget.placeholder,
-      hintStyle: Theme.of(context).textTheme.bodySmall,
+      hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: isDark ? Colors.grey.shade400 : null),
       prefixText: widget.prefixText,
       prefixIcon: prefix,
       suffixText: widget.suffixText,
-      border: _entry != null
-          ? UnderlineInputBorder(
-              borderRadius: .only(
-                bottomLeft: !_isEntryOnTop ? .zero : const .circular(10),
-                bottomRight: !_isEntryOnTop ? .zero : const .circular(10),
-                topLeft: !_isEntryOnTop ? const .circular(10) : .zero,
-                topRight: !_isEntryOnTop ? const .circular(10) : .zero,
-              ),
-              borderSide: .none,
-            )
-          : widget.borderRadius != null
-          ? OutlineInputBorder(
-              borderRadius: _entry != null
-                  ? .only(
-                      topLeft: .circular(widget.borderRadius!),
-                      topRight: .circular(widget.borderRadius!),
-                    )
-                  : .circular(widget.borderRadius!),
-            )
-          : null,
       suffixIcon: suffix,
-      contentPadding: EdgeInsets.all(10).copyWith(top: 12),
+      contentPadding: LayrzTokenizer.of(context).padding,
     );
 
     if (isDense) {
       decoration = decoration.copyWith(
-        contentPadding: const EdgeInsets.all(10).copyWith(top: 8, bottom: 5),
+        contentPadding: LayrzTokenizer.of(context).padding.copyWith(top: 8, bottom: 5),
         isDense: true,
       );
     }
 
     if (errors.isNotEmpty && !widget.hideDetails) {
       decoration = decoration.copyWith(
-        errorText: errors.join(", "),
-        errorStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-          overflow: .clip,
-          color: Theme.of(context).colorScheme.error,
+        floatingLabelStyle: Theme.of(context).inputDecorationTheme.floatingLabelStyle?.copyWith(
+          color: LayrzTokenizer.of(context).error,
         ),
+        errorText: errors.join(", "),
         errorMaxLines: 3,
       );
     }
@@ -529,57 +509,44 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
                         constraints: BoxConstraints(maxHeight: maxHeight, minHeight: 50),
                         decoration: BoxDecoration(
                           color: Theme.of(context).inputDecorationTheme.fillColor ?? Theme.of(context).canvasColor,
-                          borderRadius: .only(
-                            bottomLeft: _isEntryOnTop ? .zero : const .circular(10),
-                            bottomRight: _isEntryOnTop ? .zero : const .circular(10),
-                            topLeft: _isEntryOnTop ? const .circular(10) : .zero,
-                            topRight: _isEntryOnTop ? const .circular(10) : .zero,
-                          ),
+                          borderRadius: LayrzTokenizer.of(context).borderRadius,
                         ),
-                        child: Column(
-                          children: [
-                            if (!_isEntryOnTop) const Divider(),
-                            Expanded(
-                              child: choices.isEmpty
-                                  ? Center(
-                                      child: Text(
-                                        widget.emptyChoicesText,
-                                        style: Theme.of(context).textTheme.bodyMedium,
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      padding: const .all(10),
-                                      itemCount: choices.length,
-                                      itemExtent: itemExtent,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        final itm = choices[index];
-                                        return SizedBox(
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              borderRadius: .circular(5),
-                                              onTap: () async {
-                                                await _destroyEntry();
-                                                _controller.text = itm;
-                                                widget.onChanged?.call(itm);
-                                              },
-                                              child: Padding(
-                                                padding: const .all(5),
-                                                child: Text(
-                                                  itm,
-                                                  style: Theme.of(context).textTheme.bodyMedium,
-                                                ),
-                                              ),
-                                            ),
+                        child: choices.isEmpty
+                            ? Center(
+                                child: Text(
+                                  widget.emptyChoicesText,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: LayrzTokenizer.of(context).padding,
+                                itemCount: choices.length,
+                                itemExtent: itemExtent,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  final itm = choices[index];
+                                  return SizedBox(
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: .circular(5),
+                                        onTap: () async {
+                                          await _destroyEntry();
+                                          _controller.text = itm;
+                                          widget.onChanged?.call(itm);
+                                        },
+                                        child: Padding(
+                                          padding: const .all(5),
+                                          child: Text(
+                                            itm,
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
-                                        );
-                                      },
+                                        ),
+                                      ),
                                     ),
-                            ),
-                            if (_isEntryOnTop) const Divider(),
-                          ],
-                        ),
+                                  );
+                                },
+                              ),
                       );
                     },
                   ),
