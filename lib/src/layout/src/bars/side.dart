@@ -306,7 +306,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                   margin: const .symmetric(horizontal: 2.5, vertical: 5),
                   decoration: BoxDecoration(
                     color: isExpanded ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
-                    borderRadius: .circular(10),
+                    borderRadius: LayrzTokenizer.of(context).borderRadius,
                   ),
                   clipBehavior: .antiAlias,
                   child: Material(
@@ -373,12 +373,11 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
               ),
               _buildItem(ThemedNavigatorSeparator(), removePadding: true),
             ],
-            const SizedBox(height: 10),
             Expanded(
               child: ScrollConfiguration(
                 behavior: const ScrollBehavior(),
                 child: ListView.builder(
-                  padding: const .symmetric(horizontal: 10),
+                  padding: LayrzTokenizer.of(context).padding,
                   itemCount: widget.items.length,
                   itemBuilder: (context, index) {
                     return _buildItem(widget.items[index]);
@@ -387,7 +386,6 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
               ),
             ),
             if (widget.version != null) ...[
-              const SizedBox(height: 5),
               _buildItem(ThemedNavigatorSeparator(), removePadding: true),
               InkWell(
                 onTap: () => showThemedAboutDialog(
@@ -407,7 +405,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              LayrzTokenizer.of(context).sizedBox,
             ],
           ],
         ),
@@ -454,7 +452,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                 ).add(.only(left: 10 * depth.toDouble())),
                 decoration: BoxDecoration(
                   color: highlight ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
-                  borderRadius: .circular(10),
+                  borderRadius: LayrzTokenizer.of(context).borderRadius,
                 ),
                 clipBehavior: .antiAlias,
                 child: Material(
@@ -529,7 +527,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
     if (item is ThemedNavigatorAction) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 5).add(.only(left: 10 * depth.toDouble())),
-        decoration: BoxDecoration(borderRadius: .circular(10)),
+        decoration: BoxDecoration(borderRadius: LayrzTokenizer.of(context).borderRadius),
         clipBehavior: .antiAlias,
         child: Material(
           color: Colors.transparent,

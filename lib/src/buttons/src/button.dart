@@ -171,7 +171,7 @@ class ThemedButton extends StatefulWidget {
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineInboxIn,
       style: isMobile ? .filledTonalFab : .filledTonal,
-      color: Colors.green,
+      color: LayrzTokenizer.of(null).success,
     );
   }
 
@@ -193,7 +193,7 @@ class ThemedButton extends StatefulWidget {
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineCloseSquare,
       style: isMobile ? .fab : .text,
-      color: Colors.red,
+      color: LayrzTokenizer.of(null).error,
     );
   }
 
@@ -215,7 +215,7 @@ class ThemedButton extends StatefulWidget {
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineInfoSquare,
       style: isMobile ? .filledTonalFab : .filledTonal,
-      color: Colors.blue,
+      color: LayrzTokenizer.of(null).info,
     );
   }
 
@@ -237,7 +237,7 @@ class ThemedButton extends StatefulWidget {
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineEyeScan,
       style: isMobile ? .filledTonalFab : .filledTonal,
-      color: Colors.blue,
+      color: LayrzTokenizer.of(null).info,
     );
   }
 
@@ -259,7 +259,7 @@ class ThemedButton extends StatefulWidget {
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlinePenNewSquare,
       style: isMobile ? .filledTonalFab : .filledTonal,
-      color: Colors.orange,
+      color: LayrzTokenizer.of(null).warning,
     );
   }
 
@@ -281,7 +281,7 @@ class ThemedButton extends StatefulWidget {
       onCooldownFinish: onCooldownFinish,
       icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
       style: isMobile ? .filledTonalFab : .filledTonal,
-      color: Colors.red,
+      color: LayrzTokenizer.of(null).error,
     );
   }
 
@@ -433,7 +433,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   EdgeInsets get padding => isLoading || isCooldown ? EdgeInsets.zero : defaultPadding;
 
   /// [kHoverOpacity] defines the opacity of the button when is hovered.
-  double get kHoverOpacity => 0.2;
+  double get kHoverOpacity => LayrzTokenizer.of(context).tonalOpacity;
 
   /// [kOutlinedTonalOpacity] defines the opacity only for [.outlinedTonal] and
   /// [.outlinedTonalFab].
@@ -467,8 +467,7 @@ class _ThemedButtonState extends State<ThemedButton> {
   double get iconSize => widget.iconSize;
 
   /// [borderRadius] is used to know the border radius of the button.
-  /// It's always `10`.
-  double get borderRadius => 10;
+  double get borderRadius => LayrzTokenizer.of(context).radius;
 
   /// [iconSeparatorSize] is used to know the size of the icon separator.
   double get iconSeparatorSize => widget.iconSeparatorSize;

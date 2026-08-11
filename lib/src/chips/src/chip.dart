@@ -18,7 +18,7 @@ class ThemedChip extends StatelessWidget {
   final ThemedChipStyle style;
 
   /// [borderRadius] is the border radius of the chip.
-  final double borderRadius;
+  final double? borderRadius;
 
   /// [onDismiss] is the callback when the chip is dismissed.
   ///
@@ -36,7 +36,7 @@ class ThemedChip extends StatelessWidget {
     this.padding = const .symmetric(horizontal: 10, vertical: 5),
     this.labelText,
     this.style = .filledTonal,
-    this.borderRadius = 10,
+    this.borderRadius,
     this.onDismiss,
     this.leadingIcon,
   }) : assert(
@@ -73,6 +73,9 @@ class ThemedChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BorderRadius bRadius = borderRadius != null
+        ? BorderRadius.circular(borderRadius!)
+        : LayrzTokenizer.of(context).borderRadius;
     Widget child;
     BoxDecoration decoration;
     TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
@@ -81,14 +84,14 @@ class ThemedChip extends StatelessWidget {
       case .outlined:
         decoration = BoxDecoration(
           border: Border.all(color: color),
-          borderRadius: .circular(borderRadius),
+          borderRadius: bRadius,
         );
         textStyle = textStyle?.copyWith(color: color);
         break;
       case .elevated:
         decoration = BoxDecoration(
           color: color,
-          borderRadius: .circular(borderRadius),
+          borderRadius: bRadius,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withAlpha((255 * 0.2).toInt()),
@@ -102,7 +105,7 @@ class ThemedChip extends StatelessWidget {
       case .filled:
         decoration = BoxDecoration(
           color: color,
-          borderRadius: .circular(borderRadius),
+          borderRadius: bRadius,
         );
         textStyle = textStyle?.copyWith(color: validateColor(color: color));
         break;
@@ -111,7 +114,7 @@ class ThemedChip extends StatelessWidget {
       default:
         decoration = BoxDecoration(
           color: color.withAlpha((255 * 0.2).toInt()),
-          borderRadius: .circular(borderRadius),
+          borderRadius: bRadius,
         );
         textStyle = textStyle?.copyWith(color: color);
         break;

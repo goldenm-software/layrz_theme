@@ -8,7 +8,7 @@ class ThemedChipGroup extends StatelessWidget {
   final ThemedChipGroupBehavior behavior;
 
   /// [spacing] is the space between each chip in the group.
-  final double spacing;
+  final double? spacing;
 
   /// [alignment] defines the alignment of the chip group within its parent.
   ///
@@ -21,12 +21,13 @@ class ThemedChipGroup extends StatelessWidget {
     super.key,
     required this.chips,
     this.behavior = .scrollable,
-    this.spacing = 10.0,
+    this.spacing,
     this.alignment = .centerLeft,
   });
 
   @override
   Widget build(BuildContext context) {
+    double spacing = this.spacing ?? LayrzTokenizer.of(context).spacing;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         assert(

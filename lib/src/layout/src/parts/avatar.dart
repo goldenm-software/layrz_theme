@@ -120,7 +120,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
         position: widget.tooltipPosition,
         child: ThemedAvatar(
           size: 30,
-          radius: widget.avatarRadius,
+          radius: LayrzTokenizer.of(context).radius,
           name: widget.userName,
           dynamicAvatar: widget.userDynamicAvatar,
           elevation: 3,
