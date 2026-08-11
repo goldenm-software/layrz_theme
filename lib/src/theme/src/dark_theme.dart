@@ -13,24 +13,30 @@ ThemeData generateDarkTheme({
   Color mainColor = kPrimaryColor,
 
   /// [titleFont] is the font of the title text.
-  /// By default, uses `Cabin` from `Google Fonts`.
-  /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
+  /// By default, uses `kLayrzFont`.
+  ///
+  /// It is not mandatory, but ideally, you should use `preloadFont` to load the font
+  /// before the app starts. This is to avoid the font from being loaded after the app starts,
+  /// Note: It's mandatory for non Google Fonts sources.
   /// For example: ```dart
   /// void main() async {
   ///   await preloadFont(AppFont()); // Repeat this line for both title and body fonts
   /// }
   /// ```
-  AppFont? titleFont,
+  AppFont titleFont = kLayrzFont,
 
   /// [bodyFont] is the font of the text.
-  /// By default, uses `Fira Sans Condensed` from `Google Fonts`.
-  /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
+  /// By default, uses `kLayrzFont`.
+  ///
+  /// It is not mandatory, but ideally, you should use `preloadFont` to load the font
+  /// before the app starts. This is to avoid the font from being loaded after the app starts,
+  /// Note: It's mandatory for non Google Fonts sources.
   /// For example: ```dart
   /// void main() async {
   ///   await preloadFont(AppFont()); // Repeat this line for both title and body fonts
   /// }
   /// ```
-  AppFont? bodyFont,
+  AppFont bodyFont = kLayrzFont,
 }) {
   MaterialColor color = getThemeColor(theme: theme, color: mainColor);
   TextTheme textTheme = ThemedFontHandler.generateFont(
@@ -68,14 +74,34 @@ ThemeData generateDarkTheme({
 
     // Input
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const .all(10),
+      contentPadding: LayrzTokenizer.of(null).padding,
       filled: true,
       fillColor: Colors.grey.shade800,
-      border: const ThemedInputBorder(),
-      labelStyle: TextStyle(color: Colors.grey.shade400),
-      suffixIconColor: Colors.grey.shade300,
+      focusedBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: Colors.grey.shade700, width: LayrzTokenizer.of(null).borderWidth),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: Colors.grey.shade700, width: LayrzTokenizer.of(null).borderWidth),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
+      ),
+      labelStyle: TextStyle(color: Colors.grey.shade500),
+      errorStyle: textTheme.bodySmall?.copyWith(
+        color: LayrzTokenizer.of(null).error,
+        fontWeight: .bold,
+      ),
+      floatingLabelStyle: TextStyle(color: Colors.grey.shade400, fontWeight: .bold),
+      suffixIconColor: Colors.grey.shade500,
       suffixStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
-      prefixIconColor: Colors.grey.shade300,
+      prefixIconColor: Colors.grey.shade500,
       prefixStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
     ),
 
@@ -156,8 +182,10 @@ ThemeData generateDarkTheme({
     ),
     switchTheme: SwitchThemeData(
       thumbIcon: .resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckSquare, color: color);
-        return Icon(LayrzIcons.solarOutlineCloseSquare, color: color);
+        if (states.contains(WidgetState.selected)) {
+          return Icon(LayrzIcons.mdiCheck, size: 14, color: Colors.grey.shade800);
+        }
+        return Icon(LayrzIcons.mdiClose, size: 14);
       }),
       trackColor: .resolveWith((states) {
         return Colors.transparent;

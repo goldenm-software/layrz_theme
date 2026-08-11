@@ -61,3 +61,5 @@ const kLightSystemUiOverlayStyle = SystemUiOverlayStyle(
   systemNavigationBarDividerColor: kLightBackgroundColor, // Android only
   systemNavigationBarIconBrightness: .dark, // Android only
 );
+
+const kLayrzFont = AppFont(source: .google, name: 'Open Sans');

@@ -13,24 +13,30 @@ ThemeData generateLightTheme({
   Color mainColor = kPrimaryColor,
 
   /// [titleFont] is the font of the title text.
-  /// By default, uses `Cabin` from `Google Fonts`.
-  /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
+  /// By default, uses `kLayrzFont`.
+  ///
+  /// It is not mandatory, but ideally, you should use `preloadFont` to load the font
+  /// before the app starts. This is to avoid the font from being loaded after the app starts,
+  /// Note: It's mandatory for non Google Fonts sources.
   /// For example: ```dart
   /// void main() async {
   ///   await preloadFont(AppFont()); // Repeat this line for both title and body fonts
   /// }
   /// ```
-  AppFont? titleFont,
+  AppFont titleFont = kLayrzFont,
 
   /// [bodyFont] is the font of the text.
-  /// By default, uses `Fira Sans Condensed` from `Google Fonts`.
-  /// If your source is different than Google Fonts, you should use `preloadFont` to load the font.
+  /// By default, uses `kLayrzFont`.
+  ///
+  /// It is not mandatory, but ideally, you should use `preloadFont` to load the font
+  /// before the app starts. This is to avoid the font from being loaded after the app starts,
+  /// Note: It's mandatory for non Google Fonts sources.
   /// For example: ```dart
   /// void main() async {
   ///   await preloadFont(AppFont()); // Repeat this line for both title and body fonts
   /// }
   /// ```
-  AppFont? bodyFont,
+  AppFont bodyFont = kLayrzFont,
 }) {
   MaterialColor color = getThemeColor(theme: theme, color: mainColor);
 
@@ -66,11 +72,31 @@ ThemeData generateLightTheme({
     ),
     // Input
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const .all(10),
+      contentPadding: LayrzTokenizer.of(null).padding,
       filled: true,
       fillColor: Colors.grey.shade200,
-      border: const ThemedInputBorder(),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: color, width: LayrzTokenizer.of(null).borderWidth),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: Colors.grey.shade200, width: LayrzTokenizer.of(null).borderWidth),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: .circular(10),
+        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
+      ),
       labelStyle: TextStyle(color: Colors.grey.shade600),
+      errorStyle: textTheme.bodySmall?.copyWith(
+        color: LayrzTokenizer.of(null).error,
+        fontWeight: .bold,
+      ),
+      floatingLabelStyle: TextStyle(color: color, fontWeight: .bold),
       suffixIconColor: Colors.grey.shade500,
       suffixStyle: TextStyle(color: Colors.grey.shade600, fontSize: 15),
       prefixIconColor: Colors.grey.shade500,
@@ -160,8 +186,8 @@ ThemeData generateLightTheme({
     ),
     switchTheme: SwitchThemeData(
       thumbIcon: .resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.solarOutlineCheckCircle);
-        return Icon(LayrzIcons.solarOutlineCloseCircle);
+        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.mdiCheck, size: 14);
+        return Icon(LayrzIcons.mdiClose, size: 14);
       }),
       trackOutlineWidth: const WidgetStatePropertyAll(1),
       trackColor: .resolveWith((states) {
