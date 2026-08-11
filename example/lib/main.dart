@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:layrz_models/layrz_models.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/router.dart';
 import 'package:layrz_theme_example/store/store.dart';
@@ -9,11 +8,9 @@ import 'package:layrz_state/layrz_state.dart';
 import 'package:layrz_theme_example/timezone/native.dart'
     if (dart.library.js_interop) 'package:layrz_theme_example/timezone/web.dart';
 
-const font = AppFont(source: .google, name: 'Open Sans');
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ThemedFontHandler.preloadFont(font);
+  await ThemedFontHandler.preloadFont(kLayrzFont);
   await initializeTimeZone();
 
   final prefs = await SharedPreferences.getInstance();
@@ -76,8 +73,8 @@ class _MyAppState extends State<MyApp> {
           child: MaterialApp.router(
             title: 'Layrz Theme Example',
             themeMode: store.themeMode,
-            theme: generateLightTheme(titleFont: font, bodyFont: font),
-            darkTheme: generateDarkTheme(titleFont: font, bodyFont: font),
+            theme: generateLightTheme(titleFont: kLayrzFont, bodyFont: kLayrzFont),
+            darkTheme: generateDarkTheme(titleFont: kLayrzFont, bodyFont: kLayrzFont),
             debugShowCheckedModeBanner: false,
             routerConfig: router,
             builder: (context, child) {
