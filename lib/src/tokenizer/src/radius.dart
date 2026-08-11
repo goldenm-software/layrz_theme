@@ -14,6 +14,7 @@ extension RadiusTokenizer on LayrzTokenizer {
   /// radius is always smaller than the outer radius, which is important
   /// for maintaining a consistent visual hierarchy in UI design.
   BorderRadius innerRadius({required double outerRadius, required double spacer}) {
-    return BorderRadius.circular(outerRadius - spacer);
+    final double innerRadius = outerRadius - spacer;
+    return BorderRadius.circular(max(innerRadius, 0)); // Clamp to 0 to avoid negative radius
   }
 }

@@ -1,18 +1,21 @@
 part of '../tokenizer.dart';
 
 extension SpacerTokenizer on LayrzTokenizer {
-  /// [spacer] is the default spacer used in the system.
-  double get spacer => 8;
+  /// [spacing] is the default spacer used in the system.
+  double get spacing => 8;
 
-  /// [spacerSize] is the default spacer size used in the system.
-  Size get spacerSize => Size(spacer, spacer);
+  /// [spacingSize] is the default spacer size used in the system.
+  Size get spacingSize => Size(spacing, spacing);
 
-  /// [spacerBox] is the default spacer box used in the system.
-  Widget get spacerBox => SizedBox.fromSize(size: spacerSize);
+  /// [sizedBox] is the default spacer box used in the system.
+  Widget get sizedBox => SizedBox.fromSize(size: spacingSize);
 
   /// [margin] is the default margin used in the system.
-  EdgeInsets get margin => EdgeInsets.all(spacer);
+  EdgeInsets get margin => EdgeInsets.all(spacing);
+
+  /// [reducedMargin] is the default reduced margin divided by 2 used in the system.
+  EdgeInsets get reducedMargin => EdgeInsets.all(spacing / 2);
 
   /// [padding] is the default padding used in the system.
-  EdgeInsets get padding => EdgeInsets.all(spacer);
+  EdgeInsets get padding => EdgeInsets.all(spacing);
 }

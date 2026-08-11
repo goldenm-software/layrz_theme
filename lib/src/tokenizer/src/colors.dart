@@ -20,5 +20,13 @@ extension ColorTokenizer on LayrzTokenizer {
   Color get context => Colors.grey;
 
   /// [primary] is the primary color used for the system.
-  Color get primary => Theme.of(ctx).primaryColor;
+  Color get primary {
+    if (ctx == null) {
+      throw Exception("LayrzTokenizer context is null. Please provide a valid BuildContext.");
+    }
+    return Theme.of(ctx!).primaryColor;
+  }
+
+  /// [tonalOpacity] is the opacity used for tonal colors.
+  double get tonalOpacity => 0.2;
 }
