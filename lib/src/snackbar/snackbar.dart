@@ -6,9 +6,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_icons/layrz_icons.dart';
+import 'package:layrz_theme/src/tokenizer/tokenizer.dart';
 
 part 'src/snackbar.dart';
 part 'src/messenger.dart';
+part 'src/type.dart';
 
 const kSnackbarAnimationDuration = Duration(milliseconds: 300);
 

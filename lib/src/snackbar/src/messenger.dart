@@ -195,7 +195,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
   ThemedSnackbar? get _currentSnackbar => snackbars.firstOrNull;
 
   /// [_backgroundColor] is the background color of the snackbar.
-  Color get _backgroundColor => _currentSnackbar?.color ?? Colors.blue;
+  Color get _backgroundColor => _currentSnackbar?.type.color(_currentSnackbar?.color) ?? Colors.blue;
 
   /// [_titleStyle] helps to build the title style
   /// It uses the current theme to build the style
