@@ -1,5 +1,28 @@
 # Changelog
 
+## 7.9.0
+
+- **BREAKING**: Renamed `LayrzTokenizer.spacer` getter to `spacing`, `spacerSize` to `spacingSize`, and `spacerBox` to `sizedBox`. No deprecation shims were provided — these are hard renames.
+- **BREAKING**: Removed `ShadowTokenizer.shadowColor` getter. The `shadow()` method no longer forwards a `shadowColor` parameter to `generateContainerElevation`.
+- **BREAKING**: Changed `LayrzTokenizer.ctx` from non-nullable `BuildContext` to `BuildContext?`, and `LayrzTokenizer.of()` now accepts `BuildContext?`. This enables token access outside a widget tree (used by theme generators). **Important caveat**: context-dependent tokens like `ColorTokenizer.primary` and `ShadowTokenizer.shadow()` throw an `Exception` if `ctx` is null; constant tokens (`padding`, `margin`, `radius`, `borderWidth`, `tonalOpacity`, `spacing`, and semantic colors `success`/`error`/`warning`/`info`/`context`) are safe with a null context.
+- **BREAKING**: Changed `ThemedAlertType.color` from a getter (`Color? get color`) to a method taking a context (`Color? color(BuildContext context)`). It now resolves from the tokenizer's semantic colors instead of hardcoded `Colors.blue`/`green`/`orange`/`red`/`grey`.
+- **BREAKING**: Changed `generateLightTheme` and `generateDarkTheme` parameters: `titleFont` and `bodyFont` are now non-nullable `AppFont` defaulting to the new `kLayrzFont` constant; passing `null` is now a compile error.
+- **BREAKING**: Changed `ThemedChip.borderRadius` from `double` to `double?` and `ThemedChipGroup.spacing` from `double` to `double?`. They now fall back to the tokenizer (`LayrzTokenizer.radius` and `LayrzTokenizer.spacing`) when not supplied. Previously they defaulted to hardcoded values.
+- Added new `BorderTokenizer` extension with a `borderWidth` getter (defaults to `1.5`).
+- Added `ColorTokenizer.tonalOpacity` getter (defaults to `0.2`), replacing scattered hardcoded alpha values across widgets.
+- Added `SpacerTokenizer.reducedMargin` getter, computed as `spacing / 2`.
+- Added `kLayrzFont` constant exported from `lib/src/theme/src/constants.dart` — `AppFont(source: .google, name: 'Open Sans')` — as the new default font for theme generation.
+- Added `ThemedSnackbarType` enum (`custom`, `success`, `error`, `warning`, `info`, `context`) and a new `type` parameter to `ThemedSnackbar` (defaults to `.custom`, preserving previous color-based behaviour). The messenger now resolves the background color through `type.color(color)`.
+- Inputs now render with outlined borders in both light and dark themes. `generateLightTheme` and `generateDarkTheme` replaced the single `border: ThemedInputBorder()` with explicit `focusedBorder`, `enabledBorder`, `errorBorder`, and `focusedErrorBorder` (all `OutlineInputBorder` with a 10px radius and tokenizer `borderWidth`). Both themes also gained `errorStyle` (bold, tokenizer `error` color) and `floatingLabelStyle` (bold; primary color in light, grey in dark).
+- Fixed `RadiusTokenizer.innerRadius` to clamp the computed radius to a minimum of `0` (`max(innerRadius, 0)`), preventing a negative radius when `spacer` exceeds `outerRadius`.
+- Changed `ThemedSnackbar.duration` default from 5 seconds to 10 seconds.
+- Updated switch thumb icons in both themes to `LayrzIcons.mdiCheck` / `LayrzIcons.mdiClose` at size 14 (were the Solar check/close circle and square icons).
+- Simplified `ThemedTextInput` combobox overlay: removed `Divider`s and the surrounding `Column`/`Expanded` wrapper; the overlay now uses the tokenizer border radius instead of computing top/bottom-only corners from entry position. Removed hardcoded underline/outline border computation, so the input now inherits the theme's border. Hint style now uses a lighter grey in dark mode. When there are validation errors, the floating label is tinted with the tokenizer `error` color.
+- Migrated many widgets off hardcoded values onto the tokenizer: `ThemedAlert`, `ThemedAlertIcon`, `ThemedButton`, `ThemedChip`, `ThemedChipGroup`, `ThemedMiniBar`, `ThemedSidebar`, and `ThemedAppBarAvatar` now use `LayrzTokenizer` for padding, margins, border radius, border width, and tonal opacity. `ThemedButton` semantic factories (`.save`, `.cancel`, `.info`, `.show`, `.edit`, `.delete`) now use tokenizer semantic colors instead of hardcoded `Colors.green`/`red`/`blue`/`orange`.
+- Updated `ThemedMiniBar` to use the tokenizer `shadow()` decoration and add an outer margin; separators changed from dotted style to the default line style; item highlight radius now derives from `LayrzTokenizer.innerRadius`.
+- Updated `ThemedAppBarAvatar` to derive the avatar radius from the tokenizer instead of the `avatarRadius` property (the property is still accepted but is currently ignored).
+- Deprecated `ThemedTextInput.borderRadius` and the `ThemedTextInput.outerPadding` static getter in favour of the tokenizer. Both still work in this release.
+
 ## 7.8.0
 
 - Added `isScrollable` and `tabAlignment` to `ThemedTabView`. `isScrollable` defaults to `true`, which keeps the previous behaviour: every tab takes only the width of its own content and the bar scrolls when the tabs do not fit. Passing `isScrollable: false` makes the tabs share the available width evenly, filling the space left by `additionalWidgets` and the arrow buttons. `tabAlignment` is `null` by default and resolves to `TabAlignment.start` when scrollable and `TabAlignment.fill` when not; set it explicitly only when the value matches `isScrollable`, since Flutter accepts `.start`/`.startOffset` only on a scrollable bar and `.fill`/`.center` only on a non-scrollable one. Both values were previously hardcoded, so there was no way to make the tabs span the full width.
