@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.9.2
+
+- Reverted the input decoration changes introduced in 7.9.0. `generateLightTheme` and `generateDarkTheme` again render inputs with `ThemedInputBorder` instead of the explicit `OutlineInputBorder` set, and the `errorStyle`/`floatingLabelStyle` and tokenizer-based `contentPadding` added in 7.9.0 were removed. Fonts (`kLayrzFont`) and switch thumb icons are unaffected.
+
 ## 7.9.1
 
 - Updated `layrz_models` to `v3.27.2`
