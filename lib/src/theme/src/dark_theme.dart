@@ -74,34 +74,14 @@ ThemeData generateDarkTheme({
 
     // Input
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: LayrzTokenizer.of(null).padding,
+      contentPadding: const .all(10),
       filled: true,
       fillColor: Colors.grey.shade800,
-      focusedBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: Colors.grey.shade700, width: LayrzTokenizer.of(null).borderWidth),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: Colors.grey.shade700, width: LayrzTokenizer.of(null).borderWidth),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
-      ),
-      labelStyle: TextStyle(color: Colors.grey.shade500),
-      errorStyle: textTheme.bodySmall?.copyWith(
-        color: LayrzTokenizer.of(null).error,
-        fontWeight: .bold,
-      ),
-      floatingLabelStyle: TextStyle(color: Colors.grey.shade400, fontWeight: .bold),
-      suffixIconColor: Colors.grey.shade500,
+      border: const ThemedInputBorder(),
+      labelStyle: TextStyle(color: Colors.grey.shade400),
+      suffixIconColor: Colors.grey.shade300,
       suffixStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
-      prefixIconColor: Colors.grey.shade500,
+      prefixIconColor: Colors.grey.shade300,
       prefixStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
     ),
 
