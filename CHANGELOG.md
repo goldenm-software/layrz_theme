@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.9.1
+
+- Updated `layrz_models` to `v3.27.2`
+
 ## 7.9.0
 
 - **BREAKING**: Renamed `LayrzTokenizer.spacer` getter to `spacing`, `spacerSize` to `spacingSize`, and `spacerBox` to `sizedBox`. No deprecation shims were provided — these are hard renames.

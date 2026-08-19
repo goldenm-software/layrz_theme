@@ -57,14 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
-  convert:
-    dependency: transitive
-    description:
-      name: convert
-      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.2"
   cross_file:
     dependency: transitive
     description:
@@ -109,10 +101,10 @@ packages:
     dependency: transitive
     description:
       name: dio
-      sha256: d90ee57923d1828ac14e492ca49440f65477f4bb1263575900be731a3dac66a9
+      sha256: "0df44ebba85e503958eb75d07eedd3c86275a58c1d3eda2f2ce8f0a2c3abbb3c"
       url: "https://pub.dev"
     source: hosted
-    version: "5.9.0"
+    version: "5.11.0"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -121,22 +113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  drift:
-    dependency: transitive
-    description:
-      name: drift
-      sha256: "970cd188fddb111b26ea6a9b07a62bf5c2432d74147b8122c67044ae3b97e99e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.31.0"
-  drift_flutter:
-    dependency: transitive
-    description:
-      name: drift_flutter
-      sha256: c07120854742a0cae2f7501a0da02493addde550db6641d284983c08762e60a7
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.8"
   emojis:
     dependency: transitive
     description:
@@ -384,30 +360,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.1"
+  layrz_i18n:
+    dependency: transitive
+    description:
+      name: layrz_i18n
+      sha256: a0c63efa7ff0d98907189fa04b580e376a52f21326d0d310420ab884b062690d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   layrz_icons:
     dependency: "direct main"
     description:
       name: layrz_icons
-      sha256: "297527dc62e52fda926df810a459ecce644fedbf58a366f7f2229b5da465a191"
+      sha256: "41bcec6995b36a8192b2fac053ffe253b66179f48d223af92ecc862ae7945d97"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   layrz_logging:
     dependency: transitive
     description:
       name: layrz_logging
-      sha256: "385b944528b05994bcff70fc435f7fe368dea62670674e1abb34c0824d505027"
+      sha256: bb44f5f039e8c8f88654f75a0a53f248566942ef2d8ab3f1c7d7609c91f4bb8a
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.6.0"
   layrz_models:
     dependency: "direct main"
     description:
       name: layrz_models
-      sha256: ddb2a5313bfadc0ee4abd71f5f4486a26326efbfcca47fc26f8e9c34e50aa63d
+      sha256: d19b7bd15272695f3e07473d309e5623fc1da426675e26e2da02dc85c6403c05
       url: "https://pub.dev"
     source: hosted
-    version: "3.18.2"
+    version: "3.27.3"
+  layrz_sdk:
+    dependency: transitive
+    description:
+      name: layrz_sdk
+      sha256: c37bc3251ccfeb20f7c24f0523d3255a44461e144c7cdfc065dececb39df7cd0
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.3"
   layrz_state:
     dependency: "direct main"
     description:
@@ -422,7 +414,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.9.0"
+    version: "7.9.1"
   leak_tracker:
     dependency: transitive
     description:
@@ -788,22 +780,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.1"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: "3145bd74dcdb4fd6f5c6dda4d4e4490a8087d7f286a14dee5d37087290f0f8a2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.9.4"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: eeb9e3a45207649076b808f8a5a74d68770d0b7f26ccef6d5f43106eee5375ad
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.42"
   stack_trace:
     dependency: transitive
     description:
