@@ -72,31 +72,11 @@ ThemeData generateLightTheme({
     ),
     // Input
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: LayrzTokenizer.of(null).padding,
+      contentPadding: const .all(10),
       filled: true,
       fillColor: Colors.grey.shade200,
-      focusedBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: color, width: LayrzTokenizer.of(null).borderWidth),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: Colors.grey.shade200, width: LayrzTokenizer.of(null).borderWidth),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: .circular(10),
-        borderSide: BorderSide(color: LayrzTokenizer.of(null).error, width: LayrzTokenizer.of(null).borderWidth),
-      ),
+      border: const ThemedInputBorder(),
       labelStyle: TextStyle(color: Colors.grey.shade600),
-      errorStyle: textTheme.bodySmall?.copyWith(
-        color: LayrzTokenizer.of(null).error,
-        fontWeight: .bold,
-      ),
-      floatingLabelStyle: TextStyle(color: color, fontWeight: .bold),
       suffixIconColor: Colors.grey.shade500,
       suffixStyle: TextStyle(color: Colors.grey.shade600, fontSize: 15),
       prefixIconColor: Colors.grey.shade500,
