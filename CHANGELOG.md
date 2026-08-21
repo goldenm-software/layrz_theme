@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 7.10.0
 
 - **BREAKING**: Removed the `layrz_icons` dependency. All icon references now use `flutter_material_design_icons` (`MdiIcons`) instead. The public API is unchanged — all icon parameters were already plain Flutter `IconData` (e.g., `ThemedButton.icon`), so widget signatures remain compatible. Apps that were relying on `layrz_icons` as a transitive dependency of `layrz_theme` must now declare it themselves, or migrate to `MdiIcons`.
 - `ThemedIconPicker` is unaffected and continues to work through the `layrz_sdk` icon bridge.
