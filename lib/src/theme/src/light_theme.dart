@@ -166,8 +166,8 @@ ThemeData generateLightTheme({
     ),
     switchTheme: SwitchThemeData(
       thumbIcon: .resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return Icon(LayrzIcons.mdiCheck, size: 14);
-        return Icon(LayrzIcons.mdiClose, size: 14);
+        if (states.contains(WidgetState.selected)) return Icon(MdiIcons.check, size: 14);
+        return Icon(MdiIcons.close, size: 14);
       }),
       trackOutlineWidth: const WidgetStatePropertyAll(1),
       trackColor: .resolveWith((states) {

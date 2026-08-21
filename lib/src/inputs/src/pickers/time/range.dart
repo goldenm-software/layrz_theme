@@ -191,7 +191,7 @@ class _ThemedTimeRangePickerState extends State<ThemedTimeRangePicker> {
       prefixIcon: widget.prefixIcon,
       prefixWidget: widget.prefixWidget,
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: LayrzIcons.solarOutlineClockSquare,
+      suffixIcon: MdiIcons.clockOutline,
       disabled: widget.disabled,
       readonly: true,
       onTap: widget.disabled ? null : _showPicker,

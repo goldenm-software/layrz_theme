@@ -131,7 +131,7 @@ class _ThemedAvatarPickerState extends State<ThemedAvatarPicker> with SingleTick
                               height: 100,
                             )
                           : Icon(
-                              widget.disabled ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineUpload,
+                              widget.disabled ? MdiIcons.lockOutline : MdiIcons.uploadOutline,
                               size: 50,
                               color: validateColor(color: cardColor),
                             ),
@@ -153,7 +153,7 @@ class _ThemedAvatarPickerState extends State<ThemedAvatarPicker> with SingleTick
                                     padding: const .all(5),
                                     color: Colors.red.shade800,
                                     child: Icon(
-                                      LayrzIcons.solarOutlineCloseSquare,
+                                      MdiIcons.closeBoxOutline,
                                       size: 15,
                                       color: validateColor(color: Colors.red),
                                     ),

@@ -157,8 +157,8 @@ class _ThemedPasswordInputState extends State<ThemedPasswordInput> {
 
   /// [_icon] is the icon of the progress indicator based on the current strength level of the password.
   IconData get _icon {
-    if (!_isValid) return LayrzIcons.solarOutlineCloseCircle;
-    return LayrzIcons.solarOutlineShieldCheck;
+    if (!_isValid) return MdiIcons.closeCircleOutline;
+    return MdiIcons.shieldCheckOutline;
   }
 
   @override
@@ -206,8 +206,8 @@ class _ThemedPasswordInputState extends State<ThemedPasswordInput> {
                           children: [
                             Icon(
                               _matches[entry.value]!
-                                  ? LayrzIcons.solarOutlineCheckCircle
-                                  : LayrzIcons.solarOutlineCloseCircle,
+                                  ? MdiIcons.checkCircleOutline
+                                  : MdiIcons.closeCircleOutline,
                               size: 16,
                               color: _matches[entry.value]! ? Colors.green : Colors.red,
                             ),
@@ -266,7 +266,7 @@ class _ThemedPasswordInputState extends State<ThemedPasswordInput> {
             child: InkWell(
               onTap: () => setState(() => _showPassword = !_showPassword),
               child: Icon(
-                _showPassword ? LayrzIcons.mdiEyeOffOutline : LayrzIcons.mdiEyeOutline,
+                _showPassword ? MdiIcons.eyeOffOutline : MdiIcons.eyeOutline,
                 size: 20,
                 color: Theme.of(context).inputDecorationTheme.suffixIconColor,
               ),

@@ -73,7 +73,7 @@ class _ThemedActionsButtonsState extends State<ThemedActionsButtons> with Single
     if (isMobile || widget.forceMobileMode) {
       return ThemedButton(
         key: _key,
-        icon: LayrzIcons.solarOutlineMenuDots,
+        icon: MdiIcons.dotsHorizontal,
         labelText: widget.actionsLabel,
         style: .fab,
         color: Colors.grey.shade500,
@@ -380,7 +380,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlineInboxIn,
+      icon: MdiIcons.inboxArrowDownOutline,
       color: Colors.green,
     );
   }
@@ -403,7 +403,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlineCloseSquare,
+      icon: MdiIcons.closeBoxOutline,
       onlyIcon: isMobile,
       color: Colors.red,
     );
@@ -427,7 +427,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlineInfoSquare,
+      icon: MdiIcons.informationBoxOutline,
       onlyIcon: isMobile,
       color: Colors.blue,
     );
@@ -451,7 +451,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlineEyeScan,
+      icon: MdiIcons.eyeOutline,
       onlyIcon: isMobile,
       color: Colors.blue,
     );
@@ -475,7 +475,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlinePenNewSquare,
+      icon: MdiIcons.pencilBoxOutline,
       onlyIcon: isMobile,
       color: Colors.orange,
     );
@@ -499,7 +499,7 @@ class ThemedActionButton {
       isDisabled: isDisabled,
       isCooldown: isCooldown,
       onCooldownFinish: onCooldownFinish,
-      icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
+      icon: MdiIcons.trashCanOutline,
       onlyIcon: isMobile,
       color: Colors.red,
     );

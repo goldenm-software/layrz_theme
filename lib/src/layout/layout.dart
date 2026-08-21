@@ -6,7 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:layrz_theme/layrz_theme.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:layrz_theme/src/tokenizer/tokenizer.dart';
 
 // Layout parts
@@ -619,7 +619,7 @@ class _ThemedLayoutState extends State<ThemedLayout> {
           pageName.add(
             WidgetSpan(
               child: Icon(
-                LayrzIcons.solarOutlineAltArrowRight,
+                MdiIcons.chevronRight,
                 color: color,
                 size: 18,
               ),

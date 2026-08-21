@@ -59,7 +59,6 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
   List<String> get _publicLayrzPackages => [
     'layrz_theme',
     'layrz_models',
-    'layrz_icons',
     'layrz_logging',
   ];
 
@@ -216,7 +215,7 @@ class _ThemedAboutDialogState extends State<ThemedAboutDialog> {
                 labelText: i18n?.t('about.search') ?? 'Search package',
                 dense: true,
                 padding: .zero,
-                prefixIcon: LayrzIcons.solarOutlineMagnifer,
+                prefixIcon: MdiIcons.magnify,
                 onChanged: (value) => setState(() => _searchText = value),
               ),
               const SizedBox(height: 10),

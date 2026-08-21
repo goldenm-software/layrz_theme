@@ -287,7 +287,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                       opacity: _isLinting ? 0.5 : 1,
                                       duration: kHoverDuration,
                                       child: Icon(
-                                        LayrzIcons.solarOutlineCodeSquare,
+                                        MdiIcons.codeBracesBox,
                                         color: textColor,
                                         size: 16,
                                       ),
@@ -364,7 +364,7 @@ class _ThemedCodeEditorState extends State<ThemedCodeEditor> {
                                       child: Padding(
                                         padding: const .only(left: 2, bottom: 2),
                                         child: Icon(
-                                          LayrzIcons.solarOutlinePlay,
+                                          MdiIcons.playOutline,
                                           color: textColor,
                                           size: 18,
                                         ),

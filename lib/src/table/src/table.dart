@@ -879,7 +879,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                           ThemedButton(
                                             style: .outlinedTonal,
                                             color: Colors.red,
-                                            icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
+                                            icon: MdiIcons.trashCanOutline,
                                             labelText: t('helpers.multipleSelection.actions.delete'),
                                             isLoading: widget.isLoading,
                                             isCooldown: widget.isCooldown,
@@ -979,7 +979,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     const SizedBox(width: 5),
                     ThemedButton(
                       labelText: t('$module.title.new'),
-                      icon: LayrzIcons.solarOutlineAddSquare,
+                      icon: MdiIcons.plusBoxOutline,
                       style: isMobile ? .filledTonalFab : .filledTonal,
                       color: primaryColor,
                       onTap: widget.onAdd,
@@ -992,7 +992,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     const SizedBox(width: 5),
                     ThemedButton(
                       labelText: t('helpers.refresh'),
-                      icon: LayrzIcons.solarOutlineRefreshSquare,
+                      icon: MdiIcons.refresh,
                       style: .filledTonalFab,
                       color: primaryColor,
                       onTap: widget.onRefresh,
@@ -1101,8 +1101,8 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                                     if (_sortBy == vicinity.column) ...[
                                                       Icon(
                                                         _sortAsc
-                                                            ? LayrzIcons.solarOutlineSortFromTopToBottom
-                                                            : LayrzIcons.solarOutlineSortFromBottomToTop,
+                                                            ? MdiIcons.sortDescending
+                                                            : MdiIcons.sortAscending,
                                                         size: ThemedColumn.sortIconSize,
                                                       ),
                                                       const SizedBox(width: 5),
@@ -1159,7 +1159,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                                     ),
                                     alignment: .centerRight,
                                     padding: ThemedColumn.padding,
-                                    child: Icon(LayrzIcons.solarOutlineTuningN4, size: 20),
+                                    child: Icon(MdiIcons.tune, size: 20),
                                   ),
                                   Expanded(
                                     child: ListView.builder(
@@ -1289,7 +1289,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
             mainAxisSize: .min,
             children: [
               Icon(
-                LayrzIcons.solarOutlineFilter,
+                MdiIcons.filterOutline,
                 color: isDark ? Colors.white : Colors.black.withValues(alpha: 0.6),
               ),
               Text(
@@ -1352,7 +1352,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.start'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineDoubleAltArrowLeft,
+        icon: MdiIcons.chevronDoubleLeft,
         onTap: () => setState(() => _currentPage = 0),
       ),
 
@@ -1361,7 +1361,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.previous'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineAltArrowLeft,
+        icon: MdiIcons.chevronLeft,
         isDisabled: _currentPage == 0,
         onTap: () {
           if (_currentPage > 0) {
@@ -1380,7 +1380,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.next'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineAltArrowRight,
+        icon: MdiIcons.chevronRight,
         isDisabled: _currentPage == maxPages,
         onTap: () {
           if (_currentPage < maxPages) {
@@ -1394,7 +1394,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.end'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineDoubleAltArrowRight,
+        icon: MdiIcons.chevronDoubleRight,
         onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
       ),
     ];
@@ -1480,7 +1480,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        LayrzIcons.solarOutlineFilter,
+                        MdiIcons.filterOutline,
                         color: isDark ? Colors.white : Colors.black.withValues(alpha: 0.6),
                       ),
                       Text(
@@ -1514,14 +1514,14 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.start'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineDoubleAltArrowLeft,
+        icon: MdiIcons.chevronDoubleLeft,
         onTap: () => setState(() => _currentPage = 0),
       ),
       ThemedButton(
         labelText: t('layrz.table.paginator.previous'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineAltArrowLeft,
+        icon: MdiIcons.chevronLeft,
         isDisabled: _currentPage == 0,
         onTap: () {
           if (_currentPage > 0) {
@@ -1536,7 +1536,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.next'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineAltArrowRight,
+        icon: MdiIcons.chevronRight,
         isDisabled: _currentPage == maxPages,
         onTap: () {
           if (_currentPage < maxPages) {
@@ -1548,7 +1548,7 @@ class _ThemedTableState<T> extends State<ThemedTable<T>> with TickerProviderStat
         labelText: t('layrz.table.paginator.end'),
         color: paginatorColor,
         style: .fab,
-        icon: LayrzIcons.solarOutlineDoubleAltArrowRight,
+        icon: MdiIcons.chevronDoubleRight,
         onTap: () => setState(() => _currentPage = _items.length ~/ _itemsPerPage),
       ),
     ];

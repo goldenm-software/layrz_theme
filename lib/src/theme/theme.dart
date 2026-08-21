@@ -9,7 +9,7 @@ import 'package:layrz_theme/src/helpers/helpers.dart';
 import 'package:dio/dio.dart';
 import 'dart:math' as math;
 
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:layrz_theme/src/theme/src/custom_painters/thumb_shape.dart';
 
 part 'src/platform.dart';

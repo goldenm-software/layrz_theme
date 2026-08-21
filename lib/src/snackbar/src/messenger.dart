@@ -355,7 +355,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                   spacing: 10,
                                   children: [
                                     Icon(
-                                      _currentSnackbar!.icon ?? LayrzIcons.solarOutlineInfoCircle,
+                                      _currentSnackbar!.icon ?? MdiIcons.informationOutline,
                                       color: validateColor(color: _backgroundColor),
                                       size: 30,
                                     ),
@@ -401,7 +401,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                                           width: 30,
                                           height: 30,
                                           child: Icon(
-                                            LayrzIcons.solarOutlineCloseCircle,
+                                            MdiIcons.closeCircleOutline,
                                             color: validateColor(color: _backgroundColor),
                                             size: 25,
                                           ),
@@ -445,7 +445,7 @@ class ThemedSnackbarMessengerState extends State<ThemedSnackbarMessenger>
                             child: Center(
                               child: _hoveringClose
                                   ? Icon(
-                                      LayrzIcons.mdiClose,
+                                      MdiIcons.close,
                                       color: Colors.white,
                                       size: 16,
                                     )

@@ -9,7 +9,7 @@ import 'package:layrz_theme/src/helpers/helpers.dart';
 import 'package:layrz_theme/src/inputs/inputs.dart';
 import 'package:layrz_theme/src/snackbar/snackbar.dart';
 import 'package:layrz_theme/src/tooltips/tooltips.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 // General widgets
 part 'src/wip.dart';

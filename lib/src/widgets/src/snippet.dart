@@ -53,13 +53,13 @@ class ThemedCodeSnippet extends StatelessWidget {
                 ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(
                   .new(
                     message: copyToClipboardText,
-                    icon: LayrzIcons.solarOutlineClipboardCheck,
+                    icon: MdiIcons.clipboardCheckOutline,
                     color: Colors.green,
                   ),
                 );
               },
               child: Icon(
-                LayrzIcons.solarOutlineCopy,
+                MdiIcons.contentCopy,
                 size: 20,
               ),
             ),

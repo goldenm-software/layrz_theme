@@ -287,7 +287,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                 customChild: ThemedTooltip(
                   message: t('layrz.calendar.pickMonth'),
                   child: Icon(
-                    LayrzIcons.solarOutlineCalendar,
+                    MdiIcons.calendarOutline,
                     size: 25,
                   ),
                 ),
@@ -320,14 +320,14 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
               ThemedButton(
                 labelText: _backLabel,
                 style: .fab,
-                icon: LayrzIcons.solarOutlineAltArrowLeft,
+                icon: MdiIcons.chevronLeft,
                 onTap: _back,
               ),
               if (widget.todayButton) ...[
                 ThemedButton(
                   labelText: t('layrz.calendar.today'),
                   style: .fab,
-                  icon: LayrzIcons.solarOutlineCalendar,
+                  icon: MdiIcons.calendarOutline,
                   onTap: () {
                     setState(() => _focusDay = .now());
                     widget.onDayTap?.call(.now());
@@ -337,7 +337,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
               ThemedButton(
                 labelText: _forwardLabel,
                 style: .fab,
-                icon: LayrzIcons.solarOutlineAltArrowRight,
+                icon: MdiIcons.chevronRight,
                 onTap: _forward,
               ),
               ...widget.aditionalButtons.map((button) => button),
@@ -727,7 +727,7 @@ class _ThemedCalendarState extends State<ThemedCalendar> {
                                     child: Opacity(
                                       opacity: 0.3,
                                       child: Icon(
-                                        LayrzIcons.solarOutlineCalendar,
+                                        MdiIcons.calendarOutline,
                                         size: 20,
                                         color: containerColor,
                                       ),

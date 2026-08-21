@@ -207,7 +207,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
       if (widget.enableAbout)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.about') ?? 'About',
-          icon: LayrzIcons.solarOutlineInfoSquare,
+          icon: MdiIcons.informationBoxOutline,
           onTap: () => showThemedAboutDialog(
             context: context,
             companyName: widget.companyName,
@@ -218,25 +218,25 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
       if (widget.onThemeSwitchTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.toggleTheme') ?? 'Toggle theme',
-          icon: LayrzIcons.solarOutlineMoonFog,
+          icon: MdiIcons.weatherNight,
           onTap: widget.onThemeSwitchTap!,
         ),
       if (widget.onSettingsTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.settings') ?? 'Settings',
-          icon: LayrzIcons.solarOutlineTuningN4,
+          icon: MdiIcons.tune,
           onTap: widget.onSettingsTap!,
         ),
       if (widget.onProfileTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.profile') ?? 'Edit profile',
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
           onTap: widget.onProfileTap!,
         ),
       if (widget.onLogoutTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.signOut') ?? 'Logout',
-          icon: LayrzIcons.solarOutlineLogoutN2,
+          icon: MdiIcons.logoutVariant,
           onTap: widget.onLogoutTap!,
         ),
     ];
@@ -344,7 +344,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                             ),
                             const SizedBox(width: 10),
                             Icon(
-                              isExpanded ? LayrzIcons.solarOutlineAltArrowUp : LayrzIcons.solarOutlineAltArrowDown,
+                              isExpanded ? MdiIcons.chevronUp : MdiIcons.chevronDown,
                               color: sidebarTextColor,
                               size: 20,
                             ),
@@ -476,7 +476,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                         children: [
                           if (item.icon != null) ...[
                             Icon(
-                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                              item.icon ?? MdiIcons.helpBoxOutline,
                               size: 18,
                               color: highlight ? activeColor : validateColor(color: backgroundColor),
                             ),
@@ -494,7 +494,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                           ),
                           if (item.children.isNotEmpty) ...[
                             Icon(
-                              isExpanded ? LayrzIcons.solarOutlineAltArrowUp : LayrzIcons.solarOutlineAltArrowDown,
+                              isExpanded ? MdiIcons.chevronUp : MdiIcons.chevronDown,
                               size: 20,
                               color: highlight ? activeColor : validateColor(color: backgroundColor),
                             ),
@@ -541,7 +541,7 @@ class _ThemedSidebarState extends State<ThemedSidebar> with TickerProviderStateM
                 children: [
                   if (item.icon != null) ...[
                     Icon(
-                      item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                      item.icon ?? MdiIcons.helpBoxOutline,
                       size: 18,
                       color: validateColor(color: backgroundColor),
                     ),

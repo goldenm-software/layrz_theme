@@ -38,9 +38,9 @@ class ThemedAlertIcon extends StatelessWidget {
       typeColor = color ?? type.color(context) ?? Colors.blue;
     }
 
-    IconData typeIcon = type.icon ?? LayrzIcons.solarOutlineInfoSquare;
+    IconData typeIcon = type.icon ?? MdiIcons.informationBoxOutline;
     if (type == .custom) {
-      typeIcon = icon ?? type.icon ?? LayrzIcons.solarOutlineInfoSquare;
+      typeIcon = icon ?? type.icon ?? MdiIcons.informationBoxOutline;
     }
 
     return Container(

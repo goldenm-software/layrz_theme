@@ -428,7 +428,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                     width: .infinity,
                     child: ThemedTextInput(
                       labelText: LayrzAppLocalizations.maybeOf(context)?.t('actions.search') ?? 'Search...',
-                      prefixIcon: LayrzIcons.solarOutlineMagnifer,
+                      prefixIcon: MdiIcons.magnify,
                       padding: .zero,
                       controller: _searchController,
                       onChanged: _onSearchChanged,
@@ -558,8 +558,8 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                                         alignment: PlaceholderAlignment.middle,
                                                         child: Icon(
                                                           _isReversed
-                                                              ? LayrzIcons.solarBoldSortFromBottomToTop
-                                                              : LayrzIcons.solarBoldSortFromTopToBottom,
+                                                              ? MdiIcons.sortAscending
+                                                              : MdiIcons.sortDescending,
                                                           size: _sortIconSize,
                                                           color: Theme.of(context).textTheme.bodyMedium?.color,
                                                         ),
@@ -603,7 +603,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                   WidgetSpan(
                                     alignment: .middle,
                                     child: Icon(
-                                      LayrzIcons.solarOutlineTuningSquareN2,
+                                      MdiIcons.tuneVariant,
                                       size: _sortIconSize,
                                       color: Theme.of(context).textTheme.bodyMedium?.color,
                                     ),
@@ -746,7 +746,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                                   ThemedSnackbarMessenger.maybeOf(context)?.show(
                                                     ThemedSnackbar(
                                                       message: copiedText,
-                                                      icon: LayrzIcons.solarOutlineClipboard,
+                                                      icon: MdiIcons.clipboardOutline,
                                                       color: Colors.green,
                                                     ),
                                                   );
@@ -857,7 +857,7 @@ class _ThemedTable2State<T> extends State<ThemedTable2<T>> {
                                     ThemedButton(
                                       labelText: widget.multiSelectionCancelLabelText,
                                       color: Colors.orange,
-                                      icon: LayrzIcons.solarOutlineEraser,
+                                      icon: MdiIcons.eraser,
                                       onTap: () => _selectedItems.value = [],
                                     ),
                                     ...widget.multiselectActions.map((action) {

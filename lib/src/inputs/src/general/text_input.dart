@@ -355,7 +355,7 @@ class _ThemedTextInputState extends State<ThemedTextInput> with TickerProviderSt
       suffixes.add(
         Padding(
           padding: const .only(right: 10),
-          child: Icon(LayrzIcons.solarOutlineLockKeyhole, size: 18),
+          child: Icon(MdiIcons.lockOutline, size: 18),
         ),
       );
     }
