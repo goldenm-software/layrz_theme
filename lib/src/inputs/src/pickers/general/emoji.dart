@@ -188,7 +188,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
       key: key,
       labelText: widget.labelText,
       label: widget.label,
-      suffixIcon: widget.disabled ? null : LayrzIcons.solarOutlineEmojiFunnyCircle,
+      suffixIcon: widget.disabled ? null : MdiIcons.emoticonOutline,
       focusNode: widget.focusNode,
       padding: widget.padding,
       dense: widget.dense,
@@ -229,7 +229,7 @@ class _ThemedEmojiPickerState extends State<ThemedEmojiPicker> {
                     ThemedTextInput(
                       labelText: t('helpers.search'),
                       value: search,
-                      prefixIcon: LayrzIcons.solarOutlineMagnifer,
+                      prefixIcon: MdiIcons.magnify,
                       dense: true,
                       onChanged: (value) {
                         setState(() => search = value);
@@ -355,11 +355,11 @@ class __EmojiGroupButtonState extends State<_EmojiGroupButton> {
     Widget child;
 
     if (widget.group == null) {
-      child = Center(child: Icon(LayrzIcons.solarOutlineInfinity, size: iconSize));
+      child = Center(child: Icon(MdiIcons.infinity, size: iconSize));
     } else {
       final emojis = Emoji.byGroup(widget.group!);
       if (emojis.isEmpty) {
-        child = Icon(LayrzIcons.solarOutlineInfinity, size: iconSize);
+        child = Icon(MdiIcons.infinity, size: iconSize);
       } else {
         child = Text(emojis.first.char, style: TextStyle(fontSize: iconSize));
       }

@@ -205,7 +205,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                       RotationTransition(
                         turns: Tween<double>(begin: 0, end: 0.5).animate(_controller),
                         child: Icon(
-                          LayrzIcons.solarOutlineAltArrowDown,
+                          MdiIcons.chevronDown,
                           size: 20,
                         ),
                       ),
@@ -228,7 +228,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                         style: .filledTonalFab,
                         labelText: i18n.t('requiredFields.remove'),
                         color: Colors.red,
-                        icon: LayrzIcons.solarOutlineTrashBinMinimalisticN2,
+                        icon: MdiIcons.trashCanOutline,
                         onTap: () => widget.onRemove.call(),
                       ),
                     ],
@@ -256,7 +256,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                             ...?widget.inputFormatters,
                             FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_.]')),
                           ],
-                          suffixIcon: LayrzIcons.solarOutlineCopy,
+                          suffixIcon: MdiIcons.contentCopy,
                           onSuffixTap: () {
                             Clipboard.setData(
                               ClipboardData(
@@ -267,7 +267,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                               ThemedSnackbar(
                                 message: i18n.t('helpers.copyToClipboard.post'),
                                 color: Colors.blue,
-                                icon: LayrzIcons.solarOutlineClipboardCheck,
+                                icon: MdiIcons.clipboardCheckOutline,
                               ),
                             );
                           },
@@ -461,7 +461,7 @@ class _ThemedDynamicConfigurableBlockState extends State<ThemedDynamicConfigurab
                               readonly: true,
                               value: object.choices.join(', '),
                               errors: context.getErrors(key: '${widget.errorsKey}.${widget.index}.choices'),
-                              suffixIcon: LayrzIcons.solarOutlinePenNewSquare,
+                              suffixIcon: MdiIcons.pencilBoxOutline,
                               onSuffixTap: () async {
                                 List<String>? choices = await showDialog(
                                   context: context,

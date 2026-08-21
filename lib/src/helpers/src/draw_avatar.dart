@@ -163,7 +163,7 @@ class ThemedAvatar extends StatelessWidget {
       shadowColor: shadowColor,
       color: color,
       child: Icon(
-        icon ?? LayrzIcons.solarOutlineQuestionSquare,
+        icon ?? MdiIcons.helpCircleOutline,
         color: validateColor(color: color),
         size: iconSize ?? (size * 0.7),
       ),
@@ -192,7 +192,7 @@ class ThemedAvatar extends StatelessWidget {
           context: context,
           shadowColor: shadowColor,
           color: color,
-          icon: avatar.icon?.iconData,
+          icon: avatar.icon?.data,
         );
 
       case .base64:

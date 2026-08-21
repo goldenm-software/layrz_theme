@@ -219,7 +219,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
       prefixIcon: widget.prefixIcon,
       prefixWidget: widget.prefixWidget,
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: LayrzIcons.solarOutlineCalendar,
+      suffixIcon: MdiIcons.calendarOutline,
       disabled: widget.disabled,
       readonly: true,
       onTap: widget.disabled ? null : _showPicker,
@@ -279,7 +279,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                           style: .fab,
                           labelText: t('layrz.monthPicker.back'),
                           color: isDark ? Colors.white : Colors.black,
-                          icon: LayrzIcons.solarOutlineAltArrowLeft,
+                          icon: MdiIcons.chevronLeft,
                           onTap: () => setState(() => _focusYear--),
                         ),
                         Text(
@@ -290,7 +290,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                           style: .fab,
                           labelText: t('layrz.monthPicker.next'),
                           color: isDark ? Colors.white : Colors.black,
-                          icon: LayrzIcons.solarOutlineAltArrowRight,
+                          icon: MdiIcons.chevronRight,
                           onTap: () => setState(() => _focusYear++),
                         ),
                       ],
@@ -391,7 +391,7 @@ class _ThemedMonthRangePickerState extends State<ThemedMonthRangePicker> {
                         ),
                         ThemedButton(
                           style: isMobile ? .fab : .text,
-                          icon: LayrzIcons.solarOutlineRefreshSquare,
+                          icon: MdiIcons.refresh,
                           color: Colors.orange,
                           labelText: t('actions.reset'),
                           onTap: () {

@@ -20,7 +20,7 @@ dependencies:
   flutter_map_animations: any
 
   layrz_state: any
-  layrz_icons: any
+  flutter_material_design_icons: any
   layrz_models: any
   timezone: any
   flutter_timezone: any

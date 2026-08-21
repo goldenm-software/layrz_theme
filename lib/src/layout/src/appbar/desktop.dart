@@ -234,7 +234,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                         child: Padding(
                           padding: const .all(10),
                           child: Icon(
-                            LayrzIcons.solarOutlineMenuDots,
+                            MdiIcons.dotsHorizontal,
                           ),
                         ),
                       ),
@@ -249,7 +249,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                         child: Padding(
                           padding: const .all(10),
                           child: Icon(
-                            LayrzIcons.solarOutlineAltArrowLeft,
+                            MdiIcons.chevronLeft,
                           ),
                         ),
                       ),
@@ -310,7 +310,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                                           children: [
                                             if (item.icon != null) ...[
                                               Icon(
-                                                item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                                item.icon ?? MdiIcons.helpBoxOutline,
                                                 size: 16,
                                                 color: highlight ? activeColor : validateColor(color: backgroundColor),
                                               ),
@@ -343,7 +343,7 @@ class _ThemedAppBarState extends State<ThemedAppBar> with TickerProviderStateMix
                                           children: [
                                             if (item.icon != null) ...[
                                               Icon(
-                                                item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                                item.icon ?? MdiIcons.helpBoxOutline,
                                                 size: 16,
                                               ),
                                               const SizedBox(width: 10),

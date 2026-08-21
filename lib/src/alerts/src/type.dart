@@ -27,15 +27,15 @@ enum ThemedAlertType {
   IconData? get icon {
     switch (this) {
       case .info:
-        return LayrzIcons.solarOutlineInfoSquare;
+        return MdiIcons.informationBoxOutline;
       case .success:
-        return LayrzIcons.solarOutlineCheckSquare;
+        return MdiIcons.checkboxMarkedOutline;
       case .warning:
-        return LayrzIcons.solarOutlineDangerSquare;
+        return MdiIcons.alertBoxOutline;
       case .danger:
-        return LayrzIcons.solarOutlineCloseSquare;
+        return MdiIcons.closeBoxOutline;
       case .context:
-        return LayrzIcons.solarOutlineMenuDotsSquare;
+        return MdiIcons.dotsHorizontalCircleOutline;
       default:
         return null; // For custom type, no default icon is provided
     }

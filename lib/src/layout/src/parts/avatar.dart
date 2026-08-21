@@ -140,7 +140,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       if (widget.enableAbout)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.about') ?? 'About',
-          icon: LayrzIcons.solarOutlineInfoSquare,
+          icon: MdiIcons.informationBoxOutline,
           onTap: () => showThemedAboutDialog(
             context: context,
             companyName: widget.companyName,
@@ -151,25 +151,25 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
       if (widget.onThemeSwitchTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.toggleTheme') ?? 'Toggle theme',
-          icon: LayrzIcons.solarOutlineMoonFog,
+          icon: MdiIcons.weatherNight,
           onTap: widget.onThemeSwitchTap!,
         ),
       if (widget.onSettingsTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.settings') ?? 'Settings',
-          icon: LayrzIcons.solarOutlineTuningN4,
+          icon: MdiIcons.tune,
           onTap: widget.onSettingsTap!,
         ),
       if (widget.onProfileTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.profile') ?? 'Edit profile',
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
           onTap: widget.onProfileTap!,
         ),
       if (widget.onLogoutTap != null)
         ThemedNavigatorAction(
           labelText: i18n?.t('layrz.taskbar.signOut') ?? 'Logout',
-          icon: LayrzIcons.solarOutlineLogoutN2,
+          icon: MdiIcons.logoutVariant,
           onTap: widget.onLogoutTap!,
         ),
     ];
@@ -288,7 +288,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                         children: [
                                           if (item.icon != null && right == null) ...[
                                             Icon(
-                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                              item.icon ?? MdiIcons.helpBoxOutline,
                                               size: 20,
                                             ),
                                             const SizedBox(width: 10),
@@ -305,7 +305,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                           if (item.icon != null && right != null) ...[
                                             const SizedBox(width: 10),
                                             Icon(
-                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                              item.icon ?? MdiIcons.helpBoxOutline,
                                               size: 20,
                                             ),
                                           ],
@@ -327,7 +327,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                         children: [
                                           if (item.icon != null && right == null) ...[
                                             Icon(
-                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                              item.icon ?? MdiIcons.helpBoxOutline,
                                               size: 20,
                                             ),
                                             const SizedBox(width: 10),
@@ -344,7 +344,7 @@ class _ThemedAppBarAvatarState extends State<ThemedAppBarAvatar> with SingleTick
                                           if (item.icon != null && right != null) ...[
                                             const SizedBox(width: 10),
                                             Icon(
-                                              item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                                              item.icon ?? MdiIcons.helpBoxOutline,
                                               size: 20,
                                             ),
                                           ],

@@ -15,8 +15,9 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highlight/highlight.dart';
 import 'package:intl/intl.dart';
-import 'package:layrz_icons/layrz_icons.dart';
-import 'package:layrz_models/layrz_models.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:layrz_models/layrz_models.dart' hide iconMapping;
+import 'package:layrz_sdk/layrz_sdk.dart' hide TimeOfDay;
 
 import 'package:layrz_theme/src/buttons/buttons.dart';
 import 'package:layrz_theme/src/extensions/extensions.dart';

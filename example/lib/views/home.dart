@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/store/store.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -37,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
                 children: [
                   ListTile(
                     leading: ThemedAvatar(
-                      icon: LayrzIcons.mdiThemeLightDark,
+                      icon: MdiIcons.themeLightDark,
                       color: color,
                       size: iconSize,
                     ),
@@ -55,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     trailing: ThemedButton(
                       labelText: "Go!",
-                      icon: LayrzIcons.mdiRocketLaunch,
+                      icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/theme'),
                     ),
@@ -63,7 +63,7 @@ class _HomeViewState extends State<HomeView> {
                   const Divider(),
                   ListTile(
                     leading: ThemedAvatar(
-                      icon: LayrzIcons.mdiText,
+                      icon: MdiIcons.text,
                       color: color,
                       size: iconSize,
                     ),
@@ -79,7 +79,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     trailing: ThemedButton(
                       labelText: "Go!",
-                      icon: LayrzIcons.mdiRocketLaunch,
+                      icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/inputs'),
                     ),
@@ -87,7 +87,7 @@ class _HomeViewState extends State<HomeView> {
                   const Divider(),
                   ListTile(
                     leading: ThemedAvatar(
-                      icon: LayrzIcons.solarOutlineAlbum,
+                      icon: MdiIcons.album,
                       color: color,
                       size: iconSize,
                     ),
@@ -104,7 +104,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     trailing: ThemedButton(
                       labelText: "Go!",
-                      icon: LayrzIcons.mdiRocketLaunch,
+                      icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/table'),
                     ),
@@ -112,7 +112,7 @@ class _HomeViewState extends State<HomeView> {
                   const Divider(),
                   ListTile(
                     leading: ThemedAvatar(
-                      icon: LayrzIcons.mdiAccountCircleOutline,
+                      icon: MdiIcons.accountCircleOutline,
                       color: color,
                       size: iconSize,
                     ),
@@ -128,7 +128,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     trailing: ThemedButton(
                       labelText: "Go!",
-                      icon: LayrzIcons.mdiRocketLaunch,
+                      icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/utilities/widgets'),
                     ),
@@ -136,7 +136,7 @@ class _HomeViewState extends State<HomeView> {
                   const Divider(),
                   ListTile(
                     leading: ThemedAvatar(
-                      icon: LayrzIcons.solarOutlineAlbum,
+                      icon: MdiIcons.album,
                       color: color,
                       size: iconSize,
                     ),
@@ -152,7 +152,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     trailing: ThemedButton(
                       labelText: "Go!",
-                      icon: LayrzIcons.mdiRocketLaunch,
+                      icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/tabs'),
                     ),
@@ -175,7 +175,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     trailing: ThemedButton(
                       labelText: "Go!",
-                      icon: LayrzIcons.mdiRocketLaunch,
+                      icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/layo'),
                     ),
@@ -183,7 +183,7 @@ class _HomeViewState extends State<HomeView> {
                   const Divider(),
                   ListTile(
                     leading: ThemedAvatar(
-                      icon: LayrzIcons.mdiGrid,
+                      icon: MdiIcons.grid,
                       color: color,
                       size: iconSize,
                     ),
@@ -199,7 +199,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     trailing: ThemedButton(
                       labelText: "Go!",
-                      icon: LayrzIcons.mdiRocketLaunch,
+                      icon: MdiIcons.rocketLaunch,
                       color: Colors.green,
                       onTap: () => context.go('/grid/responsive-row'),
                     ),

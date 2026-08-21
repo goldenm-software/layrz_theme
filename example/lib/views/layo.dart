@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/store/store.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 class LayoView extends StatefulWidget {
   const LayoView({super.key});
@@ -82,14 +82,14 @@ class _LayoViewState extends State<LayoView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonalFab,
                         tooltipPosition: ThemedTooltipPosition.left,
-                        icon: LayrzIcons.solarOutlineCopy,
+                        icon: MdiIcons.contentCopy,
                         labelText: "Copy this emotion as example",
                         onTap: () {
                           Clipboard.setData(ClipboardData(text: "Layo(size: 30, emotion: ${emotion.toString()})"));
                           ThemedSnackbarMessenger.of(context).showSnackbar(
                             ThemedSnackbar(
                               message: "Copied to clipboard",
-                              icon: LayrzIcons.solarOutlineClipboardCheck,
+                              icon: MdiIcons.clipboardCheckOutline,
                               color: Colors.green,
                             ),
                           );

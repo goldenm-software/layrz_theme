@@ -1,5 +1,14 @@
 # Changelog
 
+## 7.10.0
+
+- **BREAKING**: Removed the `layrz_icons` dependency. All icon references now use `flutter_material_design_icons` (`MdiIcons`) instead. The public API is unchanged — all icon parameters were already plain Flutter `IconData` (e.g., `ThemedButton.icon`), so widget signatures remain compatible. Apps that were relying on `layrz_icons` as a transitive dependency of `layrz_theme` must now declare it themselves, or migrate to `MdiIcons`.
+- `ThemedIconPicker` is unaffected and continues to work through the `layrz_sdk` icon bridge.
+- Note that the Solar icon set has been replaced with Material Design Icons, so many icons were remapped to their closest MDI equivalents. The most visually distinct changes: the WIP placeholder (`lib/src/widgets/src/wip.dart`) now uses `MdiIcons.progressWrench` (Solar's shock-absorber glyph has no MDI counterpart), the dark-mode toggle now uses `MdiIcons.weatherNight` (replacing Solar's moon-fog icon), and Solar's "alt arrow" icons (`solarOutlineAltArrowDown`, etc.) are now represented by MDI chevrons.
+- The example app has been migrated to use `MdiRemapIcon` from `layrz_sdk` for the icon picker, maintaining compatibility with the new icon bridge.
+- Updated `layrz_sdk` to `^4.4.4` which provides the `MdiRemapIcon` type for cross-package icon compatibility.
+- **Dependency floor**: Requires `layrz_models: ^3.31.0` and `layrz_sdk: ^4.4.4`. Earlier versions of `layrz_models` (up to 3.30.0) depend on both `layrz_icons: ^1.1.0` and `layrz_sdk: ^4.4.3`, which admits 4.4.4 — a combination that causes a type clash (`MdiRemapIcon?` cannot be assigned to `LayrzIcon?`) during test compilation. Version 3.31.0 removes the `layrz_icons` dependency, resolving the incompatibility. Consumers on older `layrz_models` versions must upgrade to 3.31.0 or later.
+
 ## 7.9.2
 
 - Reverted the input decoration changes introduced in 7.9.0. `generateLightTheme` and `generateDarkTheme` again render inputs with `ThemedInputBorder` instead of the explicit `OutlineInputBorder` set, and the `errorStyle`/`floatingLabelStyle` and tokenizer-based `contentPadding` added in 7.9.0 were removed. Fonts (`kLayrzFont`) and switch thumb icons are unaffected.

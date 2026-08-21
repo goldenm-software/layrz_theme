@@ -8,10 +8,10 @@ class ThemedIconPicker extends StatefulWidget {
   final Widget? label;
 
   /// [onChanged] is the callback function when the icon picker is changed.
-  final void Function(LayrzIcon)? onChanged;
+  final void Function(MdiRemapIcon)? onChanged;
 
   /// [value] is the value of the icon picker.
-  final LayrzIcon? value;
+  final MdiRemapIcon? value;
 
   /// [disabled] is the disabled state of the icon picker.
   final bool disabled;
@@ -48,7 +48,7 @@ class ThemedIconPicker extends StatefulWidget {
 
   /// [allowedIcons] is the list of allowed icons to select from.
   /// If this property is not submitted, all icons will be allowed.
-  final List<LayrzIcon> allowedIcons;
+  final List<MdiRemapIcon> allowedIcons;
 
   /// [customChild] is the custom child of the icon picker.
   /// If it is submitted, the icon picker will be ignored.
@@ -110,9 +110,9 @@ class ThemedIconPicker extends StatefulWidget {
 
 class _ThemedIconPickerState extends State<ThemedIconPicker> {
   final TextEditingController _textController = TextEditingController();
-  LayrzIcon? _value;
+  MdiRemapIcon? _value;
 
-  List<LayrzIcon>? selectedGroup;
+  List<MdiRemapIcon>? selectedGroup;
   EdgeInsets get widgetPadding => widget.padding ?? ThemedTextInput.outerPadding;
   bool get isDense => widget.dense;
   Color get color => Theme.of(context).brightness == .dark ? Colors.white : Theme.of(context).primaryColor;
@@ -156,11 +156,11 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
       prefixWidget: Padding(
         padding: const .all(10),
         child: ThemedAvatar(
-          icon: _value?.iconData,
+          icon: _value?.data,
           size: isDense ? 20 : 30,
         ),
       ),
-      suffixIcon: widget.disabled ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineAlbum,
+      suffixIcon: widget.disabled ? MdiIcons.lockOutline : MdiIcons.album,
       labelText: widget.labelText,
       label: widget.label,
       controller: _textController,
@@ -175,7 +175,7 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
 
   void _showPicker() async {
     if (widget.disabled) return;
-    LayrzIcon? result = await showDialog(
+    MdiRemapIcon? result = await showDialog(
       context: context,
       builder: (context) {
         IconData? icon;
@@ -261,8 +261,8 @@ class _ThemedIconPickerState extends State<ThemedIconPicker> {
 }
 
 class _IconGrid extends StatefulWidget {
-  final ValueChanged<LayrzIcon>? onTap;
-  final LayrzIcon? selected;
+  final ValueChanged<MdiRemapIcon>? onTap;
+  final MdiRemapIcon? selected;
   final BoxConstraints constraints;
   final List<IconData> allowedIcons;
 
@@ -288,9 +288,9 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
   BoxConstraints get constraints => widget.constraints;
   double get _iconHeight => 50;
 
-  List<LayrzIcon> _icons = [];
+  List<MdiRemapIcon> _icons = [];
 
-  List<LayrzIcon> get _filteredIcons {
+  List<MdiRemapIcon> get _filteredIcons {
     if (search.isEmpty) return _icons;
 
     return _icons.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).toList();
@@ -347,7 +347,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
           labelText: i18n?.t('helpers.search') ?? 'Search an icon',
           value: search,
           onChanged: (value) => setState(() => search = value),
-          prefixIcon: LayrzIcons.solarOutlineMagnifer,
+          prefixIcon: MdiIcons.magnify,
         ),
         if (mounted)
           Expanded(
@@ -381,7 +381,7 @@ class __IconGridState extends State<_IconGrid> with WidgetsBindingObserver {
                         child: Row(
                           children: [
                             Icon(
-                              icon.iconData,
+                              icon.data,
                               size: 20,
                             ),
                             const SizedBox(width: 10),

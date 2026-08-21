@@ -239,7 +239,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
       placeholder: widget.placeholder,
       prefixText: widget.prefixText,
       suffixText: widget.suffixText,
-      prefixIcon: _hideActionButtons ? null : LayrzIcons.solarOutlineMinusSquare,
+      prefixIcon: _hideActionButtons ? null : MdiIcons.minusBoxOutline,
       prefixIconDisabled: !canDecrement,
       onPrefixTap: () {
         if (!canDecrement) return;
@@ -247,7 +247,7 @@ class _ThemedNumberInputState extends State<ThemedNumberInput> {
         num newValue = (widget.value ?? 0) - (widget.step ?? 1);
         widget.onChanged?.call(newValue);
       },
-      suffixIcon: _hideActionButtons ? null : LayrzIcons.solarOutlineAddSquare,
+      suffixIcon: _hideActionButtons ? null : MdiIcons.plusBoxOutline,
       suffixIconDisabled: !canIncrement,
       onSuffixTap: () {
         if (!canIncrement) return;

@@ -180,7 +180,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
     if (layers.isNotEmpty) ...[
       ThemedMapButton(
         labelText: i18n?.t('layrz.map.change.layer') ?? widget.changeLayerLabelText,
-        icon: LayrzIcons.solarBoldLayersMinimalistic,
+        icon: MdiIcons.layers,
         color: buttonColor,
         onTap: () async {
           final res = await showDialog<MapLayer>(
@@ -234,7 +234,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
         builder: (context, value, child) {
           return ThemedMapButton(
             labelText: i18n?.t('layrz.map.zoom.in') ?? widget.zoomOutLabelText,
-            icon: LayrzIcons.solarBoldAddSquare,
+            icon: MdiIcons.plusBox,
             isDisabled: value >= widget.maxZoom,
             onTap: () async {
               // Increase zoom by 1
@@ -281,7 +281,7 @@ class _ThemedMapToolbarState extends State<ThemedMapToolbar> {
         builder: (context, value, child) {
           return ThemedMapButton(
             labelText: i18n?.t('layrz.map.zoom.out') ?? widget.zoomOutLabelText,
-            icon: LayrzIcons.solarBoldMinusSquare,
+            icon: MdiIcons.minusBox,
             isDisabled: value <= widget.minZoom,
             onTap: () async {
               // reduce zoom by 1

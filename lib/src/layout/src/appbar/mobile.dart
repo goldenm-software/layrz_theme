@@ -185,7 +185,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                   if (widget.isBackEnabled && !isHome) ...[
                     ThemedButton(
                       style: .fab,
-                      icon: LayrzIcons.solarOutlineAltArrowLeft,
+                      icon: MdiIcons.chevronLeft,
                       labelText: 'Back',
                       tooltipEnabled: false,
                       onTap: widget.onNavigatorPop ?? () => Navigator.of(context).pop(),
@@ -251,7 +251,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
           height: actionSize - 10,
           child: Center(
             child: Icon(
-              LayrzIcons.solarOutlineTagHorizontal,
+              MdiIcons.tagOutline,
               color: validateColor(color: backgroundColor),
               size: 20,
             ),
@@ -302,8 +302,8 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
                   child: Center(
                     child: Icon(
                       highlightTop
-                          ? LayrzIcons.solarOutlineAltArrowDown
-                          : (item.icon ?? LayrzIcons.solarOutlineQuestionSquare),
+                          ? MdiIcons.chevronDown
+                          : (item.icon ?? MdiIcons.helpBoxOutline),
                       size: highlightTop ? 22 : 18,
                       color: highlightTop
                           ? validateColor(color: backgroundColor)
@@ -340,7 +340,7 @@ class _ThemedMobileAppBarState extends State<ThemedMobileAppBar> with TickerProv
               onTap: item.onTap,
               child: Center(
                 child: Icon(
-                  item.icon ?? LayrzIcons.solarOutlineQuestionSquare,
+                  item.icon ?? MdiIcons.helpBoxOutline,
                   color: validateColor(color: backgroundColor),
                   size: 20,
                 ),

@@ -8,7 +8,7 @@ import 'package:layrz_theme/src/helpers/helpers.dart';
 import 'package:layrz_theme/src/inputs/inputs.dart';
 import 'package:layrz_theme/src/table/table.dart';
 import 'package:layrz_theme/src/theme/theme.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 // Scaffolds
 part 'src/sidebar.dart';

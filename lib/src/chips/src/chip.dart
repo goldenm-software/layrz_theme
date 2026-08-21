@@ -149,7 +149,7 @@ class ThemedChip extends StatelessWidget {
                   borderRadius: .circular(20),
                   onTap: onDismiss,
                   child: Icon(
-                    LayrzIcons.solarBoldCloseCircle,
+                    MdiIcons.closeCircle,
                     color: textStyle?.color,
                     size: 18,
                   ),

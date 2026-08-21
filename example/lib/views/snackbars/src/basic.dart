@@ -34,7 +34,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
               const SizedBox(height: 20),
               ThemedButton(
                 color: Colors.blue,
-                icon: LayrzIcons.solarOutlineTagHorizontal,
+                icon: MdiIcons.tagOutline,
                 labelText: 'Simple snackbar',
                 onTap: () {
                   ThemedSnackbarMessenger.of(context).showSnackbar(
@@ -53,7 +53,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
               const SizedBox(height: 10),
               ThemedButton(
                 color: Colors.blue,
-                icon: LayrzIcons.solarOutlineTagHorizontal,
+                icon: MdiIcons.tagOutline,
                 labelText: 'Colored snackbar',
                 onTap: () {
                   ThemedSnackbarMessenger.of(context).showSnackbar(
@@ -73,7 +73,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
               const SizedBox(height: 10),
               ThemedButton(
                 color: Colors.blue,
-                icon: LayrzIcons.solarOutlineTagHorizontal,
+                icon: MdiIcons.tagOutline,
                 labelText: 'Titled snackbar',
                 onTap: () {
                   ThemedSnackbarMessenger.of(context).showSnackbar(
@@ -94,7 +94,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
               const SizedBox(height: 10),
               ThemedButton(
                 color: Colors.blue,
-                icon: LayrzIcons.solarOutlineTagHorizontal,
+                icon: MdiIcons.tagOutline,
                 labelText: 'Icon snackbar',
                 onTap: () {
                   ThemedSnackbarMessenger.of(context).showSnackbar(
@@ -102,7 +102,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
                       title: 'Title',
                       message: 'This is a snackbar with an icon',
                       color: Colors.green,
-                      icon: LayrzIcons.solarOutlineTagHorizontal,
+                      icon: MdiIcons.tagOutline,
                       duration: const Duration(seconds: 10),
                     ),
                   );
@@ -117,7 +117,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
               const SizedBox(height: 10),
               ThemedButton(
                 color: Colors.blue,
-                icon: LayrzIcons.solarOutlineTagHorizontal,
+                icon: MdiIcons.tagOutline,
                 labelText: 'Long snackbar',
                 onTap: () {
                   ThemedSnackbarMessenger.of(context).showSnackbar(
@@ -125,7 +125,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
                       title: 'Long snackbar',
                       message: _generateText(126),
                       color: Colors.green,
-                      icon: LayrzIcons.solarOutlineTagHorizontal,
+                      icon: MdiIcons.tagOutline,
                       duration: const Duration(seconds: 2),
                     ),
                   );
@@ -140,7 +140,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
               const SizedBox(height: 10),
               ThemedButton(
                 color: Colors.blue,
-                icon: LayrzIcons.solarOutlineTagHorizontal,
+                icon: MdiIcons.tagOutline,
                 labelText: 'Multiple snackbars',
                 onTap: () {
                   for (int i = 0; i < 10; i++) {
@@ -149,7 +149,7 @@ class _BasicSnackbarViewState extends State<BasicSnackbarView> {
                         title: 'Multiple snackbar #${i + 1}',
                         message: _randomizeText(i),
                         color: Colors.green,
-                        icon: LayrzIcons.solarOutlineTagHorizontal,
+                        icon: MdiIcons.tagOutline,
                         duration: const Duration(seconds: 3),
                       ),
                     );

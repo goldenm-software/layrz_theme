@@ -174,7 +174,7 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                     height: _kArrowButtonHeight,
                     fontSize: _kArrowButtonFontSize,
                     color: color,
-                    icon: LayrzIcons.solarOutlineAltArrowLeft,
+                    icon: MdiIcons.chevronLeft,
                     isDisabled: !widget.wrapArrowNavigation && _tabController.index == 0,
                     onTap: () {
                       if (widget.wrapArrowNavigation) {
@@ -212,7 +212,7 @@ class _ThemedTabViewState extends State<ThemedTabView> with TickerProviderStateM
                     height: _kArrowButtonHeight,
                     fontSize: _kArrowButtonFontSize,
                     color: color,
-                    icon: LayrzIcons.solarOutlineAltArrowRight,
+                    icon: MdiIcons.chevronRight,
                     isDisabled: !widget.wrapArrowNavigation && _tabController.index == widget.tabs.length - 1,
                     onTap: () {
                       if (widget.wrapArrowNavigation) {

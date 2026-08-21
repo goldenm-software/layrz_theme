@@ -231,7 +231,7 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
       prefixIcon: widget.prefixIcon,
       prefixText: widget.prefixText,
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: LayrzIcons.solarOutlineAltArrowDown,
+      suffixIcon: MdiIcons.chevronDown,
       disabled: widget.disabled,
       dense: widget.dense,
       errors: widget.errors,
@@ -299,8 +299,8 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                         padding: .zero,
                                         labelText: t('layrz.select.search'),
                                         onChanged: (value) => setState(() => searchText = value),
-                                        prefixIcon: LayrzIcons.solarOutlineMagnifer,
-                                        suffixIcon: searchText.isNotEmpty ? LayrzIcons.solarOutlineCloseSquare : null,
+                                        prefixIcon: MdiIcons.magnify,
+                                        suffixIcon: searchText.isNotEmpty ? MdiIcons.closeBoxOutline : null,
                                         onSuffixTap: searchText.isNotEmpty
                                             ? () => setState(() => searchText = "")
                                             : null,
@@ -372,8 +372,8 @@ class _ThemedMultiSelectInputState<T> extends State<ThemedMultiSelectInput<T>> w
                                 ThemedButton(
                                   style: isMobile ? .fab : .text,
                                   icon: temp.length == items.length
-                                      ? LayrzIcons.solarOutlineCheckSquare
-                                      : LayrzIcons.solarBoldMinusSquare,
+                                      ? MdiIcons.checkboxMarkedOutline
+                                      : MdiIcons.minusBox,
                                   labelText: t(
                                     'layrz.select.${temp.length == items.length ? 'unselect' : 'select'}All',
                                   ),

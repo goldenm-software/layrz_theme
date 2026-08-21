@@ -231,7 +231,7 @@ packages:
     source: hosted
     version: "0.9.0"
   flutter_material_design_icons:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_material_design_icons
       sha256: "9a7b6308736e328f9ce2249c3727a56a289c915a65ebf1b1b5f237c8232e92b7"
@@ -272,22 +272,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutty_solar_icons:
-    dependency: transitive
-    description:
-      name: flutty_solar_icons
-      sha256: "6168f464a7d0c9a00810b3f147e6a8311df699acb69ded9a447520bea878ab67"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
-  font_awesome_flutter:
-    dependency: transitive
-    description:
-      name: font_awesome_flutter
-      sha256: "09dcde8ab90ffae1a7d65ff2ef96fc62a17ad9d0ce7c127b317ded676b0d5935"
-      url: "https://pub.dev"
-    source: hosted
-    version: "11.0.0"
   freezed_annotation:
     dependency: transitive
     description:
@@ -368,14 +352,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  layrz_icons:
-    dependency: "direct main"
-    description:
-      name: layrz_icons
-      sha256: "41bcec6995b36a8192b2fac053ffe253b66179f48d223af92ecc862ae7945d97"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   layrz_logging:
     dependency: transitive
     description:
@@ -388,18 +364,18 @@ packages:
     dependency: "direct main"
     description:
       name: layrz_models
-      sha256: d19b7bd15272695f3e07473d309e5623fc1da426675e26e2da02dc85c6403c05
+      sha256: "24bba696b49fe613ed13c638a725532a0312e3e0bf5e0004c730e339d3cc10e3"
       url: "https://pub.dev"
     source: hosted
-    version: "3.27.3"
+    version: "3.31.0"
   layrz_sdk:
     dependency: transitive
     description:
       name: layrz_sdk
-      sha256: c37bc3251ccfeb20f7c24f0523d3255a44461e144c7cdfc065dececb39df7cd0
+      sha256: bedbbc1de11479df9b912054eb70d46e0cefba5a05432e8703fddcc9e7ffd468
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.3"
+    version: "4.4.4"
   layrz_state:
     dependency: "direct main"
     description:
@@ -414,7 +390,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.9.2"
+    version: "7.10.0"
   leak_tracker:
     dependency: transitive
     description:

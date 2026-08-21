@@ -163,9 +163,9 @@ ThemeData generateDarkTheme({
     switchTheme: SwitchThemeData(
       thumbIcon: .resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return Icon(LayrzIcons.mdiCheck, size: 14, color: Colors.grey.shade800);
+          return Icon(MdiIcons.check, size: 14, color: Colors.grey.shade800);
         }
-        return Icon(LayrzIcons.mdiClose, size: 14);
+        return Icon(MdiIcons.close, size: 14);
       }),
       trackColor: .resolveWith((states) {
         return Colors.transparent;

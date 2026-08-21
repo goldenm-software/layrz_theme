@@ -167,14 +167,14 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                     ? t('$translatePrefix.${widget.nested}.${field.field}.title')
                     : t('$translatePrefix.${field.field}.title'),
                 value: widget.layrzGeneratedToken ?? t('builder.authorization.tokenNew'),
-                suffixIcon: widget.layrzGeneratedToken != null ? LayrzIcons.solarOutlineClipboardText : null,
+                suffixIcon: widget.layrzGeneratedToken != null ? MdiIcons.clipboardTextOutline : null,
                 onSuffixTap: widget.layrzGeneratedToken != null
                     ? () {
                         Clipboard.setData(ClipboardData(text: widget.layrzGeneratedToken!));
                         ThemedSnackbarMessenger.maybeOf(context)?.showSnackbar(
                           ThemedSnackbar(
                             message: t('builder.authorization.tokenCopied'),
-                            icon: LayrzIcons.solarOutlineClipboardCheck,
+                            icon: MdiIcons.clipboardCheckOutline,
                           ),
                         );
                       }
@@ -211,7 +211,7 @@ class _ThemedDynamicCredentialsInputState extends State<ThemedDynamicCredentials
                       ? 'credentials.${widget.nested}.${field.field}'
                       : 'credentials.${field.field}',
                 ),
-                suffixIcon: isLoading ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineRefreshSquare,
+                suffixIcon: isLoading ? MdiIcons.lockOutline : MdiIcons.refresh,
                 onSuffixTap: () => widget.actionCallback?.call(.wialonOAuth),
               );
               break;

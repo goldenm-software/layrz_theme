@@ -254,7 +254,7 @@ class _ThemedSelectInputState<T> extends State<ThemedSelectInput<T>> with Single
       prefixIcon: widget.prefixIcon,
       prefixText: widget.prefixText,
       onPrefixTap: widget.onPrefixTap,
-      suffixIcon: LayrzIcons.solarOutlineAltArrowDown,
+      suffixIcon: MdiIcons.chevronDown,
       disabled: widget.disabled,
       dense: widget.dense,
       errors: widget.errors,
@@ -499,7 +499,7 @@ class _DialogSelectInputState extends State<DialogSelectInput> {
                             if (widget.canUnselect && selectedItem?.value != null)
                               ThemedButton(
                                 style: isMobile ? .fab : .text,
-                                icon: LayrzIcons.solarBoldMinusSquare,
+                                icon: MdiIcons.minusBox,
                                 labelText: t('layrz.select.unselect'),
                                 color: Colors.orange,
                                 onTap: () {

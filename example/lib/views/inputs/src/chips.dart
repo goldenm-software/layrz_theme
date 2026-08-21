@@ -65,7 +65,7 @@ class _ChipsViewState extends State<ChipsView> {
               ThemedChip(
                 labelText: 'Chip with leading icon',
                 color: Colors.indigo,
-                leadingIcon: LayrzIcons.solarOutlinePlainN3,
+                leadingIcon: MdiIcons.sendOutline,
               ),
               Text("Or, it can be customized with padding and border radius:"),
               ThemedChip(
@@ -132,7 +132,7 @@ class _ChipsViewState extends State<ChipsView> {
                     chips: List.generate(10, (index) {
                       return ThemedChip(
                         labelText: 'Chip $index',
-                        leadingIcon: LayrzIcons.solarOutlinePlainN3,
+                        leadingIcon: MdiIcons.sendOutline,
                         color: Colors.blue,
                       );
                     }),

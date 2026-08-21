@@ -86,7 +86,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      LayrzIcons.solarOutlineDocumentText,
+                                      MdiIcons.fileDocumentOutline,
                                       size: 64,
                                       color: Theme.of(context).colorScheme.primary,
                                     ),
@@ -139,7 +139,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      LayrzIcons.solarOutlineDocumentText,
+                                      MdiIcons.fileDocumentOutline,
                                       size: 64,
                                       color: Theme.of(context).colorScheme.primary,
                                     ),
@@ -243,7 +243,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                       tabs: [
                         ThemedTab(
                           labelText: 'Personal Info',
-                          leadingIcon: LayrzIcons.solarOutlineUser,
+                          leadingIcon: MdiIcons.accountOutline,
                           child: Padding(
                             padding: const EdgeInsets.all(16),
                             child: SingleChildScrollView(
@@ -269,7 +269,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                         ),
                         ThemedTab(
                           labelText: 'Contact',
-                          leadingIcon: LayrzIcons.solarOutlinePhone,
+                          leadingIcon: MdiIcons.phoneOutline,
                           child: Padding(
                             padding: const EdgeInsets.all(16),
                             child: SingleChildScrollView(
@@ -295,7 +295,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                         ),
                         ThemedTab(
                           labelText: 'Preferences',
-                          leadingIcon: LayrzIcons.solarOutlineSettings,
+                          leadingIcon: MdiIcons.cogOutline,
                           child: Padding(
                             padding: const EdgeInsets.all(16),
                             child: SingleChildScrollView(
@@ -390,8 +390,8 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                       tabs: [
                         ThemedTab(
                           labelText: 'Messages',
-                          leadingIcon: LayrzIcons.solarOutlineInboxIn,
-                          trailingIcon: LayrzIcons.solarOutlineAltArrowRight,
+                          leadingIcon: MdiIcons.inboxArrowDownOutline,
+                          trailingIcon: MdiIcons.chevronRight,
                           child: Center(
                             child: Text(
                               'Messages Tab',
@@ -403,7 +403,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                         ),
                         ThemedTab(
                           labelText: 'Notifications',
-                          leadingIcon: LayrzIcons.solarOutlineBell,
+                          leadingIcon: MdiIcons.bellOutline,
                           trailing: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
@@ -428,7 +428,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                         ),
                         ThemedTab(
                           labelText: 'Search',
-                          leadingIcon: LayrzIcons.solarOutlineMagnifer,
+                          leadingIcon: MdiIcons.magnify,
                           child: Center(
                             child: Text(
                               'Search Tab',
@@ -475,7 +475,7 @@ class _AdvancedTabsViewState extends State<AdvancedTabsView> {
                 child: Row(
                   children: [
                     Icon(
-                      LayrzIcons.solarOutlineDocumentText,
+                      MdiIcons.fileDocumentOutline,
                       size: 24,
                     ),
                     const SizedBox(width: 12),

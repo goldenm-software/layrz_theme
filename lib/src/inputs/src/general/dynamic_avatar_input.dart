@@ -91,7 +91,7 @@ class _ThemedDynamicAvatarInputState extends State<ThemedDynamicAvatarInput> {
         padding: const .all(10),
         child: ThemedAvatar(dynamicAvatar: .fromJson(_value.toJson())),
       ),
-      suffixIcon: widget.disabled ? LayrzIcons.solarOutlineLockKeyhole : LayrzIcons.solarOutlineAlbum,
+      suffixIcon: widget.disabled ? MdiIcons.lockOutline : MdiIcons.album,
       labelText: widget.labelText,
       label: widget.label,
       controller: _textController,
@@ -262,7 +262,7 @@ class _ThemedDynamicAvatarDialogState extends State<_ThemedDynamicAvatarDialog> 
               ThemedTextInput(
                 labelText: i18n?.t('helpers.dynamicAvatar.types.URL.url') ?? "URL",
                 value: _value.url,
-                prefixIcon: LayrzIcons.solarOutlineLinkMinimalisticN2,
+                prefixIcon: MdiIcons.linkVariant,
                 onChanged: (value) {
                   setState(() {
                     _value.icon = null;
@@ -332,15 +332,15 @@ extension on AvatarType {
   IconData? get icon {
     switch (this) {
       case .none:
-        return LayrzIcons.solarOutlineCloseSquare;
+        return MdiIcons.closeBoxOutline;
       case .url:
-        return LayrzIcons.solarOutlineLinkMinimalisticN2;
+        return MdiIcons.linkVariant;
       case .base64:
-        return LayrzIcons.solarOutlineGallery;
+        return MdiIcons.imageOutline;
       case .icon:
-        return LayrzIcons.solarOutlineEmojiFunnySquare;
+        return MdiIcons.emoticonHappyOutline;
       case .emoji:
-        return LayrzIcons.solarOutlineEmojiFunnySquare;
+        return MdiIcons.emoticonHappyOutline;
     }
   }
 

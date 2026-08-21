@@ -57,28 +57,28 @@ class _InfinityTableViewState extends State<InfinityTableView> {
         canSearch: true,
         multiselectActions: [
           ThemedActionButton(
-            icon: LayrzIcons.faSolidLayerGroup,
+            icon: MdiIcons.layersOutline,
             labelText: "Multi Test",
             onTap: () {},
           ),
         ],
         actionsBuilder: (Asset item) => [
           ThemedActionButton(
-            icon: LayrzIcons.faSolidLayerGroup,
+            icon: MdiIcons.layersOutline,
             color: Colors.teal,
             labelText: "Test",
 
             onTap: () {},
           ),
           ThemedActionButton(
-            icon: LayrzIcons.faSolidLayerGroup,
+            icon: MdiIcons.layersOutline,
             labelText: "Test",
             color: Colors.blueGrey,
 
             onTap: () {},
           ),
           ThemedActionButton(
-            icon: LayrzIcons.faSolidLayerGroup,
+            icon: MdiIcons.layersOutline,
             labelText: "Test",
             onTap: () {},
           ),

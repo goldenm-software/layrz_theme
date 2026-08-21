@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 
 /// Wraps [ThemedNumberInput] in a [StatefulBuilder] so tests can drive
@@ -238,7 +238,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // suffix icon = add button
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineAddSquare));
+        await tester.tap(find.byIcon(MdiIcons.plusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(6));
@@ -255,7 +255,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineMinusSquare));
+        await tester.tap(find.byIcon(MdiIcons.minusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(4));
@@ -271,7 +271,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineAddSquare));
+        await tester.tap(find.byIcon(MdiIcons.plusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(11));
@@ -288,7 +288,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineAddSquare));
+        await tester.tap(find.byIcon(MdiIcons.plusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(1)); // 0 + 1
@@ -310,7 +310,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineAddSquare));
+        await tester.tap(find.byIcon(MdiIcons.plusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(callCount, equals(0));
@@ -333,7 +333,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineMinusSquare));
+        await tester.tap(find.byIcon(MdiIcons.minusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(callCount, equals(0));
@@ -344,16 +344,16 @@ void main() {
         await tester.pumpWidget(_buildInput(hidePrefixSuffixActions: true));
         await tester.pumpAndSettle();
 
-        expect(find.byIcon(LayrzIcons.solarOutlineAddSquare), findsNothing);
-        expect(find.byIcon(LayrzIcons.solarOutlineMinusSquare), findsNothing);
+        expect(find.byIcon(MdiIcons.plusBoxOutline), findsNothing);
+        expect(find.byIcon(MdiIcons.minusBoxOutline), findsNothing);
       });
 
       testWidgets('step buttons are hidden when disabled is true', (tester) async {
         await tester.pumpWidget(_buildInput(disabled: true, initialValue: 5));
         await tester.pumpAndSettle();
 
-        expect(find.byIcon(LayrzIcons.solarOutlineAddSquare), findsNothing);
-        expect(find.byIcon(LayrzIcons.solarOutlineMinusSquare), findsNothing);
+        expect(find.byIcon(MdiIcons.plusBoxOutline), findsNothing);
+        expect(find.byIcon(MdiIcons.minusBoxOutline), findsNothing);
       });
     });
 
@@ -373,7 +373,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineAddSquare));
+        await tester.tap(find.byIcon(MdiIcons.plusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(10));
@@ -401,7 +401,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineAddSquare));
+        await tester.tap(find.byIcon(MdiIcons.plusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(100));
@@ -424,7 +424,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineMinusSquare));
+        await tester.tap(find.byIcon(MdiIcons.minusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(9));
@@ -447,7 +447,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(LayrzIcons.solarOutlineAddSquare));
+        await tester.tap(find.byIcon(MdiIcons.plusBoxOutline));
         await tester.pumpAndSettle();
 
         expect(current, equals(1000));
