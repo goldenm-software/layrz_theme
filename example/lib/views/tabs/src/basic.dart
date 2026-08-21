@@ -158,7 +158,7 @@ class _BasicTabsViewState extends State<BasicTabsView> {
                                           child: Row(
                                             children: [
                                               Icon(
-                                                LayrzIcons.solarOutlineCheckCircle,
+                                                MdiIcons.checkCircleOutline,
                                                 size: 18,
                                                 color: Theme.of(context).colorScheme.primary,
                                               ),
@@ -244,13 +244,13 @@ class _BasicTabsViewState extends State<BasicTabsView> {
                           tabs: [
                             ThemedTab(
                               labelText: 'Dashboard',
-                              leadingIcon: LayrzIcons.solarOutlineHomeN2,
+                              leadingIcon: MdiIcons.homeVariantOutline,
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      LayrzIcons.solarOutlineHomeN2,
+                                      MdiIcons.homeVariantOutline,
                                       size: 64,
                                       color: Theme.of(context).colorScheme.primary,
                                     ),
@@ -265,13 +265,13 @@ class _BasicTabsViewState extends State<BasicTabsView> {
                             ),
                             ThemedTab(
                               labelText: 'Users',
-                              leadingIcon: LayrzIcons.solarOutlineUsersGroupRounded,
+                              leadingIcon: MdiIcons.accountGroupOutline,
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      LayrzIcons.solarOutlineUsersGroupRounded,
+                                      MdiIcons.accountGroupOutline,
                                       size: 64,
                                       color: Theme.of(context).colorScheme.primary,
                                     ),
@@ -286,13 +286,13 @@ class _BasicTabsViewState extends State<BasicTabsView> {
                             ),
                             ThemedTab(
                               labelText: 'Settings',
-                              leadingIcon: LayrzIcons.solarOutlineSettings,
+                              leadingIcon: MdiIcons.cogOutline,
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      LayrzIcons.solarOutlineSettings,
+                                      MdiIcons.cogOutline,
                                       size: 64,
                                       color: Theme.of(context).colorScheme.primary,
                                     ),

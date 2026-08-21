@@ -425,7 +425,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonal,
                         labelText: "Toggle loading state",
-                        icon: LayrzIcons.mdiLoading,
+                        icon: MdiIcons.loading,
                         color: Colors.orange,
                         hintText: 'Toggles the loading state of the buttons',
                         tooltipPosition: ThemedTooltipPosition.top,
@@ -435,7 +435,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonal,
                         labelText: "Toggle cooldown state",
-                        icon: LayrzIcons.mdiTimerSandEmpty,
+                        icon: MdiIcons.timerSandEmpty,
                         color: Colors.red,
                         hintText:
                             'Toggles the cooldown state of the buttons, '
@@ -448,7 +448,7 @@ class _ButtonsViewState extends State<ButtonsView> {
                       ThemedButton(
                         style: ThemedButtonStyle.filledTonal,
                         labelText: "Toggle disabled state",
-                        icon: LayrzIcons.mdiCloseCircleOutline,
+                        icon: MdiIcons.closeCircleOutline,
                         color: Colors.grey,
                         hintText: 'Toggles the disabled state of the buttons',
                         tooltipPosition: ThemedTooltipPosition.top,
@@ -470,7 +470,7 @@ class _ButtonsViewState extends State<ButtonsView> {
     ThemedTooltipPosition tooltipPosition = ThemedTooltipPosition.right,
   }) {
     return ThemedButton(
-      icon: LayrzIcons.mdiAccessPoint,
+      icon: MdiIcons.accessPoint,
       cooldownDuration: const Duration(seconds: 4),
       labelText: "Button",
       style: style,
@@ -485,7 +485,7 @@ class _ButtonsViewState extends State<ButtonsView> {
         // context.go('/inputs/text');
         ThemedSnackbarMessenger.of(context).showSnackbar(
           ThemedSnackbar(
-            icon: LayrzIcons.mdiAccessPoint,
+            icon: MdiIcons.accessPoint,
             color: Colors.red,
             title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             message:

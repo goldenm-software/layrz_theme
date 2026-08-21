@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/store/store.dart';
 
@@ -56,7 +56,7 @@ class _AlertsViewState extends State<AlertsView> {
                       size: 40,
                       iconSize: 30,
                       color: Colors.purple,
-                      icon: LayrzIcons.solarOutlinePlainN3,
+                      icon: MdiIcons.sendOutline,
                     ),
                     const SizedBox(width: 10),
                     for (final style in ThemedAlertStyle.values) ...[
@@ -69,7 +69,7 @@ class _AlertsViewState extends State<AlertsView> {
                             title: "${alertType.name} - ${style.name}",
                             description: "This is a ${alertType.name} alert with the style ${style.name}.",
                             color: Colors.purple,
-                            icon: LayrzIcons.solarOutlinePlainN3,
+                            icon: MdiIcons.sendOutline,
                           ),
                         ),
                       ),

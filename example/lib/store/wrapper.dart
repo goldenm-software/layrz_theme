@@ -76,94 +76,94 @@ class _LayoutState extends State<Layout> {
         ThemedNavigatorPage(
           labelText: 'Home',
           path: '/home',
-          icon: LayrzIcons.solarOutlineHomeAngle,
+          icon: MdiIcons.homeOutline,
           // showHeaderInSidebarMode: false,
         ),
         ThemedNavigatorPage(
           labelText: 'Colorblind modes',
           path: '/colorblind',
-          icon: LayrzIcons.solarOutlinePalette,
+          icon: MdiIcons.paletteOutline,
         ),
         ThemedNavigatorPage(
           labelText: 'Theme generation',
           path: '/theme',
-          icon: LayrzIcons.solarOutlineMoonFog,
+          icon: MdiIcons.weatherNight,
           enableBreadcumb: false,
         ),
         ThemedNavigatorPage(
           labelText: 'Inputs',
           path: '/inputs',
-          icon: LayrzIcons.solarOutlineTextFieldFocus,
+          icon: MdiIcons.formTextbox,
           children: [
             ThemedNavigatorPage(
               labelText: 'Text fields',
               path: '/inputs/text',
-              icon: LayrzIcons.solarOutlineTextFieldFocus,
+              icon: MdiIcons.formTextbox,
             ),
             ThemedNavigatorPage(
               labelText: 'Buttons',
               path: '/inputs/buttons',
-              icon: LayrzIcons.solarOutlineCursorSquare,
+              icon: MdiIcons.cursorDefaultOutline,
             ),
             ThemedNavigatorPage(
               labelText: 'Checkboxes',
               path: '/inputs/checkboxes',
-              icon: LayrzIcons.solarOutlineCheckSquare,
+              icon: MdiIcons.checkboxMarkedOutline,
             ),
             ThemedNavigatorPage(
               labelText: 'Radio buttons',
               path: '/inputs/radiobuttons',
-              icon: LayrzIcons.solarOutlinePinCircle,
+              icon: MdiIcons.pinOutline,
             ),
             ThemedNavigatorPage(
               labelText: 'Chips',
               path: '/inputs/chips',
-              icon: LayrzIcons.solarOutlineTag,
+              icon: MdiIcons.tagOutline,
             ),
             ThemedNavigatorPage(
               labelText: 'Selectors',
               path: '/inputs/selectors',
-              icon: LayrzIcons.solarOutlineChecklistMinimalistic,
+              icon: MdiIcons.formatListChecks,
               children: [
                 ThemedNavigatorPage(
                   labelText: 'General selectors',
                   path: '/inputs/selectors/general',
-                  icon: LayrzIcons.solarOutlinePostsCarouselVertical,
+                  icon: MdiIcons.viewCarouselOutline,
                 ),
                 ThemedNavigatorPage(
                   labelText: 'Date & Time selectors',
                   path: '/inputs/selectors/datetime',
-                  icon: LayrzIcons.solarOutlineCalendarSearch,
+                  icon: MdiIcons.calendarSearchOutline,
                 ),
               ],
             ),
             ThemedNavigatorPage(
               labelText: 'Calendar',
               path: '/inputs/calendar',
-              icon: LayrzIcons.solarOutlineCalendar,
+              icon: MdiIcons.calendarOutline,
             ),
           ],
         ),
         ThemedNavigatorPage(
           labelText: 'Layo',
           path: '/layo',
-          icon: LayrzIcons.solarOutlineFaceScanSquare,
+          icon: MdiIcons.faceRecognition,
         ),
         ThemedNavigatorPage(
           labelText: 'Avatars',
           path: '/avatars',
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
           useDefaultRedirect: false,
           children: [
             ThemedNavigatorPage(
               labelText: 'Static avatars',
               path: '/avatars/static',
-              icon: LayrzIcons.solarOutlineUserId,
+              icon: MdiIcons.accountBoxOutline,
             ),
             ThemedNavigatorPage(
               labelText: 'Dynamic avatars',
               path: '/avatars/dynamic',
-              icon: LayrzIcons.solarOutlineUserPlus,
+              icon: MdiIcons.accountPlusOutline,
             ),
           ],
         ),
@@ -171,17 +171,17 @@ class _LayoutState extends State<Layout> {
           labelText: 'Table',
           path: '/table',
           useDefaultRedirect: false,
-          icon: LayrzIcons.solarOutlineSliderMinimalisticHorizontal,
+          icon: MdiIcons.tune,
           children: [
             ThemedNavigatorPage(
               labelText: 'Basic table',
               path: '/table/basic',
-              icon: LayrzIcons.solarOutlineSliderMinimalisticHorizontal,
+              icon: MdiIcons.tune,
             ),
             ThemedNavigatorPage(
               labelText: 'Infinite table',
               path: '/table/infinite',
-              icon: LayrzIcons.solarOutlineDocumentsMinimalistic,
+              icon: MdiIcons.fileMultipleOutline,
             ),
           ],
         ),
@@ -189,40 +189,41 @@ class _LayoutState extends State<Layout> {
           labelText: 'Tabs',
           path: '/tabs',
           useDefaultRedirect: false,
-          icon: LayrzIcons.solarOutlineAlbum,
+          icon: MdiIcons.album,
           children: [
             ThemedNavigatorPage(
               labelText: 'Basic tabs',
               path: '/tabs/basic',
-              icon: LayrzIcons.solarOutlineAlbum,
+              icon: MdiIcons.album,
             ),
             ThemedNavigatorPage(
               labelText: 'Advanced tabs',
               path: '/tabs/advanced',
-              icon: LayrzIcons.solarOutlineAlbum,
+              icon: MdiIcons.album,
             ),
           ],
         ),
         ThemedNavigatorPage(
           labelText: 'Snackbars',
           path: '/snackbar/basic',
-          icon: LayrzIcons.solarOutlineTagHorizontal,
+          icon: MdiIcons.tagOutline,
         ),
         ThemedNavigatorPage(
           labelText: 'Alerts and Chips',
           path: '/alerts',
-          icon: LayrzIcons.solarOutlineDanger,
+          icon: MdiIcons.alertCircleOutline,
         ),
         ThemedNavigatorPage(
           labelText: 'Responsive Row & Col',
           path: '/grid/responsive-row',
-          icon: LayrzIcons.solarOutlineWidgetN2,
+          icon: MdiIcons.viewGridOutline,
         ),
       ],
       persistentItems: [
         ThemedNavigatorAction(
           labelText: "GitHub repository",
-          icon: LayrzIcons.mdiGithub,
+          // ignore: deprecated_member_use — MDI deprecated its brand icons; no replacement exists for the GitHub logo
+          icon: MdiIcons.github,
           onTap: () => launchUrlString(
             'https://github.com/goldenm-software/layrz_theme',
             mode: LaunchMode.externalApplication,

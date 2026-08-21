@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:layrz_theme/layrz_theme.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
 class LandingView extends StatefulWidget {
   const LandingView({super.key});
@@ -65,7 +65,7 @@ class _LandingViewState extends State<LandingView> {
                 const SizedBox(height: 20),
                 ThemedButton(
                   labelText: "Let's go!",
-                  icon: LayrzIcons.mdiRocketLaunch,
+                  icon: MdiIcons.rocketLaunch,
                   onTap: () {
                     context.go('/home');
                   },

@@ -98,10 +98,10 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
                 const Divider(),
                 const SizedBox(height: 5),
                 _buildExampleRow(
-                  avatar: Avatar(type: AvatarType.icon, icon: LayrzIconsClasses.mdiClipboard),
+                  avatar: Avatar(type: AvatarType.icon, icon: MdiRemapIconsClasses.clipboard),
                   codeExample:
                       "ThemedAvatar(size: 30, name: 'Example', dynamicAvatar: "
-                      "Avatar(type: AvatarType.icon, icon: LayrzIconsClasses.mdiClipboard))",
+                      "Avatar(type: AvatarType.icon, icon: MdiRemapIconsClasses.clipboard))",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
@@ -144,7 +144,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
         Expanded(child: Text("Type ${avatar.type}")),
         const SizedBox(width: 5),
         ThemedButton(
-          icon: LayrzIcons.mdiContentCopy,
+          icon: MdiIcons.contentCopy,
           color: Colors.blue,
           labelText: "Get the code",
           onTap: () {
@@ -152,7 +152,7 @@ class _DynamicAvatarsViewState extends State<DynamicAvatarsView> {
             ThemedSnackbarMessenger.of(context).showSnackbar(
               ThemedSnackbar(
                 message: "Copied to clipboard",
-                icon: LayrzIcons.mdiClipboardCheckOutline,
+                icon: MdiIcons.clipboardCheckOutline,
                 color: Colors.green,
               ),
             );

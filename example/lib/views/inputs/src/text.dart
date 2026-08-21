@@ -71,8 +71,8 @@ class _TextInputViewState extends State<TextInputView> {
                     const Text("With a prefix and suffix icon"),
                     ThemedTextInput(
                       labelText: "Example label",
-                      prefixIcon: LayrzIcons.mdiAccessPoint,
-                      suffixIcon: LayrzIcons.mdiAccessPoint,
+                      prefixIcon: MdiIcons.accessPoint,
+                      suffixIcon: MdiIcons.accessPoint,
                     ),
                   ],
                 ),

@@ -94,9 +94,9 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
                 const SizedBox(height: 5),
                 _buildExampleRow(
                   name: 'Using an icon w/ a color',
-                  icon: LayrzIcons.mdiAccount,
+                  icon: MdiIcons.account,
                   color: Colors.green,
-                  codeExample: "ThemedAvatar(size: 50, icon: LayrzIcons.mdiAccount, color: Colors.green)",
+                  codeExample: "ThemedAvatar(size: 50, icon: MdiIcons.account, color: Colors.green)",
                 ),
                 const SizedBox(height: 5),
                 const Divider(),
@@ -151,7 +151,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
         Expanded(child: Text(name)),
         const SizedBox(width: 5),
         ThemedButton(
-          icon: LayrzIcons.mdiContentCopy,
+          icon: MdiIcons.contentCopy,
           color: Colors.blue,
           labelText: "Get the code",
           onTap: () {
@@ -159,7 +159,7 @@ class _StaticAvatarsViewState extends State<StaticAvatarsView> {
             ThemedSnackbarMessenger.of(context).showSnackbar(
               ThemedSnackbar(
                 message: "Copied to clipboard",
-                icon: LayrzIcons.mdiClipboardCheckOutline,
+                icon: MdiIcons.clipboardCheckOutline,
                 color: Colors.green,
               ),
             );
