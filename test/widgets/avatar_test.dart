@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_icons/layrz_icons.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:layrz_theme/layrz_theme.dart';
 
 Widget _buildApp({required Widget child}) {
@@ -55,17 +55,17 @@ void main() {
     testWidgets('renders icon when provided', (tester) async {
       await tester.pumpWidget(_buildApp(
         child: ThemedAvatar(
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
         ),
       ));
 
-      expect(find.byIcon(LayrzIcons.solarOutlineUser), findsOneWidget);
+      expect(find.byIcon(MdiIcons.accountOutline), findsOneWidget);
     });
 
     testWidgets('icon size is 70% of avatar size by default', (tester) async {
       await tester.pumpWidget(_buildApp(
         child: ThemedAvatar(
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
           size: 100,
         ),
       ));
@@ -77,7 +77,7 @@ void main() {
     testWidgets('respects custom icon size', (tester) async {
       await tester.pumpWidget(_buildApp(
         child: ThemedAvatar(
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
           size: 100,
           iconSize: 50,
         ),
@@ -167,7 +167,7 @@ void main() {
     testWidgets('applies custom color', (tester) async {
       await tester.pumpWidget(_buildApp(
         child: ThemedAvatar(
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
           color: Colors.red,
         ),
       ));
@@ -200,12 +200,12 @@ void main() {
     testWidgets('icon takes priority over name fallback', (tester) async {
       await tester.pumpWidget(_buildApp(
         child: ThemedAvatar(
-          icon: LayrzIcons.solarOutlineUser,
+          icon: MdiIcons.accountOutline,
           name: 'Test User',
         ),
       ));
 
-      expect(find.byIcon(LayrzIcons.solarOutlineUser), findsOneWidget);
+      expect(find.byIcon(MdiIcons.accountOutline), findsOneWidget);
       expect(find.text('TE'), findsNothing);
     });
   });
