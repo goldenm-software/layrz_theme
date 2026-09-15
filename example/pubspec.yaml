@@ -22,6 +22,7 @@ dependencies:
   layrz_state: any
   flutter_material_design_icons: any
   layrz_models: any
+  layrz_sdk: any
   timezone: any
   flutter_timezone: any
   layrz_theme:

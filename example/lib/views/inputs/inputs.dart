@@ -1,9 +1,12 @@
 library;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+// The time pickers now use layrz_sdk's TimeOfDay; hide Material's so the unprefixed
+// TimeOfDay resolves to sdk's, matching the pickers' API.
+import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
+import 'package:layrz_sdk/layrz_sdk.dart' show TimeOfDay;
 import 'package:layrz_theme/layrz_theme.dart';
 import 'package:layrz_theme_example/store/store.dart';
 import 'package:timezone/standalone.dart';

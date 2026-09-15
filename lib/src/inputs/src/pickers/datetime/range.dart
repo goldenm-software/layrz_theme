@@ -321,8 +321,12 @@ class _ThemedDateTimeRangeDialogState extends State<ThemedDateTimeRangeDialog> w
     _tabController = TabController(length: 2, vsync: this);
     startDate = widget.value.isNotEmpty ? widget.value.first : DateTime.now();
     endDate = widget.value.isNotEmpty ? widget.value.last : DateTime.now();
-    startTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.first) : TimeOfDay.now();
-    endTime = widget.value.isNotEmpty ? TimeOfDay.fromDateTime(widget.value.last) : TimeOfDay.now();
+    startTime = widget.value.isNotEmpty
+        ? TimeOfDay.fromDateTime(widget.value.first)
+        : TimeOfDay.fromDateTime(DateTime.now());
+    endTime = widget.value.isNotEmpty
+        ? TimeOfDay.fromDateTime(widget.value.last)
+        : TimeOfDay.fromDateTime(DateTime.now());
     filledDates = _fillDates(
       [startDate, endDate]..sort((a, b) {
         return a.compareTo(b);
