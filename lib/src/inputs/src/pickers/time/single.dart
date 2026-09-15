@@ -1,10 +1,12 @@
 part of '../../../inputs.dart';
 
 class ThemedTimePicker extends StatefulWidget {
-  /// [value] is the value of the input.
+  /// [value] is the value of the input. Uses layrz_sdk's framework-independent
+  /// [TimeOfDay] so it can be fed directly from layrz_sdk/layrz_models models.
   final TimeOfDay? value;
 
-  /// [onChanged] is the callback function when the input is changed.
+  /// [onChanged] is the callback function when the input is changed. Emits layrz_sdk's
+  /// [TimeOfDay].
   final void Function(TimeOfDay)? onChanged;
 
   /// [labelText] is the label text of the input. Avoid submit [label] and [labelText] at the same time.

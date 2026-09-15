@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.11.0
+
+- **BREAKING**: The time and datetime pickers now expose `layrz_sdk`'s framework-independent `TimeOfDay` instead of Flutter Material's. Affected public APIs: `ThemedTimePicker` (`value`, `onChanged`), `ThemedTimeRangePicker` (`value`, `onChanged`), and the datetime pickers' internal time handling. Consumers can now feed `TimeOfDay` values straight from `layrz_sdk`/`layrz_models` models (e.g. `AssetInput`'s labor-hour fields) without converting. Call sites that passed Material's `TimeOfDay` must switch to `layrz_sdk`'s (both share `hour`/`minute`); the simplest migration is to hide Material's `TimeOfDay` and import sdk's, as the inputs layer now does internally.
+- The 12-hour AM/PM picker behavior is unchanged. Material's `TimeOfDay.hourOfPeriod`/`period` (which sdk's type does not provide) are now computed inside the picker via private helpers, and `.replacing(...)` was replaced by freezed's `copyWith`.
+- Requires `layrz_sdk: ^4.4.4` (already the floor since 7.10.0).
+
 ## 7.10.0
 
 - **BREAKING**: Removed the `layrz_icons` dependency. All icon references now use `flutter_material_design_icons` (`MdiIcons`) instead. The public API is unchanged — all icon parameters were already plain Flutter `IconData` (e.g., `ThemedButton.icon`), so widget signatures remain compatible. Apps that were relying on `layrz_icons` as a transitive dependency of `layrz_theme` must now declare it themselves, or migrate to `MdiIcons`.

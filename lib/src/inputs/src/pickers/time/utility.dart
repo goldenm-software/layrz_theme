@@ -59,10 +59,16 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
   late TimeOfDay _value;
   bool _blinkState = true;
 
+  /// The 12-hour representation of the current hour (1–12), for display in 12h mode.
+  int get _hourOfPeriod => _value.hour == 0 || _value.hour == 12 ? 12 : _value.hour % 12;
+
+  /// Whether the current time falls in the AM period.
+  bool get _isAm => _value.hour < 12;
+
   @override
   void initState() {
     super.initState();
-    _value = widget.value ?? TimeOfDay.now();
+    _value = widget.value ?? TimeOfDay.fromDateTime(DateTime.now());
 
     _hoursController = TextEditingController();
     _minutesController = TextEditingController();
@@ -78,7 +84,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
   void didUpdateWidget(_ThemedTimeUtility oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      _value = widget.value ?? TimeOfDay.now();
+      _value = widget.value ?? TimeOfDay.fromDateTime(DateTime.now());
       _updateControllers();
     }
     if (!widget.disableBlink && widget.disableBlink != oldWidget.disableBlink) {
@@ -98,7 +104,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
     if (widget.use24HourFormat) {
       _hoursController.text = _value.hour.toString();
     } else {
-      _hoursController.text = _value.hourOfPeriod.toString();
+      _hoursController.text = _hourOfPeriod.toString();
     }
     _minutesController.text = _value.minute.toString();
 
@@ -163,7 +169,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.hour == 0) return;
-                                      _value = _value.replacing(hour: _value.hour - 1);
+                                      _value = _value.copyWith(hour: _value.hour - 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
@@ -181,7 +187,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.hour == 23) return;
-                                      _value = _value.replacing(hour: _value.hour + 1);
+                                      _value = _value.copyWith(hour: _value.hour + 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
@@ -197,9 +203,9 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                     if (parsed == null) return;
 
                     if (widget.use24HourFormat) {
-                      _value = _value.replacing(hour: parsed);
+                      _value = _value.copyWith(hour: parsed);
                     } else {
-                      if (_value.period == DayPeriod.am) {
+                      if (_isAm) {
                         if (parsed >= 12) {
                           return;
                         }
@@ -208,7 +214,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                           parsed += 12;
                         }
                       }
-                      _value = _value.replacing(hour: parsed);
+                      _value = _value.copyWith(hour: parsed);
                     }
                     setState(() {});
                     widget.onChanged?.call(_value);
@@ -252,7 +258,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.minute == 0) return;
-                                      _value = _value.replacing(minute: _value.minute - 1);
+                                      _value = _value.copyWith(minute: _value.minute - 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
@@ -270,7 +276,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                                   ? null
                                   : () {
                                       if (_value.minute == 59) return;
-                                      _value = _value.replacing(minute: _value.minute + 1);
+                                      _value = _value.copyWith(minute: _value.minute + 1);
                                       _updateControllers();
                                       widget.onChanged?.call(_value);
                                     },
@@ -283,7 +289,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                         ),
                   onChanged: (value) {
                     int? parsed = int.tryParse(value);
-                    _value = _value.replacing(minute: parsed);
+                    _value = _value.copyWith(minute: parsed ?? _value.minute);
                     setState(() {});
                     widget.onChanged?.call(_value);
                   },
@@ -323,17 +329,14 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                 children: [
                   Expanded(
                     child: Container(
-                      color: _value.period == .am
+                      color: _isAm
                           ? (isDark ? Colors.white : primaryColor).withValues(alpha: 0.3)
                           : Theme.of(context).dividerColor,
                       child: InkWell(
-                        onTap: _value.period == .am
+                        onTap: _isAm
                             ? null
                             : () {
-                                _value = TimeOfDay(
-                                  hour: _value.hour - 12,
-                                  minute: _value.minute,
-                                );
+                                _value = _value.copyWith(hour: _value.hour - 12);
                                 setState(() {});
                                 widget.onChanged?.call(_value);
                               },
@@ -341,7 +344,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                           child: Text(
                             'AM',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: _value.period == .am ? (isDark ? Colors.white : primaryColor) : null,
+                              color: _isAm ? (isDark ? Colors.white : primaryColor) : null,
                               fontWeight: .bold,
                             ),
                           ),
@@ -351,17 +354,14 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                   ),
                   Expanded(
                     child: Container(
-                      color: _value.period == .pm
+                      color: !_isAm
                           ? (isDark ? Colors.white : primaryColor).withValues(alpha: 0.3)
                           : Colors.transparent,
                       child: InkWell(
-                        onTap: _value.period == .pm
+                        onTap: !_isAm
                             ? null
                             : () {
-                                _value = TimeOfDay(
-                                  hour: _value.hour + 12,
-                                  minute: _value.minute,
-                                );
+                                _value = _value.copyWith(hour: _value.hour + 12);
                                 setState(() {});
                                 widget.onChanged?.call(_value);
                               },
@@ -369,7 +369,7 @@ class __ThemedTimeUtilityState extends State<_ThemedTimeUtility> {
                           child: Text(
                             'PM',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: _value.period == .pm ? (isDark ? Colors.white : primaryColor) : null,
+                              color: !_isAm ? (isDark ? Colors.white : primaryColor) : null,
                               fontWeight: .bold,
                             ),
                           ),

@@ -369,7 +369,7 @@ packages:
     source: hosted
     version: "3.31.0"
   layrz_sdk:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: layrz_sdk
       sha256: bedbbc1de11479df9b912054eb70d46e0cefba5a05432e8703fddcc9e7ffd468

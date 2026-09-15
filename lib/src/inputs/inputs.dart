@@ -9,7 +9,9 @@ import 'package:collection/collection.dart';
 import 'package:emojis/emoji.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+// The inputs layer uses layrz_sdk's framework-independent TimeOfDay throughout its time
+// pickers, so hide Material's TimeOfDay and let the unprefixed TimeOfDay resolve to sdk's.
+import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flex_color_picker/flex_color_picker.dart' hide FlexPickerNoNullColorExtensions;
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +19,7 @@ import 'package:highlight/highlight.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:layrz_models/layrz_models.dart' hide iconMapping;
-import 'package:layrz_sdk/layrz_sdk.dart' hide TimeOfDay;
+import 'package:layrz_sdk/layrz_sdk.dart';
 
 import 'package:layrz_theme/src/buttons/buttons.dart';
 import 'package:layrz_theme/src/extensions/extensions.dart';
