@@ -19,7 +19,11 @@ import 'package:highlight/highlight.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:layrz_models/layrz_models.dart' hide iconMapping;
-import 'package:layrz_sdk/layrz_sdk.dart';
+// Keep hiding sdk's TimeOfDay from the broad import (layrz_models already re-exports the
+// shared sdk symbols; importing sdk in full would duplicate them), then bring in only
+// sdk's TimeOfDay so it fills the unprefixed slot left by Material's hidden one.
+import 'package:layrz_sdk/layrz_sdk.dart' hide TimeOfDay;
+import 'package:layrz_sdk/layrz_sdk.dart' show TimeOfDay;
 
 import 'package:layrz_theme/src/buttons/buttons.dart';
 import 'package:layrz_theme/src/extensions/extensions.dart';
