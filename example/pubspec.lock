@@ -238,6 +238,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+7447"
+  flutter_mdi_remap:
+    dependency: transitive
+    description:
+      name: flutter_mdi_remap
+      sha256: "9930a72ded862efabec5651baaac35c4e7d832cbc7b356676d45e5f22f750daf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -364,18 +372,18 @@ packages:
     dependency: "direct main"
     description:
       name: layrz_models
-      sha256: "24bba696b49fe613ed13c638a725532a0312e3e0bf5e0004c730e339d3cc10e3"
+      sha256: "6cc356080c26fe9f04fdc4e5f97e2e1ebc3367a7ce805d1be3a557eb7ca23ca7"
       url: "https://pub.dev"
     source: hosted
-    version: "3.31.0"
+    version: "3.34.0+5"
   layrz_sdk:
     dependency: "direct main"
     description:
       name: layrz_sdk
-      sha256: bedbbc1de11479df9b912054eb70d46e0cefba5a05432e8703fddcc9e7ffd468
+      sha256: b00448116480a917b1339ca8da20308e1be6671d858105ecf287b9ba37110d5c
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.4"
+    version: "4.5.0+9"
   layrz_state:
     dependency: "direct main"
     description:
@@ -390,7 +398,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "7.10.0"
+    version: "7.11.0"
   leak_tracker:
     dependency: transitive
     description:
